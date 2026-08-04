@@ -83,6 +83,19 @@ def loft(rings):
     import trimesh
 
     n = len(rings[0])
+    # Minimal-twist correspondence: ring boundaries can start at arbitrary points
+    # (e.g. rotated polygons), so re-index each ring to the cyclic shift closest to
+    # the previous ring. Already-aligned rings keep shift 0 and pass through as-is.
+    aligned = [np.asarray(rings[0])]
+    for ring in rings[1:]:
+        current = np.asarray(ring)
+        previous = aligned[-1]
+        shift = min(
+            range(n),
+            key=lambda i: np.sum((previous - np.roll(current, -i, axis=0)) ** 2),
+        )
+        aligned.append(current if shift == 0 else np.roll(current, -shift, axis=0))
+    rings = aligned
     V = np.vstack(rings).tolist()
     F = []
     for k in range(len(rings) - 1):

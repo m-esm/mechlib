@@ -183,7 +183,9 @@ def closure_demos():
 
     tongue = ydovetail(0, -8, 8)
     tongue.apply_translation((-9, 0, 0))
-    groove = ydovetail(0, -8, 8, clear=0.25)
+    # groove must overrun the receiver's y faces or the channel is sealed blind,
+    # and sit at the receiver's center (x=9), not the demo origin
+    groove = ydovetail(9, -11, 11, clear=0.25)
     receiver = sub(boxc((16, 20, 10), (9, 0, 14)), groove.copy())
 
     catch = snap_catch("x", 0, 0, 1, 10)
@@ -231,7 +233,9 @@ def nut_and_pin_demos():
     """Build a captive-nut cut and a boss plus locating pin/socket pair."""
     trap = nut_slot((0, 0, 0), length=16, nib=True)
     trap_block = sub(boxc((14, 20, 8), (0, 5, 0)), trap)
-    trap_block = sub(trap_block, boxc((20, 20, 10), (-7, 5, 0)))
+    # cutaway stops at x=0 so the trap section stays exposed, not swallowed;
+    # remove the +x half so the section face fronts the default iso camera
+    trap_block = sub(trap_block, boxc((20, 20, 10), (10, 5, 0)))
     nut = hex_nut_mesh(5.5, 2.6, 3.0)
     nut.apply_translation((0, 0, -1.3))
 
@@ -259,7 +263,9 @@ def gear_and_sprocket_demos():
 
 def mechanism_demos():
     """Build threaded, knurled, and torsion-spring demonstrations."""
-    bolt = thread_solid(8, 16, seg=40)
+    # seg >= 96: coarser helical facets turn into specular "crumple" once the
+    # viewer smooths vertex normals across the crest edges
+    bolt = thread_solid(8, 16, seg=96)
     head = cyl(7, 4)
     head.apply_translation((0, 0, -2))
     bolt = uni([head, bolt])
@@ -325,11 +331,13 @@ def worm_wheel_demo():
 
 def organic_loft_demo():
     """Build an offset, vase-like solid through five resampled rings."""
+    # keep ring-to-ring edge swings under ~2 mm: larger jumps between linearly
+    # skinned rings read as a knife-edge gouge, not an organic waist
     specs = [
-        (Point(0, 0).buffer(7, resolution=24), 0),
-        (Point(1.5, 0).buffer(9, resolution=24), 7),
-        (Point(-1, 1).buffer(6, resolution=24), 15),
-        (Point(1, -1).buffer(8, resolution=24), 23),
+        (Point(0, 0).buffer(9, resolution=24), 0),
+        (Point(1, 0.5).buffer(8, resolution=24), 8),
+        (Point(0.5, 1).buffer(6.5, resolution=24), 15),
+        (Point(-0.5, 0.5).buffer(7.5, resolution=24), 22),
         (Point(0, 0).buffer(5, resolution=24), 30),
     ]
     return loft([ring_pts(poly, 64, z) for poly, z in specs])
@@ -340,7 +348,8 @@ def setscrew_demo():
     body = boxc((24, 18, 14), (0, 0, 7))
     boss, hole = setscrew((0, -9, 7), (0, 1, 0))
     feature = sub(uni([body, boss]), hole)
-    return sub(feature, boxc((30, 20, 20), (15, 0, 7)))
+    # cutaway must also swallow the boss overhang at y=-13, not just the body
+    return sub(feature, boxc((30, 28, 24), (15, -4, 7)))
 
 
 def slot_demo():
