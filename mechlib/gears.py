@@ -67,3 +67,63 @@ def mesh_phase(N_drv, N_drn, phi_deg):
     fB0 = ((phi_deg + 180.0) / pan) % 1.0       # driven tooth-phase at the point facing the driver
     fB  = (fA + 0.5) % 1.0                       # want the complement there (tooth↔gap)
     return ((fB - fB0 + 0.5) % 1.0 - 0.5) * pan  # smallest signed rotation
+
+
+def spur_gear_mesh(N, m, width, bore_d=0.0, pa=20.0, bl=0.35,
+                   t_relief=0.10, sections=96):
+    """Extrude an involute spur gear and optionally cut a round axial bore.
+
+    This unifies the finnish-windows polygon-extrusion helper and parviz's
+    printable involute spur use case. ``sections`` controls bore resolution.
+    origin: finnish-windows tools/gearbox.py:96
+    origin: parviz src/gears.py:51
+    """
+    import trimesh
+
+    from .meshutil import sub
+    from .prim import cyl
+
+    if width <= 0 or bore_d < 0:
+        raise ValueError("spur_gear_mesh(): width must be positive and bore_d non-negative")
+    poly = spur_gear_2d(N=N, m=m, pa=pa, bl=bl, t_relief=t_relief)
+    gear = trimesh.creation.extrude_polygon(poly, width)
+    if bore_d > 0:
+        bore = cyl(bore_d / 2.0, width + 2.0, sections=sections)
+        bore.apply_translation((0, 0, width / 2.0))
+        gear = sub(gear, bore)
+    return gear
+
+
+def roller_sprocket_2d(n_teeth, pitch, pin_d, clear=0.0, outer_d=None):
+    """Build a conjugate swept-envelope roller or track-pin sprocket profile.
+
+    The pitch radius is ``pitch / (2 sin(pi/n))``. A circular pin envelope is
+    swept through rack motion in half-degree steps and copied around the blank.
+    ``clear`` is radial pin running clearance. If omitted, ``outer_d`` uses a
+    0.12-pitch addendum, matching the proportions of parviz's 14-tooth profile.
+    origin: parviz src/tracks.py:85
+    origin: parviz src/tracks.py:335
+    """
+    import shapely.affinity as sa
+    import shapely.geometry as sg
+    from shapely.ops import unary_union
+
+    if n_teeth < 3 or pitch <= 0 or pin_d <= 0 or clear < 0:
+        raise ValueError("roller_sprocket_2d(): invalid tooth, pitch, pin, or clearance value")
+    rp = pitch / (2.0 * math.sin(math.pi / n_teeth))
+    env_r = pin_d / 2.0 + clear
+    if outer_d is None:
+        outer_d = 2.0 * (rp + 0.12 * pitch)
+    if outer_d <= 2.0 * (rp - env_r):
+        raise ValueError("roller_sprocket_2d(): outer_d is too small for the pin envelope")
+    blank = sg.Point(0, 0).buffer(outer_d / 2.0, resolution=96)
+    swept = []
+    for th in np.arange(-40.0, 40.01, 0.5) * (np.pi / 180.0):
+        c, s = np.cos(th), np.sin(th)
+        u, v = rp, rp * th
+        swept.append(sg.Point(c * u + s * v, -s * u + c * v)
+                     .buffer(env_r, resolution=24))
+    gap = unary_union(swept)
+    gaps = unary_union([sa.rotate(gap, 360.0 * k / n_teeth, origin=(0, 0))
+                        for k in range(n_teeth)])
+    return blank.difference(gaps).simplify(0.01).buffer(0)
