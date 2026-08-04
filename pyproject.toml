@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mechlib"
-version = "0.1.0"
+version = "0.2.0"
 description = "Pure parametric geometry components for FDM-printed mechanical design (trimesh + shapely + manifold3d)"
 requires-python = ">=3.9"
 dependencies = [
@@ -19,6 +19,7 @@ authors = [
 
 [project.optional-dependencies]
 dev = ["pytest"]
+full = ["scipy", "matplotlib"]
 
 [tool.setuptools.packages.find]
 include = ["mechlib*"]
