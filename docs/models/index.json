@@ -197,7 +197,7 @@
       "file": "thread_demo.glb",
       "name": "thread_solid + tap",
       "module": "mechlib.mechanisms",
-      "signature": "thread_solid(d_nom, length, pitch=None, internal=False, clear=0.25, starts=1, seg=64); tap(mesh, d_nom, at, length, pitch=None, clear=0.25, axis='z')",
+      "signature": "thread_solid(d_nom, length, pitch=None, internal=False, clear=0.25, starts=1, seg=96); tap(mesh, d_nom, at, length, pitch=None, clear=0.25, axis='z')",
       "description": "An M8 threaded bolt beside a cut-away tapped hex nut.",
       "origin": "Extracted from threads.py in parviz."
     },

@@ -3,3 +3,4 @@ __pycache__/
 dist/
 .pytest_cache/
 gallery/out/
+.DS_Store
