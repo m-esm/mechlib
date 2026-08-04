@@ -1,0 +1,65 @@
+"""Pure sweep geometry helpers."""
+import math, numpy as np
+from math import sin, cos, radians
+
+from mechlib.prim import mesh_from_tris, rot2
+
+
+def extrude_twist(base_outer, base_inner, zlist, phi_of, prof=None, base_ang=None):
+    N = len(base_outer)
+    if base_ang is None:
+        base_ang = [math.atan2(y, x) for (x, y) in base_outer]
+    Lo, Li = [], []
+    for z in zlist:
+        phi = phi_of(z)
+        if prof is None:
+            o = rot2(base_outer, phi)
+        else:
+            cp, sp = cos(radians(phi)), sin(radians(phi))
+            o = []
+            for i in range(N):
+                r = prof(z, i); a = base_ang[i]
+                x, y = r * cos(a), r * sin(a)
+                o.append((x * cp - y * sp, x * sp + y * cp))
+        Lo.append([(x, y, z) for (x, y) in o])
+        if base_inner is not None:
+            Li.append([(x, y, z) for (x, y) in rot2(base_inner, phi)])
+
+    solid = base_inner is None
+    tris = []
+    for k in range(len(zlist) - 1):
+        Ao, Bo = Lo[k], Lo[k + 1]
+        for i in range(N):
+            j = (i + 1) % N
+            tris += [(Ao[i], Ao[j], Bo[i]), (Ao[j], Bo[j], Bo[i])]   # outer wall
+        if not solid:
+            Ai, Bi = Li[k], Li[k + 1]
+            for i in range(N):
+                j = (i + 1) % N
+                tris += [(Ai[i], Bi[i], Ai[j]), (Ai[j], Bi[i], Bi[j])]  # inner wall
+
+    bo, to = Lo[0], Lo[-1]
+    if solid:                                    # caps = fan from centre
+        cb, ct = (0, 0, zlist[0]), (0, 0, zlist[-1])
+        for i in range(N):
+            j = (i + 1) % N
+            tris += [(cb, bo[j], bo[i]), (ct, to[i], to[j])]
+    else:
+        bi, ti = Li[0], Li[-1]
+        for i in range(N):
+            j = (i + 1) % N
+            tris += [(bo[i], bi[i], bi[j]), (bo[i], bi[j], bo[j])]
+            tris += [(to[i], ti[j], ti[i]), (to[i], to[j], ti[j])]
+    return mesh_from_tris(tris)
+
+def swept_keyed_bore(bore_poly, free_angle, steps=28):
+    """Variant B manual override: sweep the keyed profile through `free_angle` into a
+    fan-shaped bore (angular lost motion). Drive contact stays flat-to-flat at the fan's
+    end walls; the mid-travel arc is unloaded free play."""
+    import shapely.affinity as sa
+    polys = [sa.rotate(bore_poly, a, origin=(0, 0), use_radians=False)
+             for a in np.linspace(0.0, free_angle, steps)]
+    swept = polys[0]
+    for p in polys[1:]:
+        swept = swept.union(p)
+    return swept.buffer(0)
