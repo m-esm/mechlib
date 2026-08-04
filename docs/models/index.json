@@ -1,0 +1,85 @@
+{
+  "version": "0.1.0",
+  "models": [
+    {
+      "file": "cyl_demo.glb",
+      "name": "cyl",
+      "module": "mechlib.prim",
+      "signature": "cyl(r, h, center=(0, 0, 0), axis='z', sections=96)",
+      "description": "A configurable cylinder oriented along any principal axis.",
+      "origin": "Originally extracted from geom_util.py in finnish-doors."
+    },
+    {
+      "file": "boxc_demo.glb",
+      "name": "boxc",
+      "module": "mechlib.prim",
+      "signature": "boxc(ext, center=(0, 0, 0))",
+      "description": "A box positioned by its center and XYZ extents.",
+      "origin": "Originally extracted from geom_util.py in finnish-doors."
+    },
+    {
+      "file": "rbox_demo.glb",
+      "name": "rbox",
+      "module": "mechlib.prim",
+      "signature": "rbox(ext, center=(0, 0, 0), r=5.0)",
+      "description": "A clean enclosure block with rounded vertical corners.",
+      "origin": "Originally extracted from geom_util.py in finnish-doors."
+    },
+    {
+      "file": "frustum_demo.glb",
+      "name": "frustum",
+      "module": "mechlib.prim",
+      "signature": "frustum(r0, r1, h, z0=0.0, sections=96)",
+      "description": "A truncated cone between two radii and two Z planes.",
+      "origin": "Originally extracted from geom_util.py in finnish-doors."
+    },
+    {
+      "file": "sector2d_demo.glb",
+      "name": "sector2d",
+      "module": "mechlib.prim",
+      "signature": "sector2d(a0_deg, a1_deg, R, n=48)",
+      "description": "A circular sector polygon, extruded here to reveal its usable profile.",
+      "origin": "Originally extracted from geom_util.py in finnish-doors."
+    },
+    {
+      "file": "hex_poly_demo.glb",
+      "name": "hex_poly",
+      "module": "mechlib.prim",
+      "signature": "hex_poly(af)",
+      "description": "A regular hexagon defined by across-flats width, shown as a solid.",
+      "origin": "Originally extracted from gears2d.py in finnish-doors."
+    },
+    {
+      "file": "extrude_twist_demo.glb",
+      "name": "extrude_twist",
+      "module": "mechlib.sweep",
+      "signature": "extrude_twist(base_outer, base_inner, zlist, phi_of, prof=None, base_ang=None)",
+      "description": "A three-lobed profile swept through one full turn over 30 mm.",
+      "origin": "Originally extracted from geom_util.py in finnish-doors."
+    },
+    {
+      "file": "swept_keyed_bore_demo.glb",
+      "name": "swept_keyed_bore",
+      "module": "mechlib.sweep",
+      "signature": "swept_keyed_bore(bore_poly, free_angle, steps=28)",
+      "description": "A D-shaped keyed bore beside its 50 degree free-rotation envelope.",
+      "origin": "Originally extracted from shaft.py in finnish-doors."
+    },
+    {
+      "file": "spur_gear_pair_demo.glb",
+      "name": "spur_gear_2d + mesh_phase",
+      "module": "mechlib.gears",
+      "signature": "spur_gear_2d(N, m, sector=None, relief=2.5, center_at=-90.0, entry_drop=0.0, entry_end=-1, bl=None, t_relief=None, pa=20.0); phased with mesh_phase(N_drv, N_drn, phi_deg)",
+      "description": "An 18-tooth driver and 28-tooth driven gear in collision-free mesh.",
+      "origin": "Originally extracted from gears2d.py in finnish-doors."
+    },
+    {
+      "file": "board_cradle_demo.glb",
+      "name": "board_cradle",
+      "module": "mechlib.fixtures",
+      "signature": "board_cradle(rect, fl, standoff=4.0, clr=0.4, wlen=9.0, wt=1.6, cap_over=2.0)",
+      "description": "Four PCB corner standoffs and capture walls around a 40 x 30 mm board.",
+      "origin": "Originally extracted from system_layout.py in finnish-doors."
+    }
+  ]
+}

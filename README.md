@@ -31,4 +31,8 @@ mechlib functions take explicit arguments only. They never read project paramete
 
 Consumers are finnish-doors (Klonk), finnish-windows, and parviz.
 
+## Gallery
+
+Explore every visual component in the [interactive 3D gallery](https://m-esm.github.io/mechlib/). Run `python3 gallery/build_gallery.py` from the repository root to regenerate `docs/models/`.
+
 Licensed under the MIT License.

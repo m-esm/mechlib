@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Interactive 3D gallery for the mechlib parametric geometry library.">
+  <title>mechlib gallery</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --background: #080c12;
+      --surface: #101721;
+      --surface-raised: #151e2a;
+      --border: #263343;
+      --text: #edf5ff;
+      --muted: #9cafc5;
+      --accent: #55c7ff;
+      --accent-soft: rgba(85, 199, 255, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: var(--background);
+      overflow-x: hidden;
+    }
+
+    body {
+      min-width: 0;
+      min-height: 100vh;
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 0%, rgba(36, 100, 135, 0.24), transparent 34rem),
+        radial-gradient(circle at 88% 18%, rgba(104, 67, 145, 0.18), transparent 30rem),
+        var(--background);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    #render-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .page-shell {
+      width: min(1180px, calc(100% - 36px));
+      margin: 0 auto;
+      padding: 64px 0 72px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 26px;
+      align-items: end;
+      margin-bottom: 42px;
+    }
+
+    .title-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.8rem, 8vw, 5.4rem);
+      font-weight: 760;
+      letter-spacing: -0.065em;
+      line-height: 0.95;
+    }
+
+    .version {
+      display: inline-flex;
+      min-height: 30px;
+      align-items: center;
+      padding: 4px 10px;
+      border: 1px solid rgba(85, 199, 255, 0.4);
+      border-radius: 999px;
+      color: var(--accent);
+      background: var(--accent-soft);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.78rem;
+    }
+
+    .tagline {
+      max-width: 710px;
+      margin: 18px 0 0;
+      color: #c8d7e8;
+      font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+    }
+
+    .contract {
+      max-width: 760px;
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.82rem;
+    }
+
+    .repo-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 10px 16px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      background: rgba(16, 23, 33, 0.84);
+      text-decoration: none;
+      white-space: nowrap;
+      transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+    }
+
+    .repo-link:hover,
+    .repo-link:focus-visible {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .model-card {
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: linear-gradient(145deg, rgba(21, 30, 42, 0.98), rgba(13, 20, 29, 0.98));
+      box-shadow: 0 18px 60px rgba(0, 0, 0, 0.24);
+    }
+
+    .card-heading {
+      display: flex;
+      gap: 12px;
+      align-items: baseline;
+      justify-content: space-between;
+      padding: 18px 20px 15px;
+    }
+
+    .card-heading h2 {
+      min-width: 0;
+      margin: 0;
+      overflow-wrap: anywhere;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .module {
+      flex: 0 0 auto;
+      color: var(--accent);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.72rem;
+    }
+
+    .viewport {
+      position: relative;
+      height: clamp(245px, 31vw, 330px);
+      margin: 0 10px;
+      overflow: hidden;
+      border: 1px solid rgba(126, 161, 194, 0.16);
+      border-radius: 13px;
+      background: #0c131c;
+      cursor: grab;
+      touch-action: none;
+    }
+
+    .viewport:active {
+      cursor: grabbing;
+    }
+
+    .load-status {
+      position: absolute;
+      inset: 0;
+      z-index: 12;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      color: var(--muted);
+      background: #0c131c;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.78rem;
+      text-align: center;
+      pointer-events: none;
+      transition: opacity 220ms ease;
+    }
+
+    .load-status.hidden {
+      opacity: 0;
+    }
+
+    .card-copy {
+      display: grid;
+      gap: 10px;
+      padding: 17px 20px 20px;
+    }
+
+    .signature {
+      max-width: 100%;
+      margin: 0;
+      padding: 10px 12px;
+      overflow-wrap: anywhere;
+      border: 1px solid rgba(126, 161, 194, 0.14);
+      border-radius: 9px;
+      color: #d7e8fa;
+      background: rgba(5, 9, 14, 0.5);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.74rem;
+      line-height: 1.55;
+    }
+
+    .description,
+    .origin {
+      margin: 0;
+    }
+
+    .description {
+      color: #c8d7e8;
+      font-size: 0.94rem;
+    }
+
+    .origin {
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .fatal-error {
+      grid-column: 1 / -1;
+      padding: 24px;
+      border: 1px solid #934f5c;
+      border-radius: 14px;
+      color: #ffd6dc;
+      background: #2b151b;
+    }
+
+    @media (max-width: 700px) {
+      .page-shell {
+        width: min(100% - 22px, 540px);
+        padding: 38px 0 52px;
+      }
+
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+        align-items: start;
+        margin-bottom: 30px;
+      }
+
+      .repo-link {
+        justify-self: start;
+      }
+
+      .gallery-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 17px;
+      }
+
+      .viewport {
+        height: min(72vw, 320px);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .repo-link,
+      .load-status {
+        transition: none;
+      }
+    }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <canvas id="render-canvas" aria-hidden="true"></canvas>
+  <main class="page-shell">
+    <header class="hero">
+      <div>
+        <div class="title-row">
+          <h1>mechlib</h1>
+          <span class="version" id="version">loading</span>
+        </div>
+        <p class="tagline">Pure parametric geometry components for mechanical design and FDM printing.</p>
+        <p class="contract">Explicit args only, no hidden globals, no project imports.</p>
+      </div>
+      <a class="repo-link" href="https://github.com/m-esm/mechlib">View on GitHub</a>
+    </header>
+    <section class="gallery-grid" id="gallery" aria-label="Interactive component models"></section>
+  </main>
+
+  <script type="module">
+    import * as THREE from "three";
+    import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+    import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+    const canvas = document.querySelector("#render-canvas");
+    const gallery = document.querySelector("#gallery");
+    const versionLabel = document.querySelector("#version");
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    const loader = new GLTFLoader();
+    const views = [];
+    const clock = new THREE.Clock();
+
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.15;
+
+    function makeTextElement(tag, className, text) {
+      const element = document.createElement(tag);
+      element.className = className;
+      element.textContent = text;
+      return element;
+    }
+
+    function addLights(scene) {
+      const hemisphere = new THREE.HemisphereLight(0xcfeaff, 0x283344, 2.8);
+      const key = new THREE.DirectionalLight(0xffffff, 4.2);
+      const fill = new THREE.DirectionalLight(0x8fc9ff, 2.0);
+      key.position.set(5, -4, 8);
+      fill.position.set(-5, 3, 2);
+      scene.add(hemisphere, key, fill);
+    }
+
+    function prepareMaterials(root) {
+      root.traverse((object) => {
+        if (!object.isMesh) return;
+        object.geometry.computeVertexNormals();
+        const materials = Array.isArray(object.material) ? object.material : [object.material];
+        for (const material of materials) {
+          if (!material) continue;
+          if ("metalness" in material) material.metalness = 0.1;
+          if ("roughness" in material) material.roughness = 0.8;
+          material.vertexColors = Boolean(object.geometry.getAttribute("color"));
+          material.needsUpdate = true;
+        }
+      });
+    }
+
+    function frameModel(view, root) {
+      const bounds = new THREE.Box3().setFromObject(root);
+      const sphere = bounds.getBoundingSphere(new THREE.Sphere());
+      const radius = Math.max(sphere.radius, 0.1);
+      const halfFov = THREE.MathUtils.degToRad(view.camera.fov * 0.5);
+      const distance = (radius / Math.sin(halfFov)) * 1.12;
+      const direction = new THREE.Vector3(1.25, -1.5, 1.0).normalize();
+
+      view.camera.near = Math.max(radius / 100, 0.01);
+      view.camera.far = Math.max(radius * 100, 100);
+      view.camera.position.copy(sphere.center).addScaledVector(direction, distance);
+      view.camera.updateProjectionMatrix();
+      view.controls.target.copy(sphere.center);
+      view.controls.minDistance = radius * 0.55;
+      view.controls.maxDistance = radius * 12;
+      view.controls.update();
+    }
+
+    function loadView(view) {
+      if (view.started) return;
+      view.started = true;
+      view.status.textContent = "loading model";
+      loader.load(
+        `./models/${view.model.file}`,
+        (gltf) => {
+          prepareMaterials(gltf.scene);
+          view.scene.add(gltf.scene);
+          frameModel(view, gltf.scene);
+          view.loaded = true;
+          view.status.classList.add("hidden");
+          window.setTimeout(() => view.status.remove(), 250);
+        },
+        undefined,
+        () => {
+          view.status.textContent = "model could not be loaded";
+        }
+      );
+    }
+
+    function createCard(model) {
+      const card = document.createElement("article");
+      card.className = "model-card";
+
+      const heading = document.createElement("div");
+      heading.className = "card-heading";
+      heading.append(
+        makeTextElement("h2", "", model.name),
+        makeTextElement("span", "module", model.module)
+      );
+
+      const viewport = document.createElement("div");
+      viewport.className = "viewport";
+      viewport.setAttribute("role", "img");
+      viewport.setAttribute("aria-label", `Interactive 3D model of ${model.name}`);
+      const status = makeTextElement("span", "load-status", "waiting to load");
+      viewport.append(status);
+
+      const copy = document.createElement("div");
+      copy.className = "card-copy";
+      copy.append(
+        makeTextElement("code", "signature", model.signature),
+        makeTextElement("p", "description", model.description),
+        makeTextElement("p", "origin", model.origin)
+      );
+      card.append(heading, viewport, copy);
+      gallery.append(card);
+
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x0c131c);
+      addLights(scene);
+      const camera = new THREE.PerspectiveCamera(38, 1, 0.01, 1000);
+      camera.up.set(0, 0, 1);
+      const controls = new OrbitControls(camera, viewport);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.07;
+      controls.enablePan = false;
+      controls.autoRotate = false;
+      controls.autoRotateSpeed = 0.65;
+
+      const view = {
+        model,
+        viewport,
+        status,
+        scene,
+        camera,
+        controls,
+        started: false,
+        loaded: false,
+        visible: false,
+        interacting: false,
+        lastInteraction: -Infinity
+      };
+      controls.addEventListener("start", () => {
+        view.interacting = true;
+        view.lastInteraction = performance.now();
+      });
+      controls.addEventListener("end", () => {
+        view.interacting = false;
+        view.lastInteraction = performance.now();
+      });
+      viewport.addEventListener("pointerdown", () => {
+        view.interacting = true;
+        view.lastInteraction = performance.now();
+      });
+      const finishPointer = () => {
+        view.interacting = false;
+        view.lastInteraction = performance.now();
+      };
+      viewport.addEventListener("pointerup", finishPointer);
+      viewport.addEventListener("pointercancel", finishPointer);
+      viewport.addEventListener("wheel", () => {
+        view.lastInteraction = performance.now();
+      }, { passive: true });
+      views.push(view);
+      return view;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        const view = views.find((candidate) => candidate.viewport === entry.target);
+        if (!view) continue;
+        view.visible = entry.isIntersecting;
+        if (view.visible) loadView(view);
+      }
+    }, { rootMargin: "240px 0px" });
+
+    function resizeRenderer() {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      const pixelRatio = renderer.getPixelRatio();
+      const expectedWidth = Math.floor(width * pixelRatio);
+      const expectedHeight = Math.floor(height * pixelRatio);
+      if (canvas.width !== expectedWidth || canvas.height !== expectedHeight) {
+        renderer.setSize(width, height, false);
+      }
+    }
+
+    function render(time) {
+      resizeRenderer();
+      const delta = Math.min(clock.getDelta(), 0.1);
+      renderer.setScissorTest(false);
+      renderer.setClearColor(0x000000, 0);
+      renderer.clear();
+      renderer.setScissorTest(true);
+
+      for (const view of views) {
+        if (!view.visible || !view.loaded) continue;
+        const rect = view.viewport.getBoundingClientRect();
+        if (rect.bottom <= 0 || rect.top >= window.innerHeight || rect.right <= 0 || rect.left >= window.innerWidth) {
+          continue;
+        }
+
+        const left = Math.max(0, rect.left);
+        const right = Math.min(window.innerWidth, rect.right);
+        const top = Math.max(0, rect.top);
+        const bottom = Math.min(window.innerHeight, rect.bottom);
+        const width = Math.max(1, right - left);
+        const height = Math.max(1, bottom - top);
+        const viewportBottom = window.innerHeight - bottom;
+
+        view.camera.aspect = rect.width / rect.height;
+        view.camera.updateProjectionMatrix();
+        const idle = time - view.lastInteraction > 3500;
+        view.controls.autoRotate = !prefersReducedMotion.matches && !view.interacting && idle;
+        view.controls.update(delta);
+
+        renderer.setScissor(left, viewportBottom, width, height);
+        renderer.setViewport(
+          rect.left,
+          window.innerHeight - rect.bottom,
+          rect.width,
+          rect.height
+        );
+        renderer.render(view.scene, view.camera);
+      }
+      renderer.setScissorTest(false);
+      requestAnimationFrame(render);
+    }
+
+    async function initialize() {
+      try {
+        const response = await fetch("./models/index.json", { cache: "no-store" });
+        if (!response.ok) throw new Error(`manifest request returned ${response.status}`);
+        const manifest = await response.json();
+        versionLabel.textContent = `v${manifest.version}`;
+        for (const model of manifest.models) {
+          const view = createCard(model);
+          observer.observe(view.viewport);
+        }
+      } catch (error) {
+        versionLabel.textContent = "unavailable";
+        gallery.append(makeTextElement("p", "fatal-error", `Gallery data could not be loaded: ${error.message}`));
+      }
+    }
+
+    initialize();
+    requestAnimationFrame(render);
+
+    if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+      const watchedUrls = [
+        new URL(location.pathname, location.origin).href,
+        new URL("./models/index.json", location.href).href
+      ];
+      const modified = new Map();
+
+      async function pollChanges() {
+        try {
+          const responses = await Promise.all(watchedUrls.map((url) => fetch(url, {
+            method: "HEAD",
+            cache: "no-store"
+          })));
+          for (let index = 0; index < responses.length; index += 1) {
+            const value = responses[index].headers.get("Last-Modified");
+            if (modified.has(watchedUrls[index]) && value && modified.get(watchedUrls[index]) !== value) {
+              location.reload();
+              return;
+            }
+            modified.set(watchedUrls[index], value);
+          }
+        } catch (_) {
+          // A local server may be between rebuilds. The next poll retries.
+        }
+      }
+
+      pollChanges();
+      window.setInterval(pollChanges, 1500);
+    }
+  </script>
+</body>
+</html>
