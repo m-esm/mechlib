@@ -318,7 +318,7 @@
       "name": "u_channel_between",
       "module": "mechlib.cutters",
       "signature": "u_channel_between(p0, p1, channel_w, z_floor, body_h)",
-      "description": "Three arbitrary-angle open U segments forming an S-shaped run.",
+      "description": "Joined arbitrary-angle open U segments forming an S-shaped run.",
       "origin": "Extracted from build.py in jumper-wire-sockets."
     },
     {

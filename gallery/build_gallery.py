@@ -360,8 +360,9 @@ def tapered_cavity_demo():
 
 
 def u_channel_demo():
-    """Cut three joined arbitrary-angle U segments into an S-shaped block."""
-    points = [(-12, -12), (-4, -4), (5, 4), (12, 12)]
+    """Cut joined arbitrary-angle U segments into an S-shaped block."""
+    points = [(-13, -11), (-4, -11), (7, -7), (7, -2),
+              (-7, 2), (-7, 7), (4, 11), (13, 11)]
     cutters = []
     for p0, p1 in zip(points[:-1], points[1:]):
         cutters.extend(u_channel_between(p0, p1, 4, 1.2, 9))
@@ -877,7 +878,7 @@ def build():
             "name": "u_channel_between",
             "module": "mechlib.cutters",
             "signature": signature(u_channel_between),
-            "description": "Three arbitrary-angle open U segments forming an S-shaped run.",
+            "description": "Joined arbitrary-angle open U segments forming an S-shaped run.",
             "origin": "Extracted from build.py in jumper-wire-sockets.",
             "meshes": [("open_u_run", u_run, PALETTE[11])],
         },
