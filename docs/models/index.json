@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0",
+  "version": "0.3.0",
   "models": [
     {
       "file": "cyl_demo.glb",
@@ -240,6 +240,126 @@
       "signature": "fastener_mesh(d, L, style='pan', axis='z', at=(0.0, 0.0, 0.0), sections=32); hex_nut_mesh(af, h, bore_d); washer_mesh(od, id_, h)",
       "description": "Pan, socket, and countersunk screws with nut and washer stand-ins.",
       "origin": "Unified from all three source projects."
+    },
+    {
+      "file": "worm_demo.glb",
+      "name": "worm + helical wheel",
+      "module": "mechlib.gears",
+      "signature": "worm(module, length, pitch_d, starts=1, pressure_angle=20.0, bore=0.0); spur_gear(module, teeth, width, bore=0.0, pressure_angle=20.0, sector_deg=360.0, backlash=0.06, hub_d=0.0, full_disc=True, helix_deg=0.0)",
+      "description": "A true helical worm beside its lead-angle-matched wheel.",
+      "origin": "Extracted from gears.py in dual-axis-turntable."
+    },
+    {
+      "file": "spur_gear_sector_demo.glb",
+      "name": "spur_gear sector",
+      "module": "mechlib.gears",
+      "signature": "spur_gear(module, teeth, width, bore=0.0, pressure_angle=20.0, sector_deg=360.0, backlash=0.06, hub_d=0.0, full_disc=True, helix_deg=0.0)",
+      "description": "A full-featured involute sector with a central hub and bore.",
+      "origin": "Extracted from gears.py in dual-axis-turntable."
+    },
+    {
+      "file": "loft_demo.glb",
+      "name": "loft",
+      "module": "mechlib.sweep",
+      "signature": "loft(rings)",
+      "description": "An organic solid joined through five equal-count point rings.",
+      "origin": "Extracted from build.py in dual-axis-turntable."
+    },
+    {
+      "file": "push_pin_demo.glb",
+      "name": "push_pin",
+      "module": "mechlib.closures",
+      "signature": "push_pin(d, length, barb=True, axis='z', flip=False)",
+      "description": "A barbed printed press pin with a conical lead-in tip.",
+      "origin": "Extracted from build.py in dual-axis-turntable."
+    },
+    {
+      "file": "chamfer_prism_demo.glb",
+      "name": "chamfer_prism",
+      "module": "mechlib.prim",
+      "signature": "chamfer_prism(w, d, h, r, cham)",
+      "description": "A rounded enclosure prism with a clean hull-chamfered top.",
+      "origin": "Extracted from build.py in dual-axis-turntable."
+    },
+    {
+      "file": "threaded_rod_demo.glb",
+      "name": "threaded_rod M8",
+      "module": "mechlib.mechanisms",
+      "signature": "threaded_rod(major_d, pitch, length, minor_d=None, n_theta=64, steps_per_pitch=6)",
+      "description": "A fast radial-grid M8 display and light-duty external thread.",
+      "origin": "Extracted from lib.py in wall-shelf-clamp."
+    },
+    {
+      "file": "setscrew_demo.glb",
+      "name": "setscrew boss",
+      "module": "mechlib.closures",
+      "signature": "setscrew(point, direction, into=14.0, hole_d=4.2, boss_d=12.0, boss_h=4.0, sections=32)",
+      "description": "A cut-away sleeve showing its external boss and inward pilot.",
+      "origin": "Extracted from lib.py in wall-shelf-clamp."
+    },
+    {
+      "file": "slot_cutter_demo.glb",
+      "name": "slot_cutter",
+      "module": "mechlib.cutters",
+      "signature": "slot_cutter(w, t, z0, z1, cx=0.0, cy=0.0, foot_z=0.0, dogbone_r=0.6, foot_relief=0.3, eps=0.5)",
+      "description": "An FDM blade slot with visible square-corner dog-bone relief.",
+      "origin": "Extracted from build.py in torque-lever."
+    },
+    {
+      "file": "tapered_cavity_demo.glb",
+      "name": "tapered_cavity",
+      "module": "mechlib.cutters",
+      "signature": "tapered_cavity(g, zlo, height, taper_h=11.0, taper_step=0.6)",
+      "description": "A cut-away hollow whose stepped roof closes without bridging.",
+      "origin": "Extracted from lighten_legs.py in tripod."
+    },
+    {
+      "file": "u_channel_between_demo.glb",
+      "name": "u_channel_between",
+      "module": "mechlib.cutters",
+      "signature": "u_channel_between(p0, p1, channel_w, z_floor, body_h)",
+      "description": "Three arbitrary-angle open U segments forming an S-shaped run.",
+      "origin": "Extracted from build.py in jumper-wire-sockets."
+    },
+    {
+      "file": "revolved_gable_cavity_demo.glb",
+      "name": "revolved_gable_cavity",
+      "module": "mechlib.cutters",
+      "signature": "revolved_gable_cavity(r_in, r_out, z0, h, roof_angle=45.0, sections=128)",
+      "description": "A cut-away annular chamber beneath a 45 degree gable roof.",
+      "origin": "Generalized from build.py in massage-shower-head."
+    },
+    {
+      "file": "directed_holes_demo.glb",
+      "name": "directed_holes",
+      "module": "mechlib.patterns",
+      "signature": "directed_holes(points, vectors, d, length)",
+      "description": "Eight vector-directed bores cut through a hemispherical dome.",
+      "origin": "Generalized from build.py in massage-shower-head."
+    },
+    {
+      "file": "saddle_demo.glb",
+      "name": "saddle",
+      "module": "mechlib.fixtures",
+      "signature": "saddle(axis0, axis1, r, yi, rib_t, interior, rise=0.0)",
+      "description": "A shell-trimmed rib cradling a skew cylindrical reference part.",
+      "origin": "Extracted from pickle_build.py in mini-powerbank."
+    },
+    {
+      "file": "text_block_demo.glb",
+      "name": "text_block",
+      "module": "mechlib.text",
+      "signature": "text_block(lines, cx, cy, h, gap=1.2)",
+      "description": "Two centered lines of raised polygon text stacked on a plaque.",
+      "origin": "Extracted from build.py in torque-lever."
+    },
+    {
+      "file": "seg_cylinder_demo.glb",
+      "name": "seg_cylinder",
+      "module": "mechlib.prim",
+      "signature": "seg_cylinder(p0, p1, d)",
+      "description": "A cylinder spanning two skew points in three dimensions.",
+      "origin": "Extracted from build.py in massage-shower-head."
     }
   ],
   "utilities": [
@@ -362,6 +482,46 @@
       "module": "mechlib.closures",
       "signature": "nut_ac(size='M3')",
       "description": "Convert nut across-flats to across-corners."
+    },
+    {
+      "module": "mechlib.meshutil",
+      "signature": "audit(parts, clearance, allow, label='', aliases={})",
+      "description": "Audit pairwise overlap and clearance."
+    },
+    {
+      "module": "mechlib.meshutil",
+      "signature": "min_distance(a, b, n=800)",
+      "description": "Approximate sampled surface distance."
+    },
+    {
+      "module": "mechlib.meshutil",
+      "signature": "approach_clear(mesh, mouth, direction, max_dist=50.0)",
+      "description": "Measure free travel toward an opening."
+    },
+    {
+      "module": "mechlib.meshutil",
+      "signature": "slicer_area(polys, infill, line_w=0.42, perimeters=3)",
+      "description": "Predict perimeter-plus-infill layer area."
+    },
+    {
+      "module": "mechlib.packing",
+      "signature": "shelf_pack(sized, bed=(256.0, 256.0), gap=6.0)",
+      "description": "Pack brim-grown footprints across plates."
+    },
+    {
+      "module": "mechlib.stepio",
+      "signature": "export_assembly(named_meshes, path)",
+      "description": "Export positioned meshes as a STEP assembly."
+    },
+    {
+      "module": "mechlib.meshutil",
+      "signature": "extrude_snapped(poly2d, z0, z1)",
+      "description": "Snap tangent vertices before extrusion."
+    },
+    {
+      "module": "mechlib.cutters",
+      "signature": "lobe_cavity_polys(section2d, wall=1.2, rib_w=1.6, n_rib=0)",
+      "description": "Build hollow lobe polygons around ribs."
     }
   ]
 }

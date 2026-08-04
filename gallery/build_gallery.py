@@ -23,9 +23,11 @@ from mechlib.closures import (
     fix_pin,
     nut_slot,
     press_lid,
+    push_pin,
     screw_post,
     snap_catch,
     snap_finger,
+    setscrew,
     ydovetail,
 )
 from mechlib.cutters import (
@@ -35,23 +37,29 @@ from mechlib.cutters import (
     crush_ribs,
     dbore,
     dbore_hub,
+    revolved_gable_cavity,
+    slot_cutter,
     ss_bore,
     teardrop,
+    tapered_cavity,
+    u_channel_between,
 )
 from mechlib.fasteners import fastener_mesh, hex_nut_mesh, washer_mesh
-from mechlib.fixtures import board_cradle
+from mechlib.fixtures import board_cradle, saddle
 from mechlib.gears import (
     mesh_phase,
     roller_sprocket_2d,
     spur_gear_2d,
+    spur_gear,
     spur_gear_mesh,
+    worm,
 )
-from mechlib.mechanisms import knurl, tap, thread_solid, torsion_spring_mesh
+from mechlib.mechanisms import knurl, tap, thread_solid, threaded_rod, torsion_spring_mesh
 from mechlib.meshutil import sub, uni
-from mechlib.patterns import lighten_cell_poly, lighten_grid_centres, polar_ring
-from mechlib.prim import boxc, cyl, frustum, hex_poly, rbox, sector2d
-from mechlib.sweep import extrude_twist, swept_keyed_bore
-from mechlib.text import text_polygon
+from mechlib.patterns import directed_holes, lighten_cell_poly, lighten_grid_centres, polar_ring
+from mechlib.prim import boxc, chamfer_prism, cyl, frustum, hex_poly, rbox, sector2d, seg_cylinder
+from mechlib.sweep import extrude_twist, loft, ring_pts, swept_keyed_bore
+from mechlib.text import text_block, text_polygon
 
 
 OUTPUT_DIR = ROOT / "docs" / "models"
@@ -300,6 +308,108 @@ def fastener_demo():
     return screws + [nut, washer]
 
 
+def worm_wheel_demo():
+    """Build a conjugate worm and helical wheel at their pitch center distance."""
+    module, teeth, pitch_d = 1.5, 40, 14.3
+    worm_mesh, lead_angle = worm(module, 24, pitch_d)
+    worm_mesh.apply_transform(trimesh.transformations.rotation_matrix(
+        math.pi / 2, [1, 0, 0]))
+    worm_mesh.apply_translation([0, 0, -(module * teeth + pitch_d) / 2])
+    wheel = spur_gear(module, teeth, 8, backlash=0.35, helix_deg=lead_angle)
+    wheel.apply_transform(trimesh.transformations.rotation_matrix(
+        math.radians(3), [0, 0, 1]))
+    wheel.apply_transform(trimesh.transformations.rotation_matrix(
+        math.pi / 2, [0, 1, 0]))
+    return worm_mesh, wheel
+
+
+def organic_loft_demo():
+    """Build an offset, vase-like solid through five resampled rings."""
+    specs = [
+        (Point(0, 0).buffer(7, resolution=24), 0),
+        (Point(1.5, 0).buffer(9, resolution=24), 7),
+        (Point(-1, 1).buffer(6, resolution=24), 15),
+        (Point(1, -1).buffer(8, resolution=24), 23),
+        (Point(0, 0).buffer(5, resolution=24), 30),
+    ]
+    return loft([ring_pts(poly, 64, z) for poly, z in specs])
+
+
+def setscrew_demo():
+    """Build a cut-away sleeve with an external boss and set-screw pilot."""
+    body = boxc((24, 18, 14), (0, 0, 7))
+    boss, hole = setscrew((0, -9, 7), (0, 1, 0))
+    feature = sub(uni([body, boss]), hole)
+    return sub(feature, boxc((30, 20, 20), (15, 0, 7)))
+
+
+def slot_demo():
+    """Cut an FDM rectangular slot into a thin block to reveal dog-bones."""
+    block = boxc((24, 14, 6), (0, 0, 3))
+    cutters = slot_cutter(14, 4, -1, 7)
+    return sub(block, uni(cutters))
+
+
+def tapered_cavity_demo():
+    """Cut a stepped self-supporting cavity into a front-open display block."""
+    poly = Point(0, 0).buffer(7, resolution=32)
+    cavity = uni(tapered_cavity(poly, 2, 22, taper_h=11, taper_step=0.6))
+    body = boxc((22, 22, 28), (0, 0, 14))
+    hollow = sub(body, cavity)
+    return sub(hollow, boxc((30, 14, 32), (0, -11, 14)))
+
+
+def u_channel_demo():
+    """Cut three joined arbitrary-angle U segments into an S-shaped block."""
+    points = [(-12, -12), (-4, -4), (5, 4), (12, 12)]
+    cutters = []
+    for p0, p1 in zip(points[:-1], points[1:]):
+        cutters.extend(u_channel_between(p0, p1, 4, 1.2, 9))
+    body = rbox((34, 34, 9), center=(0, 0, 4.5), r=4)
+    return sub(body, uni(cutters))
+
+
+def revolved_cavity_demo():
+    """Build a cut-away ring around a revolved gable cavity."""
+    outer = cyl(20, 18)
+    outer.apply_translation((0, 0, 9))
+    bore = cyl(6, 20)
+    bore.apply_translation((0, 0, 9))
+    shell = sub(outer, bore)
+    shell = sub(shell, revolved_gable_cavity(8, 18, 2, 14, sections=96))
+    return sub(shell, boxc((44, 22, 24), (0, -11, 9)))
+
+
+def directed_holes_demo():
+    """Cut directed bores through a hemispherical dome."""
+    sphere = trimesh.creation.icosphere(subdivisions=4, radius=16)
+    upper = trimesh.boolean.intersection(
+        [sphere, boxc((40, 40, 20), (0, 0, 10))], engine="manifold")
+    angles = np.linspace(0, 2 * math.pi, 8, endpoint=False)
+    points = [(11 * math.cos(a), 11 * math.sin(a), 11) for a in angles]
+    vectors = [tuple(-np.asarray(p) / np.linalg.norm(p)) for p in points]
+    bores = directed_holes(points, vectors, 2.2, 14)
+    return sub(upper, bores)
+
+
+def saddle_demo():
+    """Build one cylindrical cradle rib and its reference cylinder."""
+    interior = boxc((34, 16, 20), (0, 0, 7))
+    rib = saddle((-12, -8, 7), (12, 8, 11), 4, 0, 2.4, interior)
+    reference = seg_cylinder((-12, -8, 7), (12, 8, 11), 8)
+    return rib, reference
+
+
+def text_block_demo():
+    """Build a two-line raised-text plaque."""
+    plaque = rbox((44, 28, 3), center=(0, 0, 1.5), r=4)
+    text_meshes = []
+    for poly in text_block(["MECH", "LIB"], 0, 0, 7, gap=1.0):
+        mesh = mechlib.extrude_poly_z(poly, 3, 4.2)
+        text_meshes.append(mesh)
+    return plaque, trimesh.util.concatenate(text_meshes)
+
+
 def build():
     """Generate all gallery assets and their runtime manifest."""
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -314,6 +424,22 @@ def build():
     threads, knurled, spring = mechanism_demos()
     panel, plaque, lettering = panel_and_text_demos()
     fasteners = fastener_demo()
+    worm_mesh, helical_wheel = worm_wheel_demo()
+    sector_gear = spur_gear(1.5, 36, 7, bore=5, sector_deg=125,
+                            hub_d=14, full_disc=False)
+    lofted = organic_loft_demo()
+    pin = push_pin(5, 18)
+    chamfered = chamfer_prism(30, 22, 12, 5, 2)
+    fast_thread = threaded_rod(8, 1.25, 20)
+    set_screw_cutaway = setscrew_demo()
+    dogbone_slot = slot_demo()
+    tapered_cutaway = tapered_cavity_demo()
+    u_run = u_channel_demo()
+    gable_cutaway = revolved_cavity_demo()
+    dome = directed_holes_demo()
+    saddle_rib, saddle_cylinder = saddle_demo()
+    block_plaque, block_text = text_block_demo()
+    skew_cylinder = seg_cylinder((-9, -6, 0), (10, 7, 18), 4)
 
     models = [
         {
@@ -661,6 +787,153 @@ def build():
         },
     ])
 
+    models.extend([
+        {
+            "file": "worm_demo.glb",
+            "name": "worm + helical wheel",
+            "module": "mechlib.gears",
+            "signature": "%s; %s" % (signature(worm), signature(spur_gear)),
+            "description": "A true helical worm beside its lead-angle-matched wheel.",
+            "origin": "Extracted from gears.py in dual-axis-turntable.",
+            "meshes": [
+                ("worm", worm_mesh, PALETTE[10]),
+                ("helical_wheel", helical_wheel, PALETTE[5]),
+            ],
+        },
+        {
+            "file": "spur_gear_sector_demo.glb",
+            "name": "spur_gear sector",
+            "module": "mechlib.gears",
+            "signature": signature(spur_gear),
+            "description": "A full-featured involute sector with a central hub and bore.",
+            "origin": "Extracted from gears.py in dual-axis-turntable.",
+            "meshes": [("sector_gear", sector_gear, PALETTE[9])],
+        },
+        {
+            "file": "loft_demo.glb",
+            "name": "loft",
+            "module": "mechlib.sweep",
+            "signature": signature(loft),
+            "description": "An organic solid joined through five equal-count point rings.",
+            "origin": "Extracted from build.py in dual-axis-turntable.",
+            "meshes": [("organic_loft", lofted, PALETTE[6])],
+        },
+        {
+            "file": "push_pin_demo.glb",
+            "name": "push_pin",
+            "module": "mechlib.closures",
+            "signature": signature(push_pin),
+            "description": "A barbed printed press pin with a conical lead-in tip.",
+            "origin": "Extracted from build.py in dual-axis-turntable.",
+            "meshes": [("barbed_push_pin", pin, PALETTE[4])],
+        },
+        {
+            "file": "chamfer_prism_demo.glb",
+            "name": "chamfer_prism",
+            "module": "mechlib.prim",
+            "signature": signature(chamfer_prism),
+            "description": "A rounded enclosure prism with a clean hull-chamfered top.",
+            "origin": "Extracted from build.py in dual-axis-turntable.",
+            "meshes": [("chamfered_prism", chamfered, PALETTE[1])],
+        },
+        {
+            "file": "threaded_rod_demo.glb",
+            "name": "threaded_rod M8",
+            "module": "mechlib.mechanisms",
+            "signature": signature(threaded_rod),
+            "description": "A fast radial-grid M8 display and light-duty external thread.",
+            "origin": "Extracted from lib.py in wall-shelf-clamp.",
+            "meshes": [("m8_threaded_rod", fast_thread, PALETTE[12])],
+        },
+        {
+            "file": "setscrew_demo.glb",
+            "name": "setscrew boss",
+            "module": "mechlib.closures",
+            "signature": signature(setscrew),
+            "description": "A cut-away sleeve showing its external boss and inward pilot.",
+            "origin": "Extracted from lib.py in wall-shelf-clamp.",
+            "meshes": [("setscrew_cutaway", set_screw_cutaway, PALETTE[3])],
+        },
+        {
+            "file": "slot_cutter_demo.glb",
+            "name": "slot_cutter",
+            "module": "mechlib.cutters",
+            "signature": signature(slot_cutter),
+            "description": "An FDM blade slot with visible square-corner dog-bone relief.",
+            "origin": "Extracted from build.py in torque-lever.",
+            "meshes": [("dogbone_slot", dogbone_slot, PALETTE[7])],
+        },
+        {
+            "file": "tapered_cavity_demo.glb",
+            "name": "tapered_cavity",
+            "module": "mechlib.cutters",
+            "signature": signature(tapered_cavity),
+            "description": "A cut-away hollow whose stepped roof closes without bridging.",
+            "origin": "Extracted from lighten_legs.py in tripod.",
+            "meshes": [("tapered_cutaway", tapered_cutaway, PALETTE[2])],
+        },
+        {
+            "file": "u_channel_between_demo.glb",
+            "name": "u_channel_between",
+            "module": "mechlib.cutters",
+            "signature": signature(u_channel_between),
+            "description": "Three arbitrary-angle open U segments forming an S-shaped run.",
+            "origin": "Extracted from build.py in jumper-wire-sockets.",
+            "meshes": [("open_u_run", u_run, PALETTE[11])],
+        },
+        {
+            "file": "revolved_gable_cavity_demo.glb",
+            "name": "revolved_gable_cavity",
+            "module": "mechlib.cutters",
+            "signature": signature(revolved_gable_cavity),
+            "description": "A cut-away annular chamber beneath a 45 degree gable roof.",
+            "origin": "Generalized from build.py in massage-shower-head.",
+            "meshes": [("gable_cavity_cutaway", gable_cutaway, PALETTE[8])],
+        },
+        {
+            "file": "directed_holes_demo.glb",
+            "name": "directed_holes",
+            "module": "mechlib.patterns",
+            "signature": signature(directed_holes),
+            "description": "Eight vector-directed bores cut through a hemispherical dome.",
+            "origin": "Generalized from build.py in massage-shower-head.",
+            "meshes": [("perforated_dome", dome, PALETTE[0])],
+        },
+        {
+            "file": "saddle_demo.glb",
+            "name": "saddle",
+            "module": "mechlib.fixtures",
+            "signature": signature(saddle),
+            "description": "A shell-trimmed rib cradling a skew cylindrical reference part.",
+            "origin": "Extracted from pickle_build.py in mini-powerbank.",
+            "meshes": [
+                ("saddle_rib", saddle_rib, PALETTE[1]),
+                ("cylinder_reference", saddle_cylinder, PALETTE[12]),
+            ],
+        },
+        {
+            "file": "text_block_demo.glb",
+            "name": "text_block",
+            "module": "mechlib.text",
+            "signature": signature(text_block),
+            "description": "Two centered lines of raised polygon text stacked on a plaque.",
+            "origin": "Extracted from build.py in torque-lever.",
+            "meshes": [
+                ("plaque", block_plaque, PALETTE[7]),
+                ("stacked_text", block_text, PALETTE[0]),
+            ],
+        },
+        {
+            "file": "seg_cylinder_demo.glb",
+            "name": "seg_cylinder",
+            "module": "mechlib.prim",
+            "signature": signature(seg_cylinder),
+            "description": "A cylinder spanning two skew points in three dimensions.",
+            "origin": "Extracted from build.py in massage-shower-head.",
+            "meshes": [("skew_segment", skew_cylinder, PALETTE[10])],
+        },
+    ])
+
     manifest_models = []
     for model in models:
         export_model(model["file"], model.pop("meshes"))
@@ -691,6 +964,14 @@ def build():
         ("mechlib.mechanisms", mechlib.coarse_pitch, "Look up a printable coarse metric pitch."),
         ("mechlib.fasteners", mechlib.pick_length, "Select the next usable standard screw length."),
         ("mechlib.closures", mechlib.nut_ac, "Convert nut across-flats to across-corners."),
+        ("mechlib.meshutil", mechlib.audit, "Audit pairwise overlap and clearance."),
+        ("mechlib.meshutil", mechlib.min_distance, "Approximate sampled surface distance."),
+        ("mechlib.meshutil", mechlib.approach_clear, "Measure free travel toward an opening."),
+        ("mechlib.meshutil", mechlib.slicer_area, "Predict perimeter-plus-infill layer area."),
+        ("mechlib.packing", mechlib.shelf_pack, "Pack brim-grown footprints across plates."),
+        ("mechlib.stepio", mechlib.export_assembly, "Export positioned meshes as a STEP assembly."),
+        ("mechlib.meshutil", mechlib.extrude_snapped, "Snap tangent vertices before extrusion."),
+        ("mechlib.cutters", mechlib.lobe_cavity_polys, "Build hollow lobe polygons around ribs."),
     ]
     utilities = [
         {"module": module, "signature": signature(function), "description": description}
