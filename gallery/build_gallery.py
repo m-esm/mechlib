@@ -387,9 +387,12 @@ def directed_holes_demo():
     upper = trimesh.boolean.intersection(
         [sphere, boxc((40, 40, 20), (0, 0, 10))], engine="manifold")
     angles = np.linspace(0, 2 * math.pi, 8, endpoint=False)
-    points = [(11 * math.cos(a), 11 * math.sin(a), 11) for a in angles]
-    vectors = [tuple(-np.asarray(p) / np.linalg.norm(p)) for p in points]
-    bores = directed_holes(points, vectors, 2.2, 14)
+    rays = [np.asarray((math.cos(a), math.sin(a), 1.0), float)
+            for a in angles]
+    rays = [ray / np.linalg.norm(ray) for ray in rays]
+    points = [tuple(18.0 * ray) for ray in rays]
+    vectors = [tuple(-ray) for ray in rays]
+    bores = directed_holes(points, vectors, 2.2, 24)
     return sub(upper, bores)
 
 
