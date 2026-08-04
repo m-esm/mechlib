@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "models": [
     {
       "file": "cyl_demo.glb",
@@ -80,6 +80,288 @@
       "signature": "board_cradle(rect, fl, standoff=4.0, clr=0.4, wlen=9.0, wt=1.6, cap_over=2.0)",
       "description": "Four PCB corner standoffs and capture walls around a 40 x 30 mm board.",
       "origin": "Originally extracted from system_layout.py in finnish-doors."
+    },
+    {
+      "file": "teardrop_demo.glb",
+      "name": "teardrop",
+      "module": "mechlib.cutters",
+      "signature": "teardrop(r, length, axis='x', up=(0, -1, 0))",
+      "description": "A support-free teardrop bore shown through a cut block.",
+      "origin": "Extracted from head.py in parviz."
+    },
+    {
+      "file": "ss_bore_demo.glb",
+      "name": "ss_bore",
+      "module": "mechlib.cutters",
+      "signature": "ss_bore(R, Robj, length, center, axis='x', split_z=0.0)",
+      "description": "A round lower cradle and support-light chamfered upper bore.",
+      "origin": "Extracted from geom_util.py in finnish-doors."
+    },
+    {
+      "file": "dbore_demo.glb",
+      "name": "dbore + dbore_hub",
+      "module": "mechlib.cutters",
+      "signature": "dbore(shaft_d, flat, length, axis='z', clear=0.0, round_clear=0.0, flat_clear=0.0); dbore_hub(outer_r, length, axis='z', shaft_d=4.93, flat=3.0, clear=0.12, round_clear=0.0, flat_clear=0.0)",
+      "description": "A double-D socket blank beside a ready-made keyed hub.",
+      "origin": "Unified from parviz and finnish-windows."
+    },
+    {
+      "file": "counterbore_demo.glb",
+      "name": "counterbore",
+      "module": "mechlib.cutters",
+      "signature": "counterbore(d_hole, d_head, head_depth, length, axis='z', head_end='top')",
+      "description": "A through-hole with a cylindrical recessed-head pocket.",
+      "origin": "New abstraction inspired by finnish-doors fastener seats."
+    },
+    {
+      "file": "bearing_seat_demo.glb",
+      "name": "bearing_seat 608",
+      "module": "mechlib.cutters",
+      "signature": "bearing_seat(kind, fit='press', open_column=True, extra_depth=0.0)",
+      "description": "A cut-away retained 608 seat with a bearing reference ring.",
+      "origin": "New abstraction from the Klonk 22.25 mm 608 pocket practice."
+    },
+    {
+      "file": "crush_ribs_demo.glb",
+      "name": "crush_ribs",
+      "module": "mechlib.cutters",
+      "signature": "crush_ribs(component_size, rib_thickness, rib_length, rib_height, count=2, interference=0.1, wall_axis='y', wall_offset=None, center=(0, 0, 0))",
+      "description": "Six tapered vertical ribs squeezing a rectangular component.",
+      "origin": "Generalized from tcst_hold_ribs in finnish-doors."
+    },
+    {
+      "file": "press_lid_demo.glb",
+      "name": "press_lid",
+      "module": "mechlib.closures",
+      "signature": "press_lid(ox, oy, cav_x, cav_y, c, plate_t=2.4, plug_h=5.0, plug_wall=1.8, edge_r=5.5, clear=0.1)",
+      "description": "A hollow box and its friction-plug lid in an exploded pose.",
+      "origin": "Extracted from system_layout.py in finnish-doors."
+    },
+    {
+      "file": "clamshell_shiplap_demo.glb",
+      "name": "clamshell_shiplap",
+      "module": "mechlib.closures",
+      "signature": "clamshell_shiplap(outer_solid, clear=0.05)",
+      "description": "The matching raised base lip and oversized lid receiver slot.",
+      "origin": "Extracted from housings.py in finnish-doors."
+    },
+    {
+      "file": "ydovetail_demo.glb",
+      "name": "ydovetail pair",
+      "module": "mechlib.closures",
+      "signature": "ydovetail(xc, y0, y1, clear=0.0, wide=10.0, w=6.0, h=5.0, z=14.0)",
+      "description": "A self-supporting slide tongue beside its clearanced receiver.",
+      "origin": "Extracted from system_layout.py in finnish-doors."
+    },
+    {
+      "file": "snap_pair_demo.glb",
+      "name": "snap_catch + snap_finger",
+      "module": "mechlib.closures",
+      "signature": "snap_catch(axis, fc, t, sgn, box_top, spec=SnapSpec(aw=8.0, at=1.6, gap=0.4, drop=6.0, hook=1.5)); snap_finger(axis, fc, t, sgn, mate_z, spec=SnapSpec(aw=8.0, at=1.6, gap=0.4, drop=6.0, hook=1.5))",
+      "description": "A ramped retention catch and matching cantilever hook.",
+      "origin": "Unified from system_layout.py and build_powerbank.py."
+    },
+    {
+      "file": "nut_slot_demo.glb",
+      "name": "nut_slot",
+      "module": "mechlib.closures",
+      "signature": "nut_slot(center, screw_axis='z', open_dir=(0, 1, 0), size='M3', length=14.0, c_af=0.2, c_t=0.2, seat=True, nib=False)",
+      "description": "A cut-away seated nut trap with its M3 nut stand-in.",
+      "origin": "Extracted from geo.py in parviz."
+    },
+    {
+      "file": "pins_and_posts_demo.glb",
+      "name": "screw_post + fix_pin + blind_socket",
+      "module": "mechlib.closures / mechlib.cutters",
+      "signature": "screw_post(pos, normal, depth, boss_r=4.3); fix_pin(r, length, direction, face_pt, bury=1.0); blind_socket(r, deep, out_dir, face_pt, overshoot=1.0)",
+      "description": "A bored screw boss beside a locating pin and blind socket block.",
+      "origin": "Extracted from geo.py in parviz."
+    },
+    {
+      "file": "spur_gear_mesh_demo.glb",
+      "name": "spur_gear_mesh",
+      "module": "mechlib.gears",
+      "signature": "spur_gear_mesh(N, m, width, bore_d=0.0, pa=20.0, bl=0.35, t_relief=0.1, sections=96)",
+      "description": "A printable involute spur gear with a measured round bore.",
+      "origin": "Unified from finnish-windows and parviz gear builders."
+    },
+    {
+      "file": "roller_sprocket_demo.glb",
+      "name": "roller_sprocket_2d + polar_ring",
+      "module": "mechlib.gears / mechlib.patterns",
+      "signature": "roller_sprocket_2d(n_teeth, pitch, pin_d, clear=0.0, outer_d=None); polar_ring(n, r, center=(0.0, 0.0), phase=0.0)",
+      "description": "A conjugate 14-tooth sprocket surrounded by track-pin references.",
+      "origin": "Generalized from tracks.py in parviz."
+    },
+    {
+      "file": "thread_demo.glb",
+      "name": "thread_solid + tap",
+      "module": "mechlib.mechanisms",
+      "signature": "thread_solid(d_nom, length, pitch=None, internal=False, clear=0.25, starts=1, seg=64); tap(mesh, d_nom, at, length, pitch=None, clear=0.25, axis='z')",
+      "description": "An M8 threaded bolt beside a cut-away tapped hex nut.",
+      "origin": "Extracted from threads.py in parviz."
+    },
+    {
+      "file": "knurl_demo.glb",
+      "name": "knurl",
+      "module": "mechlib.mechanisms",
+      "signature": "knurl(mesh, r, z0, z1, n=18, depth=0.35)",
+      "description": "A cylindrical thumb knob with printable vertical flutes.",
+      "origin": "Extracted from m4_bolt.py in parviz."
+    },
+    {
+      "file": "torsion_spring_demo.glb",
+      "name": "torsion_spring_mesh",
+      "module": "mechlib.mechanisms",
+      "signature": "torsion_spring_mesh(mean_r=6.8, wire=1.2, turns=5.0, z=(0.5, 7.5), leg_r=1.4, anchor_at=(9.5, -60.0), moving_leg_z=10.5)",
+      "description": "A five-turn torsion spring preview with moving and ground legs.",
+      "origin": "Extracted from shaft.py in finnish-doors."
+    },
+    {
+      "file": "lighten_grid_demo.glb",
+      "name": "lighten_grid panel",
+      "module": "mechlib.patterns",
+      "signature": "lighten_grid_centres(minx, miny, maxx, maxy, cell, web, pattern); lighten_cell_poly(cx, cy, cell, pattern)",
+      "description": "A structural panel opened by a staggered hexagonal lattice.",
+      "origin": "Extracted from housings.py in finnish-doors."
+    },
+    {
+      "file": "text_polygon_demo.glb",
+      "name": "text_polygon",
+      "module": "mechlib.text",
+      "signature": "text_polygon(text, size, font_path=None)",
+      "description": "The word mechlib converted to counter-preserving raised geometry.",
+      "origin": "Extracted from housings.py in finnish-doors."
+    },
+    {
+      "file": "fastener_trio_demo.glb",
+      "name": "fastener_mesh + nut + washer",
+      "module": "mechlib.fasteners",
+      "signature": "fastener_mesh(d, L, style='pan', axis='z', at=(0.0, 0.0, 0.0), sections=32); hex_nut_mesh(af, h, bore_d); washer_mesh(od, id_, h)",
+      "description": "Pan, socket, and countersunk screws with nut and washer stand-ins.",
+      "origin": "Unified from all three source projects."
+    }
+  ],
+  "utilities": [
+    {
+      "module": "mechlib.meshutil",
+      "signature": "to_manifold(mesh)",
+      "description": "Convert trimesh geometry to manifold3d."
+    },
+    {
+      "module": "mechlib.meshutil",
+      "signature": "from_manifold(man)",
+      "description": "Convert manifold3d results back to trimesh."
+    },
+    {
+      "module": "mechlib.meshutil",
+      "signature": "sub(a, b)",
+      "description": "Subtract one watertight solid from another."
+    },
+    {
+      "module": "mechlib.meshutil",
+      "signature": "uni(parts)",
+      "description": "Union a sequence of watertight solids."
+    },
+    {
+      "module": "mechlib.meshutil",
+      "signature": "inter(a, b)",
+      "description": "Intersect two watertight solids."
+    },
+    {
+      "module": "mechlib.meshutil",
+      "signature": "export_stl(mesh, path)",
+      "description": "Export STL through a watertightness gate."
+    },
+    {
+      "module": "mechlib.meshutil",
+      "signature": "inflate(m, gap=0.6)",
+      "description": "Offset mesh vertices along their normals."
+    },
+    {
+      "module": "mechlib.meshutil",
+      "signature": "bbox_overlap(a, b)",
+      "description": "Check axis-aligned bounding-box overlap."
+    },
+    {
+      "module": "mechlib.meshutil",
+      "signature": "overlap_volume(a, b)",
+      "description": "Measure exact manifold overlap volume."
+    },
+    {
+      "module": "mechlib.meshutil",
+      "signature": "inside(mesh, pts)",
+      "description": "Probe points expected inside a solid."
+    },
+    {
+      "module": "mechlib.meshutil",
+      "signature": "clear(mesh, pts)",
+      "description": "Probe points expected outside a solid."
+    },
+    {
+      "module": "mechlib.meshutil",
+      "signature": "bore_pierces(mesh, start, direction, length, n=12)",
+      "description": "Probe a bore along its real axis."
+    },
+    {
+      "module": "mechlib.meshutil",
+      "signature": "void_cube(mesh, pt, s=0.5)",
+      "description": "Confirm local void with a cube intersection."
+    },
+    {
+      "module": "mechlib.meshutil",
+      "signature": "solid_cube(mesh, pt, s=0.25)",
+      "description": "Confirm local material with a cube intersection."
+    },
+    {
+      "module": "mechlib.meshutil",
+      "signature": "self_thickness(mesh, n, seed=0)",
+      "description": "Sample ray-based wall thickness."
+    },
+    {
+      "module": "mechlib.meshutil",
+      "signature": "cube_rotations()",
+      "description": "Return the 24 proper cube rotations."
+    },
+    {
+      "module": "mechlib.meshutil",
+      "signature": "fit_transform(real, placeholder)",
+      "description": "Fit a real mesh to an oriented placeholder."
+    },
+    {
+      "module": "mechlib.meshutil",
+      "signature": "decimate(m, pitch)",
+      "description": "Cluster vertices on a regular grid."
+    },
+    {
+      "module": "mechlib.meshutil",
+      "signature": "orient(m, normal)",
+      "description": "Rotate positive Z onto a normal vector."
+    },
+    {
+      "module": "mechlib.meshutil",
+      "signature": "extrude_poly_z(poly2d, z0, z1)",
+      "description": "Extrude Polygon or MultiPolygon between Z planes."
+    },
+    {
+      "module": "mechlib.meshutil",
+      "signature": "largest_poly(g)",
+      "description": "Select the largest Shapely polygon."
+    },
+    {
+      "module": "mechlib.mechanisms",
+      "signature": "coarse_pitch(nominal_d)",
+      "description": "Look up a printable coarse metric pitch."
+    },
+    {
+      "module": "mechlib.fasteners",
+      "signature": "pick_length(span, std_lengths=(6, 8, 10, 12, 16, 20, 25, 30))",
+      "description": "Select the next usable standard screw length."
+    },
+    {
+      "module": "mechlib.closures",
+      "signature": "nut_ac(size='M3')",
+      "description": "Convert nut across-flats to across-corners."
     }
   ]
 }

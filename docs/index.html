@@ -136,6 +136,56 @@
       gap: 22px;
     }
 
+    .utility-section {
+      margin-top: 46px;
+      padding-top: 34px;
+      border-top: 1px solid var(--border);
+    }
+
+    .utility-section h2 {
+      margin: 0 0 8px;
+      font-size: 1.65rem;
+      letter-spacing: -0.035em;
+    }
+
+    .utility-intro {
+      margin: 0 0 20px;
+      color: var(--muted);
+    }
+
+    .utility-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .utility-item {
+      min-width: 0;
+      padding: 13px 14px;
+      border: 1px solid rgba(126, 161, 194, 0.16);
+      border-radius: 11px;
+      background: rgba(16, 23, 33, 0.72);
+    }
+
+    .utility-item code {
+      display: block;
+      overflow-wrap: anywhere;
+      color: #d7e8fa;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.74rem;
+    }
+
+    .utility-item p {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .utility-item .module {
+      display: block;
+      margin-bottom: 5px;
+    }
+
     .model-card {
       min-width: 0;
       overflow: hidden;
@@ -269,6 +319,10 @@
         gap: 17px;
       }
 
+      .utility-list {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
       .viewport {
         height: min(72vw, 320px);
       }
@@ -305,6 +359,11 @@
       <a class="repo-link" href="https://github.com/m-esm/mechlib">View on GitHub</a>
     </header>
     <section class="gallery-grid" id="gallery" aria-label="Interactive component models"></section>
+    <section class="utility-section" aria-labelledby="utility-title">
+      <h2 id="utility-title">Utility API</h2>
+      <p class="utility-intro">Non-visual CSG, probing, fitting, and selection helpers.</p>
+      <div class="utility-list" id="utilities"></div>
+    </section>
   </main>
 
   <script type="module">
@@ -314,6 +373,7 @@
 
     const canvas = document.querySelector("#render-canvas");
     const gallery = document.querySelector("#gallery");
+    const utilities = document.querySelector("#utilities");
     const versionLabel = document.querySelector("#version");
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
@@ -474,6 +534,17 @@
       return view;
     }
 
+    function createUtility(item) {
+      const card = document.createElement("article");
+      card.className = "utility-item";
+      card.append(
+        makeTextElement("span", "module", item.module),
+        makeTextElement("code", "", item.signature),
+        makeTextElement("p", "", item.description)
+      );
+      utilities.append(card);
+    }
+
     const observer = new IntersectionObserver((entries) => {
       for (const entry of entries) {
         const view = views.find((candidate) => candidate.viewport === entry.target);
@@ -546,6 +617,7 @@
           const view = createCard(model);
           observer.observe(view.viewport);
         }
+        for (const item of manifest.utilities || []) createUtility(item);
       } catch (error) {
         versionLabel.textContent = "unavailable";
         gallery.append(makeTextElement("p", "fatal-error", `Gallery data could not be loaded: ${error.message}`));
