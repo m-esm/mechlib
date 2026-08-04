@@ -63,3 +63,40 @@ def swept_keyed_bore(bore_poly, free_angle, steps=28):
     for p in polys[1:]:
         swept = swept.union(p)
     return swept.buffer(0)
+
+
+def ring_pts(poly, n, z):
+    """Resample a polygon boundary to evenly spaced 3D points at height Z.
+
+    origin: dual-axis-turntable src/build.py:193
+    """
+    L = poly.exterior.length
+    pts = [poly.exterior.interpolate(i / n * L) for i in range(n)]
+    return np.array([[p.x, p.y, z] for p in pts])
+
+
+def loft(rings):
+    """Build a solid between equal-count point rings with centroid-fan caps.
+
+    origin: dual-axis-turntable src/build.py:200
+    """
+    import trimesh
+
+    n = len(rings[0])
+    V = np.vstack(rings).tolist()
+    F = []
+    for k in range(len(rings) - 1):
+        a, b = k * n, (k + 1) * n
+        for j in range(n):
+            j2 = (j + 1) % n
+            F.append([a + j, a + j2, b + j2]); F.append([a + j, b + j2, b + j])
+    c0 = len(V); V.append(np.vstack(rings[0]).mean(0).tolist())
+    for j in range(n):
+        F.append([c0, (j + 1) % n, j])
+    base = (len(rings) - 1) * n
+    c1 = len(V); V.append(np.vstack(rings[-1]).mean(0).tolist())
+    for j in range(n):
+        F.append([c1, base + j, base + (j + 1) % n])
+    m = trimesh.Trimesh(vertices=np.array(V), faces=np.array(F), process=True)
+    m.fix_normals()
+    return m

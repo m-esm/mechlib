@@ -1,4 +1,8 @@
-"""Mechanical cutter solids and print-aware pocket features."""
+"""Mechanical cutter solids and print-aware pocket features.
+
+``slot_neg`` is an obround adjustment slot. ``slot_cutter`` is an FDM-ready
+rectangular slot with square-corner and elephant-foot relief.
+"""
 
 import math
 
@@ -292,3 +296,133 @@ def crush_ribs(component_size, rib_thickness, rib_length, rib_height, count=2,
             rib.apply_translation((0.0, 0.0, ctr[2] - rib_height / 2.0))
             ribs.append(rib)
     return trimesh.util.concatenate(ribs)
+
+
+def slot_cutter(w, t, z0, z1, cx=0.0, cy=0.0, foot_z=0.0,
+                dogbone_r=0.6, foot_relief=0.3, eps=0.5):
+    """Build an FDM-ready rectangular slot with dog-bones and foot relief.
+
+    Unlike the obround ``slot_neg``, this preserves a rectangular blade seat.
+    Returns a list of cutter volumes.
+    origin: torque-lever build.py:168
+    """
+    from shapely.geometry import Point, box
+    from shapely.ops import unary_union
+
+    from .meshutil import extrude_snapped
+
+    rect = box(cx - w / 2, cy - t / 2, cx + w / 2, cy + t / 2)
+    bones = [Point(cx + sx * w / 2, cy + sy * t / 2).buffer(dogbone_r, resolution=16)
+             for sx in (-1, 1) for sy in (-1, 1)]
+    outline = unary_union([rect] + bones)
+    cut = extrude_snapped(outline, z0, z1)
+    relief = extrude_snapped(outline.buffer(foot_relief, join_style=2),
+                             foot_z - eps, foot_z + foot_relief)
+    return cut + relief
+
+
+def lobe_cavity_polys(section2d, wall=1.2, rib_w=1.6, n_rib=0):
+    """Return hollow lobe cores after optional internal rib crosses.
+
+    origin: tripod lighten_legs.py:56
+    """
+    from shapely.geometry import box
+    from shapely.ops import unary_union
+
+    cutters = []
+    for poly in section2d.polygons_full:
+        core = poly.buffer(-wall)
+        if core.is_empty or core.area < 4:
+            continue
+        cx, cy = poly.centroid.x, poly.centroid.y
+        minx, miny, maxx, maxy = poly.bounds
+        ribs = []
+        if n_rib >= 1:
+            ribs.append(box(cx - rib_w / 2, miny - 1, cx + rib_w / 2, maxy + 1))
+        if n_rib >= 2:
+            ribs.append(box(minx - 1, cy - rib_w / 2, maxx + 1, cy + rib_w / 2))
+        cut = core.difference(unary_union(ribs)) if ribs else core
+        if not cut.is_empty:
+            cutters.append(cut)
+    return cutters
+
+
+def tapered_cavity(g, zlo, height, taper_h=11.0, taper_step=0.6):
+    """Build a cavity whose roof steps closed at about 45 degrees.
+
+    Returns a list of watertight cutter slabs.
+    origin: tripod lighten_legs.py:76
+    """
+    if taper_h <= 0:
+        prism = trimesh.creation.extrude_polygon(g, height)
+        prism.apply_translation([0, 0, zlo])
+        return [prism]
+    main_h = max(height - taper_h, 1.0)
+    parts = []
+    base = trimesh.creation.extrude_polygon(g, main_h)
+    base.apply_translation([0, 0, zlo])
+    parts.append(base)
+    z = zlo + main_h
+    k = 1
+    while z < zlo + height:
+        gk = g.buffer(-taper_step * k)
+        if gk.is_empty or gk.area < 2:
+            break
+        for piece in (gk.geoms if gk.geom_type == "MultiPolygon" else [gk]):
+            if piece.area < 2:
+                continue
+            slab = trimesh.creation.extrude_polygon(piece, taper_step)
+            slab.apply_translation([0, 0, z])
+            parts.append(slab)
+        z += taper_step
+        k += 1
+    return parts
+
+
+def u_channel_between(p0, p1, channel_w, z_floor, body_h):
+    """Build an open-top rounded U cutter between arbitrary XY points.
+
+    Returns the round floor bore and open-top slot as separate cutter meshes.
+    origin: jumper-wire-sockets src/build.py:1386
+    """
+    x0, y0 = p0
+    x1, y1 = p1
+    dx, dy = x1 - x0, y1 - y0
+    length = math.hypot(dx, dy)
+    angle = math.atan2(dy, dx)
+    r = channel_w / 2
+    z_axis = z_floor + r
+
+    bore = cyl(r, length + 0.4)
+    bore.apply_transform(tf.rotation_matrix(math.pi / 2, [0, 1, 0]))
+    bore.apply_transform(tf.rotation_matrix(angle, [0, 0, 1]))
+    bore.apply_translation([(x0 + x1) / 2, (y0 + y1) / 2, z_axis])
+
+    slot_h = body_h - z_axis + 0.5
+    slot = boxc((length + 0.4, channel_w, slot_h))
+    slot.apply_transform(tf.rotation_matrix(angle, [0, 0, 1]))
+    slot.apply_translation(
+        [(x0 + x1) / 2, (y0 + y1) / 2, z_axis + slot_h / 2]
+    )
+    return [bore, slot]
+
+
+def revolved_gable_cavity(r_in, r_out, z0, h, roof_angle=45.0, sections=128):
+    """Build a revolved annular cavity with a self-supporting gable roof.
+
+    This generalizes the shower-head chamber while retaining its roof idea.
+    origin: massage-shower-head build.py:117
+    """
+    half = (r_out - r_in) / 2.0
+    r_mid = (r_in + r_out) / 2.0
+    z_peak = z0 + h
+    z_eave = z_peak - half * math.tan(math.radians(roof_angle))
+    prof = np.array([
+        [r_in, z0],
+        [r_out, z0],
+        [r_out, z_eave],
+        [r_mid, z_peak],
+        [r_in, z_eave],
+        [r_in, z0],
+    ])
+    return trimesh.creation.revolve(prof, sections=sections)

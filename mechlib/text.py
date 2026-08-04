@@ -46,3 +46,37 @@ def text_polygon(text, size, font_path=None):
     if g.geom_type == "MultiPolygon":
         g = so.unary_union(list(g.geoms))
     return g if (g is not None and not g.is_empty) else None
+
+
+def place(poly2d, cx, cy):
+    """Center a 2D geometry at a point.
+
+    origin: torque-lever build.py:145
+    """
+    from shapely import affinity
+    minx, miny, maxx, maxy = poly2d.bounds
+    return affinity.translate(poly2d, cx - (minx + maxx) / 2,
+                              cy - (miny + maxy) / 2)
+
+
+def place_right(poly2d, right_x, cy):
+    """Right-align a 2D geometry and center it vertically.
+
+    origin: torque-lever build.py:152
+    """
+    from shapely import affinity
+    minx, miny, maxx, maxy = poly2d.bounds
+    return affinity.translate(poly2d, right_x - maxx,
+                              cy - (miny + maxy) / 2)
+
+
+def text_block(lines, cx, cy, h, gap=1.2):
+    """Stack centered text polygons with the top line first.
+
+    origin: torque-lever build.py:159
+    """
+    pitch = h + gap
+    total = len(lines) * h + (len(lines) - 1) * gap
+    return [place(text_polygon(s, h), cx,
+                  cy + total / 2 - h / 2 - i * pitch)
+            for i, s in enumerate(lines)]

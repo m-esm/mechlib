@@ -1,4 +1,4 @@
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 from .closures import (
     SnapSpec,
@@ -7,9 +7,11 @@ from .closures import (
     nut_ac,
     nut_slot,
     press_lid,
+    push_pin,
     screw_post,
     snap_catch,
     snap_finger,
+    setscrew,
     ydovetail,
 )
 from .cutters import (
@@ -23,9 +25,14 @@ from .cutters import (
     dbore_hub,
     gable_roof,
     hex_corner_chamfer,
+    lobe_cavity_polys,
+    revolved_gable_cavity,
+    slot_cutter,
     slot_neg,
     ss_bore,
     teardrop,
+    tapered_cavity,
+    u_channel_between,
 )
 from .fasteners import (
     bolt_mesh,
@@ -35,23 +42,27 @@ from .fasteners import (
     washer_mesh,
     zmin0,
 )
-from .fixtures import board_cradle
-from .gears import mesh_phase, roller_sprocket_2d, spur_gear_2d, spur_gear_mesh
+from .fixtures import board_cradle, saddle
+from .gears import mesh_phase, roller_sprocket_2d, spur_gear, spur_gear_2d, spur_gear_mesh, worm
 from .mechanisms import (
     coarse_pitch,
     helix_solid,
     knurl,
     tap,
     thread_solid,
+    threaded_rod,
     torsion_spring_mesh,
 )
 from .meshutil import (
     bbox_overlap,
+    audit,
+    approach_clear,
     bore_pierces,
     clear,
     cube_rotations,
     decimate,
     export_stl,
+    extrude_snapped,
     extrude_poly_z,
     fit_transform,
     from_manifold,
@@ -59,18 +70,22 @@ from .meshutil import (
     inside,
     inter,
     largest_poly,
+    min_distance,
     orient,
     overlap_volume,
     self_thickness,
+    slicer_area,
     solid_cube,
     sub,
     to_manifold,
     uni,
     void_cube,
 )
-from .patterns import lighten_cell_poly, lighten_grid_centres, polar_ring
+from .packing import pack_by_category, shelf_pack
+from .patterns import directed_holes, lighten_cell_poly, lighten_grid_centres, polar_ring
 from .prim import (
     boxc,
+    chamfer_prism,
     cyl,
     extrude_down,
     frustum,
@@ -81,9 +96,11 @@ from .prim import (
     rbox,
     rot2,
     sector2d,
+    seg_cylinder,
 )
-from .sweep import extrude_twist, swept_keyed_bore
-from .text import text_polygon
+from .stepio import export_assembly
+from .sweep import extrude_twist, loft, ring_pts, swept_keyed_bore
+from .text import place, place_right, text_block, text_polygon
 
 __all__ = (
     "cyl",
@@ -97,11 +114,18 @@ __all__ = (
     "largest",
     "extrude_down",
     "hex_poly",
+    "chamfer_prism",
+    "seg_cylinder",
     "extrude_twist",
     "swept_keyed_bore",
+    "ring_pts",
+    "loft",
     "spur_gear_2d",
     "mesh_phase",
+    "spur_gear",
+    "worm",
     "board_cradle",
+    "saddle",
     "to_manifold",
     "from_manifold",
     "sub",
@@ -111,6 +135,10 @@ __all__ = (
     "inflate",
     "bbox_overlap",
     "overlap_volume",
+    "audit",
+    "min_distance",
+    "approach_clear",
+    "slicer_area",
     "void_cube",
     "solid_cube",
     "bore_pierces",
@@ -122,6 +150,7 @@ __all__ = (
     "decimate",
     "orient",
     "extrude_poly_z",
+    "extrude_snapped",
     "largest_poly",
     "teardrop",
     "ss_bore",
@@ -131,6 +160,11 @@ __all__ = (
     "countersink",
     "hex_corner_chamfer",
     "slot_neg",
+    "slot_cutter",
+    "tapered_cavity",
+    "lobe_cavity_polys",
+    "u_channel_between",
+    "revolved_gable_cavity",
     "blind_socket",
     "gable_roof",
     "counterbore",
@@ -146,11 +180,14 @@ __all__ = (
     "nut_slot",
     "screw_post",
     "fix_pin",
+    "setscrew",
+    "push_pin",
     "spur_gear_mesh",
     "roller_sprocket_2d",
     "coarse_pitch",
     "helix_solid",
     "thread_solid",
+    "threaded_rod",
     "tap",
     "knurl",
     "torsion_spring_mesh",
@@ -163,5 +200,12 @@ __all__ = (
     "polar_ring",
     "lighten_grid_centres",
     "lighten_cell_poly",
+    "directed_holes",
     "text_polygon",
+    "place",
+    "place_right",
+    "text_block",
+    "shelf_pack",
+    "pack_by_category",
+    "export_assembly",
 )

@@ -85,3 +85,43 @@ def hex_poly(af):
     import shapely.geometry as sg
     r = af / math.sqrt(3.0)                          # corner radius from across-flats
     return sg.Polygon([(r * cos(radians(60*k + 30)), r * sin(radians(60*k + 30))) for k in range(6)])
+
+
+def chamfer_prism(w, d, h, r, cham):
+    """Build a rounded-rectangle prism with a hull-chamfered top edge.
+
+    The base is at Z zero.
+    origin: dual-axis-turntable src/build.py:176
+    """
+    import shapely.geometry as sg
+
+    def rrect_poly(rw, rd, rr):
+        return sg.box(-rw / 2 + rr, -rd / 2 + rr,
+                      rw / 2 - rr, rd / 2 - rr).buffer(rr, resolution=12)
+
+    lower = trimesh.creation.extrude_polygon(rrect_poly(w, d, r), h - cham)
+    pl = rrect_poly(w, d, r)
+    pt = rrect_poly(w - 2 * cham, d - 2 * cham, max(r - cham, 2))
+    pts = [[x, y, h - cham] for x, y in pl.exterior.coords] + \
+          [[x, y, h] for x, y in pt.exterior.coords]
+    cap = trimesh.Trimesh(vertices=np.array(pts)).convex_hull
+    return trimesh.boolean.union([lower, cap], engine="manifold")
+
+
+def seg_cylinder(p0, p1, d):
+    """Build a cylinder spanning two arbitrary 3D points.
+
+    origin: massage-shower-head build.py:137
+    """
+    p0 = np.asarray(p0, float); p1 = np.asarray(p1, float)
+    v = p1 - p0; L = np.linalg.norm(v)
+    c = trimesh.creation.cylinder(radius=d/2.0, height=L, sections=16)
+    z = np.array([0, 0, 1.0]); vn = v / L
+    axis = np.cross(z, vn); s = np.linalg.norm(axis)
+    T = np.eye(4)
+    if s > 1e-9:
+        axis /= s; ang = np.arctan2(s, np.dot(z, vn))
+        T[:3, :3] = trimesh.transformations.rotation_matrix(ang, axis)[:3, :3]
+    T[:3, 3] = (p0 + p1) / 2.0
+    c.apply_transform(T)
+    return c

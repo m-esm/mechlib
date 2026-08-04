@@ -1,4 +1,9 @@
-"""Pure two-dimensional gear generators."""
+"""Pure gear generators.
+
+``spur_gear_2d`` is the canonical 2D involute profile,
+``spur_gear_mesh`` is the simple extrude-and-bore solid, and ``spur_gear`` is
+the full-featured 3D helical, sector, and hub generator.
+"""
 import math, numpy as np
 
 
@@ -127,3 +132,166 @@ def roller_sprocket_2d(n_teeth, pitch, pin_d, clear=0.0, outer_d=None):
     gaps = unary_union([sa.rotate(gap, 360.0 * k / n_teeth, origin=(0, 0))
                         for k in range(n_teeth)])
     return blank.difference(gaps).simplify(0.01).buffer(0)
+
+
+def _involute_points(rb, r_start, r_end, n=14):
+    """Return points on an involute of base circle ``rb``."""
+    pts = []
+    rs = max(r_start, rb + 1e-6)
+    for r in np.linspace(rs, r_end, n):
+        a = np.sqrt((r / rb) ** 2 - 1.0)
+        inv = a - np.arctan(a)
+        pts.append((r * np.cos(inv), r * np.sin(inv)))
+    return np.array(pts)
+
+
+def spur_gear(module, teeth, width, bore=0.0, pressure_angle=20.0,
+              sector_deg=360.0, backlash=0.06, hub_d=0.0, full_disc=True,
+              helix_deg=0.0):
+    """Build a full-featured external involute gear.
+
+    ``sector_deg`` can select a toothed arc, while ``hub_d`` and ``helix_deg``
+    add a hub and helical tooth twist respectively.
+    origin: dual-axis-turntable src/gears.py:26
+    """
+    import trimesh
+    from shapely.geometry import Polygon
+    from shapely.ops import unary_union
+
+    m = module
+    z = teeth
+    a = np.radians(pressure_angle)
+    r_pitch = m * z / 2.0
+    r_base = r_pitch * np.cos(a)
+    r_add = r_pitch + m
+    r_ded = r_pitch - 1.25 * m
+    r_root = max(r_ded, 0.5)
+
+    t_pitch = np.pi * m / 2.0 - backlash
+    inv_a = np.tan(a) - a
+    half_ang_pitch = t_pitch / (2.0 * r_pitch)
+    beta = half_ang_pitch + inv_a
+
+    flank = _involute_points(r_base, r_root, r_add, n=16)
+
+    def rot(pts, ang):
+        c, s = np.cos(ang), np.sin(ang)
+        return np.column_stack([pts[:, 0] * c - pts[:, 1] * s,
+                                pts[:, 0] * s + pts[:, 1] * c])
+
+    right = rot(flank, -beta)
+    left = rot(flank * [1, -1], beta)
+    root_r = np.array([r_root * np.cos(-beta), r_root * np.sin(-beta)])
+    root_l = np.array([r_root * np.cos(beta), r_root * np.sin(beta)])
+    th_r = np.arctan2(right[-1, 1], right[-1, 0])
+    th_l = np.arctan2(left[-1, 1], left[-1, 0])
+    tip_pts = np.array([(r_add * np.cos(t), r_add * np.sin(t))
+                        for t in np.linspace(th_r, th_l, 4)])
+    tooth = np.vstack([root_r, right, tip_pts, left[::-1], root_l])
+
+    ring = []
+    for k in range(z):
+        ang = 2 * np.pi * k / z
+        c, s = np.cos(ang), np.sin(ang)
+        tp = np.column_stack([tooth[:, 0] * c - tooth[:, 1] * s,
+                              tooth[:, 0] * s + tooth[:, 1] * c])
+        ring.append(tp)
+    pts = np.vstack(ring)
+    keep = [pts[0]]
+    for p in pts[1:]:
+        if np.linalg.norm(p - keep[-1]) > 1e-6:
+            keep.append(p)
+    prof = Polygon(keep).buffer(0)
+
+    if sector_deg < 360:
+        half = np.radians(sector_deg) / 2.0
+        big = r_add * 1.3
+        wedge = Polygon([(0, 0)] +
+                        [(big * np.cos(t), big * np.sin(t))
+                         for t in np.linspace(-half, half, 60)] + [(0, 0)])
+        prof = prof.intersection(wedge).buffer(0)
+        back_r = r_root if full_disc else max(bore / 2 + 5.0, 9.0)
+        disc = Polygon([(back_r * np.cos(t), back_r * np.sin(t))
+                        for t in np.linspace(0, 2 * np.pi, 180, endpoint=False)])
+        prof = unary_union([prof, disc]).buffer(0)
+    if not isinstance(prof, Polygon):
+        prof = max(prof.geoms, key=lambda g: g.area)
+
+    mesh = trimesh.creation.extrude_polygon(prof, height=width)
+    mesh.apply_translation([0, 0, -width / 2.0])
+
+    if abs(helix_deg) > 1e-6:
+        twist = width * np.tan(np.radians(helix_deg)) / r_pitch
+        vertices = mesh.vertices
+        ang = twist * (vertices[:, 2] / width)
+        c, s = np.cos(ang), np.sin(ang)
+        mesh.vertices = np.column_stack([
+            vertices[:, 0] * c - vertices[:, 1] * s,
+            vertices[:, 0] * s + vertices[:, 1] * c,
+            vertices[:, 2],
+        ])
+
+    if hub_d > 0:
+        hub = trimesh.creation.cylinder(radius=hub_d / 2, height=width, sections=64)
+        mesh = trimesh.boolean.union([mesh, hub], engine="manifold")
+    if bore > 0:
+        cutter = trimesh.creation.cylinder(radius=bore / 2, height=width * 3, sections=48)
+        mesh = trimesh.boolean.difference([mesh, cutter], engine="manifold")
+    return mesh
+
+
+def worm(module, length, pitch_d, starts=1, pressure_angle=20.0, bore=0.0):
+    """Build a helical worm along positive Z and return it with its lead angle.
+
+    The lead is ``starts * pi * module``. ``pressure_angle`` is retained as an
+    explicit conjugacy parameter from the source implementation.
+    origin: dual-axis-turntable src/gears.py:127
+    """
+    import trimesh
+
+    m = module
+    lead = starts * np.pi * m
+    r_pitch = pitch_d / 2.0
+    r_out = r_pitch + m
+    r_root = r_pitch - 1.25 * m
+    lead_angle = np.degrees(np.arctan(lead / (np.pi * pitch_d)))
+
+    core = trimesh.creation.cylinder(radius=r_root, height=length, sections=64)
+    w_root = lead * 0.55
+    w_crest = lead * 0.22
+    prof = np.array([(r_root, -w_root / 2), (r_out, -w_crest / 2),
+                     (r_out, +w_crest / 2), (r_root, +w_root / 2)])
+    turns = length / lead
+    nseg = max(60, int(turns * 60))
+    phis = np.linspace(0, 2 * np.pi * turns, nseg + 1)
+    z0 = -length / 2
+    rings = []
+    for ph in phis:
+        zc = z0 + lead * ph / (2 * np.pi)
+        c, s = np.cos(ph), np.sin(ph)
+        ring = np.array([[rr * c, rr * s, zc + zz] for rr, zz in prof])
+        rings.append(ring)
+    rings = np.array(rings)
+    vertices = rings.reshape(-1, 3)
+    faces = []
+    np_ = 4
+    for i in range(nseg):
+        b0, b1 = i * np_, (i + 1) * np_
+        for j in range(np_):
+            a, b = j, (j + 1) % np_
+            faces.append([b0 + a, b0 + b, b1 + b])
+            faces.append([b0 + a, b1 + b, b1 + a])
+    s0 = 0
+    faces.append([s0 + 0, s0 + 1, s0 + 2])
+    faces.append([s0 + 0, s0 + 2, s0 + 3])
+    e0 = nseg * np_
+    faces.append([e0 + 2, e0 + 1, e0 + 0])
+    faces.append([e0 + 3, e0 + 2, e0 + 0])
+    thread = trimesh.Trimesh(vertices=vertices, faces=np.array(faces), process=True)
+    thread.fix_normals()
+    worm_mesh = trimesh.boolean.union([core, thread], engine="manifold")
+    if bore > 0:
+        cutter = trimesh.creation.cylinder(radius=bore / 2, height=length * 3, sections=32)
+        worm_mesh = trimesh.boolean.difference([worm_mesh, cutter], engine="manifold")
+    worm_mesh.metadata["lead_angle"] = lead_angle
+    return worm_mesh, lead_angle

@@ -157,3 +157,49 @@ def torsion_spring_mesh(mean_r=6.8, wire=1.2, turns=5.0, z=(0.5, 7.5),
         segment=[[mean_r, 0, z0],
                  [ar*math.cos(math.radians(aa)), ar*math.sin(math.radians(aa)), z0-1.5]]))
     return trimesh.util.concatenate(segs)
+
+
+def threaded_rod(major_d, pitch, length, minor_d=None, n_theta=64,
+                 steps_per_pitch=6):
+    """Build a fast radial-grid external ISO-style thread.
+
+    This is a display and light-duty alternative. ``thread_solid`` remains the
+    robust cutter source for tapping.
+    origin: wall-shelf-clamp lib.py:165
+    """
+    major_r = major_d / 2.0
+    minor_r = (minor_d / 2.0) if minor_d else (major_r - 0.6134 * pitch)
+
+    def rad(z_eff):
+        t = (z_eff % pitch) / pitch
+        if t < 0.45:   return minor_r + (major_r - minor_r) * (t / 0.45)
+        elif t < 0.50: return major_r
+        elif t < 0.95: return major_r - (major_r - minor_r) * ((t - 0.50) / 0.45)
+        else:          return minor_r
+
+    nz = max(2, int(length / pitch * steps_per_pitch))
+    thetas = np.linspace(0, 2 * np.pi, n_theta, endpoint=False)
+    zs = np.linspace(0, length, nz)
+    R = np.empty((nz, n_theta))
+    for i, z in enumerate(zs):
+        for j, th in enumerate(thetas):
+            R[i, j] = rad(z - pitch * th / (2 * np.pi))
+    X = R * np.cos(thetas)[None, :]
+    Y = R * np.sin(thetas)[None, :]
+    Z = np.repeat(zs[:, None], n_theta, axis=1)
+    verts = np.stack([X.ravel(), Y.ravel(), Z.ravel()], axis=1)
+    faces = []
+    idx = lambda i, j: i * n_theta + (j % n_theta)
+    for i in range(nz - 1):
+        for j in range(n_theta):
+            a, b = idx(i, j), idx(i, j + 1)
+            c, d = idx(i + 1, j), idx(i + 1, j + 1)
+            faces.append([a, b, d]); faces.append([a, d, c])
+    cb = len(verts); verts = np.vstack([verts, [0, 0, zs[0]]])
+    ct = len(verts); verts = np.vstack([verts, [0, 0, zs[-1]]])
+    for j in range(n_theta):
+        faces.append([cb, idx(0, j + 1), idx(0, j)])
+        faces.append([ct, idx(nz - 1, j), idx(nz - 1, j + 1)])
+    m = trimesh.Trimesh(verts, np.array(faces), process=True)
+    m.fix_normals()
+    return m

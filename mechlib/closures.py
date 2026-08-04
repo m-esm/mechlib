@@ -205,3 +205,49 @@ def fix_pin(r, length, direction, face_pt, bury=1.0):
     orient(m, direction)
     m.apply_translation(face_pt)
     return m
+
+
+def setscrew(point, direction, into=14.0, hole_d=4.2,
+             boss_d=12.0, boss_h=4.0, sections=32):
+    """Build a locking set-screw boss and its inward pilot hole.
+
+    Returns ``(boss, hole)`` for union then subtraction.
+    origin: wall-shelf-clamp lib.py:107
+    """
+    p = np.asarray(point, float)
+    d = np.asarray(direction, float); d = d / np.linalg.norm(d)
+    boss = cyl(boss_d / 2.0, boss_h, sections=sections)
+    orient(boss, d)
+    boss.apply_translation(p - d * (boss_h / 2.0))
+    H = into + boss_h + 2.0
+    hole = cyl(hole_d / 2.0, H, sections=sections)
+    orient(hole, d)
+    hole.apply_translation(p + d * ((into - boss_h) / 2.0))
+    return boss, hole
+
+
+def push_pin(d, length, barb=True, axis="z", flip=False):
+    """Build a barbed press pin with a conical lead-in.
+
+    The pin runs from Z zero toward positive Z before optional orientation.
+    origin: dual-axis-turntable src/build.py:131
+    """
+    parts = []
+    shaft = cyl(d / 2, length, sections=32)
+    shaft.apply_translation([0, 0, length / 2])
+    parts.append(shaft)
+    if barb:
+        barb_r = d / 2 + 0.7
+        b = cyl(barb_r, 2.2, sections=32)
+        b.apply_translation([0, 0, length - 4.0])
+        tip = trimesh.creation.cone(radius=barb_r, height=4.0, sections=32)
+        tip.apply_translation([0, 0, length - 2.0])
+        parts += [b, tip]
+    m = trimesh.util.concatenate(parts)
+    if flip:
+        m.apply_transform(tf.rotation_matrix(np.pi, [1, 0, 0]))
+    if axis == "y":
+        m.apply_transform(tf.rotation_matrix(np.pi / 2, [1, 0, 0]))
+    elif axis == "x":
+        m.apply_transform(tf.rotation_matrix(np.pi / 2, [0, 1, 0]))
+    return m

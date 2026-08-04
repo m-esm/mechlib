@@ -63,3 +63,24 @@ def lighten_grid_centres(minx, miny, maxx, maxy, cell, web, pattern):
             x += dx
         y += dy
         row += 1
+
+
+def directed_holes(points, vectors, d, length):
+    """Union bores starting at points and following corresponding vectors.
+
+    ``d`` may be one diameter or a diameter sequence matching ``points``.
+    origin: massage-shower-head build.py:178
+    """
+    import numpy as np
+    import trimesh
+
+    from .prim import seg_cylinder
+
+    diameters = ([d] * len(points) if np.isscalar(d) else d)
+    cyls = []
+    for point, vector, diameter in zip(points, vectors, diameters):
+        p0 = np.asarray(point, float)
+        direction = np.asarray(vector, float)
+        direction /= np.linalg.norm(direction)
+        cyls.append(seg_cylinder(p0, p0 + direction * length, diameter))
+    return trimesh.boolean.union(cyls, engine="manifold")

@@ -255,6 +255,8 @@ def orient(m, normal):
     z = np.array([0, 0, 1.0]); v = np.cross(z, n); s = np.linalg.norm(v)
     if s > 1e-6:
         m.apply_transform(R(np.arctan2(s, np.dot(z, n)), v / s))
+    elif np.dot(z, n) < 0:
+        m.apply_transform(R(np.pi, [1, 0, 0]))
     return m
 
 
@@ -303,3 +305,123 @@ def extrude_poly_z(poly2d, z0, z1):
     m = trimesh.creation.extrude_polygon(poly2d, h)
     m.apply_translation([0.0, 0.0, z0])
     return m
+
+
+def bbox_gap(a, b):
+    """Return the lower-bound gap between two axis-aligned bounds."""
+    lo = np.maximum(a.bounds[0], b.bounds[0])
+    hi = np.minimum(a.bounds[1], b.bounds[1])
+    gap = np.maximum(lo - hi, 0)
+    return float(np.linalg.norm(gap))
+
+
+def min_distance(a, b, n=800):
+    """Approximate unsigned surface distance from sampled points.
+
+    origin: torque-lever assembly_check.py:80
+    """
+    pts, _ = trimesh.sample.sample_surface(a, n)
+    d = trimesh.proximity.ProximityQuery(b).on_surface(pts)[1]
+    return float(d.min())
+
+
+def audit(parts, clearance, allow, label="", aliases={}):
+    """Audit all part pairs for overlap and sub-clearance proximity.
+
+    ``allow`` contains frozenset name pairs. ``aliases`` maps split part names
+    back to their logical parents.
+    origin: torque-lever assembly_check.py:95
+    """
+    failures, warnings = [], []
+    names = sorted(parts)
+    for na, nb in itertools.combinations(names, 2):
+        a, b = parts[na], parts[nb]
+        if bbox_gap(a, b) > clearance:
+            continue
+        try:
+            vol = overlap_volume(a, b)
+        except Exception:
+            vol = None
+        na, nb = aliases.get(na, na), aliases.get(nb, nb)
+        if na == nb:
+            continue
+        pair = frozenset((na, nb))
+        if vol is None:
+            warnings.append("  ?  %s vs %s: boolean failed (non-volume mesh), "
+                            "fix watertightness and re-run" % (na, nb))
+            continue
+        if vol > 1e-3:
+            line = "%s vs %s: OVERLAP %.2f mm^3%s" % (na, nb, vol, label)
+            if pair in allow:
+                warnings.append("  ~  %s (whitelisted)" % line)
+            else:
+                failures.append("  X  %s" % line)
+            continue
+        d = min_distance(a, b)
+        if d < clearance:
+            warnings.append("  !  %s vs %s: TIGHT %.2f mm (< %s)%s"
+                            % (na, nb, d, clearance, label))
+    return failures, warnings
+
+
+def approach_clear(mesh, mouth, direction, max_dist=50.0):
+    """Measure free travel toward an opening by marching along an approach.
+
+    origin: jumper-wire-sockets src/checks.py:624
+    """
+    mx, my, mz = mouth
+    dx, dy, dz = direction
+    n = float(np.linalg.norm([dx, dy, dz])) or 1.0
+    dx, dy, dz = dx / n, dy / n, dz / n
+    lo, hi = mesh.bounds
+    for dist in np.linspace(0.5, max_dist, 100):
+        px = mx + dx * dist
+        py = my + dy * dist
+        pz = mz + dz * dist
+        outside = (
+            px < lo[0] - 0.2
+            or px > hi[0] + 0.2
+            or py < lo[1] - 0.2
+            or py > hi[1] + 0.2
+            or pz < lo[2] - 0.2
+            or pz > hi[2] + 0.2
+        )
+        if outside:
+            return float(max_dist)
+        if mesh.contains([[px, py, pz]])[0]:
+            return max(0.0, float(dist) - 0.5)
+    return float(max_dist)
+
+
+def slicer_area(polys, infill, line_w=0.42, perimeters=3):
+    """Predict per-layer extrusion area from perimeter band plus infill core.
+
+    origin: tripod lighten_legs.py:45
+    """
+    band = line_w * perimeters
+    tot = 0.0
+    for poly in polys:
+        core = poly.buffer(-band)
+        ca = core.area if not core.is_empty else 0.0
+        tot += (poly.area - ca) + infill * ca
+    return tot
+
+
+def extrude_snapped(poly2d, z0, z1):
+    """Snap Shapely vertices to 1e-6 before extrusion into mesh volumes.
+
+    Prefer this for tangent or near-coincident vertices that can triangulate as
+    non-volumes. Prefer ``extrude_poly_z`` for its Polygon/MultiPolygon mesh API
+    when input geometry is already clean. Returns a list of volumes.
+    origin: torque-lever build.py:117
+    """
+    import shapely
+
+    poly2d = shapely.set_precision(poly2d, 1e-6)
+    geoms = poly2d.geoms if poly2d.geom_type == "MultiPolygon" else [poly2d]
+    out = []
+    for g in geoms:
+        m = trimesh.creation.extrude_polygon(g, z1 - z0)
+        m.apply_translation([0, 0, z0])
+        out.append(m)
+    return out
