@@ -1,5 +1,5 @@
 {
-  "version": "0.4.0",
+  "version": "0.5.0",
   "models": [
     {
       "file": "cyl_demo.glb",
@@ -360,6 +360,38 @@
       "signature": "seg_cylinder(p0, p1, d)",
       "description": "A cylinder spanning two skew points in three dimensions.",
       "origin": "Extracted from build.py in massage-shower-head."
+    },
+    {
+      "file": "printed_worm_demo.glb",
+      "name": "printed_worm",
+      "module": "mechlib.drives",
+      "signature": "printed_worm(handsign=1, motor_tail=None, module=1.2, pressure_angle=20.0, starts=1, length=50.0, bore_d=5.5, shaft_flat=3.7, clearance=0.25, lead_angle=5.0, journal_d=8.0, journal_len=9.0, engage_teeth=6, wheel_width=6.55, backlash=0.35, collar_d=10.5, collar_len=2.0, bearing_width=7.0, set_screw_d=2.6, set_screw_z=6.0, sections=160)",
+      "description": "A journalled printed worm with runout threads, keyed bore, thrust collars, and radial set-screw hole.",
+      "origin": "Extracted from the Klonk build_worm generator."
+    },
+    {
+      "file": "flat_worm_pair_demo.glb",
+      "name": "flat_worm + worm_wheel_band",
+      "module": "mechlib.drives",
+      "signature": "flat_worm(starts=3, module=1.5, pitch_d=9.0, pressure_angle=20.0, worm_backlash=0.8, tip_trim=0.25, hand=1, thread_len=16.0, runout=2.2, use_695=True, journal_d=4.95, seat_len=4.4, spacer_d=6.8, bearing_spacer_len=5.442135623730952, collar_d=6.8, collar_len=0.5, length=36.6842712474619, shaft_d=3.0, shaft_flat=2.33, clearance=0.25, bore_depth=8.7, assembly_spin=95.0, flute_count=2, flute_d=0.8, flute_z0=5.5, flute_z1=8.55, sections=144); worm_wheel_band(width=3.5, z0=0.0, wheel_teeth=26, module=1.5, pressure_angle=20.0, backlash=0.35, tip_relief=0.03, tip_trim=0.55, hand=1, starts=3, pitch_d=9.0, read_face=2.4, read_r0=17.0, layers=12)",
+      "description": "The bench-proven three-start input worm and lead-angle-matched wheel band at crossed axes.",
+      "origin": "Extracted from the Klonk flat-drive generators."
+    },
+    {
+      "file": "worm_coupon_demo.glb",
+      "name": "worm_coupon",
+      "module": "mechlib.drives",
+      "signature": "worm_coupon(starts=3, module=1.5, pitch_d=9.0, pressure_angle=20.0, worm_backlash=0.8, worm_tip_trim=0.25, hand=1, thread_len=16.0, runout=2.2, use_695=True, journal_d=4.95, seat_len=4.4, spacer_d=6.8, bearing_spacer_len=5.442135623730952, collar_d=6.8, collar_len=0.5, length=36.6842712474619, shaft_d=3.0, shaft_flat=2.33, clearance=0.25, bore_depth=8.7, assembly_spin=95.0, flute_count=2, flute_d=0.8, flute_z0=5.5, flute_z1=8.55, worm_sections=144, wheel_teeth=26, band_width=3.5, band_backlash=0.35, band_tip_relief=0.03, band_tip_trim=0.55, band_read_face=2.4, band_read_r0=17.0, band_layers=12)",
+      "description": "The inexpensive print-frame worm and short wheel-band pieces used to test mesh quality before a full drive.",
+      "origin": "Project-neutral form of the Klonk flat-drive mesh coupon."
+    },
+    {
+      "file": "planet_stage_demo.glb",
+      "name": "planet_stage",
+      "module": "mechlib.drives",
+      "signature": "planet_stage(module=1.0, sun_teeth=12, planet_teeth=9, ring_teeth=30, n_planets=3, pressure_angle=20.0, backlash=0.1, ring_clearance=0.25, tip_relief=0.03, face_width=5.0, ring_outer_d=34.5, ring_face_width=5.725, carrier_radius=13.5, carrier_height=3.0, gear_gap=0.3, planet_pin_d=3.4, planet_bore_clearance=0.4, pin_extra=0.6, hex_af=7.0, hex_length=6.4, shaft_relief_d=6.4, shaft_relief_depth=2.8, sun_hub_d=9.0, sun_hub_height=0.8, shaft_d=3.0, shaft_flat=2.33, clearance=0.25, bore_leadin=1.2)",
+      "description": "An assembled 12:9:30 top-loading planetary stage with three planets and a downward hex-output carrier.",
+      "origin": "Project-neutral form of the Klonk printed planetary stage."
     },
     {
       "file": "pip_ratchet_demo.glb",

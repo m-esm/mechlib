@@ -140,6 +140,16 @@ ml.export_stl(body, "bracket.stl")
 | `spur_gear` | Build a full 3D helical, sector, or hubbed gear. | dual-axis-turntable `src/gears.py` |
 | `worm` | Build a true helical worm and report its lead angle. | dual-axis-turntable `src/gears.py` |
 
+### `mechlib.drives`
+
+| Function | Purpose | Origin project |
+| --- | --- | --- |
+| `printed_worm` | Build a journalled printed worm with a keyed bore and runout threads. | finnish-doors Klonk `worm.py` |
+| `flat_worm` | Build the bench-proven three-start flat-drive input worm. | finnish-doors Klonk `worm.py` |
+| `worm_wheel_band` | Build the lead-angle-matched helical wheel band for `flat_worm`. | finnish-doors Klonk `worm.py` |
+| `worm_coupon` | Build the inexpensive worm and wheel-band pair used to bench-test mesh quality. | finnish-doors Klonk `worm.py` |
+| `planet_stage` | Build an assembled top-loading fixed-ring planetary stage with a hex-output carrier. | finnish-doors Klonk `parts_drive.py` |
+
 ### `mechlib.mechanisms`
 
 | Function | Purpose | Origin project |

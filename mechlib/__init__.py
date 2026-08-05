@@ -1,4 +1,4 @@
-__version__ = "0.4.0"
+__version__ = "0.5.0"
 
 from .closures import (
     SnapSpec,
@@ -43,6 +43,13 @@ from .fasteners import (
     zmin0,
 )
 from .fixtures import board_cradle, saddle
+from .drives import (
+    flat_worm,
+    planet_stage,
+    printed_worm,
+    worm_coupon,
+    worm_wheel_band,
+)
 from .gears import (
     mesh_phase,
     rack_2d,
@@ -216,6 +223,11 @@ __all__ = (
     "torsion_spring_mesh",
     "helix_tube",
     "dog_slot_coupling",
+    "printed_worm",
+    "flat_worm",
+    "worm_wheel_band",
+    "worm_coupon",
+    "planet_stage",
     "ratchet_ring_2d",
     "ratchet_ring",
     "pip_ratchet_hub_2d",

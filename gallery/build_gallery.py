@@ -44,6 +44,13 @@ from mechlib.cutters import (
     tapered_cavity,
     u_channel_between,
 )
+from mechlib.drives import (
+    flat_worm,
+    planet_stage,
+    printed_worm,
+    worm_coupon,
+    worm_wheel_band,
+)
 from mechlib.fasteners import fastener_mesh, hex_nut_mesh, washer_mesh
 from mechlib.fixtures import board_cradle, saddle
 from mechlib.gears import (
@@ -350,6 +357,26 @@ def worm_wheel_demo():
     return worm_mesh, wheel
 
 
+def flat_worm_pair_demo(gap=0.25):
+    """Pose the flat worm and wheel band at their crossed-axis center distance."""
+    input_worm = flat_worm()
+    wheel_band = worm_wheel_band()
+    length = float(input_worm.bounds[1, 2] - input_worm.bounds[0, 2])
+    input_worm.apply_transform(trimesh.transformations.rotation_matrix(
+        math.pi / 2.0, [0, 1, 0]))
+    input_worm.apply_translation((-length / 2.0, -24.0 - gap, 1.75))
+    wheel_band.apply_transform(trimesh.transformations.rotation_matrix(
+        math.radians(11.30), [0, 0, 1]))
+    return input_worm, wheel_band
+
+
+def worm_coupon_demo():
+    """Lay out the two coupon pieces in their printable orientations."""
+    coupon = worm_coupon()
+    coupon["wheel_band"].apply_translation((30.0, 0.0, 0.0))
+    return coupon
+
+
 def organic_loft_demo():
     """Build an offset, vase-like solid through five resampled rings."""
     # keep ring-to-ring edge swings under ~2 mm: larger jumps between linearly
@@ -486,6 +513,10 @@ def build():
     coupling_boss, coupling_collar = dog_slot_coupling()
     coupling_boss.apply_translation((-17.0, 0.0, 0.0))
     coupling_collar.apply_translation((17.0, 0.0, 0.0))
+    journal_worm = printed_worm(sections=72)
+    flat_input, flat_band = flat_worm_pair_demo()
+    coupon = worm_coupon_demo()
+    planetary = planet_stage()
 
     models = [
         {
@@ -981,6 +1012,54 @@ def build():
     ])
 
     models.extend([
+        {
+            "file": "printed_worm_demo.glb",
+            "name": "printed_worm",
+            "module": "mechlib.drives",
+            "signature": signature(printed_worm),
+            "description": "A journalled printed worm with runout threads, keyed bore, thrust collars, and radial set-screw hole.",
+            "origin": "Extracted from the Klonk build_worm generator.",
+            "meshes": [("journalled_worm", journal_worm, PALETTE[0])],
+        },
+        {
+            "file": "flat_worm_pair_demo.glb",
+            "name": "flat_worm + worm_wheel_band",
+            "module": "mechlib.drives",
+            "signature": "%s; %s" % (
+                signature(flat_worm), signature(worm_wheel_band)),
+            "description": "The bench-proven three-start input worm and lead-angle-matched wheel band at crossed axes.",
+            "origin": "Extracted from the Klonk flat-drive generators.",
+            "meshes": [
+                ("flat_input_worm", flat_input, PALETTE[1]),
+                ("helical_wheel_band", flat_band, PALETTE[5]),
+            ],
+        },
+        {
+            "file": "worm_coupon_demo.glb",
+            "name": "worm_coupon",
+            "module": "mechlib.drives",
+            "signature": signature(worm_coupon),
+            "description": "The inexpensive print-frame worm and short wheel-band pieces used to test mesh quality before a full drive.",
+            "origin": "Project-neutral form of the Klonk flat-drive mesh coupon.",
+            "meshes": [
+                ("coupon_worm", coupon["worm"], PALETTE[2]),
+                ("coupon_wheel_band", coupon["wheel_band"], PALETTE[9]),
+            ],
+        },
+        {
+            "file": "planet_stage_demo.glb",
+            "name": "planet_stage",
+            "module": "mechlib.drives",
+            "signature": signature(planet_stage),
+            "description": "An assembled 12:9:30 top-loading planetary stage with three planets and a downward hex-output carrier.",
+            "origin": "Project-neutral form of the Klonk printed planetary stage.",
+            "meshes": [
+                ("sun", planetary["sun"], PALETTE[5]),
+                ("ring", planetary["ring"], PALETTE[0]),
+                ("carrier", planetary["carrier"], PALETTE[7]),
+            ] + [("planet_%d" % index, mesh, PALETTE[2 + index])
+                 for index, mesh in enumerate(planetary["planets"])],
+        },
         {
             "file": "pip_ratchet_demo.glb",
             "name": "print-in-place accordion ratchet",
