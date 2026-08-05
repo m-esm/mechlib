@@ -51,9 +51,9 @@
     }
 
     .page-shell {
-      width: min(1180px, calc(100% - 36px));
+      width: min(1720px, calc(100% - 36px));
       margin: 0 auto;
-      padding: 64px 0 72px;
+      padding: 48px 0 64px;
     }
 
     .hero {
@@ -132,8 +132,8 @@
 
     .gallery-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 22px;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 14px;
     }
 
     .utility-section {
@@ -155,7 +155,7 @@
 
     .utility-list {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 10px;
     }
 
@@ -190,24 +190,24 @@
       min-width: 0;
       overflow: hidden;
       border: 1px solid var(--border);
-      border-radius: 18px;
+      border-radius: 14px;
       background: linear-gradient(145deg, rgba(21, 30, 42, 0.98), rgba(13, 20, 29, 0.98));
-      box-shadow: 0 18px 60px rgba(0, 0, 0, 0.24);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.22);
     }
 
     .card-heading {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       align-items: baseline;
       justify-content: space-between;
-      padding: 18px 20px 15px;
+      padding: 12px 14px 10px;
     }
 
     .card-heading h2 {
       min-width: 0;
       margin: 0;
       overflow-wrap: anywhere;
-      font-size: 1.1rem;
+      font-size: 0.98rem;
       letter-spacing: -0.02em;
     }
 
@@ -220,8 +220,8 @@
 
     .viewport {
       position: relative;
-      height: clamp(245px, 31vw, 330px);
-      margin: 0 10px;
+      height: clamp(180px, 15vw, 230px);
+      margin: 0 8px;
       overflow: hidden;
       border: 1px solid rgba(126, 161, 194, 0.16);
       border-radius: 13px;
@@ -256,22 +256,22 @@
 
     .card-copy {
       display: grid;
-      gap: 10px;
-      padding: 17px 20px 20px;
+      gap: 8px;
+      padding: 11px 14px 14px;
     }
 
     .signature {
       max-width: 100%;
       margin: 0;
-      padding: 10px 12px;
+      padding: 8px 10px;
       overflow-wrap: anywhere;
       border: 1px solid rgba(126, 161, 194, 0.14);
-      border-radius: 9px;
+      border-radius: 8px;
       color: #d7e8fa;
       background: rgba(5, 9, 14, 0.5);
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.74rem;
-      line-height: 1.55;
+      font-size: 0.7rem;
+      line-height: 1.5;
     }
 
     .description,
@@ -281,12 +281,12 @@
 
     .description {
       color: #c8d7e8;
-      font-size: 0.94rem;
+      font-size: 0.85rem;
     }
 
     .origin {
       color: var(--muted);
-      font-size: 0.78rem;
+      font-size: 0.74rem;
     }
 
     .fatal-error {
