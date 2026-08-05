@@ -48,16 +48,37 @@ from mechlib.fasteners import fastener_mesh, hex_nut_mesh, washer_mesh
 from mechlib.fixtures import board_cradle, saddle
 from mechlib.gears import (
     mesh_phase,
+    rack_2d,
     roller_sprocket_2d,
     spur_gear_2d,
     spur_gear,
     spur_gear_mesh,
     worm,
 )
-from mechlib.mechanisms import knurl, tap, thread_solid, threaded_rod, torsion_spring_mesh
+from mechlib.mechanisms import (
+    dog_slot_coupling,
+    helix_tube,
+    knurl,
+    tap,
+    thread_solid,
+    threaded_rod,
+    torsion_spring_mesh,
+)
 from mechlib.meshutil import sub, uni
 from mechlib.patterns import directed_holes, lighten_cell_poly, lighten_grid_centres, polar_ring
 from mechlib.prim import boxc, chamfer_prism, cyl, frustum, hex_poly, rbox, sector2d, seg_cylinder
+from mechlib.ratchets import (
+    arc_ratchet_2d,
+    check_ratchet_sense_and_sweep,
+    compliant_clutch,
+    compliant_clutch_2d,
+    pip_ratchet_hub,
+    pip_ratchet_hub_2d,
+    ratchet_ring,
+    ratchet_ring_2d,
+    spring_cartridge_ratchet,
+    spring_cartridge_ratchet_2d,
+)
 from mechlib.sweep import extrude_twist, loft, ring_pts, swept_keyed_bore
 from mechlib.text import text_block, text_polygon
 
@@ -453,6 +474,18 @@ def build():
     saddle_rib, saddle_cylinder = saddle_demo()
     block_plaque, block_text = text_block_demo()
     skew_cylinder = seg_cylinder((-9, -6, 0), (10, 7, 18), 4)
+    pip_ring = ratchet_ring()
+    pip_hub = pip_ratchet_hub()
+    cartridge_ring, cartridge_hub, cartridge_pawls = spring_cartridge_ratchet()
+    clutch_race, clutch_hub = compliant_clutch(lock_face_frac=0.34)
+    arc_ring_2d, arc_hub_2d = arc_ratchet_2d()
+    arc_ring = trimesh.creation.extrude_polygon(arc_ring_2d, 3.0)
+    arc_hub = trimesh.creation.extrude_polygon(arc_hub_2d, 3.0)
+    coil = helix_tube(7.0, 1.15, 5.0, -5.0, 5.0)
+    rack = trimesh.creation.extrude_polygon(rack_2d(8, 1.5), 4.0)
+    coupling_boss, coupling_collar = dog_slot_coupling()
+    coupling_boss.apply_translation((-17.0, 0.0, 0.0))
+    coupling_collar.apply_translation((17.0, 0.0, 0.0))
 
     models = [
         {
@@ -944,6 +977,94 @@ def build():
             "description": "A cylinder spanning two skew points in three dimensions.",
             "origin": "Extracted from build.py in massage-shower-head.",
             "meshes": [("skew_segment", skew_cylinder, PALETTE[10])],
+        },
+    ])
+
+    models.extend([
+        {
+            "file": "pip_ratchet_demo.glb",
+            "name": "print-in-place accordion ratchet",
+            "module": "mechlib.ratchets",
+            "signature": "%s; %s; %s; %s" % (
+                signature(ratchet_ring_2d), signature(ratchet_ring),
+                signature(pip_ratchet_hub_2d), signature(pip_ratchet_hub)),
+            "description": "Three captive rigid pawls, each reseated by a printed accordion spring, inside a matching undercut ring.",
+            "origin": "Extracted from the Klonk print-in-place follower ratchet.",
+            "meshes": [
+                ("undercut_ring", pip_ring, PALETTE[2]),
+                ("accordion_hub", pip_hub, PALETTE[3]),
+            ],
+        },
+        {
+            "file": "spring_cartridge_ratchet_demo.glb",
+            "name": "spring-cartridge rigid-pawl ratchet",
+            "module": "mechlib.ratchets",
+            "signature": "%s; %s; validator %s" % (
+                signature(spring_cartridge_ratchet_2d),
+                signature(spring_cartridge_ratchet),
+                signature(check_ratchet_sense_and_sweep)),
+            "description": "A slotted hub and three separately printable rigid pawls inside a self-energising ring.",
+            "origin": "Adapted from experiments/spring_ratchet_fable/design.py.",
+            "meshes": [
+                ("cartridge_ring", cartridge_ring, PALETTE[2]),
+                ("cartridge_hub", cartridge_hub, PALETTE[7]),
+            ] + [("pawl_%d" % index, pawl, PALETTE[10])
+                 for index, pawl in enumerate(cartridge_pawls)],
+        },
+        {
+            "file": "compliant_clutch_demo.glb",
+            "name": "compliant clutch torque limiter",
+            "module": "mechlib.ratchets",
+            "signature": "%s; %s" % (
+                signature(compliant_clutch_2d), signature(compliant_clutch)),
+            "description": "Integral spiral flexures engaging an internal sawtooth race, shown with the torque-limit face fraction.",
+            "origin": "Extracted from Klonk gen_compliant_2d with the torque-limit experiment delta.",
+            "meshes": [
+                ("clutch_race", clutch_race, PALETTE[1]),
+                ("flexure_hub", clutch_hub, PALETTE[6]),
+            ],
+        },
+        {
+            "file": "arc_ratchet_demo.glb",
+            "name": "compliant arc-arm ratchet",
+            "module": "mechlib.ratchets",
+            "signature": signature(arc_ratchet_2d),
+            "description": "Three trailing tension-loaded arc flexures engaging a self-energising undercut ring.",
+            "origin": "Recovered from the pre-bb26eec Klonk follower-ratchet revision.",
+            "meshes": [
+                ("arc_ring", arc_ring, PALETTE[4]),
+                ("arc_flexure_hub", arc_hub, PALETTE[11]),
+            ],
+        },
+        {
+            "file": "helix_tube_demo.glb",
+            "name": "helix_tube",
+            "module": "mechlib.mechanisms",
+            "signature": signature(helix_tube),
+            "description": "A capped solid wire swept through five turns with a radial-inward moving frame.",
+            "origin": "Extracted from the finnish-doors wrap-spring demonstration.",
+            "meshes": [("helical_tube", coil, PALETTE[12])],
+        },
+        {
+            "file": "rack_2d_demo.glb",
+            "name": "rack_2d",
+            "module": "mechlib.gears",
+            "signature": signature(rack_2d),
+            "description": "Eight pressure-angle trapezoidal teeth at pi times module circular pitch, extruded thin for display.",
+            "origin": "Generalized from the finnish-doors intercom plunger rack.",
+            "meshes": [("eight_tooth_rack", rack, PALETTE[5])],
+        },
+        {
+            "file": "dog_slot_coupling_demo.glb",
+            "name": "dog_slot_coupling",
+            "module": "mechlib.mechanisms",
+            "signature": signature(dog_slot_coupling),
+            "description": "A downward collar dog riding in a boss arc slot to provide controlled angular lost motion.",
+            "origin": "Generalized from finnish-doors coupling variant A.",
+            "meshes": [
+                ("slotted_boss", coupling_boss, PALETTE[1]),
+                ("dog_collar", coupling_collar, PALETTE[9]),
+            ],
         },
     ])
 

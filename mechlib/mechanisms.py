@@ -160,6 +160,111 @@ def torsion_spring_mesh(mean_r=6.8, wire=1.2, turns=5.0, z=(0.5, 7.5),
     return trimesh.util.concatenate(segs)
 
 
+def helix_tube(R, rw, turns, z0, z1, M=16, N=420):
+    """Sweep a capped solid tube along a helix and return a watertight mesh.
+
+    The moving frame uses a radial-inward normal, avoiding accumulated frame
+    twist. ``R`` is centerline radius, ``rw`` wire radius, ``turns`` may be
+    fractional, and the helix advances from ``z0`` to ``z1``.
+    origin: finnish-doors wrap_demo.py at 75ca785
+    """
+    if R <= 0 or rw <= 0 or turns == 0 or M < 3 or N < 2:
+        raise ValueError("helix_tube(): invalid radius, turns, or resolution")
+    theta = np.linspace(0.0, 2.0 * np.pi * turns, N)
+    z = np.linspace(z0, z1, N)
+    centerline = np.stack([R * np.cos(theta), R * np.sin(theta), z], axis=1)
+    tangent = np.stack([
+        -R * np.sin(theta),
+        R * np.cos(theta),
+        np.full_like(theta, (z1 - z0) / (2.0 * np.pi * turns)),
+    ], axis=1)
+    tangent /= np.linalg.norm(tangent, axis=1, keepdims=True)
+    normal = np.stack([
+        -np.cos(theta), -np.sin(theta), np.zeros_like(theta)
+    ], axis=1)
+    binormal = np.cross(tangent, normal)
+    binormal /= np.linalg.norm(binormal, axis=1, keepdims=True)
+    normal = np.cross(binormal, tangent)
+
+    phi = np.linspace(0.0, 2.0 * np.pi, M, endpoint=False)
+    rings = (
+        normal[:, None, :] * np.cos(phi)[None, :, None]
+        + binormal[:, None, :] * np.sin(phi)[None, :, None]
+    ) * rw + centerline[:, None, :]
+    vertices = rings.reshape(-1, 3)
+    faces = []
+    for i in range(N - 1):
+        for j in range(M):
+            a = i * M + j
+            b = i * M + (j + 1) % M
+            c = (i + 1) * M + j
+            d = (i + 1) * M + (j + 1) % M
+            faces.extend(((a, b, d), (a, d, c)))
+    for index, base in ((0, 0), (N - 1, (N - 1) * M)):
+        center_index = len(vertices)
+        vertices = np.vstack([vertices, centerline[index]])
+        for j in range(M):
+            a = base + j
+            b = base + (j + 1) % M
+            faces.append((center_index, a, b) if index == 0
+                         else (center_index, b, a))
+    mesh = trimesh.Trimesh(vertices=vertices, faces=np.asarray(faces), process=False)
+    mesh.fix_normals()
+    return mesh
+
+
+def dog_slot_coupling(r_in=6.0, r_out=12.0, dog_deg=30.0,
+                      free_deg=50.0, boss_h=7.0, collar_h=5.0,
+                      slot_a_clear=1.0, slot_z_clear=0.6,
+                      bore_r=4.5, boss_wall=1.5, collar_overhang=2.5,
+                      sections=64):
+    """Build angular lost motion as ``(slotted_boss, dog_collar)`` meshes.
+
+    The boss is an annulus with a through arc slot. The separate collar carries
+    a downward radial dog, with its rest face against the drive wall and
+    ``free_deg`` of relative rotation toward release. Both pieces have a round
+    bore for consumers to replace or subtract with their own keyed interface.
+    Looking from +Z, free travel is toward positive angle.
+
+    origin: finnish-doors coupling_variants/build_coupling.py at 9de406d^
+    """
+    from shapely.geometry import Point
+
+    from .prim import sector2d
+
+    if (not 0 < bore_r < r_in < r_out or dog_deg <= 0 or free_deg < 0 or
+            boss_h <= 0 or collar_h <= 0 or slot_a_clear < 0 or
+            not 0 <= slot_z_clear < boss_h or boss_wall <= 0 or
+            collar_overhang <= 0 or sections < 12):
+        raise ValueError("dog_slot_coupling(): invalid dimensions")
+    dog_lo, dog_hi = -dog_deg / 2.0, dog_deg / 2.0
+    slot_lo = dog_lo - slot_a_clear
+    slot_hi = dog_hi + free_deg + slot_a_clear
+    slot_inner = r_in - 0.6
+    if slot_inner <= bore_r:
+        raise ValueError("dog_slot_coupling(): slot breaks through the bore wall")
+
+    bore = Point(0, 0).buffer(bore_r, resolution=sections)
+    boss_poly = Point(0, 0).buffer(
+        r_out + boss_wall, resolution=sections).difference(bore)
+    slot = sector2d(slot_lo, slot_hi, r_out + 0.6, n=sections).difference(
+        Point(0, 0).buffer(slot_inner, resolution=sections))
+    boss_poly = boss_poly.difference(slot).buffer(0)
+    boss = trimesh.creation.extrude_polygon(boss_poly, boss_h)
+
+    collar_poly = Point(0, 0).buffer(
+        r_out + collar_overhang, resolution=sections).difference(bore).buffer(0)
+    collar = trimesh.creation.extrude_polygon(collar_poly, collar_h)
+    collar.apply_translation((0, 0, boss_h))
+    dog_poly = sector2d(dog_lo, dog_hi, r_out, n=sections).difference(
+        Point(0, 0).buffer(r_in, resolution=sections))
+    dog_h = boss_h - slot_z_clear + 0.05
+    dog = trimesh.creation.extrude_polygon(dog_poly, dog_h)
+    dog.apply_translation((0, 0, slot_z_clear))
+    collar = uni([collar, dog])
+    return boss, collar
+
+
 def threaded_rod(major_d, pitch, length, minor_d=None, n_theta=64,
                  steps_per_pitch=6):
     """Build a fast radial-grid external ISO-style thread.

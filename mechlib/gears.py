@@ -134,6 +134,58 @@ def roller_sprocket_2d(n_teeth, pitch, pin_d, clear=0.0, outer_d=None):
     return blank.difference(gaps).simplify(0.01).buffer(0)
 
 
+def rack_2d(n_teeth, module, pa_deg=20.0, backlash=0.0,
+            addendum=None, dedendum=None, base_height=None,
+            end_margin=0.0, centered=True):
+    """Build a finite trapezoidal-tooth rack profile as a Shapely polygon.
+
+    Tooth centers are spaced at the circular pitch ``pi * module`` along X,
+    with the pitch line at Y zero and teeth pointing toward positive Y. The
+    pitch-line tooth thickness is half a pitch minus ``backlash``. It meshes
+    with ``spur_gear_2d`` using the same module and pressure angle. ``addendum``
+    and ``dedendum`` default to ``module`` and ``1.25 * module``;
+    ``base_height`` defaults to ``2 * module`` below the tooth roots.
+
+    origin: finnish-doors src/intercom/fixture.py ``_rack_tooth_gaps``
+    """
+    import shapely.geometry as sg
+    from shapely.ops import unary_union
+
+    if int(n_teeth) != n_teeth or n_teeth < 1 or module <= 0:
+        raise ValueError("rack_2d(): n_teeth must be positive and module must be positive")
+    if backlash < 0 or end_margin < 0 or not 0 < pa_deg < 45:
+        raise ValueError("rack_2d(): invalid pressure angle, backlash, or end margin")
+    addendum = module if addendum is None else addendum
+    dedendum = 1.25 * module if dedendum is None else dedendum
+    base_height = 2.0 * module if base_height is None else base_height
+    if addendum <= 0 or dedendum <= 0 or base_height <= 0:
+        raise ValueError("rack_2d(): addendum, dedendum, and base_height must be positive")
+
+    pitch = math.pi * module
+    pitch_thickness = pitch / 2.0 - backlash
+    slope = math.tan(math.radians(pa_deg))
+    tip_width = pitch_thickness - 2.0 * addendum * slope
+    root_width = pitch_thickness + 2.0 * dedendum * slope
+    if tip_width <= 0 or root_width >= pitch:
+        raise ValueError("rack_2d(): tooth proportions overlap or collapse")
+
+    length = n_teeth * pitch + 2.0 * end_margin
+    x0 = -length / 2.0 if centered else 0.0
+    base = sg.box(x0, -dedendum - base_height,
+                  x0 + length, -dedendum + 0.01)
+    first_center = x0 + end_margin + pitch / 2.0
+    teeth = []
+    for index in range(n_teeth):
+        center = first_center + index * pitch
+        teeth.append(sg.Polygon([
+            (center - root_width / 2.0, -dedendum),
+            (center + root_width / 2.0, -dedendum),
+            (center + tip_width / 2.0, addendum),
+            (center - tip_width / 2.0, addendum),
+        ]))
+    return unary_union([base] + teeth).buffer(0)
+
+
 def _involute_points(rb, r_start, r_end, n=14):
     """Return points on an involute of base circle ``rb``."""
     pts = []

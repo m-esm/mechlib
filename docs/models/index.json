@@ -1,5 +1,5 @@
 {
-  "version": "0.3.0",
+  "version": "0.4.0",
   "models": [
     {
       "file": "cyl_demo.glb",
@@ -360,6 +360,62 @@
       "signature": "seg_cylinder(p0, p1, d)",
       "description": "A cylinder spanning two skew points in three dimensions.",
       "origin": "Extracted from build.py in massage-shower-head."
+    },
+    {
+      "file": "pip_ratchet_demo.glb",
+      "name": "print-in-place accordion ratchet",
+      "module": "mechlib.ratchets",
+      "signature": "ratchet_ring_2d(teeth=9, tip_r=15.0, root_r=17.0, outer_r=18.4, undercut_deg=7.0, clearance=0.15, flip=False, phase_deg=None, pawl_az=(90.0, 210.0, 330.0), pawl_width=5.6, nose_r=16.7, spring_x0=5.7, spring_t=0.8, spring_gap=0.9, spring_folds=4); ratchet_ring(height=3.62, teeth=9, tip_r=15.0, root_r=17.0, outer_r=18.4, undercut_deg=7.0, clearance=0.15, flip=False, phase_deg=None, pawl_az=(90.0, 210.0, 330.0), pawl_width=5.6, nose_r=16.7, spring_x0=5.7, spring_t=0.8, spring_gap=0.9, spring_folds=4); pip_ratchet_hub_2d(teeth=9, tip_r=15.0, root_r=17.0, outer_r=18.4, undercut_deg=7.0, clearance=0.15, flip=False, phase_deg=None, pawl_az=(90.0, 210.0, 330.0), hub_radius=14.5, spoke_outer_r=13.5, pawl_width=5.6, nose_r=16.7, travel=1.9, sliding_clearance=0.45, boss_width=1.7, spoke_inner_r=2.0, spring_x0=5.7, spring_t=0.8, spring_gap=0.9, spring_folds=4, spring_clearance=0.45); pip_ratchet_hub(height=3.15, bore_w=7.2, bore_t=2.0, bore_clearance=0.3, teeth=9, tip_r=15.0, root_r=17.0, outer_r=18.4, undercut_deg=7.0, clearance=0.15, flip=False, phase_deg=None, pawl_az=(90.0, 210.0, 330.0), hub_radius=14.5, spoke_outer_r=13.5, pawl_width=5.6, nose_r=16.7, travel=1.9, sliding_clearance=0.45, boss_width=1.7, spoke_inner_r=2.0, spring_x0=5.7, spring_t=0.8, spring_gap=0.9, spring_folds=4, spring_clearance=0.45)",
+      "description": "Three captive rigid pawls, each reseated by a printed accordion spring, inside a matching undercut ring.",
+      "origin": "Extracted from the Klonk print-in-place follower ratchet."
+    },
+    {
+      "file": "spring_cartridge_ratchet_demo.glb",
+      "name": "spring-cartridge rigid-pawl ratchet",
+      "module": "mechlib.ratchets",
+      "signature": "spring_cartridge_ratchet_2d(teeth=12, tip_r=13.2, root_r=15.2, outer_r=17.8, hook_deg=7.0, drive_ccw=True, phase_deg=None, hub_r=12.7, pawl_az=(90.0, 210.0, 330.0), pawl_clear=0.15, slot_w_wide=7.7, slot_w_mouth=5.4, slot_x_in=5.0, slot_x_step=12.15, slot_x_out=12.75, tail_w=7.3, tail_x0=7.2, tail_x1=12.05, fork_w=4.6, fork_x1=11.0, body_w=5.0, nose_x1=15.35, boss_sq=2.2, boss_len=1.2); spring_cartridge_ratchet(ring_height=3.2, hub_height=2.75, pawl_height=2.6, hub_z0=0.15, pawl_z0=0.15, bore_w=7.2, bore_t=2.0, bore_clearance=0.3, teeth=12, tip_r=13.2, root_r=15.2, outer_r=17.8, hook_deg=7.0, drive_ccw=True, phase_deg=None, hub_r=12.7, pawl_az=(90.0, 210.0, 330.0), pawl_clear=0.15, slot_w_wide=7.7, slot_w_mouth=5.4, slot_x_in=5.0, slot_x_step=12.15, slot_x_out=12.75, tail_w=7.3, tail_x0=7.2, tail_x1=12.05, fork_w=4.6, fork_x1=11.0, body_w=5.0, nose_x1=15.35, boss_sq=2.2, boss_len=1.2); validator check_ratchet_sense_and_sweep(ring_2d, pawls_2d, pawl_az=(90.0, 210.0, 330.0), teeth=12, travel=1.9, drive_ccw=True, drive_probe_deg=2.0, area_epsilon=0.005)",
+      "description": "A slotted hub and three separately printable rigid pawls inside a self-energising ring.",
+      "origin": "Adapted from experiments/spring_ratchet_fable/design.py."
+    },
+    {
+      "file": "compliant_clutch_demo.glb",
+      "name": "compliant clutch torque limiter",
+      "module": "mechlib.ratchets",
+      "signature": "compliant_clutch_2d(teeth=18, pawls=3, race_outer_r=24.5, race_tip_r=14.0, tooth_depth=2.6, hub_r=8.0, flexure_w=1.4, flexure_arc_deg=150.0, flexure_clearance=0.45, preload=0.6, flip=False, lock_face_frac=0.4); compliant_clutch(height=3.0, teeth=18, pawls=3, race_outer_r=24.5, race_tip_r=14.0, tooth_depth=2.6, hub_r=8.0, flexure_w=1.4, flexure_arc_deg=150.0, flexure_clearance=0.45, preload=0.6, flip=False, lock_face_frac=0.4)",
+      "description": "Integral spiral flexures engaging an internal sawtooth race, shown with the torque-limit face fraction.",
+      "origin": "Extracted from Klonk gen_compliant_2d with the torque-limit experiment delta."
+    },
+    {
+      "file": "arc_ratchet_demo.glb",
+      "name": "compliant arc-arm ratchet",
+      "module": "mechlib.ratchets",
+      "signature": "arc_ratchet_2d(teeth=12, tip_r=14.2, root_r=16.0, ring_outer_r=18.0, undercut_deg=8.0, pawls=3, arm_w=2.0, arm_sweep_deg=113.0, arm_r=12.3, clearance=0.35, flip=False, core_r=6.5)",
+      "description": "Three trailing tension-loaded arc flexures engaging a self-energising undercut ring.",
+      "origin": "Recovered from the pre-bb26eec Klonk follower-ratchet revision."
+    },
+    {
+      "file": "helix_tube_demo.glb",
+      "name": "helix_tube",
+      "module": "mechlib.mechanisms",
+      "signature": "helix_tube(R, rw, turns, z0, z1, M=16, N=420)",
+      "description": "A capped solid wire swept through five turns with a radial-inward moving frame.",
+      "origin": "Extracted from the finnish-doors wrap-spring demonstration."
+    },
+    {
+      "file": "rack_2d_demo.glb",
+      "name": "rack_2d",
+      "module": "mechlib.gears",
+      "signature": "rack_2d(n_teeth, module, pa_deg=20.0, backlash=0.0, addendum=None, dedendum=None, base_height=None, end_margin=0.0, centered=True)",
+      "description": "Eight pressure-angle trapezoidal teeth at pi times module circular pitch, extruded thin for display.",
+      "origin": "Generalized from the finnish-doors intercom plunger rack."
+    },
+    {
+      "file": "dog_slot_coupling_demo.glb",
+      "name": "dog_slot_coupling",
+      "module": "mechlib.mechanisms",
+      "signature": "dog_slot_coupling(r_in=6.0, r_out=12.0, dog_deg=30.0, free_deg=50.0, boss_h=7.0, collar_h=5.0, slot_a_clear=1.0, slot_z_clear=0.6, bore_r=4.5, boss_wall=1.5, collar_overhang=2.5, sections=64)",
+      "description": "A downward collar dog riding in a boss arc slot to provide controlled angular lost motion.",
+      "origin": "Generalized from finnish-doors coupling variant A."
     }
   ],
   "utilities": [

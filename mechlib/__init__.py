@@ -1,4 +1,4 @@
-__version__ = "0.3.1"
+__version__ = "0.4.0"
 
 from .closures import (
     SnapSpec,
@@ -43,9 +43,19 @@ from .fasteners import (
     zmin0,
 )
 from .fixtures import board_cradle, saddle
-from .gears import mesh_phase, roller_sprocket_2d, spur_gear, spur_gear_2d, spur_gear_mesh, worm
+from .gears import (
+    mesh_phase,
+    rack_2d,
+    roller_sprocket_2d,
+    spur_gear,
+    spur_gear_2d,
+    spur_gear_mesh,
+    worm,
+)
 from .mechanisms import (
     coarse_pitch,
+    dog_slot_coupling,
+    helix_tube,
     helix_solid,
     knurl,
     tap,
@@ -98,6 +108,18 @@ from .prim import (
     sector2d,
     seg_cylinder,
 )
+from .ratchets import (
+    arc_ratchet_2d,
+    check_ratchet_sense_and_sweep,
+    compliant_clutch,
+    compliant_clutch_2d,
+    pip_ratchet_hub,
+    pip_ratchet_hub_2d,
+    ratchet_ring,
+    ratchet_ring_2d,
+    spring_cartridge_ratchet,
+    spring_cartridge_ratchet_2d,
+)
 from .stepio import export_assembly
 from .sweep import extrude_twist, loft, ring_pts, swept_keyed_bore
 from .text import place, place_right, text_block, text_polygon
@@ -121,6 +143,7 @@ __all__ = (
     "ring_pts",
     "loft",
     "spur_gear_2d",
+    "rack_2d",
     "mesh_phase",
     "spur_gear",
     "worm",
@@ -191,6 +214,18 @@ __all__ = (
     "tap",
     "knurl",
     "torsion_spring_mesh",
+    "helix_tube",
+    "dog_slot_coupling",
+    "ratchet_ring_2d",
+    "ratchet_ring",
+    "pip_ratchet_hub_2d",
+    "pip_ratchet_hub",
+    "spring_cartridge_ratchet_2d",
+    "spring_cartridge_ratchet",
+    "check_ratchet_sense_and_sweep",
+    "compliant_clutch_2d",
+    "compliant_clutch",
+    "arc_ratchet_2d",
     "zmin0",
     "bolt_mesh",
     "hex_nut_mesh",

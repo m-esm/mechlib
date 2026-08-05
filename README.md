@@ -136,6 +136,7 @@ ml.export_stl(body, "bracket.stl")
 | `mesh_phase` | Compute driven-gear tooth phase. | finnish-doors `src/projects/klonk/gears2d.py` |
 | `spur_gear_mesh` | Extrude a spur gear and cut a round bore. | New, unifying finnish-windows and parviz |
 | `roller_sprocket_2d` | Generate a conjugate pin-envelope sprocket. | New, generalized from parviz `src/tracks.py` |
+| `rack_2d` | Generate a finite pressure-angle rack matching `spur_gear_2d`. | finnish-doors `src/intercom/fixture.py` |
 | `spur_gear` | Build a full 3D helical, sector, or hubbed gear. | dual-axis-turntable `src/gears.py` |
 | `worm` | Build a true helical worm and report its lead angle. | dual-axis-turntable `src/gears.py` |
 
@@ -149,7 +150,24 @@ ml.export_stl(body, "bracket.stl")
 | `tap` | Cut an internal thread into a solid. | parviz `src/threads.py` |
 | `knurl` | Cut vertical grip flutes around a cylinder. | parviz `src/standins/m4_bolt.py` |
 | `torsion_spring_mesh` | Build a torsion-spring assembly preview. | finnish-doors `src/projects/klonk/shaft.py` |
+| `helix_tube` | Sweep a capped solid tube along a helix. | finnish-doors `wrap_demo.py` |
+| `dog_slot_coupling` | Build a slotted boss and dog collar for angular lost motion. | finnish-doors `coupling_variants/build_coupling.py` |
 | `threaded_rod` | Build a fast radial-grid external thread. | wall-shelf-clamp `lib.py` |
+
+### `mechlib.ratchets`
+
+| Function | Purpose | Origin project |
+| --- | --- | --- |
+| `ratchet_ring_2d` | Generate the shared phased internal undercut ring profile. | finnish-doors Klonk `gears2d.py` |
+| `ratchet_ring` | Extrude the shared internal ratchet ring. | finnish-doors Klonk `gears2d.py` |
+| `pip_ratchet_hub_2d` | Generate a monolithic hub with captive rigid pawls and accordion springs. | finnish-doors Klonk `gears2d.py` |
+| `pip_ratchet_hub` | Extrude and bore the print-in-place accordion ratchet hub. | finnish-doors Klonk `parts_drive.py` |
+| `spring_cartridge_ratchet_2d` | Generate a slotted hub, matching ring, and separate spring-loaded pawls. | finnish-doors `experiments/spring_ratchet_fable/design.py` |
+| `spring_cartridge_ratchet` | Extrude the spring-cartridge ring, hub, and pawl pieces. | finnish-doors `experiments/spring_ratchet_fable/design.py` |
+| `check_ratchet_sense_and_sweep` | Validate drive sense, self-energising contact, cam-out, and retracted clearance. | finnish-doors `experiments/spring_ratchet_fable/design.py` |
+| `compliant_clutch_2d` | Generate a compliant one-way or torque-limiting race and hub. | finnish-doors Klonk `gen_compliant_2d` |
+| `compliant_clutch` | Extrude the compliant clutch race and flexure hub. | finnish-doors Klonk `gen_compliant_2d` |
+| `arc_ratchet_2d` | Generate a tension-loaded compliant arc-arm ratchet. | finnish-doors historical Klonk follower ratchet |
 
 ### `mechlib.fasteners`
 

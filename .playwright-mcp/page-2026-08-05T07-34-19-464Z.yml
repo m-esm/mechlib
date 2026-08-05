@@ -1,0 +1,639 @@
+- main [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - heading "mechlib" [level=1] [ref=e6]
+        - generic [ref=e7]: v0.4.0
+      - paragraph [ref=e8]: Pure parametric geometry components for mechanical design and FDM printing.
+      - paragraph [ref=e9]: Explicit args only, no hidden globals, no project imports.
+    - link "View on GitHub" [ref=e10] [cursor=pointer]:
+      - /url: https://github.com/m-esm/mechlib
+  - region "Interactive component models" [ref=e11]:
+    - article [ref=e12]:
+      - generic [ref=e13]:
+        - heading "cyl" [level=2] [ref=e14]
+        - generic [ref=e15]: mechlib.prim
+      - img "Interactive 3D model of cyl" [ref=e16]
+      - generic [ref=e17]:
+        - code [ref=e18]: cyl(r, h, center=(0, 0, 0), axis='z', sections=96)
+        - paragraph [ref=e19]: A configurable cylinder oriented along any principal axis.
+        - paragraph [ref=e20]: Originally extracted from geom_util.py in finnish-doors.
+    - article [ref=e21]:
+      - generic [ref=e22]:
+        - heading "boxc" [level=2] [ref=e23]
+        - generic [ref=e24]: mechlib.prim
+      - img "Interactive 3D model of boxc" [ref=e25]
+      - generic [ref=e26]:
+        - code [ref=e27]: boxc(ext, center=(0, 0, 0))
+        - paragraph [ref=e28]: A box positioned by its center and XYZ extents.
+        - paragraph [ref=e29]: Originally extracted from geom_util.py in finnish-doors.
+    - article [ref=e30]:
+      - generic [ref=e31]:
+        - heading "rbox" [level=2] [ref=e32]
+        - generic [ref=e33]: mechlib.prim
+      - img "Interactive 3D model of rbox" [ref=e34]
+      - generic [ref=e35]:
+        - code [ref=e36]: rbox(ext, center=(0, 0, 0), r=5.0)
+        - paragraph [ref=e37]: A clean enclosure block with rounded vertical corners.
+        - paragraph [ref=e38]: Originally extracted from geom_util.py in finnish-doors.
+    - article [ref=e39]:
+      - generic [ref=e40]:
+        - heading "frustum" [level=2] [ref=e41]
+        - generic [ref=e42]: mechlib.prim
+      - img "Interactive 3D model of frustum" [ref=e43]
+      - generic [ref=e44]:
+        - code [ref=e45]: frustum(r0, r1, h, z0=0.0, sections=96)
+        - paragraph [ref=e46]: A truncated cone between two radii and two Z planes.
+        - paragraph [ref=e47]: Originally extracted from geom_util.py in finnish-doors.
+    - article [ref=e48]:
+      - generic [ref=e49]:
+        - heading "sector2d" [level=2] [ref=e50]
+        - generic [ref=e51]: mechlib.prim
+      - img "Interactive 3D model of sector2d" [ref=e52]
+      - generic [ref=e53]:
+        - code [ref=e54]: sector2d(a0_deg, a1_deg, R, n=48)
+        - paragraph [ref=e55]: A circular sector polygon, extruded here to reveal its usable profile.
+        - paragraph [ref=e56]: Originally extracted from geom_util.py in finnish-doors.
+    - article [ref=e57]:
+      - generic [ref=e58]:
+        - heading "hex_poly" [level=2] [ref=e59]
+        - generic [ref=e60]: mechlib.prim
+      - img "Interactive 3D model of hex_poly" [ref=e61]
+      - generic [ref=e62]:
+        - code [ref=e63]: hex_poly(af)
+        - paragraph [ref=e64]: A regular hexagon defined by across-flats width, shown as a solid.
+        - paragraph [ref=e65]: Originally extracted from gears2d.py in finnish-doors.
+    - article [ref=e66]:
+      - generic [ref=e67]:
+        - heading "extrude_twist" [level=2] [ref=e68]
+        - generic [ref=e69]: mechlib.sweep
+      - img "Interactive 3D model of extrude_twist" [ref=e70]
+      - generic [ref=e71]:
+        - code [ref=e72]: extrude_twist(base_outer, base_inner, zlist, phi_of, prof=None, base_ang=None)
+        - paragraph [ref=e73]: A three-lobed profile swept through one full turn over 30 mm.
+        - paragraph [ref=e74]: Originally extracted from geom_util.py in finnish-doors.
+    - article [ref=e75]:
+      - generic [ref=e76]:
+        - heading "swept_keyed_bore" [level=2] [ref=e77]
+        - generic [ref=e78]: mechlib.sweep
+      - img "Interactive 3D model of swept_keyed_bore" [ref=e79]
+      - generic [ref=e80]:
+        - code [ref=e81]: swept_keyed_bore(bore_poly, free_angle, steps=28)
+        - paragraph [ref=e82]: A D-shaped keyed bore beside its 50 degree free-rotation envelope.
+        - paragraph [ref=e83]: Originally extracted from shaft.py in finnish-doors.
+    - article [ref=e84]:
+      - generic [ref=e85]:
+        - heading "spur_gear_2d + mesh_phase" [level=2] [ref=e86]
+        - generic [ref=e87]: mechlib.gears
+      - img "Interactive 3D model of spur_gear_2d + mesh_phase" [ref=e88]
+      - generic [ref=e89]:
+        - code [ref=e90]: spur_gear_2d(N, m, sector=None, relief=2.5, center_at=-90.0, entry_drop=0.0, entry_end=-1, bl=None, t_relief=None, pa=20.0); phased with mesh_phase(N_drv, N_drn, phi_deg)
+        - paragraph [ref=e91]: An 18-tooth driver and 28-tooth driven gear in collision-free mesh.
+        - paragraph [ref=e92]: Originally extracted from gears2d.py in finnish-doors.
+    - article [ref=e93]:
+      - generic [ref=e94]:
+        - heading "board_cradle" [level=2] [ref=e95]
+        - generic [ref=e96]: mechlib.fixtures
+      - img "Interactive 3D model of board_cradle" [ref=e97]
+      - generic [ref=e98]:
+        - code [ref=e99]: board_cradle(rect, fl, standoff=4.0, clr=0.4, wlen=9.0, wt=1.6, cap_over=2.0)
+        - paragraph [ref=e100]: Four PCB corner standoffs and capture walls around a 40 x 30 mm board.
+        - paragraph [ref=e101]: Originally extracted from system_layout.py in finnish-doors.
+    - article [ref=e102]:
+      - generic [ref=e103]:
+        - heading "teardrop" [level=2] [ref=e104]
+        - generic [ref=e105]: mechlib.cutters
+      - img "Interactive 3D model of teardrop" [ref=e106]
+      - generic [ref=e107]:
+        - code [ref=e108]: teardrop(r, length, axis='x', up=(0, -1, 0))
+        - paragraph [ref=e109]: A support-free teardrop bore shown through a cut block.
+        - paragraph [ref=e110]: Extracted from head.py in parviz.
+    - article [ref=e111]:
+      - generic [ref=e112]:
+        - heading "ss_bore" [level=2] [ref=e113]
+        - generic [ref=e114]: mechlib.cutters
+      - img "Interactive 3D model of ss_bore" [ref=e115]
+      - generic [ref=e116]:
+        - code [ref=e117]: ss_bore(R, Robj, length, center, axis='x', split_z=0.0)
+        - paragraph [ref=e118]: A round lower cradle and support-light chamfered upper bore.
+        - paragraph [ref=e119]: Extracted from geom_util.py in finnish-doors.
+    - article [ref=e120]:
+      - generic [ref=e121]:
+        - heading "dbore + dbore_hub" [level=2] [ref=e122]
+        - generic [ref=e123]: mechlib.cutters
+      - img "Interactive 3D model of dbore + dbore_hub" [ref=e124]:
+        - generic: waiting to load
+      - generic [ref=e125]:
+        - code [ref=e126]: dbore(shaft_d, flat, length, axis='z', clear=0.0, round_clear=0.0, flat_clear=0.0); dbore_hub(outer_r, length, axis='z', shaft_d=4.93, flat=3.0, clear=0.12, round_clear=0.0, flat_clear=0.0)
+        - paragraph [ref=e127]: A double-D socket blank beside a ready-made keyed hub.
+        - paragraph [ref=e128]: Unified from parviz and finnish-windows.
+    - article [ref=e129]:
+      - generic [ref=e130]:
+        - heading "counterbore" [level=2] [ref=e131]
+        - generic [ref=e132]: mechlib.cutters
+      - img "Interactive 3D model of counterbore" [ref=e133]:
+        - generic: waiting to load
+      - generic [ref=e134]:
+        - code [ref=e135]: counterbore(d_hole, d_head, head_depth, length, axis='z', head_end='top')
+        - paragraph [ref=e136]: A through-hole with a cylindrical recessed-head pocket.
+        - paragraph [ref=e137]: New abstraction inspired by finnish-doors fastener seats.
+    - article [ref=e138]:
+      - generic [ref=e139]:
+        - heading "bearing_seat 608" [level=2] [ref=e140]
+        - generic [ref=e141]: mechlib.cutters
+      - img "Interactive 3D model of bearing_seat 608" [ref=e142]:
+        - generic: waiting to load
+      - generic [ref=e143]:
+        - code [ref=e144]: bearing_seat(kind, fit='press', open_column=True, extra_depth=0.0)
+        - paragraph [ref=e145]: A cut-away retained 608 seat with a bearing reference ring.
+        - paragraph [ref=e146]: New abstraction from the Klonk 22.25 mm 608 pocket practice.
+    - article [ref=e147]:
+      - generic [ref=e148]:
+        - heading "crush_ribs" [level=2] [ref=e149]
+        - generic [ref=e150]: mechlib.cutters
+      - img "Interactive 3D model of crush_ribs" [ref=e151]:
+        - generic: waiting to load
+      - generic [ref=e152]:
+        - code [ref=e153]: crush_ribs(component_size, rib_thickness, rib_length, rib_height, count=2, interference=0.1, wall_axis='y', wall_offset=None, center=(0, 0, 0))
+        - paragraph [ref=e154]: Six tapered vertical ribs squeezing a rectangular component.
+        - paragraph [ref=e155]: Generalized from tcst_hold_ribs in finnish-doors.
+    - article [ref=e156]:
+      - generic [ref=e157]:
+        - heading "press_lid" [level=2] [ref=e158]
+        - generic [ref=e159]: mechlib.closures
+      - img "Interactive 3D model of press_lid" [ref=e160]:
+        - generic: waiting to load
+      - generic [ref=e161]:
+        - code [ref=e162]: press_lid(ox, oy, cav_x, cav_y, c, plate_t=2.4, plug_h=5.0, plug_wall=1.8, edge_r=5.5, clear=0.1)
+        - paragraph [ref=e163]: A hollow box and its friction-plug lid in an exploded pose.
+        - paragraph [ref=e164]: Extracted from system_layout.py in finnish-doors.
+    - article [ref=e165]:
+      - generic [ref=e166]:
+        - heading "clamshell_shiplap" [level=2] [ref=e167]
+        - generic [ref=e168]: mechlib.closures
+      - img "Interactive 3D model of clamshell_shiplap" [ref=e169]:
+        - generic: waiting to load
+      - generic [ref=e170]:
+        - code [ref=e171]: clamshell_shiplap(outer_solid, clear=0.05)
+        - paragraph [ref=e172]: The matching raised base lip and oversized lid receiver slot.
+        - paragraph [ref=e173]: Extracted from housings.py in finnish-doors.
+    - article [ref=e174]:
+      - generic [ref=e175]:
+        - heading "ydovetail pair" [level=2] [ref=e176]
+        - generic [ref=e177]: mechlib.closures
+      - img "Interactive 3D model of ydovetail pair" [ref=e178]:
+        - generic: waiting to load
+      - generic [ref=e179]:
+        - code [ref=e180]: ydovetail(xc, y0, y1, clear=0.0, wide=10.0, w=6.0, h=5.0, z=14.0)
+        - paragraph [ref=e181]: A self-supporting slide tongue beside its clearanced receiver.
+        - paragraph [ref=e182]: Extracted from system_layout.py in finnish-doors.
+    - article [ref=e183]:
+      - generic [ref=e184]:
+        - heading "snap_catch + snap_finger" [level=2] [ref=e185]
+        - generic [ref=e186]: mechlib.closures
+      - img "Interactive 3D model of snap_catch + snap_finger" [ref=e187]:
+        - generic: waiting to load
+      - generic [ref=e188]:
+        - code [ref=e189]: snap_catch(axis, fc, t, sgn, box_top, spec=SnapSpec(aw=8.0, at=1.6, gap=0.4, drop=6.0, hook=1.5)); snap_finger(axis, fc, t, sgn, mate_z, spec=SnapSpec(aw=8.0, at=1.6, gap=0.4, drop=6.0, hook=1.5))
+        - paragraph [ref=e190]: A ramped retention catch and matching cantilever hook.
+        - paragraph [ref=e191]: Unified from system_layout.py and build_powerbank.py.
+    - article [ref=e192]:
+      - generic [ref=e193]:
+        - heading "nut_slot" [level=2] [ref=e194]
+        - generic [ref=e195]: mechlib.closures
+      - img "Interactive 3D model of nut_slot" [ref=e196]:
+        - generic: waiting to load
+      - generic [ref=e197]:
+        - code [ref=e198]: nut_slot(center, screw_axis='z', open_dir=(0, 1, 0), size='M3', length=14.0, c_af=0.2, c_t=0.2, seat=True, nib=False)
+        - paragraph [ref=e199]: A cut-away seated nut trap with its M3 nut stand-in.
+        - paragraph [ref=e200]: Extracted from geo.py in parviz.
+    - article [ref=e201]:
+      - generic [ref=e202]:
+        - heading "screw_post + fix_pin + blind_socket" [level=2] [ref=e203]
+        - generic [ref=e204]: mechlib.closures / mechlib.cutters
+      - img "Interactive 3D model of screw_post + fix_pin + blind_socket" [ref=e205]:
+        - generic: waiting to load
+      - generic [ref=e206]:
+        - code [ref=e207]: screw_post(pos, normal, depth, boss_r=4.3); fix_pin(r, length, direction, face_pt, bury=1.0); blind_socket(r, deep, out_dir, face_pt, overshoot=1.0)
+        - paragraph [ref=e208]: A bored screw boss beside a locating pin and blind socket block.
+        - paragraph [ref=e209]: Extracted from geo.py in parviz.
+    - article [ref=e210]:
+      - generic [ref=e211]:
+        - heading "spur_gear_mesh" [level=2] [ref=e212]
+        - generic [ref=e213]: mechlib.gears
+      - img "Interactive 3D model of spur_gear_mesh" [ref=e214]:
+        - generic: waiting to load
+      - generic [ref=e215]:
+        - code [ref=e216]: spur_gear_mesh(N, m, width, bore_d=0.0, pa=20.0, bl=0.35, t_relief=0.1, sections=96)
+        - paragraph [ref=e217]: A printable involute spur gear with a measured round bore.
+        - paragraph [ref=e218]: Unified from finnish-windows and parviz gear builders.
+    - article [ref=e219]:
+      - generic [ref=e220]:
+        - heading "roller_sprocket_2d + polar_ring" [level=2] [ref=e221]
+        - generic [ref=e222]: mechlib.gears / mechlib.patterns
+      - img "Interactive 3D model of roller_sprocket_2d + polar_ring" [ref=e223]:
+        - generic: waiting to load
+      - generic [ref=e224]:
+        - code [ref=e225]: roller_sprocket_2d(n_teeth, pitch, pin_d, clear=0.0, outer_d=None); polar_ring(n, r, center=(0.0, 0.0), phase=0.0)
+        - paragraph [ref=e226]: A conjugate 14-tooth sprocket surrounded by track-pin references.
+        - paragraph [ref=e227]: Generalized from tracks.py in parviz.
+    - article [ref=e228]:
+      - generic [ref=e229]:
+        - heading "thread_solid + tap" [level=2] [ref=e230]
+        - generic [ref=e231]: mechlib.mechanisms
+      - img "Interactive 3D model of thread_solid + tap" [ref=e232]:
+        - generic: waiting to load
+      - generic [ref=e233]:
+        - code [ref=e234]: thread_solid(d_nom, length, pitch=None, internal=False, clear=0.25, starts=1, seg=96); tap(mesh, d_nom, at, length, pitch=None, clear=0.25, axis='z')
+        - paragraph [ref=e235]: An M8 threaded bolt beside a cut-away tapped hex nut.
+        - paragraph [ref=e236]: Extracted from threads.py in parviz.
+    - article [ref=e237]:
+      - generic [ref=e238]:
+        - heading "knurl" [level=2] [ref=e239]
+        - generic [ref=e240]: mechlib.mechanisms
+      - img "Interactive 3D model of knurl" [ref=e241]:
+        - generic: waiting to load
+      - generic [ref=e242]:
+        - code [ref=e243]: knurl(mesh, r, z0, z1, n=18, depth=0.35)
+        - paragraph [ref=e244]: A cylindrical thumb knob with printable vertical flutes.
+        - paragraph [ref=e245]: Extracted from m4_bolt.py in parviz.
+    - article [ref=e246]:
+      - generic [ref=e247]:
+        - heading "torsion_spring_mesh" [level=2] [ref=e248]
+        - generic [ref=e249]: mechlib.mechanisms
+      - img "Interactive 3D model of torsion_spring_mesh" [ref=e250]:
+        - generic: waiting to load
+      - generic [ref=e251]:
+        - code [ref=e252]: torsion_spring_mesh(mean_r=6.8, wire=1.2, turns=5.0, z=(0.5, 7.5), leg_r=1.4, anchor_at=(9.5, -60.0), moving_leg_z=10.5)
+        - paragraph [ref=e253]: A five-turn torsion spring preview with moving and ground legs.
+        - paragraph [ref=e254]: Extracted from shaft.py in finnish-doors.
+    - article [ref=e255]:
+      - generic [ref=e256]:
+        - heading "lighten_grid panel" [level=2] [ref=e257]
+        - generic [ref=e258]: mechlib.patterns
+      - img "Interactive 3D model of lighten_grid panel" [ref=e259]:
+        - generic: waiting to load
+      - generic [ref=e260]:
+        - code [ref=e261]: lighten_grid_centres(minx, miny, maxx, maxy, cell, web, pattern); lighten_cell_poly(cx, cy, cell, pattern)
+        - paragraph [ref=e262]: A structural panel opened by a staggered hexagonal lattice.
+        - paragraph [ref=e263]: Extracted from housings.py in finnish-doors.
+    - article [ref=e264]:
+      - generic [ref=e265]:
+        - heading "text_polygon" [level=2] [ref=e266]
+        - generic [ref=e267]: mechlib.text
+      - img "Interactive 3D model of text_polygon" [ref=e268]:
+        - generic: waiting to load
+      - generic [ref=e269]:
+        - code [ref=e270]: text_polygon(text, size, font_path=None)
+        - paragraph [ref=e271]: The word mechlib converted to counter-preserving raised geometry.
+        - paragraph [ref=e272]: Extracted from housings.py in finnish-doors.
+    - article [ref=e273]:
+      - generic [ref=e274]:
+        - heading "fastener_mesh + nut + washer" [level=2] [ref=e275]
+        - generic [ref=e276]: mechlib.fasteners
+      - img "Interactive 3D model of fastener_mesh + nut + washer" [ref=e277]:
+        - generic: waiting to load
+      - generic [ref=e278]:
+        - code [ref=e279]: fastener_mesh(d, L, style='pan', axis='z', at=(0.0, 0.0, 0.0), sections=32); hex_nut_mesh(af, h, bore_d); washer_mesh(od, id_, h)
+        - paragraph [ref=e280]: Pan, socket, and countersunk screws with nut and washer stand-ins.
+        - paragraph [ref=e281]: Unified from all three source projects.
+    - article [ref=e282]:
+      - generic [ref=e283]:
+        - heading "worm + helical wheel" [level=2] [ref=e284]
+        - generic [ref=e285]: mechlib.gears
+      - img "Interactive 3D model of worm + helical wheel" [ref=e286]:
+        - generic: waiting to load
+      - generic [ref=e287]:
+        - code [ref=e288]: worm(module, length, pitch_d, starts=1, pressure_angle=20.0, bore=0.0); spur_gear(module, teeth, width, bore=0.0, pressure_angle=20.0, sector_deg=360.0, backlash=0.06, hub_d=0.0, full_disc=True, helix_deg=0.0)
+        - paragraph [ref=e289]: A true helical worm beside its lead-angle-matched wheel.
+        - paragraph [ref=e290]: Extracted from gears.py in dual-axis-turntable.
+    - article [ref=e291]:
+      - generic [ref=e292]:
+        - heading "spur_gear sector" [level=2] [ref=e293]
+        - generic [ref=e294]: mechlib.gears
+      - img "Interactive 3D model of spur_gear sector" [ref=e295]:
+        - generic: waiting to load
+      - generic [ref=e296]:
+        - code [ref=e297]: spur_gear(module, teeth, width, bore=0.0, pressure_angle=20.0, sector_deg=360.0, backlash=0.06, hub_d=0.0, full_disc=True, helix_deg=0.0)
+        - paragraph [ref=e298]: A full-featured involute sector with a central hub and bore.
+        - paragraph [ref=e299]: Extracted from gears.py in dual-axis-turntable.
+    - article [ref=e300]:
+      - generic [ref=e301]:
+        - heading "loft" [level=2] [ref=e302]
+        - generic [ref=e303]: mechlib.sweep
+      - img "Interactive 3D model of loft" [ref=e304]:
+        - generic: waiting to load
+      - generic [ref=e305]:
+        - code [ref=e306]: loft(rings)
+        - paragraph [ref=e307]: An organic solid joined through five equal-count point rings.
+        - paragraph [ref=e308]: Extracted from build.py in dual-axis-turntable.
+    - article [ref=e309]:
+      - generic [ref=e310]:
+        - heading "push_pin" [level=2] [ref=e311]
+        - generic [ref=e312]: mechlib.closures
+      - img "Interactive 3D model of push_pin" [ref=e313]:
+        - generic: waiting to load
+      - generic [ref=e314]:
+        - code [ref=e315]: push_pin(d, length, barb=True, axis='z', flip=False)
+        - paragraph [ref=e316]: A barbed printed press pin with a conical lead-in tip.
+        - paragraph [ref=e317]: Extracted from build.py in dual-axis-turntable.
+    - article [ref=e318]:
+      - generic [ref=e319]:
+        - heading "chamfer_prism" [level=2] [ref=e320]
+        - generic [ref=e321]: mechlib.prim
+      - img "Interactive 3D model of chamfer_prism" [ref=e322]:
+        - generic: waiting to load
+      - generic [ref=e323]:
+        - code [ref=e324]: chamfer_prism(w, d, h, r, cham)
+        - paragraph [ref=e325]: A rounded enclosure prism with a clean hull-chamfered top.
+        - paragraph [ref=e326]: Extracted from build.py in dual-axis-turntable.
+    - article [ref=e327]:
+      - generic [ref=e328]:
+        - heading "threaded_rod M8" [level=2] [ref=e329]
+        - generic [ref=e330]: mechlib.mechanisms
+      - img "Interactive 3D model of threaded_rod M8" [ref=e331]:
+        - generic: waiting to load
+      - generic [ref=e332]:
+        - code [ref=e333]: threaded_rod(major_d, pitch, length, minor_d=None, n_theta=64, steps_per_pitch=6)
+        - paragraph [ref=e334]: A fast radial-grid M8 display and light-duty external thread.
+        - paragraph [ref=e335]: Extracted from lib.py in wall-shelf-clamp.
+    - article [ref=e336]:
+      - generic [ref=e337]:
+        - heading "setscrew boss" [level=2] [ref=e338]
+        - generic [ref=e339]: mechlib.closures
+      - img "Interactive 3D model of setscrew boss" [ref=e340]:
+        - generic: waiting to load
+      - generic [ref=e341]:
+        - code [ref=e342]: setscrew(point, direction, into=14.0, hole_d=4.2, boss_d=12.0, boss_h=4.0, sections=32)
+        - paragraph [ref=e343]: A cut-away sleeve showing its external boss and inward pilot.
+        - paragraph [ref=e344]: Extracted from lib.py in wall-shelf-clamp.
+    - article [ref=e345]:
+      - generic [ref=e346]:
+        - heading "slot_cutter" [level=2] [ref=e347]
+        - generic [ref=e348]: mechlib.cutters
+      - img "Interactive 3D model of slot_cutter" [ref=e349]:
+        - generic: waiting to load
+      - generic [ref=e350]:
+        - code [ref=e351]: slot_cutter(w, t, z0, z1, cx=0.0, cy=0.0, foot_z=0.0, dogbone_r=0.6, foot_relief=0.3, eps=0.5)
+        - paragraph [ref=e352]: An FDM blade slot with visible square-corner dog-bone relief.
+        - paragraph [ref=e353]: Extracted from build.py in torque-lever.
+    - article [ref=e354]:
+      - generic [ref=e355]:
+        - heading "tapered_cavity" [level=2] [ref=e356]
+        - generic [ref=e357]: mechlib.cutters
+      - img "Interactive 3D model of tapered_cavity" [ref=e358]:
+        - generic: waiting to load
+      - generic [ref=e359]:
+        - code [ref=e360]: tapered_cavity(g, zlo, height, taper_h=11.0, taper_step=0.6)
+        - paragraph [ref=e361]: A cut-away hollow whose stepped roof closes without bridging.
+        - paragraph [ref=e362]: Extracted from lighten_legs.py in tripod.
+    - article [ref=e363]:
+      - generic [ref=e364]:
+        - heading "u_channel_between" [level=2] [ref=e365]
+        - generic [ref=e366]: mechlib.cutters
+      - img "Interactive 3D model of u_channel_between" [ref=e367]:
+        - generic: waiting to load
+      - generic [ref=e368]:
+        - code [ref=e369]: u_channel_between(p0, p1, channel_w, z_floor, body_h)
+        - paragraph [ref=e370]: Joined arbitrary-angle open U segments forming an S-shaped run.
+        - paragraph [ref=e371]: Extracted from build.py in jumper-wire-sockets.
+    - article [ref=e372]:
+      - generic [ref=e373]:
+        - heading "revolved_gable_cavity" [level=2] [ref=e374]
+        - generic [ref=e375]: mechlib.cutters
+      - img "Interactive 3D model of revolved_gable_cavity" [ref=e376]
+      - generic [ref=e377]:
+        - code [ref=e378]: revolved_gable_cavity(r_in, r_out, z0, h, roof_angle=45.0, sections=128)
+        - paragraph [ref=e379]: A cut-away annular chamber beneath a 45 degree gable roof.
+        - paragraph [ref=e380]: Generalized from build.py in massage-shower-head.
+    - article [ref=e381]:
+      - generic [ref=e382]:
+        - heading "directed_holes" [level=2] [ref=e383]
+        - generic [ref=e384]: mechlib.patterns
+      - img "Interactive 3D model of directed_holes" [ref=e385]
+      - generic [ref=e386]:
+        - code [ref=e387]: directed_holes(points, vectors, d, length)
+        - paragraph [ref=e388]: Eight vector-directed bores cut through a hemispherical dome.
+        - paragraph [ref=e389]: Generalized from build.py in massage-shower-head.
+    - article [ref=e390]:
+      - generic [ref=e391]:
+        - heading "saddle" [level=2] [ref=e392]
+        - generic [ref=e393]: mechlib.fixtures
+      - img "Interactive 3D model of saddle" [ref=e394]
+      - generic [ref=e395]:
+        - code [ref=e396]: saddle(axis0, axis1, r, yi, rib_t, interior, rise=0.0)
+        - paragraph [ref=e397]: A shell-trimmed rib cradling a skew cylindrical reference part.
+        - paragraph [ref=e398]: Extracted from pickle_build.py in mini-powerbank.
+    - article [ref=e399]:
+      - generic [ref=e400]:
+        - heading "text_block" [level=2] [ref=e401]
+        - generic [ref=e402]: mechlib.text
+      - img "Interactive 3D model of text_block" [ref=e403]
+      - generic [ref=e404]:
+        - code [ref=e405]: text_block(lines, cx, cy, h, gap=1.2)
+        - paragraph [ref=e406]: Two centered lines of raised polygon text stacked on a plaque.
+        - paragraph [ref=e407]: Extracted from build.py in torque-lever.
+    - article [ref=e408]:
+      - generic [ref=e409]:
+        - heading "seg_cylinder" [level=2] [ref=e410]
+        - generic [ref=e411]: mechlib.prim
+      - img "Interactive 3D model of seg_cylinder" [ref=e412]
+      - generic [ref=e413]:
+        - code [ref=e414]: seg_cylinder(p0, p1, d)
+        - paragraph [ref=e415]: A cylinder spanning two skew points in three dimensions.
+        - paragraph [ref=e416]: Extracted from build.py in massage-shower-head.
+    - article [ref=e417]:
+      - generic [ref=e418]:
+        - heading "print-in-place accordion ratchet" [level=2] [ref=e419]
+        - generic [ref=e420]: mechlib.ratchets
+      - img "Interactive 3D model of print-in-place accordion ratchet" [ref=e421]
+      - generic [ref=e422]:
+        - code [ref=e423]: ratchet_ring_2d(teeth=9, tip_r=15.0, root_r=17.0, outer_r=18.4, undercut_deg=7.0, clearance=0.15, flip=False, phase_deg=None, pawl_az=(90.0, 210.0, 330.0), pawl_width=5.6, nose_r=16.7, spring_x0=5.7, spring_t=0.8, spring_gap=0.9, spring_folds=4); ratchet_ring(height=3.62, teeth=9, tip_r=15.0, root_r=17.0, outer_r=18.4, undercut_deg=7.0, clearance=0.15, flip=False, phase_deg=None, pawl_az=(90.0, 210.0, 330.0), pawl_width=5.6, nose_r=16.7, spring_x0=5.7, spring_t=0.8, spring_gap=0.9, spring_folds=4); pip_ratchet_hub_2d(teeth=9, tip_r=15.0, root_r=17.0, outer_r=18.4, undercut_deg=7.0, clearance=0.15, flip=False, phase_deg=None, pawl_az=(90.0, 210.0, 330.0), hub_radius=14.5, spoke_outer_r=13.5, pawl_width=5.6, nose_r=16.7, travel=1.9, sliding_clearance=0.45, boss_width=1.7, spoke_inner_r=2.0, spring_x0=5.7, spring_t=0.8, spring_gap=0.9, spring_folds=4, spring_clearance=0.45); pip_ratchet_hub(height=3.15, bore_w=7.2, bore_t=2.0, bore_clearance=0.3, teeth=9, tip_r=15.0, root_r=17.0, outer_r=18.4, undercut_deg=7.0, clearance=0.15, flip=False, phase_deg=None, pawl_az=(90.0, 210.0, 330.0), hub_radius=14.5, spoke_outer_r=13.5, pawl_width=5.6, nose_r=16.7, travel=1.9, sliding_clearance=0.45, boss_width=1.7, spoke_inner_r=2.0, spring_x0=5.7, spring_t=0.8, spring_gap=0.9, spring_folds=4, spring_clearance=0.45)
+        - paragraph [ref=e424]: Three captive rigid pawls, each reseated by a printed accordion spring, inside a matching undercut ring.
+        - paragraph [ref=e425]: Extracted from the Klonk print-in-place follower ratchet.
+    - article [ref=e426]:
+      - generic [ref=e427]:
+        - heading "spring-cartridge rigid-pawl ratchet" [level=2] [ref=e428]
+        - generic [ref=e429]: mechlib.ratchets
+      - img "Interactive 3D model of spring-cartridge rigid-pawl ratchet" [ref=e430]
+      - generic [ref=e431]:
+        - code [ref=e432]: spring_cartridge_ratchet_2d(teeth=12, tip_r=13.2, root_r=15.2, outer_r=17.8, hook_deg=7.0, drive_ccw=True, phase_deg=None, hub_r=12.7, pawl_az=(90.0, 210.0, 330.0), pawl_clear=0.15, slot_w_wide=7.7, slot_w_mouth=5.4, slot_x_in=5.0, slot_x_step=12.15, slot_x_out=12.75, tail_w=7.3, tail_x0=7.2, tail_x1=12.05, fork_w=4.6, fork_x1=11.0, body_w=5.0, nose_x1=15.35, boss_sq=2.2, boss_len=1.2); spring_cartridge_ratchet(ring_height=3.2, hub_height=2.75, pawl_height=2.6, hub_z0=0.15, pawl_z0=0.15, bore_w=7.2, bore_t=2.0, bore_clearance=0.3, teeth=12, tip_r=13.2, root_r=15.2, outer_r=17.8, hook_deg=7.0, drive_ccw=True, phase_deg=None, hub_r=12.7, pawl_az=(90.0, 210.0, 330.0), pawl_clear=0.15, slot_w_wide=7.7, slot_w_mouth=5.4, slot_x_in=5.0, slot_x_step=12.15, slot_x_out=12.75, tail_w=7.3, tail_x0=7.2, tail_x1=12.05, fork_w=4.6, fork_x1=11.0, body_w=5.0, nose_x1=15.35, boss_sq=2.2, boss_len=1.2); validator check_ratchet_sense_and_sweep(ring_2d, pawls_2d, pawl_az=(90.0, 210.0, 330.0), teeth=12, travel=1.9, drive_ccw=True, drive_probe_deg=2.0, area_epsilon=0.005)
+        - paragraph [ref=e433]: A slotted hub and three separately printable rigid pawls inside a self-energising ring.
+        - paragraph [ref=e434]: Adapted from experiments/spring_ratchet_fable/design.py.
+    - article [ref=e435]:
+      - generic [ref=e436]:
+        - heading "compliant clutch torque limiter" [level=2] [ref=e437]
+        - generic [ref=e438]: mechlib.ratchets
+      - img "Interactive 3D model of compliant clutch torque limiter" [ref=e439]
+      - generic [ref=e440]:
+        - code [ref=e441]: compliant_clutch_2d(teeth=18, pawls=3, race_outer_r=24.5, race_tip_r=14.0, tooth_depth=2.6, hub_r=8.0, flexure_w=1.4, flexure_arc_deg=150.0, flexure_clearance=0.45, preload=0.6, flip=False, lock_face_frac=0.4); compliant_clutch(height=3.0, teeth=18, pawls=3, race_outer_r=24.5, race_tip_r=14.0, tooth_depth=2.6, hub_r=8.0, flexure_w=1.4, flexure_arc_deg=150.0, flexure_clearance=0.45, preload=0.6, flip=False, lock_face_frac=0.4)
+        - paragraph [ref=e442]: Integral spiral flexures engaging an internal sawtooth race, shown with the torque-limit face fraction.
+        - paragraph [ref=e443]: Extracted from Klonk gen_compliant_2d with the torque-limit experiment delta.
+    - article [ref=e444]:
+      - generic [ref=e445]:
+        - heading "compliant arc-arm ratchet" [level=2] [ref=e446]
+        - generic [ref=e447]: mechlib.ratchets
+      - img "Interactive 3D model of compliant arc-arm ratchet" [ref=e448]
+      - generic [ref=e449]:
+        - code [ref=e450]: arc_ratchet_2d(teeth=12, tip_r=14.2, root_r=16.0, ring_outer_r=18.0, undercut_deg=8.0, pawls=3, arm_w=2.0, arm_sweep_deg=113.0, arm_r=12.3, clearance=0.35, flip=False, core_r=6.5)
+        - paragraph [ref=e451]: Three trailing tension-loaded arc flexures engaging a self-energising undercut ring.
+        - paragraph [ref=e452]: Recovered from the pre-bb26eec Klonk follower-ratchet revision.
+    - article [ref=e453]:
+      - generic [ref=e454]:
+        - heading "helix_tube" [level=2] [ref=e455]
+        - generic [ref=e456]: mechlib.mechanisms
+      - img "Interactive 3D model of helix_tube" [ref=e457]
+      - generic [ref=e458]:
+        - code [ref=e459]: helix_tube(R, rw, turns, z0, z1, M=16, N=420)
+        - paragraph [ref=e460]: A capped solid wire swept through five turns with a radial-inward moving frame.
+        - paragraph [ref=e461]: Extracted from the finnish-doors wrap-spring demonstration.
+    - article [ref=e462]:
+      - generic [ref=e463]:
+        - heading "rack_2d" [level=2] [ref=e464]
+        - generic [ref=e465]: mechlib.gears
+      - img "Interactive 3D model of rack_2d" [ref=e466]
+      - generic [ref=e467]:
+        - code [ref=e468]: rack_2d(n_teeth, module, pa_deg=20.0, backlash=0.0, addendum=None, dedendum=None, base_height=None, end_margin=0.0, centered=True)
+        - paragraph [ref=e469]: Eight pressure-angle trapezoidal teeth at pi times module circular pitch, extruded thin for display.
+        - paragraph [ref=e470]: Generalized from the finnish-doors intercom plunger rack.
+    - article [ref=e471]:
+      - generic [ref=e472]:
+        - heading "dog_slot_coupling" [level=2] [ref=e473]
+        - generic [ref=e474]: mechlib.mechanisms
+      - img "Interactive 3D model of dog_slot_coupling" [ref=e475]
+      - generic [ref=e476]:
+        - code [ref=e477]: dog_slot_coupling(r_in=6.0, r_out=12.0, dog_deg=30.0, free_deg=50.0, boss_h=7.0, collar_h=5.0, slot_a_clear=1.0, slot_z_clear=0.6, bore_r=4.5, boss_wall=1.5, collar_overhang=2.5, sections=64)
+        - paragraph [ref=e478]: A downward collar dog riding in a boss arc slot to provide controlled angular lost motion.
+        - paragraph [ref=e479]: Generalized from finnish-doors coupling variant A.
+  - region [ref=e480]:
+    - heading "Utility API" [level=2] [ref=e481]
+    - paragraph [ref=e482]: Non-visual CSG, probing, fitting, and selection helpers.
+    - generic [ref=e483]:
+      - article [ref=e484]:
+        - generic [ref=e485]: mechlib.meshutil
+        - code [ref=e486]: to_manifold(mesh)
+        - paragraph [ref=e487]: Convert trimesh geometry to manifold3d.
+      - article [ref=e488]:
+        - generic [ref=e489]: mechlib.meshutil
+        - code [ref=e490]: from_manifold(man)
+        - paragraph [ref=e491]: Convert manifold3d results back to trimesh.
+      - article [ref=e492]:
+        - generic [ref=e493]: mechlib.meshutil
+        - code [ref=e494]: sub(a, b)
+        - paragraph [ref=e495]: Subtract one watertight solid from another.
+      - article [ref=e496]:
+        - generic [ref=e497]: mechlib.meshutil
+        - code [ref=e498]: uni(parts)
+        - paragraph [ref=e499]: Union a sequence of watertight solids.
+      - article [ref=e500]:
+        - generic [ref=e501]: mechlib.meshutil
+        - code [ref=e502]: inter(a, b)
+        - paragraph [ref=e503]: Intersect two watertight solids.
+      - article [ref=e504]:
+        - generic [ref=e505]: mechlib.meshutil
+        - code [ref=e506]: export_stl(mesh, path)
+        - paragraph [ref=e507]: Export STL through a watertightness gate.
+      - article [ref=e508]:
+        - generic [ref=e509]: mechlib.meshutil
+        - code [ref=e510]: inflate(m, gap=0.6)
+        - paragraph [ref=e511]: Offset mesh vertices along their normals.
+      - article [ref=e512]:
+        - generic [ref=e513]: mechlib.meshutil
+        - code [ref=e514]: bbox_overlap(a, b)
+        - paragraph [ref=e515]: Check axis-aligned bounding-box overlap.
+      - article [ref=e516]:
+        - generic [ref=e517]: mechlib.meshutil
+        - code [ref=e518]: overlap_volume(a, b)
+        - paragraph [ref=e519]: Measure exact manifold overlap volume.
+      - article [ref=e520]:
+        - generic [ref=e521]: mechlib.meshutil
+        - code [ref=e522]: inside(mesh, pts)
+        - paragraph [ref=e523]: Probe points expected inside a solid.
+      - article [ref=e524]:
+        - generic [ref=e525]: mechlib.meshutil
+        - code [ref=e526]: clear(mesh, pts)
+        - paragraph [ref=e527]: Probe points expected outside a solid.
+      - article [ref=e528]:
+        - generic [ref=e529]: mechlib.meshutil
+        - code [ref=e530]: bore_pierces(mesh, start, direction, length, n=12)
+        - paragraph [ref=e531]: Probe a bore along its real axis.
+      - article [ref=e532]:
+        - generic [ref=e533]: mechlib.meshutil
+        - code [ref=e534]: void_cube(mesh, pt, s=0.5)
+        - paragraph [ref=e535]: Confirm local void with a cube intersection.
+      - article [ref=e536]:
+        - generic [ref=e537]: mechlib.meshutil
+        - code [ref=e538]: solid_cube(mesh, pt, s=0.25)
+        - paragraph [ref=e539]: Confirm local material with a cube intersection.
+      - article [ref=e540]:
+        - generic [ref=e541]: mechlib.meshutil
+        - code [ref=e542]: self_thickness(mesh, n, seed=0)
+        - paragraph [ref=e543]: Sample ray-based wall thickness.
+      - article [ref=e544]:
+        - generic [ref=e545]: mechlib.meshutil
+        - code [ref=e546]: cube_rotations()
+        - paragraph [ref=e547]: Return the 24 proper cube rotations.
+      - article [ref=e548]:
+        - generic [ref=e549]: mechlib.meshutil
+        - code [ref=e550]: fit_transform(real, placeholder)
+        - paragraph [ref=e551]: Fit a real mesh to an oriented placeholder.
+      - article [ref=e552]:
+        - generic [ref=e553]: mechlib.meshutil
+        - code [ref=e554]: decimate(m, pitch)
+        - paragraph [ref=e555]: Cluster vertices on a regular grid.
+      - article [ref=e556]:
+        - generic [ref=e557]: mechlib.meshutil
+        - code [ref=e558]: orient(m, normal)
+        - paragraph [ref=e559]: Rotate positive Z onto a normal vector.
+      - article [ref=e560]:
+        - generic [ref=e561]: mechlib.meshutil
+        - code [ref=e562]: extrude_poly_z(poly2d, z0, z1)
+        - paragraph [ref=e563]: Extrude Polygon or MultiPolygon between Z planes.
+      - article [ref=e564]:
+        - generic [ref=e565]: mechlib.meshutil
+        - code [ref=e566]: largest_poly(g)
+        - paragraph [ref=e567]: Select the largest Shapely polygon.
+      - article [ref=e568]:
+        - generic [ref=e569]: mechlib.mechanisms
+        - code [ref=e570]: coarse_pitch(nominal_d)
+        - paragraph [ref=e571]: Look up a printable coarse metric pitch.
+      - article [ref=e572]:
+        - generic [ref=e573]: mechlib.fasteners
+        - code [ref=e574]: pick_length(span, std_lengths=(6, 8, 10, 12, 16, 20, 25, 30))
+        - paragraph [ref=e575]: Select the next usable standard screw length.
+      - article [ref=e576]:
+        - generic [ref=e577]: mechlib.closures
+        - code [ref=e578]: nut_ac(size='M3')
+        - paragraph [ref=e579]: Convert nut across-flats to across-corners.
+      - article [ref=e580]:
+        - generic [ref=e581]: mechlib.meshutil
+        - code [ref=e582]: "audit(parts, clearance, allow, label='', aliases={})"
+        - paragraph [ref=e583]: Audit pairwise overlap and clearance.
+      - article [ref=e584]:
+        - generic [ref=e585]: mechlib.meshutil
+        - code [ref=e586]: min_distance(a, b, n=800)
+        - paragraph [ref=e587]: Approximate sampled surface distance.
+      - article [ref=e588]:
+        - generic [ref=e589]: mechlib.meshutil
+        - code [ref=e590]: approach_clear(mesh, mouth, direction, max_dist=50.0)
+        - paragraph [ref=e591]: Measure free travel toward an opening.
+      - article [ref=e592]:
+        - generic [ref=e593]: mechlib.meshutil
+        - code [ref=e594]: slicer_area(polys, infill, line_w=0.42, perimeters=3)
+        - paragraph [ref=e595]: Predict perimeter-plus-infill layer area.
+      - article [ref=e596]:
+        - generic [ref=e597]: mechlib.packing
+        - code [ref=e598]: shelf_pack(sized, bed=(256.0, 256.0), gap=6.0)
+        - paragraph [ref=e599]: Pack brim-grown footprints across plates.
+      - article [ref=e600]:
+        - generic [ref=e601]: mechlib.stepio
+        - code [ref=e602]: export_assembly(named_meshes, path)
+        - paragraph [ref=e603]: Export positioned meshes as a STEP assembly.
+      - article [ref=e604]:
+        - generic [ref=e605]: mechlib.meshutil
+        - code [ref=e606]: extrude_snapped(poly2d, z0, z1)
+        - paragraph [ref=e607]: Snap tangent vertices before extrusion.
+      - article [ref=e608]:
+        - generic [ref=e609]: mechlib.cutters
+        - code [ref=e610]: lobe_cavity_polys(section2d, wall=1.2, rib_w=1.6, n_rib=0)
+        - paragraph [ref=e611]: Build hollow lobe polygons around ribs.
