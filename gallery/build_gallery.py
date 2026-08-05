@@ -265,7 +265,7 @@ def mechanism_demos():
     """Build threaded, knurled, and torsion-spring demonstrations."""
     # seg >= 96: coarser helical facets turn into specular "crumple" once the
     # viewer smooths vertex normals across the crest edges
-    bolt = thread_solid(8, 16, seg=96)
+    bolt = thread_solid(8, 16)
     head = cyl(7, 4)
     head.apply_translation((0, 0, -2))
     bolt = uni([head, bolt])

@@ -78,11 +78,12 @@ def helix_solid(prof, lead, turns, seg):
 
 
 def thread_solid(d_nom, length, pitch=None, internal=False, clear=0.25,
-                 starts=1, seg=64):
+                 starts=1, seg=96):
     """Build a printable ISO 60 degree external thread or internal cutter.
 
     External mode returns a threaded rod. Internal mode returns its clearance-
-    grown negative for subtraction from a nut or boss.
+    grown negative for subtraction from a nut or boss. ``seg`` below 96 leaves
+    a visible sawtooth on the crests under smoothed-normal rendering.
     origin: parviz src/threads.py:124
     """
     pitch = pitch or coarse_pitch(d_nom)

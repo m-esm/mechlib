@@ -4,6 +4,28 @@
 
 `mechlib` is a standalone collection of pure parametric geometry primitives for FDM-printed mechanical design using trimesh, Shapely, and manifold3d. The primitives were mined from finnish-doors (the Klonk door CAD project), finnish-windows, and parviz, which contained three or more independent reimplementations of the same geometry helpers.
 
+## Scope
+
+mechlib holds semi-primitive parts only: reusable, project-agnostic building blocks (primitives, sweeps, cutters, gear generators, fasteners, closures, patterns, text, mesh utilities, packing, STEP export). Finished designed parts, product models, and assemblies never live here; they belong to consumer projects. The gallery demos API usage, one minimal entry per function, and is not a parts showcase.
+
+## Install
+
+```bash
+# from a consumer project on this machine (editable, tracks the checkout)
+pip3 install -e ~/Desktop/myprojects/mechlib
+
+# or straight from GitHub
+pip3 install git+https://github.com/m-esm/mechlib
+```
+
+```python
+import mechlib as ml
+
+body = ml.rbox((40, 24, 12), r=3)                              # rounded block
+body = ml.sub(body, ml.teardrop(4.1, 50, axis="x", up=(0, 0, 1)))  # print-safe bore
+ml.export_stl(body, "bracket.stl")
+```
+
 ## API
 
 ### `mechlib.prim`
@@ -165,7 +187,7 @@
 
 mechlib functions take explicit arguments only. They never read project parameter modules, never import from consuming projects, and never hold mutable module state. Consumers keep thin facade modules that bind their own params.
 
-Consumers are finnish-doors (Klonk), finnish-windows, and parviz.
+Current consumer: finnish-doors (Klonk). Planned migrations: finnish-windows, parviz, dual-axis-turntable, wall-shelf-clamp.
 
 ## Gallery
 
