@@ -364,6 +364,229 @@
       font-size: 0.66rem;
     }
 
+    .tune-button {
+      position: absolute;
+      right: 6px;
+      bottom: 6px;
+      z-index: 14;
+      padding: 3px 8px;
+      border: 1px solid var(--line-strong);
+      color: var(--accent);
+      background: rgba(9, 33, 54, 0.85);
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: border-color 140ms ease, background 140ms ease;
+    }
+
+    .tune-button:hover,
+    .tune-button:focus-visible {
+      border-color: var(--accent);
+      background: rgba(255, 180, 84, 0.14);
+      outline: none;
+    }
+
+    .playground-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: none;
+      padding: clamp(10px, 3vw, 36px);
+      border: 0;
+      background: rgba(4, 14, 24, 0.82);
+    }
+
+    .playground-modal.open {
+      display: grid;
+      place-items: center;
+    }
+
+    .pg-sheet {
+      display: flex;
+      flex-direction: column;
+      width: min(1180px, 100%);
+      max-height: 100%;
+      border: 1px solid var(--line-strong);
+      background: var(--field);
+    }
+
+    .pg-head {
+      display: flex;
+      gap: 12px;
+      align-items: baseline;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .pg-head h2 {
+      margin: 0;
+      font-family: var(--display);
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .pg-close {
+      padding: 6px 12px;
+      border: 1px solid var(--line-strong);
+      color: var(--ink);
+      background: transparent;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .pg-close:hover,
+    .pg-close:focus-visible {
+      border-color: var(--accent);
+      color: var(--accent);
+      outline: none;
+    }
+
+    .pg-body {
+      display: grid;
+      flex: 1 1 auto;
+      grid-template-columns: minmax(0, 1.5fr) minmax(260px, 1fr);
+      min-height: 0;
+    }
+
+    .pg-viewer {
+      position: relative;
+      min-height: 340px;
+      border-right: 1px solid var(--line);
+      background: var(--panel-deep);
+      cursor: grab;
+      touch-action: none;
+    }
+
+    .pg-viewer:active {
+      cursor: grabbing;
+    }
+
+    .pg-viewer canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .pg-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 0;
+      padding: 14px 16px;
+      overflow-y: auto;
+    }
+
+    .pg-signature {
+      margin: 0;
+      padding: 7px 9px;
+      overflow-wrap: anywhere;
+      border: 1px solid var(--line);
+      border-left: 2px solid var(--accent);
+      color: #d9eafa;
+      background: rgba(6, 24, 40, 0.65);
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      line-height: 1.55;
+    }
+
+    .pg-param {
+      display: grid;
+      gap: 4px;
+    }
+
+    .pg-param-head {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+    }
+
+    .pg-param-head output {
+      color: var(--accent);
+    }
+
+    .pg-param input[type="range"] {
+      width: 100%;
+      height: 4px;
+      appearance: none;
+      background: var(--line);
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .pg-param input[type="range"]::-webkit-slider-thumb {
+      width: 14px;
+      height: 14px;
+      appearance: none;
+      border: 1px solid var(--field);
+      border-radius: 0;
+      background: var(--accent);
+    }
+
+    .pg-param input[type="range"]:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+    }
+
+    .pg-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: auto;
+    }
+
+    .pg-reset {
+      padding: 6px 12px;
+      border: 1px solid var(--line-strong);
+      color: var(--muted);
+      background: transparent;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .pg-reset:hover,
+    .pg-reset:focus-visible {
+      border-color: var(--accent);
+      color: var(--accent);
+      outline: none;
+    }
+
+    .pg-status {
+      padding: 8px 16px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.06em;
+    }
+
+    .pg-status.error {
+      color: #ff9d8f;
+    }
+
+    @media (max-width: 860px) {
+      .pg-body {
+        grid-template-columns: minmax(0, 1fr);
+        overflow-y: auto;
+      }
+
+      .pg-viewer {
+        min-height: 46vh;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+    }
+
     .fatal-error {
       grid-column: 1 / -1;
       padding: 24px;
@@ -441,6 +664,26 @@
       <div class="utility-list" id="utilities"></div>
     </section>
   </main>
+
+  <div class="playground-modal" id="playground" role="dialog" aria-modal="true" aria-labelledby="pg-title">
+    <div class="pg-sheet">
+      <div class="pg-head">
+        <h2 id="pg-title">part</h2>
+        <button class="pg-close" id="pg-close" type="button">Close</button>
+      </div>
+      <div class="pg-body">
+        <div class="pg-viewer" id="pg-viewer"><canvas id="pg-canvas"></canvas></div>
+        <div class="pg-panel">
+          <code class="pg-signature" id="pg-signature"></code>
+          <div id="pg-params"></div>
+          <div class="pg-actions">
+            <button class="pg-reset" id="pg-reset" type="button">Reset defaults</button>
+          </div>
+        </div>
+      </div>
+      <div class="pg-status" id="pg-status">idle</div>
+    </div>
+  </div>
 
   <script type="module">
     import * as THREE from "three";
@@ -560,6 +803,20 @@
       const status = makeTextElement("span", "load-status", "waiting to load");
       viewport.append(status);
 
+      if (model.play && manifestPlayground) {
+        const tune = makeTextElement("button", "tune-button", "Tune ⚙");
+        tune.type = "button";
+        tune.setAttribute("aria-label", `Adjust parameters of ${model.name}`);
+        tune.addEventListener("pointerdown", (event) => {
+          event.stopPropagation();
+        });
+        tune.addEventListener("click", (event) => {
+          event.stopPropagation();
+          openPlayground(model);
+        });
+        viewport.append(tune);
+      }
+
       const copy = document.createElement("div");
       copy.className = "card-copy";
       copy.append(
@@ -631,6 +888,252 @@
       utilities.append(card);
     }
 
+    // ------------------------------------------------------------------
+    // Parameter playground: Pyodide worker + modal viewer
+    // ------------------------------------------------------------------
+    let manifestPlayground = null;
+    const pg = {
+      modal: document.querySelector("#playground"),
+      title: document.querySelector("#pg-title"),
+      signature: document.querySelector("#pg-signature"),
+      paramsHost: document.querySelector("#pg-params"),
+      statusLine: document.querySelector("#pg-status"),
+      viewerHost: document.querySelector("#pg-viewer"),
+      canvas: document.querySelector("#pg-canvas"),
+      worker: null,
+      ready: false,
+      model: null,
+      values: {},
+      requestId: 0,
+      busy: false,
+      pendingParams: null,
+      renderer: null,
+      scene: null,
+      camera: null,
+      controls: null,
+      group: null,
+      framed: false,
+      rafId: 0,
+      lastFocus: null,
+      debounceId: 0
+    };
+
+    function pgStatus(text, isError) {
+      pg.statusLine.textContent = text;
+      pg.statusLine.classList.toggle("error", Boolean(isError));
+    }
+
+    function ensureWorker() {
+      if (pg.worker) return;
+      pg.worker = new Worker("./playground/worker.js");
+      pg.worker.onmessage = (event) => {
+        const data = event.data;
+        if (data.type === "status") {
+          pgStatus(`${data.stage}… (first open only)`);
+        } else if (data.type === "ready") {
+          pg.ready = true;
+          pgStatus("runtime ready");
+          if (pg.model) requestGenerate();
+        } else if (data.type === "result") {
+          pg.busy = false;
+          if (data.id === pg.requestId) {
+            showMeshes(data.meshes);
+            pgStatus(`regenerated in ${Math.round(data.ms)} ms`);
+          }
+          if (pg.pendingParams) {
+            pg.pendingParams = null;
+            requestGenerate();
+          }
+        } else if (data.type === "error") {
+          pg.busy = false;
+          pgStatus(data.message, true);
+        }
+      };
+      pg.worker.postMessage({
+        type: "init",
+        pyodideVersion: manifestPlayground.pyodide,
+        wheelUrls: manifestPlayground.wheels.map((w) => new URL(`./${w}`, location.href).href),
+        demosUrl: new URL(`./${manifestPlayground.demos}`, location.href).href
+      });
+      pgStatus("booting python runtime (~12 MB, one-time)…");
+    }
+
+    function ensureViewer() {
+      if (pg.renderer) return;
+      pg.renderer = new THREE.WebGLRenderer({ canvas: pg.canvas, antialias: true });
+      pg.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      pg.renderer.outputColorSpace = THREE.SRGBColorSpace;
+      pg.scene = new THREE.Scene();
+      pg.scene.background = new THREE.Color(0x092136);
+      addLights(pg.scene);
+      pg.camera = new THREE.PerspectiveCamera(38, 1, 0.01, 1000);
+      pg.camera.up.set(0, 0, 1);
+      pg.controls = new OrbitControls(pg.camera, pg.viewerHost);
+      pg.controls.enableDamping = true;
+      pg.controls.dampingFactor = 0.07;
+      pg.controls.enablePan = false;
+    }
+
+    function pgRenderLoop() {
+      if (!pg.modal.classList.contains("open")) return;
+      const rect = pg.viewerHost.getBoundingClientRect();
+      const width = Math.max(1, Math.floor(rect.width));
+      const height = Math.max(1, Math.floor(rect.height));
+      const pixelRatio = pg.renderer.getPixelRatio();
+      if (pg.canvas.width !== Math.floor(width * pixelRatio) || pg.canvas.height !== Math.floor(height * pixelRatio)) {
+        pg.renderer.setSize(width, height, false);
+      }
+      pg.camera.aspect = width / height;
+      pg.camera.updateProjectionMatrix();
+      pg.controls.update();
+      pg.renderer.render(pg.scene, pg.camera);
+      pg.rafId = requestAnimationFrame(pgRenderLoop);
+    }
+
+    function showMeshes(meshes) {
+      if (pg.group) {
+        pg.scene.remove(pg.group);
+        pg.group.traverse((obj) => {
+          if (obj.isMesh) {
+            obj.geometry.dispose();
+            obj.material.dispose();
+          }
+        });
+      }
+      pg.group = new THREE.Group();
+      for (const part of meshes) {
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute("position", new THREE.BufferAttribute(part.positions, 3));
+        geometry.setIndex(new THREE.BufferAttribute(part.indices, 1));
+        geometry.computeVertexNormals();
+        const material = new THREE.MeshStandardMaterial({
+          color: new THREE.Color(part.color[0] / 255, part.color[1] / 255, part.color[2] / 255),
+          metalness: 0.1,
+          roughness: 0.8
+        });
+        pg.group.add(new THREE.Mesh(geometry, material));
+      }
+      pg.scene.add(pg.group);
+      if (!pg.framed) {
+        const bounds = new THREE.Box3().setFromObject(pg.group);
+        const sphere = bounds.getBoundingSphere(new THREE.Sphere());
+        const radius = Math.max(sphere.radius, 0.1);
+        const distance = (radius / Math.sin(THREE.MathUtils.degToRad(pg.camera.fov * 0.5))) * 1.12;
+        const direction = new THREE.Vector3(1.25, -1.5, 1.0).normalize();
+        pg.camera.near = Math.max(radius / 100, 0.01);
+        pg.camera.far = Math.max(radius * 100, 100);
+        pg.camera.position.copy(sphere.center).addScaledVector(direction, distance);
+        pg.camera.updateProjectionMatrix();
+        pg.controls.target.copy(sphere.center);
+        pg.controls.minDistance = radius * 0.55;
+        pg.controls.maxDistance = radius * 12;
+        pg.controls.update();
+        pg.framed = true;
+      }
+    }
+
+    function updateSignature() {
+      const args = pg.model.play.params
+        .map((p) => `${p.name}=${pg.values[p.name]}`)
+        .join(", ");
+      pg.signature.textContent = `${pg.model.play.demo.replace(/^demo_/, "")}(${args})`;
+    }
+
+    function requestGenerate() {
+      if (!pg.ready || !pg.model) return;
+      if (pg.busy) {
+        pg.pendingParams = true;
+        return;
+      }
+      pg.busy = true;
+      pg.requestId += 1;
+      pgStatus("generating…");
+      pg.worker.postMessage({
+        type: "generate",
+        id: pg.requestId,
+        demo: pg.model.play.demo,
+        params: { ...pg.values }
+      });
+    }
+
+    function scheduleGenerate() {
+      window.clearTimeout(pg.debounceId);
+      pg.debounceId = window.setTimeout(requestGenerate, 150);
+    }
+
+    function buildParamControls() {
+      pg.paramsHost.textContent = "";
+      for (const param of pg.model.play.params) {
+        const row = document.createElement("div");
+        row.className = "pg-param";
+        const head = document.createElement("div");
+        head.className = "pg-param-head";
+        const label = document.createElement("label");
+        label.textContent = param.label || param.name;
+        label.setAttribute("for", `pg-in-${param.name}`);
+        const readout = document.createElement("output");
+        readout.textContent = String(pg.values[param.name]);
+        head.append(label, readout);
+        const input = document.createElement("input");
+        input.type = "range";
+        input.id = `pg-in-${param.name}`;
+        input.min = param.min;
+        input.max = param.max;
+        input.step = param.step;
+        input.value = pg.values[param.name];
+        input.addEventListener("input", () => {
+          const value = param.type === "int" ? parseInt(input.value, 10) : parseFloat(input.value);
+          pg.values[param.name] = value;
+          readout.textContent = String(value);
+          updateSignature();
+          scheduleGenerate();
+        });
+        row.append(head, input);
+        pg.paramsHost.append(row);
+      }
+    }
+
+    function openPlayground(model) {
+      pg.lastFocus = document.activeElement;
+      pg.model = model;
+      pg.values = {};
+      for (const param of model.play.params) pg.values[param.name] = param.default;
+      pg.title.textContent = model.name;
+      pg.framed = false;
+      buildParamControls();
+      updateSignature();
+      pg.modal.classList.add("open");
+      ensureViewer();
+      ensureWorker();
+      pgStatus(pg.ready ? "generating…" : "booting python runtime (~12 MB, one-time)…");
+      if (pg.ready) requestGenerate();
+      cancelAnimationFrame(pg.rafId);
+      pg.rafId = requestAnimationFrame(pgRenderLoop);
+      document.querySelector("#pg-close").focus();
+    }
+
+    function closePlayground() {
+      pg.modal.classList.remove("open");
+      pg.model = null;
+      cancelAnimationFrame(pg.rafId);
+      if (pg.lastFocus) pg.lastFocus.focus();
+    }
+
+    document.querySelector("#pg-close").addEventListener("click", closePlayground);
+    document.querySelector("#pg-reset").addEventListener("click", () => {
+      if (!pg.model) return;
+      for (const param of pg.model.play.params) pg.values[param.name] = param.default;
+      buildParamControls();
+      updateSignature();
+      requestGenerate();
+    });
+    pg.modal.addEventListener("click", (event) => {
+      if (event.target === pg.modal) closePlayground();
+    });
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && pg.modal.classList.contains("open")) closePlayground();
+    });
+
     const observer = new IntersectionObserver((entries) => {
       for (const entry of entries) {
         const view = views.find((candidate) => candidate.viewport === entry.target);
@@ -701,6 +1204,7 @@
         versionLabel.textContent = `v${manifest.version}`;
         document.querySelector("#part-count").textContent =
           String(manifest.models.length + (manifest.utilities || []).length);
+        manifestPlayground = manifest.playground || null;
         for (const model of manifest.models) {
           const view = createCard(model);
           observer.observe(view.viewport);

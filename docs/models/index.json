@@ -1,5 +1,13 @@
 {
   "version": "0.5.0",
+  "playground": {
+    "pyodide": "0.27.7",
+    "wheels": [
+      "wheels/manifold3d-3.5.2-cp312-cp312-emscripten_3_1_58_wasm32.whl",
+      "wheels/mechlib-0.5.0-py3-none-any.whl"
+    ],
+    "demos": "playground/demos.py"
+  },
   "models": [
     {
       "file": "cyl_demo.glb",
@@ -7,7 +15,39 @@
       "module": "mechlib.prim",
       "signature": "cyl(r, h, center=(0, 0, 0), axis='z', sections=96)",
       "description": "A configurable cylinder oriented along any principal axis.",
-      "origin": "Originally extracted from geom_util.py in finnish-doors."
+      "origin": "Originally extracted from geom_util.py in finnish-doors.",
+      "play": {
+        "demo": "demo_cyl",
+        "params": [
+          {
+            "name": "r",
+            "label": "R",
+            "type": "int",
+            "default": 8,
+            "min": 2,
+            "max": 20,
+            "step": 1
+          },
+          {
+            "name": "h",
+            "label": "H",
+            "type": "int",
+            "default": 20,
+            "min": 4,
+            "max": 40,
+            "step": 1
+          },
+          {
+            "name": "sections",
+            "label": "Sections",
+            "type": "int",
+            "default": 96,
+            "min": 24,
+            "max": 64,
+            "step": 8
+          }
+        ]
+      }
     },
     {
       "file": "boxc_demo.glb",
@@ -15,7 +55,39 @@
       "module": "mechlib.prim",
       "signature": "boxc(ext, center=(0, 0, 0))",
       "description": "A box positioned by its center and XYZ extents.",
-      "origin": "Originally extracted from geom_util.py in finnish-doors."
+      "origin": "Originally extracted from geom_util.py in finnish-doors.",
+      "play": {
+        "demo": "demo_boxc",
+        "params": [
+          {
+            "name": "w",
+            "label": "W",
+            "type": "int",
+            "default": 24,
+            "min": 8,
+            "max": 40,
+            "step": 1
+          },
+          {
+            "name": "d",
+            "label": "D",
+            "type": "int",
+            "default": 16,
+            "min": 6,
+            "max": 30,
+            "step": 1
+          },
+          {
+            "name": "h",
+            "label": "H",
+            "type": "int",
+            "default": 10,
+            "min": 4,
+            "max": 24,
+            "step": 1
+          }
+        ]
+      }
     },
     {
       "file": "rbox_demo.glb",
@@ -23,7 +95,48 @@
       "module": "mechlib.prim",
       "signature": "rbox(ext, center=(0, 0, 0), r=5.0)",
       "description": "A clean enclosure block with rounded vertical corners.",
-      "origin": "Originally extracted from geom_util.py in finnish-doors."
+      "origin": "Originally extracted from geom_util.py in finnish-doors.",
+      "play": {
+        "demo": "demo_rbox",
+        "params": [
+          {
+            "name": "w",
+            "label": "W",
+            "type": "int",
+            "default": 24,
+            "min": 10,
+            "max": 40,
+            "step": 1
+          },
+          {
+            "name": "d",
+            "label": "D",
+            "type": "int",
+            "default": 16,
+            "min": 8,
+            "max": 30,
+            "step": 1
+          },
+          {
+            "name": "h",
+            "label": "H",
+            "type": "int",
+            "default": 10,
+            "min": 4,
+            "max": 24,
+            "step": 1
+          },
+          {
+            "name": "r",
+            "label": "R",
+            "type": "int",
+            "default": 4,
+            "min": 1,
+            "max": 8,
+            "step": 1
+          }
+        ]
+      }
     },
     {
       "file": "frustum_demo.glb",
@@ -31,7 +144,48 @@
       "module": "mechlib.prim",
       "signature": "frustum(r0, r1, h, z0=0.0, sections=96)",
       "description": "A truncated cone between two radii and two Z planes.",
-      "origin": "Originally extracted from geom_util.py in finnish-doors."
+      "origin": "Originally extracted from geom_util.py in finnish-doors.",
+      "play": {
+        "demo": "demo_frustum",
+        "params": [
+          {
+            "name": "r0",
+            "label": "R0",
+            "type": "int",
+            "default": 6,
+            "min": 2,
+            "max": 14,
+            "step": 1
+          },
+          {
+            "name": "r1",
+            "label": "R1",
+            "type": "int",
+            "default": 10,
+            "min": 2,
+            "max": 16,
+            "step": 1
+          },
+          {
+            "name": "h",
+            "label": "H",
+            "type": "int",
+            "default": 16,
+            "min": 6,
+            "max": 30,
+            "step": 1
+          },
+          {
+            "name": "sections",
+            "label": "Sections",
+            "type": "int",
+            "default": 96,
+            "min": 24,
+            "max": 64,
+            "step": 8
+          }
+        ]
+      }
     },
     {
       "file": "sector2d_demo.glb",
@@ -39,7 +193,57 @@
       "module": "mechlib.prim",
       "signature": "sector2d(a0_deg, a1_deg, R, n=48)",
       "description": "A circular sector polygon, extruded here to reveal its usable profile.",
-      "origin": "Originally extracted from geom_util.py in finnish-doors."
+      "origin": "Originally extracted from geom_util.py in finnish-doors.",
+      "play": {
+        "demo": "demo_sector2d",
+        "params": [
+          {
+            "name": "a0_deg",
+            "label": "A0 Deg",
+            "type": "float",
+            "default": -30.0,
+            "min": -90.0,
+            "max": 0.0,
+            "step": 5.0
+          },
+          {
+            "name": "a1_deg",
+            "label": "A1 Deg",
+            "type": "float",
+            "default": 210.0,
+            "min": 90.0,
+            "max": 270.0,
+            "step": 10.0
+          },
+          {
+            "name": "radius",
+            "label": "Radius",
+            "type": "float",
+            "default": 18.0,
+            "min": 8.0,
+            "max": 28.0,
+            "step": 1.0
+          },
+          {
+            "name": "extrude_h",
+            "label": "Extrude H",
+            "type": "float",
+            "default": 4.0,
+            "min": 2.0,
+            "max": 10.0,
+            "step": 0.5
+          },
+          {
+            "name": "n",
+            "label": "N",
+            "type": "int",
+            "default": 48,
+            "min": 24,
+            "max": 64,
+            "step": 8
+          }
+        ]
+      }
     },
     {
       "file": "hex_poly_demo.glb",
@@ -47,7 +251,30 @@
       "module": "mechlib.prim",
       "signature": "hex_poly(af)",
       "description": "A regular hexagon defined by across-flats width, shown as a solid.",
-      "origin": "Originally extracted from gears2d.py in finnish-doors."
+      "origin": "Originally extracted from gears2d.py in finnish-doors.",
+      "play": {
+        "demo": "demo_hex_poly",
+        "params": [
+          {
+            "name": "af",
+            "label": "Af",
+            "type": "float",
+            "default": 16.0,
+            "min": 8.0,
+            "max": 28.0,
+            "step": 1.0
+          },
+          {
+            "name": "extrude_h",
+            "label": "Extrude H",
+            "type": "float",
+            "default": 4.0,
+            "min": 2.0,
+            "max": 10.0,
+            "step": 0.5
+          }
+        ]
+      }
     },
     {
       "file": "extrude_twist_demo.glb",
@@ -55,7 +282,66 @@
       "module": "mechlib.sweep",
       "signature": "extrude_twist(base_outer, base_inner, zlist, phi_of, prof=None, base_ang=None)",
       "description": "A three-lobed profile swept through one full turn over 30 mm.",
-      "origin": "Originally extracted from geom_util.py in finnish-doors."
+      "origin": "Originally extracted from geom_util.py in finnish-doors.",
+      "play": {
+        "demo": "demo_extrude_twist",
+        "params": [
+          {
+            "name": "base_r",
+            "label": "Base R",
+            "type": "float",
+            "default": 7.5,
+            "min": 4.0,
+            "max": 12.0,
+            "step": 0.5
+          },
+          {
+            "name": "lobe_amp",
+            "label": "Lobe Amp",
+            "type": "float",
+            "default": 2.0,
+            "min": 0.5,
+            "max": 4.0,
+            "step": 0.25
+          },
+          {
+            "name": "height",
+            "label": "Height",
+            "type": "float",
+            "default": 30.0,
+            "min": 15.0,
+            "max": 40.0,
+            "step": 1.0
+          },
+          {
+            "name": "turns_deg",
+            "label": "Turns Deg",
+            "type": "float",
+            "default": 360.0,
+            "min": 180.0,
+            "max": 720.0,
+            "step": 30.0
+          },
+          {
+            "name": "count",
+            "label": "Count",
+            "type": "int",
+            "default": 96,
+            "min": 24,
+            "max": 64,
+            "step": 8
+          },
+          {
+            "name": "z_samples",
+            "label": "Z Samples",
+            "type": "int",
+            "default": 81,
+            "min": 21,
+            "max": 61,
+            "step": 10
+          }
+        ]
+      }
     },
     {
       "file": "swept_keyed_bore_demo.glb",
@@ -63,7 +349,57 @@
       "module": "mechlib.sweep",
       "signature": "swept_keyed_bore(bore_poly, free_angle, steps=28)",
       "description": "A D-shaped keyed bore beside its 50 degree free-rotation envelope.",
-      "origin": "Originally extracted from shaft.py in finnish-doors."
+      "origin": "Originally extracted from shaft.py in finnish-doors.",
+      "play": {
+        "demo": "demo_swept_keyed_bore",
+        "params": [
+          {
+            "name": "radius",
+            "label": "Radius",
+            "type": "float",
+            "default": 7.0,
+            "min": 4.0,
+            "max": 12.0,
+            "step": 0.5
+          },
+          {
+            "name": "flat_x",
+            "label": "Flat X",
+            "type": "float",
+            "default": 5.2,
+            "min": 2.0,
+            "max": 8.0,
+            "step": 0.5
+          },
+          {
+            "name": "free_angle",
+            "label": "Free Angle",
+            "type": "float",
+            "default": 50.0,
+            "min": 20.0,
+            "max": 90.0,
+            "step": 5.0
+          },
+          {
+            "name": "extrude_h",
+            "label": "Extrude H",
+            "type": "float",
+            "default": 4.0,
+            "min": 2.0,
+            "max": 8.0,
+            "step": 0.5
+          },
+          {
+            "name": "spacing",
+            "label": "Spacing",
+            "type": "float",
+            "default": 22.0,
+            "min": 16.0,
+            "max": 30.0,
+            "step": 1.0
+          }
+        ]
+      }
     },
     {
       "file": "spur_gear_pair_demo.glb",
@@ -71,7 +407,57 @@
       "module": "mechlib.gears",
       "signature": "spur_gear_2d(N, m, sector=None, relief=2.5, center_at=-90.0, entry_drop=0.0, entry_end=-1, bl=None, t_relief=None, pa=20.0); phased with mesh_phase(N_drv, N_drn, phi_deg)",
       "description": "An 18-tooth driver and 28-tooth driven gear in collision-free mesh.",
-      "origin": "Originally extracted from gears2d.py in finnish-doors."
+      "origin": "Originally extracted from gears2d.py in finnish-doors.",
+      "play": {
+        "demo": "demo_spur_gear_pair",
+        "params": [
+          {
+            "name": "n_driver",
+            "label": "N Driver",
+            "type": "int",
+            "default": 18,
+            "min": 12,
+            "max": 24,
+            "step": 1
+          },
+          {
+            "name": "n_driven",
+            "label": "N Driven",
+            "type": "int",
+            "default": 28,
+            "min": 18,
+            "max": 36,
+            "step": 1
+          },
+          {
+            "name": "module",
+            "label": "Module",
+            "type": "float",
+            "default": 1.5,
+            "min": 1.0,
+            "max": 2.5,
+            "step": 0.25
+          },
+          {
+            "name": "thickness",
+            "label": "Thickness",
+            "type": "float",
+            "default": 5.0,
+            "min": 3.0,
+            "max": 10.0,
+            "step": 0.5
+          },
+          {
+            "name": "backlash",
+            "label": "Backlash",
+            "type": "float",
+            "default": 0.35,
+            "min": 0.1,
+            "max": 0.6,
+            "step": 0.05
+          }
+        ]
+      }
     },
     {
       "file": "board_cradle_demo.glb",
@@ -79,7 +465,57 @@
       "module": "mechlib.fixtures",
       "signature": "board_cradle(rect, fl, standoff=4.0, clr=0.4, wlen=9.0, wt=1.6, cap_over=2.0)",
       "description": "Four PCB corner standoffs and capture walls around a 40 x 30 mm board.",
-      "origin": "Originally extracted from system_layout.py in finnish-doors."
+      "origin": "Originally extracted from system_layout.py in finnish-doors.",
+      "play": {
+        "demo": "demo_board_cradle",
+        "params": [
+          {
+            "name": "board_w",
+            "label": "Board W",
+            "type": "float",
+            "default": 40.0,
+            "min": 24.0,
+            "max": 60.0,
+            "step": 2.0
+          },
+          {
+            "name": "board_d",
+            "label": "Board D",
+            "type": "float",
+            "default": 30.0,
+            "min": 18.0,
+            "max": 50.0,
+            "step": 2.0
+          },
+          {
+            "name": "board_h",
+            "label": "Board H",
+            "type": "float",
+            "default": 8.0,
+            "min": 4.0,
+            "max": 12.0,
+            "step": 1.0
+          },
+          {
+            "name": "board_t",
+            "label": "Board T",
+            "type": "float",
+            "default": 1.6,
+            "min": 1.0,
+            "max": 2.5,
+            "step": 0.2
+          },
+          {
+            "name": "standoff",
+            "label": "Standoff",
+            "type": "float",
+            "default": 4.0,
+            "min": 2.0,
+            "max": 8.0,
+            "step": 0.5
+          }
+        ]
+      }
     },
     {
       "file": "teardrop_demo.glb",
@@ -87,7 +523,57 @@
       "module": "mechlib.cutters",
       "signature": "teardrop(r, length, axis='x', up=(0, -1, 0))",
       "description": "A support-free teardrop bore shown through a cut block.",
-      "origin": "Extracted from head.py in parviz."
+      "origin": "Extracted from head.py in parviz.",
+      "play": {
+        "demo": "demo_teardrop",
+        "params": [
+          {
+            "name": "r",
+            "label": "R",
+            "type": "float",
+            "default": 4.0,
+            "min": 2.0,
+            "max": 8.0,
+            "step": 0.5
+          },
+          {
+            "name": "length",
+            "label": "Length",
+            "type": "float",
+            "default": 26.0,
+            "min": 12.0,
+            "max": 36.0,
+            "step": 2.0
+          },
+          {
+            "name": "block_w",
+            "label": "Block W",
+            "type": "float",
+            "default": 24.0,
+            "min": 16.0,
+            "max": 36.0,
+            "step": 2.0
+          },
+          {
+            "name": "block_d",
+            "label": "Block D",
+            "type": "float",
+            "default": 18.0,
+            "min": 12.0,
+            "max": 28.0,
+            "step": 2.0
+          },
+          {
+            "name": "block_h",
+            "label": "Block H",
+            "type": "float",
+            "default": 16.0,
+            "min": 10.0,
+            "max": 24.0,
+            "step": 2.0
+          }
+        ]
+      }
     },
     {
       "file": "ss_bore_demo.glb",
@@ -95,7 +581,48 @@
       "module": "mechlib.cutters",
       "signature": "ss_bore(R, Robj, length, center, axis='x', split_z=0.0)",
       "description": "A round lower cradle and support-light chamfered upper bore.",
-      "origin": "Extracted from geom_util.py in finnish-doors."
+      "origin": "Extracted from geom_util.py in finnish-doors.",
+      "play": {
+        "demo": "demo_ss_bore",
+        "params": [
+          {
+            "name": "R",
+            "label": "R",
+            "type": "float",
+            "default": 5.0,
+            "min": 3.0,
+            "max": 8.0,
+            "step": 0.5
+          },
+          {
+            "name": "Robj",
+            "label": "Robj",
+            "type": "float",
+            "default": 4.5,
+            "min": 2.5,
+            "max": 7.0,
+            "step": 0.5
+          },
+          {
+            "name": "length",
+            "label": "Length",
+            "type": "float",
+            "default": 26.0,
+            "min": 14.0,
+            "max": 36.0,
+            "step": 2.0
+          },
+          {
+            "name": "split_z",
+            "label": "Split Z",
+            "type": "float",
+            "default": 12.0,
+            "min": 6.0,
+            "max": 16.0,
+            "step": 1.0
+          }
+        ]
+      }
     },
     {
       "file": "dbore_demo.glb",
@@ -103,7 +630,57 @@
       "module": "mechlib.cutters",
       "signature": "dbore(shaft_d, flat, length, axis='z', clear=0.0, round_clear=0.0, flat_clear=0.0); dbore_hub(outer_r, length, axis='z', shaft_d=4.93, flat=3.0, clear=0.12, round_clear=0.0, flat_clear=0.0)",
       "description": "A double-D socket blank beside a ready-made keyed hub.",
-      "origin": "Unified from parviz and finnish-windows."
+      "origin": "Unified from parviz and finnish-windows.",
+      "play": {
+        "demo": "demo_dbore",
+        "params": [
+          {
+            "name": "shaft_d",
+            "label": "Shaft D",
+            "type": "float",
+            "default": 5.5,
+            "min": 3.5,
+            "max": 8.0,
+            "step": 0.5
+          },
+          {
+            "name": "flat",
+            "label": "Flat",
+            "type": "float",
+            "default": 3.7,
+            "min": 2.5,
+            "max": 6.0,
+            "step": 0.25
+          },
+          {
+            "name": "hub_r",
+            "label": "Hub R",
+            "type": "float",
+            "default": 7.0,
+            "min": 5.0,
+            "max": 12.0,
+            "step": 0.5
+          },
+          {
+            "name": "hub_h",
+            "label": "Hub H",
+            "type": "float",
+            "default": 10.0,
+            "min": 6.0,
+            "max": 16.0,
+            "step": 1.0
+          },
+          {
+            "name": "clear",
+            "label": "Clear",
+            "type": "float",
+            "default": 0.1,
+            "min": 0.05,
+            "max": 0.3,
+            "step": 0.05
+          }
+        ]
+      }
     },
     {
       "file": "counterbore_demo.glb",
@@ -111,7 +688,48 @@
       "module": "mechlib.cutters",
       "signature": "counterbore(d_hole, d_head, head_depth, length, axis='z', head_end='top')",
       "description": "A through-hole with a cylindrical recessed-head pocket.",
-      "origin": "New abstraction inspired by finnish-doors fastener seats."
+      "origin": "New abstraction inspired by finnish-doors fastener seats.",
+      "play": {
+        "demo": "demo_counterbore",
+        "params": [
+          {
+            "name": "through_d",
+            "label": "Through D",
+            "type": "float",
+            "default": 3.4,
+            "min": 2.0,
+            "max": 6.0,
+            "step": 0.2
+          },
+          {
+            "name": "cb_d",
+            "label": "Cb D",
+            "type": "float",
+            "default": 7.0,
+            "min": 4.0,
+            "max": 12.0,
+            "step": 0.5
+          },
+          {
+            "name": "cb_h",
+            "label": "Cb H",
+            "type": "float",
+            "default": 3.2,
+            "min": 1.5,
+            "max": 6.0,
+            "step": 0.5
+          },
+          {
+            "name": "length",
+            "label": "Length",
+            "type": "float",
+            "default": 16.0,
+            "min": 10.0,
+            "max": 24.0,
+            "step": 1.0
+          }
+        ]
+      }
     },
     {
       "file": "bearing_seat_demo.glb",
@@ -119,7 +737,30 @@
       "module": "mechlib.cutters",
       "signature": "bearing_seat(kind, fit='press', open_column=True, extra_depth=0.0)",
       "description": "A cut-away retained 608 seat with a bearing reference ring.",
-      "origin": "New abstraction from the Klonk 22.25 mm 608 pocket practice."
+      "origin": "New abstraction from the Klonk 22.25 mm 608 pocket practice.",
+      "play": {
+        "demo": "demo_bearing_seat",
+        "params": [
+          {
+            "name": "housing_r",
+            "label": "Housing R",
+            "type": "float",
+            "default": 15.0,
+            "min": 12.0,
+            "max": 22.0,
+            "step": 0.5
+          },
+          {
+            "name": "housing_h",
+            "label": "Housing H",
+            "type": "float",
+            "default": 10.0,
+            "min": 6.0,
+            "max": 16.0,
+            "step": 1.0
+          }
+        ]
+      }
     },
     {
       "file": "crush_ribs_demo.glb",
@@ -127,7 +768,66 @@
       "module": "mechlib.cutters",
       "signature": "crush_ribs(component_size, rib_thickness, rib_length, rib_height, count=2, interference=0.1, wall_axis='y', wall_offset=None, center=(0, 0, 0))",
       "description": "Six tapered vertical ribs squeezing a rectangular component.",
-      "origin": "Generalized from tcst_hold_ribs in finnish-doors."
+      "origin": "Generalized from tcst_hold_ribs in finnish-doors.",
+      "play": {
+        "demo": "demo_crush_ribs",
+        "params": [
+          {
+            "name": "comp_w",
+            "label": "Comp W",
+            "type": "float",
+            "default": 18.0,
+            "min": 10.0,
+            "max": 28.0,
+            "step": 1.0
+          },
+          {
+            "name": "comp_d",
+            "label": "Comp D",
+            "type": "float",
+            "default": 12.0,
+            "min": 8.0,
+            "max": 20.0,
+            "step": 1.0
+          },
+          {
+            "name": "comp_h",
+            "label": "Comp H",
+            "type": "float",
+            "default": 16.0,
+            "min": 8.0,
+            "max": 24.0,
+            "step": 1.0
+          },
+          {
+            "name": "rib_t",
+            "label": "Rib T",
+            "type": "float",
+            "default": 0.6,
+            "min": 0.4,
+            "max": 1.2,
+            "step": 0.1
+          },
+          {
+            "name": "count",
+            "label": "Count",
+            "type": "int",
+            "default": 3,
+            "min": 2,
+            "max": 5,
+            "step": 1
+          },
+          {
+            "name": "interference",
+            "label": "Interference",
+            "type": "float",
+            "default": 0.12,
+            "min": 0.05,
+            "max": 0.25,
+            "step": 0.05
+          }
+        ]
+      }
     },
     {
       "file": "press_lid_demo.glb",
@@ -135,7 +835,57 @@
       "module": "mechlib.closures",
       "signature": "press_lid(ox, oy, cav_x, cav_y, c, plate_t=2.4, plug_h=5.0, plug_wall=1.8, edge_r=5.5, clear=0.1)",
       "description": "A hollow box and its friction-plug lid in an exploded pose.",
-      "origin": "Extracted from system_layout.py in finnish-doors."
+      "origin": "Extracted from system_layout.py in finnish-doors.",
+      "play": {
+        "demo": "demo_press_lid",
+        "params": [
+          {
+            "name": "box_w",
+            "label": "Box W",
+            "type": "float",
+            "default": 34.0,
+            "min": 24.0,
+            "max": 48.0,
+            "step": 2.0
+          },
+          {
+            "name": "box_d",
+            "label": "Box D",
+            "type": "float",
+            "default": 28.0,
+            "min": 20.0,
+            "max": 40.0,
+            "step": 2.0
+          },
+          {
+            "name": "box_h",
+            "label": "Box H",
+            "type": "float",
+            "default": 14.0,
+            "min": 10.0,
+            "max": 22.0,
+            "step": 1.0
+          },
+          {
+            "name": "wall",
+            "label": "Wall",
+            "type": "float",
+            "default": 2.0,
+            "min": 1.2,
+            "max": 3.0,
+            "step": 0.2
+          },
+          {
+            "name": "lid_lift",
+            "label": "Lid Lift",
+            "type": "float",
+            "default": 23.0,
+            "min": 14.0,
+            "max": 32.0,
+            "step": 1.0
+          }
+        ]
+      }
     },
     {
       "file": "clamshell_shiplap_demo.glb",
@@ -143,7 +893,48 @@
       "module": "mechlib.closures",
       "signature": "clamshell_shiplap(outer_solid, clear=0.05)",
       "description": "The matching raised base lip and oversized lid receiver slot.",
-      "origin": "Extracted from housings.py in finnish-doors."
+      "origin": "Extracted from housings.py in finnish-doors.",
+      "play": {
+        "demo": "demo_clamshell_shiplap",
+        "params": [
+          {
+            "name": "w",
+            "label": "W",
+            "type": "float",
+            "default": 34.0,
+            "min": 24.0,
+            "max": 48.0,
+            "step": 2.0
+          },
+          {
+            "name": "d",
+            "label": "D",
+            "type": "float",
+            "default": 28.0,
+            "min": 20.0,
+            "max": 40.0,
+            "step": 2.0
+          },
+          {
+            "name": "h",
+            "label": "H",
+            "type": "float",
+            "default": 14.0,
+            "min": 10.0,
+            "max": 22.0,
+            "step": 1.0
+          },
+          {
+            "name": "spacing",
+            "label": "Spacing",
+            "type": "float",
+            "default": 22.0,
+            "min": 16.0,
+            "max": 32.0,
+            "step": 2.0
+          }
+        ]
+      }
     },
     {
       "file": "ydovetail_demo.glb",
@@ -151,7 +942,57 @@
       "module": "mechlib.closures",
       "signature": "ydovetail(xc, y0, y1, clear=0.0, wide=10.0, w=6.0, h=5.0, z=14.0)",
       "description": "A self-supporting slide tongue beside its clearanced receiver.",
-      "origin": "Extracted from system_layout.py in finnish-doors."
+      "origin": "Extracted from system_layout.py in finnish-doors.",
+      "play": {
+        "demo": "demo_ydovetail",
+        "params": [
+          {
+            "name": "tongue_y0",
+            "label": "Tongue Y0",
+            "type": "float",
+            "default": -8.0,
+            "min": -12.0,
+            "max": -4.0,
+            "step": 1.0
+          },
+          {
+            "name": "tongue_y1",
+            "label": "Tongue Y1",
+            "type": "float",
+            "default": 8.0,
+            "min": 4.0,
+            "max": 12.0,
+            "step": 1.0
+          },
+          {
+            "name": "clear",
+            "label": "Clear",
+            "type": "float",
+            "default": 0.25,
+            "min": 0.1,
+            "max": 0.5,
+            "step": 0.05
+          },
+          {
+            "name": "receiver_w",
+            "label": "Receiver W",
+            "type": "float",
+            "default": 16.0,
+            "min": 12.0,
+            "max": 24.0,
+            "step": 1.0
+          },
+          {
+            "name": "receiver_d",
+            "label": "Receiver D",
+            "type": "float",
+            "default": 20.0,
+            "min": 14.0,
+            "max": 28.0,
+            "step": 1.0
+          }
+        ]
+      }
     },
     {
       "file": "snap_pair_demo.glb",
@@ -159,7 +1000,39 @@
       "module": "mechlib.closures",
       "signature": "snap_catch(axis, fc, t, sgn, box_top, spec=SnapSpec(aw=8.0, at=1.6, gap=0.4, drop=6.0, hook=1.5)); snap_finger(axis, fc, t, sgn, mate_z, spec=SnapSpec(aw=8.0, at=1.6, gap=0.4, drop=6.0, hook=1.5))",
       "description": "A ramped retention catch and matching cantilever hook.",
-      "origin": "Unified from system_layout.py and build_powerbank.py."
+      "origin": "Unified from system_layout.py and build_powerbank.py.",
+      "play": {
+        "demo": "demo_snap_pair",
+        "params": [
+          {
+            "name": "depth",
+            "label": "Depth",
+            "type": "float",
+            "default": 10.0,
+            "min": 6.0,
+            "max": 16.0,
+            "step": 1.0
+          },
+          {
+            "name": "finger_dx",
+            "label": "Finger Dx",
+            "type": "float",
+            "default": 8.0,
+            "min": 4.0,
+            "max": 14.0,
+            "step": 1.0
+          },
+          {
+            "name": "finger_dz",
+            "label": "Finger Dz",
+            "type": "float",
+            "default": 2.0,
+            "min": 0.0,
+            "max": 6.0,
+            "step": 0.5
+          }
+        ]
+      }
     },
     {
       "file": "nut_slot_demo.glb",
@@ -167,7 +1040,48 @@
       "module": "mechlib.closures",
       "signature": "nut_slot(center, screw_axis='z', open_dir=(0, 1, 0), size='M3', length=14.0, c_af=0.2, c_t=0.2, seat=True, nib=False)",
       "description": "A cut-away seated nut trap with its M3 nut stand-in.",
-      "origin": "Extracted from geo.py in parviz."
+      "origin": "Extracted from geo.py in parviz.",
+      "play": {
+        "demo": "demo_nut_slot",
+        "params": [
+          {
+            "name": "length",
+            "label": "Length",
+            "type": "float",
+            "default": 16.0,
+            "min": 10.0,
+            "max": 24.0,
+            "step": 1.0
+          },
+          {
+            "name": "nib",
+            "label": "Nib",
+            "type": "int",
+            "default": 1,
+            "min": 0,
+            "max": 1,
+            "step": 1
+          },
+          {
+            "name": "nut_af",
+            "label": "Nut Af",
+            "type": "float",
+            "default": 5.5,
+            "min": 4.0,
+            "max": 8.0,
+            "step": 0.5
+          },
+          {
+            "name": "nut_h",
+            "label": "Nut H",
+            "type": "float",
+            "default": 2.6,
+            "min": 1.5,
+            "max": 4.0,
+            "step": 0.25
+          }
+        ]
+      }
     },
     {
       "file": "pins_and_posts_demo.glb",
@@ -175,7 +1089,57 @@
       "module": "mechlib.closures / mechlib.cutters",
       "signature": "screw_post(pos, normal, depth, boss_r=4.3); fix_pin(r, length, direction, face_pt, bury=1.0); blind_socket(r, deep, out_dir, face_pt, overshoot=1.0)",
       "description": "A bored screw boss beside a locating pin and blind socket block.",
-      "origin": "Extracted from geo.py in parviz."
+      "origin": "Extracted from geo.py in parviz.",
+      "play": {
+        "demo": "demo_pins_and_posts",
+        "params": [
+          {
+            "name": "post_h",
+            "label": "Post H",
+            "type": "int",
+            "default": 10,
+            "min": 6,
+            "max": 16,
+            "step": 1
+          },
+          {
+            "name": "pin_r",
+            "label": "Pin R",
+            "type": "int",
+            "default": 2,
+            "min": 1,
+            "max": 4,
+            "step": 1
+          },
+          {
+            "name": "pin_h",
+            "label": "Pin H",
+            "type": "int",
+            "default": 7,
+            "min": 4,
+            "max": 12,
+            "step": 1
+          },
+          {
+            "name": "socket_r",
+            "label": "Socket R",
+            "type": "float",
+            "default": 2.25,
+            "min": 1.5,
+            "max": 4.0,
+            "step": 0.25
+          },
+          {
+            "name": "socket_depth",
+            "label": "Socket Depth",
+            "type": "int",
+            "default": 5,
+            "min": 3,
+            "max": 8,
+            "step": 1
+          }
+        ]
+      }
     },
     {
       "file": "spur_gear_mesh_demo.glb",
@@ -183,7 +1147,48 @@
       "module": "mechlib.gears",
       "signature": "spur_gear_mesh(N, m, width, bore_d=0.0, pa=20.0, bl=0.35, t_relief=0.1, sections=96)",
       "description": "A printable involute spur gear with a measured round bore.",
-      "origin": "Unified from finnish-windows and parviz gear builders."
+      "origin": "Unified from finnish-windows and parviz gear builders.",
+      "play": {
+        "demo": "demo_spur_gear_mesh",
+        "params": [
+          {
+            "name": "teeth",
+            "label": "Teeth",
+            "type": "int",
+            "default": 20,
+            "min": 12,
+            "max": 36,
+            "step": 1
+          },
+          {
+            "name": "module",
+            "label": "Module",
+            "type": "float",
+            "default": 1.5,
+            "min": 1.0,
+            "max": 2.5,
+            "step": 0.25
+          },
+          {
+            "name": "thickness",
+            "label": "Thickness",
+            "type": "float",
+            "default": 6.0,
+            "min": 3.0,
+            "max": 12.0,
+            "step": 0.5
+          },
+          {
+            "name": "bore_d",
+            "label": "Bore D",
+            "type": "float",
+            "default": 5.0,
+            "min": 2.0,
+            "max": 10.0,
+            "step": 0.5
+          }
+        ]
+      }
     },
     {
       "file": "roller_sprocket_demo.glb",
@@ -191,7 +1196,48 @@
       "module": "mechlib.gears / mechlib.patterns",
       "signature": "roller_sprocket_2d(n_teeth, pitch, pin_d, clear=0.0, outer_d=None); polar_ring(n, r, center=(0.0, 0.0), phase=0.0)",
       "description": "A conjugate 14-tooth sprocket surrounded by track-pin references.",
-      "origin": "Generalized from tracks.py in parviz."
+      "origin": "Generalized from tracks.py in parviz.",
+      "play": {
+        "demo": "demo_roller_sprocket",
+        "params": [
+          {
+            "name": "teeth",
+            "label": "Teeth",
+            "type": "int",
+            "default": 14,
+            "min": 10,
+            "max": 16,
+            "step": 1
+          },
+          {
+            "name": "pitch",
+            "label": "Pitch",
+            "type": "float",
+            "default": 10.0,
+            "min": 8.0,
+            "max": 12.0,
+            "step": 0.5
+          },
+          {
+            "name": "thickness",
+            "label": "Thickness",
+            "type": "float",
+            "default": 6.0,
+            "min": 3.0,
+            "max": 10.0,
+            "step": 0.5
+          },
+          {
+            "name": "pin_r",
+            "label": "Pin R",
+            "type": "float",
+            "default": 1.0,
+            "min": 0.5,
+            "max": 1.5,
+            "step": 0.25
+          }
+        ]
+      }
     },
     {
       "file": "thread_demo.glb",
@@ -199,7 +1245,57 @@
       "module": "mechlib.mechanisms",
       "signature": "thread_solid(d_nom, length, pitch=None, internal=False, clear=0.25, starts=1, seg=96); tap(mesh, d_nom, at, length, pitch=None, clear=0.25, axis='z')",
       "description": "An M8 threaded bolt beside a cut-away tapped hex nut.",
-      "origin": "Extracted from threads.py in parviz."
+      "origin": "Extracted from threads.py in parviz.",
+      "play": {
+        "demo": "demo_thread",
+        "params": [
+          {
+            "name": "d",
+            "label": "D",
+            "type": "float",
+            "default": 8.0,
+            "min": 5.0,
+            "max": 8.0,
+            "step": 3.0
+          },
+          {
+            "name": "length",
+            "label": "Length",
+            "type": "float",
+            "default": 16.0,
+            "min": 10.0,
+            "max": 28.0,
+            "step": 1.0
+          },
+          {
+            "name": "head_r",
+            "label": "Head R",
+            "type": "float",
+            "default": 7.0,
+            "min": 4.0,
+            "max": 12.0,
+            "step": 0.5
+          },
+          {
+            "name": "head_h",
+            "label": "Head H",
+            "type": "float",
+            "default": 4.0,
+            "min": 2.0,
+            "max": 8.0,
+            "step": 0.5
+          },
+          {
+            "name": "spacing",
+            "label": "Spacing",
+            "type": "float",
+            "default": 11.0,
+            "min": 11.0,
+            "max": 30.0,
+            "step": 1.0
+          }
+        ]
+      }
     },
     {
       "file": "knurl_demo.glb",
@@ -207,7 +1303,39 @@
       "module": "mechlib.mechanisms",
       "signature": "knurl(mesh, r, z0, z1, n=18, depth=0.35)",
       "description": "A cylindrical thumb knob with printable vertical flutes.",
-      "origin": "Extracted from m4_bolt.py in parviz."
+      "origin": "Extracted from m4_bolt.py in parviz.",
+      "play": {
+        "demo": "demo_knurl",
+        "params": [
+          {
+            "name": "r",
+            "label": "R",
+            "type": "float",
+            "default": 8.0,
+            "min": 4.0,
+            "max": 14.0,
+            "step": 0.5
+          },
+          {
+            "name": "h",
+            "label": "H",
+            "type": "float",
+            "default": 7.0,
+            "min": 4.0,
+            "max": 14.0,
+            "step": 0.5
+          },
+          {
+            "name": "n",
+            "label": "N",
+            "type": "int",
+            "default": 20,
+            "min": 12,
+            "max": 32,
+            "step": 2
+          }
+        ]
+      }
     },
     {
       "file": "torsion_spring_demo.glb",
@@ -223,7 +1351,57 @@
       "module": "mechlib.patterns",
       "signature": "lighten_grid_centres(minx, miny, maxx, maxy, cell, web, pattern); lighten_cell_poly(cx, cy, cell, pattern)",
       "description": "A structural panel opened by a staggered hexagonal lattice.",
-      "origin": "Extracted from housings.py in finnish-doors."
+      "origin": "Extracted from housings.py in finnish-doors.",
+      "play": {
+        "demo": "demo_lighten_grid",
+        "params": [
+          {
+            "name": "panel_w",
+            "label": "Panel W",
+            "type": "float",
+            "default": 44.0,
+            "min": 28.0,
+            "max": 60.0,
+            "step": 2.0
+          },
+          {
+            "name": "panel_d",
+            "label": "Panel D",
+            "type": "float",
+            "default": 30.0,
+            "min": 18.0,
+            "max": 44.0,
+            "step": 2.0
+          },
+          {
+            "name": "panel_t",
+            "label": "Panel T",
+            "type": "float",
+            "default": 3.0,
+            "min": 1.5,
+            "max": 5.0,
+            "step": 0.5
+          },
+          {
+            "name": "cell",
+            "label": "Cell",
+            "type": "float",
+            "default": 5.0,
+            "min": 3.0,
+            "max": 8.0,
+            "step": 0.5
+          },
+          {
+            "name": "wall",
+            "label": "Wall",
+            "type": "float",
+            "default": 2.0,
+            "min": 1.0,
+            "max": 4.0,
+            "step": 0.5
+          }
+        ]
+      }
     },
     {
       "file": "text_polygon_demo.glb",
@@ -231,7 +1409,57 @@
       "module": "mechlib.text",
       "signature": "text_polygon(text, size, font_path=None)",
       "description": "The word mechlib converted to counter-preserving raised geometry.",
-      "origin": "Extracted from housings.py in finnish-doors."
+      "origin": "Extracted from housings.py in finnish-doors.",
+      "play": {
+        "demo": "demo_text_polygon",
+        "params": [
+          {
+            "name": "size",
+            "label": "Size",
+            "type": "float",
+            "default": 12.0,
+            "min": 8.0,
+            "max": 18.0,
+            "step": 1.0
+          },
+          {
+            "name": "extrude_h",
+            "label": "Extrude H",
+            "type": "float",
+            "default": 1.5,
+            "min": 0.8,
+            "max": 3.0,
+            "step": 0.2
+          },
+          {
+            "name": "plaque_w",
+            "label": "Plaque W",
+            "type": "float",
+            "default": 52.0,
+            "min": 36.0,
+            "max": 70.0,
+            "step": 2.0
+          },
+          {
+            "name": "plaque_d",
+            "label": "Plaque D",
+            "type": "float",
+            "default": 18.0,
+            "min": 12.0,
+            "max": 28.0,
+            "step": 1.0
+          },
+          {
+            "name": "plaque_r",
+            "label": "Plaque R",
+            "type": "float",
+            "default": 3.0,
+            "min": 1.0,
+            "max": 6.0,
+            "step": 0.5
+          }
+        ]
+      }
     },
     {
       "file": "fastener_trio_demo.glb",
@@ -247,7 +1475,66 @@
       "module": "mechlib.gears",
       "signature": "worm(module, length, pitch_d, starts=1, pressure_angle=20.0, bore=0.0); spur_gear(module, teeth, width, bore=0.0, pressure_angle=20.0, sector_deg=360.0, backlash=0.06, hub_d=0.0, full_disc=True, helix_deg=0.0)",
       "description": "A true helical worm beside its lead-angle-matched wheel.",
-      "origin": "Extracted from gears.py in dual-axis-turntable."
+      "origin": "Extracted from gears.py in dual-axis-turntable.",
+      "play": {
+        "demo": "demo_worm",
+        "params": [
+          {
+            "name": "module",
+            "label": "Module",
+            "type": "float",
+            "default": 1.5,
+            "min": 1.0,
+            "max": 2.5,
+            "step": 0.25
+          },
+          {
+            "name": "worm_length",
+            "label": "Worm Length",
+            "type": "float",
+            "default": 24.0,
+            "min": 14.0,
+            "max": 36.0,
+            "step": 2.0
+          },
+          {
+            "name": "pitch_d",
+            "label": "Pitch D",
+            "type": "float",
+            "default": 14.3,
+            "min": 10.0,
+            "max": 20.0,
+            "step": 0.5
+          },
+          {
+            "name": "wheel_teeth",
+            "label": "Wheel Teeth",
+            "type": "int",
+            "default": 40,
+            "min": 24,
+            "max": 48,
+            "step": 2
+          },
+          {
+            "name": "wheel_thickness",
+            "label": "Wheel Thickness",
+            "type": "float",
+            "default": 8.0,
+            "min": 4.0,
+            "max": 14.0,
+            "step": 1.0
+          },
+          {
+            "name": "backlash",
+            "label": "Backlash",
+            "type": "float",
+            "default": 0.35,
+            "min": 0.15,
+            "max": 0.6,
+            "step": 0.05
+          }
+        ]
+      }
     },
     {
       "file": "spur_gear_sector_demo.glb",
@@ -255,7 +1542,66 @@
       "module": "mechlib.gears",
       "signature": "spur_gear(module, teeth, width, bore=0.0, pressure_angle=20.0, sector_deg=360.0, backlash=0.06, hub_d=0.0, full_disc=True, helix_deg=0.0)",
       "description": "A full-featured involute sector with a central hub and bore.",
-      "origin": "Extracted from gears.py in dual-axis-turntable."
+      "origin": "Extracted from gears.py in dual-axis-turntable.",
+      "play": {
+        "demo": "demo_spur_gear_sector",
+        "params": [
+          {
+            "name": "module",
+            "label": "Module",
+            "type": "float",
+            "default": 1.5,
+            "min": 1.0,
+            "max": 2.5,
+            "step": 0.25
+          },
+          {
+            "name": "teeth",
+            "label": "Teeth",
+            "type": "int",
+            "default": 36,
+            "min": 24,
+            "max": 48,
+            "step": 2
+          },
+          {
+            "name": "thickness",
+            "label": "Thickness",
+            "type": "float",
+            "default": 7.0,
+            "min": 4.0,
+            "max": 12.0,
+            "step": 1.0
+          },
+          {
+            "name": "bore",
+            "label": "Bore",
+            "type": "float",
+            "default": 5.0,
+            "min": 2.0,
+            "max": 8.0,
+            "step": 0.5
+          },
+          {
+            "name": "sector_deg",
+            "label": "Sector Deg",
+            "type": "float",
+            "default": 125.0,
+            "min": 90.0,
+            "max": 150.0,
+            "step": 10.0
+          },
+          {
+            "name": "hub_d",
+            "label": "Hub D",
+            "type": "float",
+            "default": 14.0,
+            "min": 10.0,
+            "max": 20.0,
+            "step": 1.0
+          }
+        ]
+      }
     },
     {
       "file": "loft_demo.glb",
@@ -263,7 +1609,66 @@
       "module": "mechlib.sweep",
       "signature": "loft(rings)",
       "description": "An organic solid joined through five equal-count point rings.",
-      "origin": "Extracted from build.py in dual-axis-turntable."
+      "origin": "Extracted from build.py in dual-axis-turntable.",
+      "play": {
+        "demo": "demo_loft",
+        "params": [
+          {
+            "name": "r0",
+            "label": "R0",
+            "type": "float",
+            "default": 9.0,
+            "min": 5.0,
+            "max": 14.0,
+            "step": 0.5
+          },
+          {
+            "name": "r_mid",
+            "label": "R Mid",
+            "type": "float",
+            "default": 6.5,
+            "min": 4.0,
+            "max": 10.0,
+            "step": 0.5
+          },
+          {
+            "name": "r_top",
+            "label": "R Top",
+            "type": "float",
+            "default": 5.0,
+            "min": 3.0,
+            "max": 9.0,
+            "step": 0.5
+          },
+          {
+            "name": "height",
+            "label": "Height",
+            "type": "float",
+            "default": 30.0,
+            "min": 18.0,
+            "max": 40.0,
+            "step": 2.0
+          },
+          {
+            "name": "ring_n",
+            "label": "Ring N",
+            "type": "int",
+            "default": 64,
+            "min": 24,
+            "max": 64,
+            "step": 8
+          },
+          {
+            "name": "resolution",
+            "label": "Resolution",
+            "type": "int",
+            "default": 24,
+            "min": 16,
+            "max": 32,
+            "step": 4
+          }
+        ]
+      }
     },
     {
       "file": "push_pin_demo.glb",
@@ -271,7 +1676,30 @@
       "module": "mechlib.closures",
       "signature": "push_pin(d, length, barb=True, axis='z', flip=False)",
       "description": "A barbed printed press pin with a conical lead-in tip.",
-      "origin": "Extracted from build.py in dual-axis-turntable."
+      "origin": "Extracted from build.py in dual-axis-turntable.",
+      "play": {
+        "demo": "demo_push_pin",
+        "params": [
+          {
+            "name": "d",
+            "label": "D",
+            "type": "float",
+            "default": 5.0,
+            "min": 3.0,
+            "max": 8.0,
+            "step": 0.5
+          },
+          {
+            "name": "length",
+            "label": "Length",
+            "type": "float",
+            "default": 18.0,
+            "min": 10.0,
+            "max": 28.0,
+            "step": 1.0
+          }
+        ]
+      }
     },
     {
       "file": "chamfer_prism_demo.glb",
@@ -279,7 +1707,57 @@
       "module": "mechlib.prim",
       "signature": "chamfer_prism(w, d, h, r, cham)",
       "description": "A rounded enclosure prism with a clean hull-chamfered top.",
-      "origin": "Extracted from build.py in dual-axis-turntable."
+      "origin": "Extracted from build.py in dual-axis-turntable.",
+      "play": {
+        "demo": "demo_chamfer_prism",
+        "params": [
+          {
+            "name": "w",
+            "label": "W",
+            "type": "float",
+            "default": 30.0,
+            "min": 16.0,
+            "max": 44.0,
+            "step": 2.0
+          },
+          {
+            "name": "d",
+            "label": "D",
+            "type": "float",
+            "default": 22.0,
+            "min": 12.0,
+            "max": 32.0,
+            "step": 2.0
+          },
+          {
+            "name": "h",
+            "label": "H",
+            "type": "float",
+            "default": 12.0,
+            "min": 6.0,
+            "max": 20.0,
+            "step": 1.0
+          },
+          {
+            "name": "r",
+            "label": "R",
+            "type": "float",
+            "default": 5.0,
+            "min": 2.0,
+            "max": 8.0,
+            "step": 0.5
+          },
+          {
+            "name": "chamfer",
+            "label": "Chamfer",
+            "type": "float",
+            "default": 2.0,
+            "min": 1.0,
+            "max": 4.0,
+            "step": 0.5
+          }
+        ]
+      }
     },
     {
       "file": "threaded_rod_demo.glb",
@@ -287,7 +1765,39 @@
       "module": "mechlib.mechanisms",
       "signature": "threaded_rod(major_d, pitch, length, minor_d=None, n_theta=64, steps_per_pitch=6)",
       "description": "A fast radial-grid M8 display and light-duty external thread.",
-      "origin": "Extracted from lib.py in wall-shelf-clamp."
+      "origin": "Extracted from lib.py in wall-shelf-clamp.",
+      "play": {
+        "demo": "demo_threaded_rod",
+        "params": [
+          {
+            "name": "d",
+            "label": "D",
+            "type": "float",
+            "default": 8.0,
+            "min": 5.0,
+            "max": 12.0,
+            "step": 0.5
+          },
+          {
+            "name": "pitch",
+            "label": "Pitch",
+            "type": "float",
+            "default": 1.25,
+            "min": 0.8,
+            "max": 2.0,
+            "step": 0.1
+          },
+          {
+            "name": "length",
+            "label": "Length",
+            "type": "float",
+            "default": 20.0,
+            "min": 12.0,
+            "max": 36.0,
+            "step": 2.0
+          }
+        ]
+      }
     },
     {
       "file": "setscrew_demo.glb",
@@ -295,7 +1805,39 @@
       "module": "mechlib.closures",
       "signature": "setscrew(point, direction, into=14.0, hole_d=4.2, boss_d=12.0, boss_h=4.0, sections=32)",
       "description": "A cut-away sleeve showing its external boss and inward pilot.",
-      "origin": "Extracted from lib.py in wall-shelf-clamp."
+      "origin": "Extracted from lib.py in wall-shelf-clamp.",
+      "play": {
+        "demo": "demo_setscrew",
+        "params": [
+          {
+            "name": "body_w",
+            "label": "Body W",
+            "type": "float",
+            "default": 24.0,
+            "min": 16.0,
+            "max": 32.0,
+            "step": 2.0
+          },
+          {
+            "name": "body_d",
+            "label": "Body D",
+            "type": "float",
+            "default": 18.0,
+            "min": 12.0,
+            "max": 24.0,
+            "step": 1.0
+          },
+          {
+            "name": "body_h",
+            "label": "Body H",
+            "type": "float",
+            "default": 14.0,
+            "min": 10.0,
+            "max": 20.0,
+            "step": 1.0
+          }
+        ]
+      }
     },
     {
       "file": "slot_cutter_demo.glb",
@@ -303,7 +1845,57 @@
       "module": "mechlib.cutters",
       "signature": "slot_cutter(w, t, z0, z1, cx=0.0, cy=0.0, foot_z=0.0, dogbone_r=0.6, foot_relief=0.3, eps=0.5)",
       "description": "An FDM blade slot with visible square-corner dog-bone relief.",
-      "origin": "Extracted from build.py in torque-lever."
+      "origin": "Extracted from build.py in torque-lever.",
+      "play": {
+        "demo": "demo_slot_cutter",
+        "params": [
+          {
+            "name": "slot_len",
+            "label": "Slot Len",
+            "type": "float",
+            "default": 14.0,
+            "min": 8.0,
+            "max": 22.0,
+            "step": 1.0
+          },
+          {
+            "name": "slot_w",
+            "label": "Slot W",
+            "type": "float",
+            "default": 4.0,
+            "min": 2.0,
+            "max": 8.0,
+            "step": 0.5
+          },
+          {
+            "name": "block_w",
+            "label": "Block W",
+            "type": "float",
+            "default": 24.0,
+            "min": 16.0,
+            "max": 36.0,
+            "step": 2.0
+          },
+          {
+            "name": "block_d",
+            "label": "Block D",
+            "type": "float",
+            "default": 14.0,
+            "min": 10.0,
+            "max": 22.0,
+            "step": 1.0
+          },
+          {
+            "name": "block_h",
+            "label": "Block H",
+            "type": "float",
+            "default": 6.0,
+            "min": 3.0,
+            "max": 12.0,
+            "step": 1.0
+          }
+        ]
+      }
     },
     {
       "file": "tapered_cavity_demo.glb",
@@ -311,7 +1903,57 @@
       "module": "mechlib.cutters",
       "signature": "tapered_cavity(g, zlo, height, taper_h=11.0, taper_step=0.6)",
       "description": "A cut-away hollow whose stepped roof closes without bridging.",
-      "origin": "Extracted from lighten_legs.py in tripod."
+      "origin": "Extracted from lighten_legs.py in tripod.",
+      "play": {
+        "demo": "demo_tapered_cavity",
+        "params": [
+          {
+            "name": "cavity_r",
+            "label": "Cavity R",
+            "type": "float",
+            "default": 7.0,
+            "min": 4.0,
+            "max": 12.0,
+            "step": 0.5
+          },
+          {
+            "name": "depth",
+            "label": "Depth",
+            "type": "float",
+            "default": 22.0,
+            "min": 12.0,
+            "max": 30.0,
+            "step": 2.0
+          },
+          {
+            "name": "taper_h",
+            "label": "Taper H",
+            "type": "float",
+            "default": 11.0,
+            "min": 6.0,
+            "max": 16.0,
+            "step": 1.0
+          },
+          {
+            "name": "taper_step",
+            "label": "Taper Step",
+            "type": "float",
+            "default": 0.6,
+            "min": 0.3,
+            "max": 1.2,
+            "step": 0.1
+          },
+          {
+            "name": "body",
+            "label": "Body",
+            "type": "float",
+            "default": 22.0,
+            "min": 16.0,
+            "max": 32.0,
+            "step": 2.0
+          }
+        ]
+      }
     },
     {
       "file": "u_channel_between_demo.glb",
@@ -319,7 +1961,57 @@
       "module": "mechlib.cutters",
       "signature": "u_channel_between(p0, p1, channel_w, z_floor, body_h)",
       "description": "Joined arbitrary-angle open U segments forming an S-shaped run.",
-      "origin": "Extracted from build.py in jumper-wire-sockets."
+      "origin": "Extracted from build.py in jumper-wire-sockets.",
+      "play": {
+        "demo": "demo_u_channel_between",
+        "params": [
+          {
+            "name": "channel_w",
+            "label": "Channel W",
+            "type": "float",
+            "default": 4.0,
+            "min": 2.5,
+            "max": 7.0,
+            "step": 0.5
+          },
+          {
+            "name": "wall",
+            "label": "Wall",
+            "type": "float",
+            "default": 1.2,
+            "min": 0.8,
+            "max": 2.0,
+            "step": 0.2
+          },
+          {
+            "name": "depth",
+            "label": "Depth",
+            "type": "float",
+            "default": 9.0,
+            "min": 5.0,
+            "max": 14.0,
+            "step": 1.0
+          },
+          {
+            "name": "body_size",
+            "label": "Body Size",
+            "type": "float",
+            "default": 34.0,
+            "min": 24.0,
+            "max": 48.0,
+            "step": 2.0
+          },
+          {
+            "name": "body_r",
+            "label": "Body R",
+            "type": "float",
+            "default": 4.0,
+            "min": 2.0,
+            "max": 8.0,
+            "step": 0.5
+          }
+        ]
+      }
     },
     {
       "file": "revolved_gable_cavity_demo.glb",
@@ -327,7 +2019,66 @@
       "module": "mechlib.cutters",
       "signature": "revolved_gable_cavity(r_in, r_out, z0, h, roof_angle=45.0, sections=128)",
       "description": "A cut-away annular chamber beneath a 45 degree gable roof.",
-      "origin": "Generalized from build.py in massage-shower-head."
+      "origin": "Generalized from build.py in massage-shower-head.",
+      "play": {
+        "demo": "demo_revolved_gable_cavity",
+        "params": [
+          {
+            "name": "outer_r",
+            "label": "Outer R",
+            "type": "float",
+            "default": 20.0,
+            "min": 12.0,
+            "max": 28.0,
+            "step": 1.0
+          },
+          {
+            "name": "outer_h",
+            "label": "Outer H",
+            "type": "float",
+            "default": 18.0,
+            "min": 12.0,
+            "max": 28.0,
+            "step": 1.0
+          },
+          {
+            "name": "bore_r",
+            "label": "Bore R",
+            "type": "float",
+            "default": 6.0,
+            "min": 3.0,
+            "max": 10.0,
+            "step": 0.5
+          },
+          {
+            "name": "cavity_r0",
+            "label": "Cavity R0",
+            "type": "float",
+            "default": 8.0,
+            "min": 5.0,
+            "max": 14.0,
+            "step": 0.5
+          },
+          {
+            "name": "cavity_r1",
+            "label": "Cavity R1",
+            "type": "float",
+            "default": 18.0,
+            "min": 12.0,
+            "max": 24.0,
+            "step": 1.0
+          },
+          {
+            "name": "sections",
+            "label": "Sections",
+            "type": "int",
+            "default": 96,
+            "min": 24,
+            "max": 64,
+            "step": 8
+          }
+        ]
+      }
     },
     {
       "file": "directed_holes_demo.glb",
@@ -335,7 +2086,57 @@
       "module": "mechlib.patterns",
       "signature": "directed_holes(points, vectors, d, length)",
       "description": "Eight vector-directed bores cut through a hemispherical dome.",
-      "origin": "Generalized from build.py in massage-shower-head."
+      "origin": "Generalized from build.py in massage-shower-head.",
+      "play": {
+        "demo": "demo_directed_holes",
+        "params": [
+          {
+            "name": "radius",
+            "label": "Radius",
+            "type": "float",
+            "default": 16.0,
+            "min": 10.0,
+            "max": 22.0,
+            "step": 1.0
+          },
+          {
+            "name": "n_holes",
+            "label": "N Holes",
+            "type": "int",
+            "default": 8,
+            "min": 4,
+            "max": 12,
+            "step": 1
+          },
+          {
+            "name": "hole_r",
+            "label": "Hole R",
+            "type": "float",
+            "default": 2.2,
+            "min": 1.0,
+            "max": 3.5,
+            "step": 0.25
+          },
+          {
+            "name": "hole_len",
+            "label": "Hole Len",
+            "type": "float",
+            "default": 24.0,
+            "min": 14.0,
+            "max": 32.0,
+            "step": 2.0
+          },
+          {
+            "name": "subdivisions",
+            "label": "Subdivisions",
+            "type": "int",
+            "default": 4,
+            "min": 2,
+            "max": 4,
+            "step": 1
+          }
+        ]
+      }
     },
     {
       "file": "saddle_demo.glb",
@@ -343,7 +2144,48 @@
       "module": "mechlib.fixtures",
       "signature": "saddle(axis0, axis1, r, yi, rib_t, interior, rise=0.0)",
       "description": "A shell-trimmed rib cradling a skew cylindrical reference part.",
-      "origin": "Extracted from pickle_build.py in mini-powerbank."
+      "origin": "Extracted from pickle_build.py in mini-powerbank.",
+      "play": {
+        "demo": "demo_saddle",
+        "params": [
+          {
+            "name": "rib_t",
+            "label": "Rib T",
+            "type": "float",
+            "default": 4.0,
+            "min": 2.0,
+            "max": 8.0,
+            "step": 0.5
+          },
+          {
+            "name": "shell",
+            "label": "Shell",
+            "type": "float",
+            "default": 2.4,
+            "min": 1.0,
+            "max": 4.0,
+            "step": 0.5
+          },
+          {
+            "name": "cyl_r",
+            "label": "Cyl R",
+            "type": "float",
+            "default": 8.0,
+            "min": 4.0,
+            "max": 14.0,
+            "step": 0.5
+          },
+          {
+            "name": "span",
+            "label": "Span",
+            "type": "float",
+            "default": 12.0,
+            "min": 8.0,
+            "max": 18.0,
+            "step": 1.0
+          }
+        ]
+      }
     },
     {
       "file": "text_block_demo.glb",
@@ -351,7 +2193,57 @@
       "module": "mechlib.text",
       "signature": "text_block(lines, cx, cy, h, gap=1.2)",
       "description": "Two centered lines of raised polygon text stacked on a plaque.",
-      "origin": "Extracted from build.py in torque-lever."
+      "origin": "Extracted from build.py in torque-lever.",
+      "play": {
+        "demo": "demo_text_block",
+        "params": [
+          {
+            "name": "size",
+            "label": "Size",
+            "type": "float",
+            "default": 7.0,
+            "min": 5.0,
+            "max": 12.0,
+            "step": 0.5
+          },
+          {
+            "name": "gap",
+            "label": "Gap",
+            "type": "float",
+            "default": 1.0,
+            "min": 0.4,
+            "max": 2.0,
+            "step": 0.2
+          },
+          {
+            "name": "plaque_w",
+            "label": "Plaque W",
+            "type": "float",
+            "default": 44.0,
+            "min": 30.0,
+            "max": 60.0,
+            "step": 2.0
+          },
+          {
+            "name": "plaque_d",
+            "label": "Plaque D",
+            "type": "float",
+            "default": 28.0,
+            "min": 18.0,
+            "max": 40.0,
+            "step": 2.0
+          },
+          {
+            "name": "text_h",
+            "label": "Text H",
+            "type": "float",
+            "default": 1.2,
+            "min": 0.8,
+            "max": 2.5,
+            "step": 0.2
+          }
+        ]
+      }
     },
     {
       "file": "seg_cylinder_demo.glb",
@@ -359,7 +2251,48 @@
       "module": "mechlib.prim",
       "signature": "seg_cylinder(p0, p1, d)",
       "description": "A cylinder spanning two skew points in three dimensions.",
-      "origin": "Extracted from build.py in massage-shower-head."
+      "origin": "Extracted from build.py in massage-shower-head.",
+      "play": {
+        "demo": "demo_seg_cylinder",
+        "params": [
+          {
+            "name": "r",
+            "label": "R",
+            "type": "float",
+            "default": 4.0,
+            "min": 2.0,
+            "max": 8.0,
+            "step": 0.5
+          },
+          {
+            "name": "x0",
+            "label": "X0",
+            "type": "float",
+            "default": -9.0,
+            "min": -16.0,
+            "max": -4.0,
+            "step": 1.0
+          },
+          {
+            "name": "y0",
+            "label": "Y0",
+            "type": "float",
+            "default": -6.0,
+            "min": -12.0,
+            "max": -2.0,
+            "step": 1.0
+          },
+          {
+            "name": "z1",
+            "label": "Z1",
+            "type": "float",
+            "default": 18.0,
+            "min": 8.0,
+            "max": 28.0,
+            "step": 1.0
+          }
+        ]
+      }
     },
     {
       "file": "printed_worm_demo.glb",
@@ -367,7 +2300,21 @@
       "module": "mechlib.drives",
       "signature": "printed_worm(handsign=1, motor_tail=None, module=1.2, pressure_angle=20.0, starts=1, length=50.0, bore_d=5.5, shaft_flat=3.7, clearance=0.25, lead_angle=5.0, journal_d=8.0, journal_len=9.0, engage_teeth=6, wheel_width=6.55, backlash=0.35, collar_d=10.5, collar_len=2.0, bearing_width=7.0, set_screw_d=2.6, set_screw_z=6.0, sections=160)",
       "description": "A journalled printed worm with runout threads, keyed bore, thrust collars, and radial set-screw hole.",
-      "origin": "Extracted from the Klonk build_worm generator."
+      "origin": "Extracted from the Klonk build_worm generator.",
+      "play": {
+        "demo": "demo_printed_worm",
+        "params": [
+          {
+            "name": "sections",
+            "label": "Sections",
+            "type": "int",
+            "default": 72,
+            "min": 24,
+            "max": 64,
+            "step": 8
+          }
+        ]
+      }
     },
     {
       "file": "flat_worm_pair_demo.glb",
@@ -375,7 +2322,21 @@
       "module": "mechlib.drives",
       "signature": "flat_worm(starts=3, module=1.5, pitch_d=9.0, pressure_angle=20.0, worm_backlash=0.8, tip_trim=0.25, hand=1, thread_len=16.0, runout=2.2, use_695=True, journal_d=4.95, seat_len=4.4, spacer_d=6.8, bearing_spacer_len=5.442135623730952, collar_d=6.8, collar_len=0.5, length=36.6842712474619, shaft_d=3.0, shaft_flat=2.33, clearance=0.25, bore_depth=8.7, assembly_spin=95.0, flute_count=2, flute_d=0.8, flute_z0=5.5, flute_z1=8.55, sections=144); worm_wheel_band(width=3.5, z0=0.0, wheel_teeth=26, module=1.5, pressure_angle=20.0, backlash=0.35, tip_relief=0.03, tip_trim=0.55, hand=1, starts=3, pitch_d=9.0, read_face=2.4, read_r0=17.0, layers=12)",
       "description": "The bench-proven three-start input worm and lead-angle-matched wheel band at crossed axes.",
-      "origin": "Extracted from the Klonk flat-drive generators."
+      "origin": "Extracted from the Klonk flat-drive generators.",
+      "play": {
+        "demo": "demo_flat_worm_pair",
+        "params": [
+          {
+            "name": "gap",
+            "label": "Gap",
+            "type": "float",
+            "default": 0.25,
+            "min": 0.0,
+            "max": 2.0,
+            "step": 0.1
+          }
+        ]
+      }
     },
     {
       "file": "worm_coupon_demo.glb",
@@ -415,7 +2376,21 @@
       "module": "mechlib.ratchets",
       "signature": "compliant_clutch_2d(teeth=18, pawls=3, race_outer_r=24.5, race_tip_r=14.0, tooth_depth=2.6, hub_r=8.0, flexure_w=1.4, flexure_arc_deg=150.0, flexure_clearance=0.45, preload=0.6, flip=False, lock_face_frac=0.4); compliant_clutch(height=3.0, teeth=18, pawls=3, race_outer_r=24.5, race_tip_r=14.0, tooth_depth=2.6, hub_r=8.0, flexure_w=1.4, flexure_arc_deg=150.0, flexure_clearance=0.45, preload=0.6, flip=False, lock_face_frac=0.4)",
       "description": "Integral spiral flexures engaging an internal sawtooth race, shown with the torque-limit face fraction.",
-      "origin": "Extracted from Klonk gen_compliant_2d with the torque-limit experiment delta."
+      "origin": "Extracted from Klonk gen_compliant_2d with the torque-limit experiment delta.",
+      "play": {
+        "demo": "demo_compliant_clutch",
+        "params": [
+          {
+            "name": "lock_face_frac",
+            "label": "Lock Face Frac",
+            "type": "float",
+            "default": 0.34,
+            "min": 0.2,
+            "max": 0.48,
+            "step": 0.02
+          }
+        ]
+      }
     },
     {
       "file": "arc_ratchet_demo.glb",
@@ -431,7 +2406,57 @@
       "module": "mechlib.mechanisms",
       "signature": "helix_tube(R, rw, turns, z0, z1, M=16, N=420)",
       "description": "A capped solid wire swept through five turns with a radial-inward moving frame.",
-      "origin": "Extracted from the finnish-doors wrap-spring demonstration."
+      "origin": "Extracted from the finnish-doors wrap-spring demonstration.",
+      "play": {
+        "demo": "demo_helix_tube",
+        "params": [
+          {
+            "name": "radius",
+            "label": "Radius",
+            "type": "float",
+            "default": 7.0,
+            "min": 4.0,
+            "max": 12.0,
+            "step": 0.5
+          },
+          {
+            "name": "wire_r",
+            "label": "Wire R",
+            "type": "float",
+            "default": 1.15,
+            "min": 0.6,
+            "max": 2.0,
+            "step": 0.1
+          },
+          {
+            "name": "turns",
+            "label": "Turns",
+            "type": "float",
+            "default": 5.0,
+            "min": 2.0,
+            "max": 8.0,
+            "step": 0.5
+          },
+          {
+            "name": "z0",
+            "label": "Z0",
+            "type": "float",
+            "default": -5.0,
+            "min": -10.0,
+            "max": -2.0,
+            "step": 0.5
+          },
+          {
+            "name": "z1",
+            "label": "Z1",
+            "type": "float",
+            "default": 5.0,
+            "min": 2.0,
+            "max": 12.0,
+            "step": 0.5
+          }
+        ]
+      }
     },
     {
       "file": "rack_2d_demo.glb",
@@ -439,7 +2464,39 @@
       "module": "mechlib.gears",
       "signature": "rack_2d(n_teeth, module, pa_deg=20.0, backlash=0.0, addendum=None, dedendum=None, base_height=None, end_margin=0.0, centered=True)",
       "description": "Eight pressure-angle trapezoidal teeth at pi times module circular pitch, extruded thin for display.",
-      "origin": "Generalized from the finnish-doors intercom plunger rack."
+      "origin": "Generalized from the finnish-doors intercom plunger rack.",
+      "play": {
+        "demo": "demo_rack_2d",
+        "params": [
+          {
+            "name": "teeth",
+            "label": "Teeth",
+            "type": "int",
+            "default": 8,
+            "min": 4,
+            "max": 16,
+            "step": 1
+          },
+          {
+            "name": "module",
+            "label": "Module",
+            "type": "float",
+            "default": 1.5,
+            "min": 1.0,
+            "max": 2.5,
+            "step": 0.25
+          },
+          {
+            "name": "thickness",
+            "label": "Thickness",
+            "type": "float",
+            "default": 4.0,
+            "min": 2.0,
+            "max": 8.0,
+            "step": 0.5
+          }
+        ]
+      }
     },
     {
       "file": "dog_slot_coupling_demo.glb",
@@ -447,7 +2504,21 @@
       "module": "mechlib.mechanisms",
       "signature": "dog_slot_coupling(r_in=6.0, r_out=12.0, dog_deg=30.0, free_deg=50.0, boss_h=7.0, collar_h=5.0, slot_a_clear=1.0, slot_z_clear=0.6, bore_r=4.5, boss_wall=1.5, collar_overhang=2.5, sections=64)",
       "description": "A downward collar dog riding in a boss arc slot to provide controlled angular lost motion.",
-      "origin": "Generalized from finnish-doors coupling variant A."
+      "origin": "Generalized from finnish-doors coupling variant A.",
+      "play": {
+        "demo": "demo_dog_slot_coupling",
+        "params": [
+          {
+            "name": "spacing",
+            "label": "Spacing",
+            "type": "float",
+            "default": 17.0,
+            "min": 10.0,
+            "max": 28.0,
+            "step": 1.0
+          }
+        ]
+      }
     }
   ],
   "utilities": [
