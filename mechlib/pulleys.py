@@ -7,8 +7,10 @@ import shapely.geometry as sg
 from shapely.ops import unary_union
 import trimesh
 
+from .closures import setscrew
+from .cutters import bearing_seat
 from .meshutil import from_manifold, sub, to_manifold, uni
-from .prim import cyl
+from .prim import cyl, hex_poly
 from .sweep import loft
 
 
@@ -239,7 +241,242 @@ def grooved_drum(radius_law="cylinder", turns=8.0, cable_d=3.0,
     return drum
 
 
+def idler_pulley(od=16.0, width=8.0, bore_d=5.0, crown=0.15,
+                 flanges=True, flange_t=1.2, flange_extra=1.5,
+                 belt_clearance=0.3, toothed=False, teeth=20, pitch=2.0,
+                 bearing=None, bearing_fit="press", clearance=0.25,
+                 sections=64):
+    """Build a smooth or toothed idler pulley for tensioning a belt (axis along +Z).
+
+    The default smooth idler rides the back of a flat or toothed belt on a
+    shallow parabolic ``crown`` (peak radius ``od/2 + crown`` at mid-width,
+    tapering to ``od/2`` at the edges, the classic conveyor-idler crown that
+    self-centres a flat belt under tension). With ``toothed=True`` the body
+    is a real ``timing_pulley`` instead (its GT2 tooth generation is reused
+    directly, not reimplemented), so the idler meshes with a synchronous
+    belt rather than rubbing it; ``crown`` is ignored in that case. With
+    ``flanges`` the belt is retained between two discs of ``flange_t``
+    thickness; for the smooth idler their inner faces are spaced
+    ``width + belt_clearance`` apart, for the toothed idler exactly
+    ``width`` apart (pass ``width`` already inclusive of any desired float,
+    matching ``timing_pulley``'s ``belt_w``). The bore is a plain
+    ``bore_d + clearance`` hole by default; pass ``bearing`` as ``"608"``,
+    ``"695"``, or ``"MR105"`` to cut a ``cutters.bearing_seat`` pocket
+    through the idler instead (``bearing_fit`` selects ``"press"`` or
+    ``"slip"``). The effective belt-contact diameter -- the crown peak for a
+    smooth idler, the pitch diameter for a toothed one -- is stored in
+    ``mesh.metadata["belt_contact_d"]``. Print with the bore axis vertical;
+    the crown and teeth need no support. Units are mm.
+    """
+    if (od <= 0 or width <= 0 or bore_d <= 0 or crown < 0 or flange_t < 1.2 or
+            flange_extra <= 0 or belt_clearance < 0 or teeth < 8 or pitch <= 0 or
+            clearance < 0 or sections < 24):
+        raise ValueError("invalid idler pulley dimensions")
+    if not toothed:
+        if crown <= 0 and not flanges:
+            raise ValueError(
+                "idler_pulley(): a flat idler needs flanges or a crown to "
+                "retain the belt")
+        if crown > od / 4.0:
+            raise ValueError("idler_pulley(): crown too large for the outer diameter")
+        if od / 2.0 - (bore_d + clearance) / 2.0 < 1.2:
+            raise ValueError("idler_pulley(): wall below 1.2 mm around the bore")
+
+    sections = int(round(sections))
+
+    if toothed:
+        body = timing_pulley(teeth=teeth, pitch=pitch, belt_w=width,
+                             bore_d=bore_d, hub_d=max(bore_d + 4.0, 8.0),
+                             hub_len=0.0, flanges=flanges, flange_t=flange_t,
+                             flange_extra=flange_extra, clearance=clearance,
+                             sections=sections)
+        contact_d = body.metadata["pitch_d"]
+        total_h = width + (2.0 * flange_t if flanges else 0.0)
+    else:
+        span = width + (belt_clearance if flanges else 0.0)
+        z0 = flange_t if flanges else 0.0
+        n_rings = 9
+        angles = np.linspace(0.0, 2.0 * np.pi, sections, endpoint=False)
+        rings = []
+        for i in range(n_rings):
+            f = i / (n_rings - 1.0)
+            r = od / 2.0 + crown * (1.0 - (2.0 * f - 1.0) ** 2)
+            z = z0 + f * span
+            rings.append(np.c_[r * np.cos(angles), r * np.sin(angles),
+                               np.full(sections, z)])
+        body = loft(rings)
+        parts = [body]
+        if flanges:
+            flange_r = od / 2.0 + crown + flange_extra
+            parts.append(cyl(flange_r, flange_t,
+                             center=(0, 0, flange_t / 2.0), sections=sections))
+            parts.append(cyl(flange_r, flange_t,
+                             center=(0, 0, z0 + span + flange_t / 2.0),
+                             sections=sections))
+        body = uni(parts)
+        contact_d = od + 2.0 * crown
+        total_h = z0 + span + (flange_t if flanges else 0.0)
+        bore = cyl((bore_d + clearance) / 2.0, total_h + 4.0,
+                   center=(0, 0, total_h / 2.0), sections=sections)
+        body = sub(body, bore)
+
+    pocket_d = None
+    if bearing is not None:
+        seat = bearing_seat(bearing, fit=bearing_fit, open_column=True)
+        seat_h = seat.bounds[1][2] - seat.bounds[0][2]
+        if seat_h < total_h:
+            seat = bearing_seat(bearing, fit=bearing_fit, open_column=True,
+                                extra_depth=total_h - seat_h)
+        pocket_d = float(seat.bounds[1][0] - seat.bounds[0][0])
+        body = sub(body, seat)
+
+    body.metadata["belt_contact_d"] = float(contact_d)
+    body.metadata["toothed"] = bool(toothed)
+    if pocket_d is not None:
+        body.metadata["bearing_pocket_d"] = pocket_d
+    return body
+
+
+def eccentric_idler_mount(eccentricity=1.5, bushing_od=14.0, post_d=5.0,
+                          height=10.0, rotation_deg=0.0, drive_af=6.0,
+                          setscrew_d=3.0, clearance=0.25, idler_od=16.0,
+                          idler_width=8.0, sections=64):
+    """Build an eccentric take-up bushing plus the idler pulley it carries.
+
+    The bushing's outer cylinder (``bushing_od``) seats concentrically in a
+    fixed frame bore; its through-bore for the idler's shaft or an
+    ``idler_pulley`` post is offset ``eccentricity`` off that outer axis.
+    Turning the bushing (a hex drive recess, ``drive_af`` across flats, is
+    cut into its top face on the outer axis so a key can turn the whole part
+    from the frame side) sweeps the offset bore -- and the ``idler_pulley``
+    riding it -- through a circle of radius ``eccentricity``, so the total
+    belt-tension adjustment is ``2 * eccentricity`` end to end; that range is
+    stored in ``mesh.metadata["adjustment_range"]``. ``rotation_deg`` is the
+    bushing's current turned angle. A radial ``closures.setscrew`` boss,
+    aimed at the offset bore regardless of ``rotation_deg``, locks the
+    idler's post once tension is set. Print with the outer axis vertical.
+    Units are mm and degrees.
+    """
+    if (eccentricity <= 0 or bushing_od <= 0 or post_d <= 0 or height <= 0 or
+            drive_af <= 0 or setscrew_d <= 0 or clearance < 0 or
+            idler_od <= 0 or idler_width <= 0 or sections < 24):
+        raise ValueError("invalid eccentric idler mount dimensions")
+    post_r = (post_d + clearance) / 2.0
+    if bushing_od / 2.0 - eccentricity - post_r < 1.5:
+        raise ValueError(
+            "eccentric_idler_mount(): eccentricity leaves too little wall "
+            "around the offset post bore")
+    if 2.0 * drive_af / math.sqrt(3.0) > bushing_od - 2.0:
+        raise ValueError(
+            "eccentric_idler_mount(): hex drive too large for the bushing OD")
+
+    sections = int(round(sections))
+    rot = math.radians(rotation_deg)
+    off = (eccentricity * math.cos(rot), eccentricity * math.sin(rot))
+
+    bushing = cyl(bushing_od / 2.0, height, center=(0, 0, height / 2.0),
+                 sections=sections)
+    hex_depth = min(4.0, height * 0.4)
+    hex_cut = trimesh.creation.extrude_polygon(hex_poly(drive_af), hex_depth)
+    hex_cut.apply_translation((0, 0, height - hex_depth))
+    bushing = sub(bushing, hex_cut)
+    post_bore = cyl(post_r, height + 4.0,
+                    center=(off[0], off[1], height / 2.0), sections=sections)
+    bushing = sub(bushing, post_bore)
+
+    off_len = math.hypot(off[0], off[1])
+    off_dir = ((off[0] / off_len, off[1] / off_len) if off_len > 1e-9
+              else (1.0, 0.0))
+    ss_point = np.array([off_dir[0] * bushing_od / 2.0,
+                         off_dir[1] * bushing_od / 2.0, height / 2.0])
+    ss_dir = np.array([-off_dir[0], -off_dir[1], 0.0])
+    boss, hole = setscrew(ss_point, ss_dir,
+                          into=(bushing_od / 2.0 - eccentricity) + post_r,
+                          hole_d=setscrew_d, boss_d=setscrew_d + 5.0,
+                          boss_h=3.0, sections=32)
+    bushing = sub(uni([bushing, boss]), hole)
+
+    pulley = idler_pulley(od=idler_od, width=idler_width, bore_d=post_d,
+                          clearance=clearance, sections=sections)
+    pulley.apply_translation((off[0], off[1], height))
+
+    bushing.metadata["eccentricity"] = float(eccentricity)
+    bushing.metadata["adjustment_range"] = float(2.0 * eccentricity)
+    bushing.metadata["axis_offset"] = (float(off[0]), float(off[1]))
+    return {"bushing": bushing, "pulley": pulley}
+
+
+def belt_tensioner(arm_len=30.0, sweep_deg=50.0, beam_t=1.4, beam_w=6.0,
+                   preload_mm=2.5, mount_w=14.0, mount_d=8.0,
+                   idler_bore_d=5.0, boss_d=11.0, clearance=0.25,
+                   max_strain=0.015, sections=48):
+    """Build a compliant-arm belt tensioner: a curved cantilever spring idler mount.
+
+    A rigid mounting block anchors one end of a curved cantilever blade of
+    developed length ``arm_len`` and in-plane thickness ``beam_t`` (extruded
+    ``beam_w`` mm out of plane, and swept through ``sweep_deg`` of arc so the
+    tip lands off to the side rather than straight out), the same arc-beam
+    idiom used by ``ratchets.arc_ratchet_2d``'s pawl arms and ``flexures``'
+    blade construction. The tip carries a boss with an
+    ``idler_bore_d + clearance`` through-bore for an idler shaft or an
+    ``eccentric_idler_mount`` post. Mounted so its free tip must be pushed
+    back ``preload_mm`` to reach the belt line, the beam preloads the idler
+    against the belt with no metal spring and keeps re-deflecting to take up
+    belt stretch. The estimated tip deflection and peak bending strain
+    (``3 * beam_t * preload_mm / (2 * arm_len**2)``, the standard cantilever
+    estimate) are stored in ``mesh.metadata``; this raises rather than
+    shipping a part that snaps if that strain exceeds ``max_strain`` (about
+    0.015 for PETG, closer to 0.01 for PLA -- pass a lower ``max_strain`` for
+    PLA). Print flat with the mount face down: the beam bends in the print
+    plane, so no support is needed. Units are mm.
+    """
+    if (arm_len <= 0 or not 5.0 <= sweep_deg <= 170.0 or beam_t <= 0 or
+            beam_w <= 0 or preload_mm < 0 or mount_w <= 0 or mount_d <= 0 or
+            idler_bore_d <= 0 or boss_d <= 0 or clearance < 0 or
+            max_strain <= 0 or sections < 24):
+        raise ValueError("invalid belt tensioner dimensions")
+    if arm_len < boss_d:
+        raise ValueError("belt_tensioner(): arm_len too short for the tip boss")
+    if boss_d / 2.0 - (idler_bore_d + clearance) / 2.0 < 1.2:
+        raise ValueError(
+            "belt_tensioner(): boss wall below 1.2 mm around the idler bore")
+    strain = 3.0 * beam_t * preload_mm / (2.0 * arm_len ** 2)
+    if strain > max_strain:
+        raise ValueError(
+            "belt_tensioner(): preload_mm=%.2f over arm_len=%.1f needs "
+            "%.2f%% strain, over the %.2f%% limit; lower preload_mm or "
+            "lengthen arm_len" % (preload_mm, arm_len, 100.0 * strain,
+                                  100.0 * max_strain))
+
+    sections = int(round(sections))
+    arc_r = arm_len / math.radians(sweep_deg)
+    n = max(12, int(sweep_deg / 3.0))
+    thetas = np.linspace(-90.0, -90.0 + sweep_deg, n)
+    centerline = [(arc_r * math.cos(math.radians(t)),
+                  arc_r + arc_r * math.sin(math.radians(t))) for t in thetas]
+    beam = sg.LineString(centerline).buffer(
+        beam_t / 2.0, cap_style=2, join_style=1)
+
+    mount = sg.box(-mount_d, -mount_w / 2.0, beam_t / 2.0, mount_w / 2.0)
+    tip_x, tip_y = centerline[-1]
+    boss = sg.Point(tip_x, tip_y).buffer(boss_d / 2.0, resolution=32)
+
+    profile = unary_union([mount, beam, boss]).buffer(0)
+    body = _extrude(profile, beam_w)
+    bore = cyl((idler_bore_d + clearance) / 2.0, beam_w + 2.0,
+              center=(tip_x, tip_y, beam_w / 2.0), sections=sections)
+    body = sub(body, bore)
+
+    body.metadata["preload_deflection_mm"] = float(preload_mm)
+    body.metadata["peak_strain"] = float(strain)
+    body.metadata["tip_xy"] = (float(tip_x), float(tip_y))
+    return body
+
+
 __all__ = (
     "timing_pulley",
     "grooved_drum",
+    "idler_pulley",
+    "eccentric_idler_mount",
+    "belt_tensioner",
 )

@@ -56,6 +56,9 @@ ml.export_stl(body, "bracket.stl")
 | `loft` | Build a capped solid through equal-count point rings. | dual-axis-turntable `src/build.py` |
 | `board_cradle` | Build four corner standoffs and capture walls for a PCB. | finnish-doors `src/projects/klonk/system_layout.py` |
 | `saddle` | Build a shell-trimmed cradle rib for a cylindrical part. | mini-powerbank `pickle_build.py` |
+| `kinematic_coupling` | Build an exactly constrained Maxwell or Kelvin ball-and-groove mount. | New, gap-analysis wave v0.8.0 |
+| `repeatable_dock` | Build a kinematic coupling with magnet or screw preload and a bolt circle. | New, gap-analysis wave v0.8.0 |
+| `three_point_leveller` | Build a three-screw kinematic levelling stage for tip, tilt, and height. | New, gap-analysis wave v0.8.0 |
 
 ### `mechlib.meshutil`
 
@@ -110,6 +113,10 @@ ml.export_stl(body, "bracket.stl")
 | `tapered_cavity` | Build a stepped, self-supporting hollow cutter. | tripod `lighten_legs.py` |
 | `u_channel_between` | Build an open rounded U channel at any XY angle. | jumper-wire-sockets `src/build.py` |
 | `revolved_gable_cavity` | Build an annular cavity with a self-supporting roof. | massage-shower-head `build.py` |
+| `AS568_CS_MM` | The AS568/ISO 3601 O-ring cross-section sizes in millimetres. | New, gap-analysis wave v0.8.0 |
+| `oring_groove` | Build an AS568/ISO 3601 O-ring gland cutter (face or bore mode), squeeze and fill validated. | New, gap-analysis wave v0.8.0 |
+| `labyrinth_seal` | Build an interleaved-comb non-contact rotary seal (rotor plus stator). | New, gap-analysis wave v0.8.0 |
+| `gasket_channel` | Build a cord-stock gasket groove cutter following an arbitrary closed path. | New, gap-analysis wave v0.8.0 |
 
 ### `mechlib.closures`
 
@@ -142,6 +149,11 @@ ml.export_stl(body, "bracket.stl")
 | `herringbone_gear` | Build a double-helical (herringbone) involute gear. | New, mechanical-movements wave v0.6.0 |
 | `cycloidal_drive` | Build a single-stage cycloidal reducer stack. | New, mechanical-movements wave v0.6.0 |
 | `bevel_gear_pair` | Build a straight bevel pair on 90-degree axes (Tredgold approximation). | New, mechanical-movements wave v0.6.0 |
+| `internal_gear_2d` | Generate a true internal (annular) involute ring-gear polygon. | New, gap-analysis wave v0.8.0 |
+| `internal_mesh_phase` | Compute pinion tooth phase for an INTERNAL mesh (not `mesh_phase`). | New, gap-analysis wave v0.8.0 |
+| `ring_gear` | Extrude an internal ring gear with an outer rim. | New, gap-analysis wave v0.8.0 |
+| `ring_gear_mesh` | Build a pinion posed in mesh inside a ring gear. | New, gap-analysis wave v0.8.0 |
+| `trochoid_profile_2d` | Generate the shortened-epitrochoid inner equidistant shared by cycloidal discs and gerotor rotors. | New, gap-analysis wave v0.8.0 |
 
 ### `mechlib.drives`
 
@@ -193,6 +205,25 @@ ml.export_stl(body, "bracket.stl")
 | `scotch_yoke` | Build a crank-and-pin slotted yoke with guide rails. | New, mechanical-movements wave v0.6.0 |
 | `quick_return_ratio` | Compute the working:return time ratio of a crank quick-return. | New, mechanical-movements wave v0.6.0 |
 | `quick_return` | Build a slotted-lever (Whitworth) quick-return mechanism. | New, mechanical-movements wave v0.6.0 |
+| `peaucellier_pose` | Solve the Peaucellier-Lipkin inversor pose by geometric inversion. | New, gap-analysis wave v0.8.0 |
+| `peaucellier_linkage` | Build the exact straight-line Peaucellier-Lipkin cell. | New, gap-analysis wave v0.8.0 |
+| `watt_pose` | Solve Watt's parallel-motion pose for one lever angle. | New, gap-analysis wave v0.8.0 |
+| `watt_linkage` | Build Watt's parallel motion and measure its straight-line error. | New, gap-analysis wave v0.8.0 |
+| `sarrus_pose` | Solve the Sarrus platform lift from the fold angle. | New, gap-analysis wave v0.8.0 |
+| `sarrus_linkage` | Build the spatial Sarrus pure-translation linkage. | New, gap-analysis wave v0.8.0 |
+| `pantograph_pose` | Solve the pantograph pose and its exact scale ratio. | New, gap-analysis wave v0.8.0 |
+| `pantograph_linkage` | Build a parallelogram pantograph that copies a shape to scale. | New, gap-analysis wave v0.8.0 |
+| `lazy_tongs_pose` | Solve the Nuremberg-scissors span, height, and stroke gain. | New, gap-analysis wave v0.8.0 |
+| `lazy_tongs` | Build a lazy-tongs extension chain with guided end yokes. | New, gap-analysis wave v0.8.0 |
+
+### `mechlib.grippers`
+
+| Function | Purpose | Origin project |
+| --- | --- | --- |
+| `iris_diaphragm` | Build a stacked-plane iris diaphragm posed at one drive-ring angle. | New, gap-analysis wave v0.8.0 |
+| `iris_control_range` | Return an iris drive ring's travel from wide open to its minimum aperture. | New, gap-analysis wave v0.8.0 |
+| `collet_chuck` | Build an ER-style split collet with its taper nut and spindle nose. | New, gap-analysis wave v0.8.0 |
+| `eccentric_cam_clamp` | Build an over-centre eccentric cam clamp posed at one handle angle. | New, gap-analysis wave v0.8.0 |
 
 ### `mechlib.cams`
 
@@ -216,6 +247,15 @@ ml.export_stl(body, "bracket.stl")
 | `escapement` | Build an escape wheel and anchor/deadbeat pallets with one pallet engaged. | New, mechanical-movements wave v0.6.0 |
 | `intermittent_gear_pair` | Build a mutilated-gear intermittent pair with locking segments, posed meshed. | New, mechanical-movements wave v0.6.0 |
 
+### `mechlib.fluid`
+
+| Function | Purpose | Origin project |
+| --- | --- | --- |
+| `gerotor_pump` | Build a trochoidal internal-gear pump with kidney ports. | New, gap-analysis wave v0.8.0 |
+| `hose_barb` | Build a stacked-frustum hose tail with a flange or threaded foot. | New, gap-analysis wave v0.8.0 |
+| `rotary_spool_valve` | Build a cross-drilled rotary plug valve with derived routing. | New, gap-analysis wave v0.8.0 |
+| `peristaltic_pump_head` | Build a roller peristaltic head with a tangential tube race. | New, gap-analysis wave v0.8.0 |
+
 ### `mechlib.linear`
 
 | Function | Purpose | Origin project |
@@ -223,6 +263,13 @@ ml.export_stl(body, "bracket.stl")
 | `scroll_drive` | Build a lathe-chuck scroll plate with three self-centering jaws. | New, mechanical-movements wave v0.6.0 |
 | `differential_screw` | Build a two-pitch differential screw with its nut blocks. | New, mechanical-movements wave v0.6.0 |
 | `archimedes_screw` | Build an inclined helical water screw in a half-pipe trough. | New, mechanical-movements wave v0.6.0 |
+
+### `mechlib.guides`
+
+| Function | Purpose | Origin project |
+| --- | --- | --- |
+| `linear_way` | Build a prismatic linear guideway: rail, carriage, and tapered gib. | New, gap-analysis wave v0.8.0 |
+| `telescoping_stage` | Build nested telescoping sections with anti-pullout stops. | New, gap-analysis wave v0.8.0 |
 
 ### `mechlib.couplings` and `mechlib.clutches`
 
@@ -233,6 +280,19 @@ ml.export_stl(body, "bracket.stl")
 | `jaw_coupling` | Build interleaved jaw hubs with an elastomer spider. | New, mechanical-movements wave v0.6.0 |
 | `torque_limiter` | Build a spring-detent slip clutch with geometry-set trip torque. | New, mechanical-movements wave v0.6.0 |
 | `freewheel_clutch` | Build a roller-ramp one-way overrunning clutch. | New, mechanical-movements wave v0.6.0 |
+| `tripod_cv_joint` | Build a plunging tripod constant-velocity joint posed at a shaft angle. | New, gap-analysis wave v0.8.0 |
+| `double_cardan_joint` | Build two Hooke joints in series, intermediate yokes 90 degrees apart. | New, gap-analysis wave v0.8.0 |
+| `tripod_pose` | Return the tripod's exact pose: housing angle, spider centre, orbit radius. | New, gap-analysis wave v0.8.0 |
+| `cv_velocity_ratio` | Return the instantaneous output/input speed ratio of a Hooke or CV joint. | New, gap-analysis wave v0.8.0 |
+| `cv_velocity_fluctuation` | Return the peak-to-peak Cardan speed error at a shaft angle. | New, gap-analysis wave v0.8.0 |
+
+### `mechlib.joints`
+
+| Function | Purpose | Origin project |
+| --- | --- | --- |
+| `ball_socket_joint` | Build a snap-together spherical joint (ball stud plus split-finger socket). | New, gap-analysis wave v0.8.0 |
+| `knuckle_hinge` | Build a print-in-place knuckle hinge with an integral hard stop. | New, gap-analysis wave v0.8.0 |
+| `gimbal_rings` | Build nested print-in-place gimbal rings on alternating axes. | New, gap-analysis wave v0.8.0 |
 
 ### `mechlib.pulleys` and `mechlib.flexures`
 
@@ -243,6 +303,23 @@ ml.export_stl(body, "bracket.stl")
 | `cross_flexure` | Build a monolithic cross-axis flexural pivot. | New, mechanical-movements wave v0.6.0 |
 | `wave_spring` | Build a crest-to-crest annular wave spring. | New, mechanical-movements wave v0.6.0 |
 | `bistable_beam` | Build a buckled-beam bistable switch with a central shuttle. | New, mechanical-movements wave v0.6.0 |
+| `idler_pulley` | Build a crowned or toothed idler pulley with plain or bearing bore. | New, gap-analysis wave v0.8.0 |
+| `eccentric_idler_mount` | Build an eccentric take-up bushing plus the idler pulley it carries. | New, gap-analysis wave v0.8.0 |
+| `belt_tensioner` | Build a compliant-arm cantilever spring that self-preloads an idler. | New, gap-analysis wave v0.8.0 |
+| `belleville_washer` | Build a coned disc spring, optionally as a series, parallel or alternating stack. | New, gap-analysis wave v0.8.0 |
+| `coil_spring` | Build a helical compression spring with dead end coils and a round or rectangular wire. | New, gap-analysis wave v0.8.0 |
+| `spiral_power_spring` | Build a flat spiral mainspring with its barrel and arbor. | New, gap-analysis wave v0.8.0 |
+| `leaf_spring` | Build a semi-elliptic multi-leaf spring with a centre clamp band. | New, gap-analysis wave v0.8.0 |
+| `flexure_stage` | Build a monolithic compound parallelogram straight-line flexure stage. | New, gap-analysis wave v0.8.0 |
+
+### `mechlib.chains`
+
+| Function | Purpose | Origin project |
+| --- | --- | --- |
+| `drag_chain_link` | Build one print-in-place cable-carrier link with a one-sided stop. | New, gap-analysis wave v0.8.0 |
+| `drag_chain` | Pose an N-link drag-chain run with a straight section and a bend. | New, gap-analysis wave v0.8.0 |
+| `roller_chain_link` | Build one pitch segment of a bush roller chain matching `roller_sprocket_2d`. | New, gap-analysis wave v0.8.0 |
+| `roller_chain` | Wrap a roller-chain run around a matching sprocket. | New, gap-analysis wave v0.8.0 |
 
 ### `mechlib.fasteners`
 
@@ -254,6 +331,14 @@ ml.export_stl(body, "bracket.stl")
 | `washer_mesh` | Build an annular washer stand-in. | parviz `src/standins/_common.py` |
 | `fastener_mesh` | Build and orient pan, SHCS, or CSK fasteners. | Unified from all three source projects |
 | `pick_length` | Select the next usable standard screw length. | finnish-windows `tools/add_screws_glb.py` |
+
+### `mechlib.bearings`
+
+| Function | Purpose | Origin project |
+| --- | --- | --- |
+| `plain_bushing` | Build a sleeve or flanged plain bushing with bore relief grooves. | New, gap-analysis wave v0.8.0 |
+| `thrust_washer` | Build a relieved thrust washer, or a caged ball thrust pair. | New, gap-analysis wave v0.8.0 |
+| `printed_ball_bearing` | Build a print-in-place radial ball bearing. | New, gap-analysis wave v0.8.0 |
 
 ### `mechlib.patterns` and `mechlib.text`
 
@@ -267,6 +352,13 @@ ml.export_stl(body, "bracket.stl")
 | `place` | Center a 2D geometry at a point. | torque-lever `build.py` |
 | `place_right` | Right-align a 2D geometry at a point. | torque-lever `build.py` |
 | `text_block` | Stack centered multi-line text polygons. | torque-lever `build.py` |
+
+### `mechlib.lattices`
+
+| Function | Purpose | Origin project |
+| --- | --- | --- |
+| `auxetic_panel` | Build a flat negative-Poisson's-ratio panel (reentrant, rotating-squares, or chiral cells). | New, gap-analysis wave v0.8.0 |
+| `kerf_bend_cutter` | Build slit-array cutters that make a flat slab bend, twist, or roll (also the single-axis living-hinge case). | New, gap-analysis wave v0.8.0 |
 
 ### `mechlib.packing` and `mechlib.stepio`
 

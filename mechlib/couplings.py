@@ -11,6 +11,14 @@ import trimesh.transformations as tf
 from .meshutil import sub, uni
 from .prim import boxc, cyl, sector2d
 
+# --- constant-velocity joint additions (v0.8.0) ----------------------------
+import numpy as np
+
+from .cutters import dbore, teardrop
+from .meshutil import inter
+from .patterns import polar_ring
+from .prim import frustum, seg_cylinder
+
 
 def _extrude(poly, height, z0=0.0):
     if height <= 0:
@@ -242,4 +250,450 @@ __all__ = (
     "oldham_coupling",
     "universal_joint",
     "jaw_coupling",
+)
+
+
+# ---------------------------------------------------------------------------
+# Constant-velocity joints (v0.8.0)
+#
+# A single Hooke (Cardan) joint is NOT constant velocity: at a shaft angle its
+# output speed oscillates twice per turn. ``cv_velocity_ratio`` states that
+# error in closed form and ``tripod_cv_joint`` is the printable fix.
+# ---------------------------------------------------------------------------
+
+_CV_JOINTS = ("hooke", "tripod", "double_cardan", "double_cardan_intermediate")
+
+
+def cv_velocity_ratio(angle_deg=15.0, phase_deg=0.0, joint="hooke"):
+    """Return the instantaneous output/input angular velocity ratio.
+
+    A pure number, no geometry. For a single Hooke (Cardan) joint bent through
+    ``angle_deg`` the closed form is ``cos(b) / (1 - sin(b)**2 * cos(t)**2)``
+    with ``b`` the shaft angle and ``t`` the input phase measured from the
+    position where the input yoke's pin axis lies in the plane of the two
+    shafts. It runs fast at ``t = 0, 180`` (``1/cos(b)``) and slow at
+    ``t = 90, 270`` (``cos(b)``), so the output oscillates twice per input
+    turn -- the "Cardan error" that shakes a driveline.
+
+    ``joint`` selects the mechanism: ``"hooke"`` for the single Cardan joint,
+    ``"tripod"`` for a three-trunnion constant-velocity joint (identically
+    1.0 at every phase and every angle), ``"double_cardan"`` for two Hooke
+    joints phased 90 degrees apart at equal angles (also identically 1.0),
+    and ``"double_cardan_intermediate"`` for the intermediate shaft of that
+    pair, which still fluctuates exactly like a single Hooke joint. Angles
+    are in degrees.
+    """
+    if joint not in _CV_JOINTS:
+        raise ValueError("cv_velocity_ratio(): joint must be one of %s"
+                         % (_CV_JOINTS,))
+    if not -89.0 <= angle_deg <= 89.0:
+        raise ValueError("cv_velocity_ratio(): angle_deg must be within "
+                         "+/-89 degrees")
+    if joint in ("tripod", "double_cardan"):
+        return 1.0
+    beta = math.radians(angle_deg)
+    theta = math.radians(phase_deg)
+    denominator = 1.0 - (math.sin(beta) * math.cos(theta)) ** 2
+    return math.cos(beta) / denominator
+
+
+def cv_velocity_fluctuation(angle_deg=15.0, joint="hooke"):
+    """Return the peak-to-peak output speed swing as a fraction of input.
+
+    The number an engineer actually sizes a driveline against. For a single
+    Hooke joint the extremes of ``cv_velocity_ratio`` are ``1/cos(b)`` and
+    ``cos(b)``, so the peak-to-peak swing is ``sin(b)**2 / cos(b)``: 0.0069
+    (+/-0.35 percent) at 5 degrees, 0.0693 (+/-3.5 percent) at 15 degrees,
+    and 0.2088 (+/-10 percent) at 25 degrees. It grows without bound as the
+    shaft angle approaches 90 degrees. A tripod or a correctly phased double
+    Cardan returns exactly 0.0. Angles are in degrees.
+    """
+    if joint not in _CV_JOINTS:
+        raise ValueError("cv_velocity_fluctuation(): joint must be one of %s"
+                         % (_CV_JOINTS,))
+    if not -89.0 <= angle_deg <= 89.0:
+        raise ValueError("cv_velocity_fluctuation(): angle_deg must be within "
+                         "+/-89 degrees")
+    if joint in ("tripod", "double_cardan"):
+        return 0.0
+    beta = math.radians(angle_deg)
+    return abs(math.sin(beta) ** 2 / math.cos(beta))
+
+
+def tripod_pose(angle_deg=15.0, phase_deg=0.0, pitch_r=12.0, plunge=0.0):
+    """Return the exact rigid pose of a three-trunnion tripod joint.
+
+    The motion law, as numbers only. Put the housing axis on +Z with the joint
+    centre at the origin and tilt the inner shaft by ``angle_deg`` about +X.
+    Each trunnion centre must stay in its own track plane -- the plane through
+    the housing axis at 0, 120 and 240 degrees. Writing that constraint for all
+    three trunnions and summing gives ``housing_deg == phase_deg`` exactly, at
+    every angle: the tripod is a true constant-velocity joint, not an
+    approximation. Solving the two remaining independent equations puts the
+    spider centre on a circle of radius ``pitch_r * (1 - cos(b)) / 2`` traversed
+    at THREE times the input speed, which is where a tripod joint's third-order
+    shudder comes from.
+
+    Three is not a styling choice. Repeat the algebra for four trunnions and
+    the constraint set is inconsistent (no spider centre satisfies it); for six
+    it forces ``sin(2 * phase) == 0``. Only three closes.
+
+    Returns ``{"housing_deg", "spider_deg", "centre", "orbit_r", "ratio"}``.
+    ``centre`` is the spider centre in housing coordinates, with ``plunge``
+    passed straight through as its Z: the tripod's axial degree of freedom is
+    free, which is why tripods plunge and Rzeppa joints do not. Units are mm
+    and degrees.
+    """
+    if pitch_r <= 0.0:
+        raise ValueError("tripod_pose(): pitch_r must be positive")
+    if not -89.0 <= angle_deg <= 89.0:
+        raise ValueError("tripod_pose(): angle_deg must be within +/-89 deg")
+    beta = math.radians(angle_deg)
+    theta = math.radians(phase_deg)
+    orbit_r = pitch_r * (1.0 - math.cos(beta)) / 2.0
+    return {
+        "housing_deg": float(phase_deg),
+        "spider_deg": float(phase_deg),
+        "centre": (orbit_r * math.cos(3.0 * theta),
+                   orbit_r * math.sin(3.0 * theta),
+                   float(plunge)),
+        "orbit_r": orbit_r,
+        "ratio": 1.0,
+    }
+
+
+def _barrel(r_max, half_len, crown_r, sections, slices=9):
+    """Convex crowned barrel about +Z: radius ``r_max`` at the mid-plane."""
+    rings = []
+    angles = np.linspace(0.0, 2.0 * np.pi, sections, endpoint=False)
+    for z in np.linspace(-half_len, half_len, slices):
+        drop = crown_r - math.sqrt(max(crown_r * crown_r - z * z, 0.0))
+        r = r_max - drop
+        rings.append(np.c_[r * np.cos(angles), r * np.sin(angles),
+                           np.full(sections, z)])
+    return trimesh.Trimesh(vertices=np.vstack(rings)).convex_hull
+
+
+def tripod_cv_joint(shaft_d=8.0, trunnions=3, trunnion_d=5.0, housing_d=40.0,
+                    angle_deg=15.0, phase_deg=0.0, plunge=0.0, swing_deg=25.0,
+                    plunge_travel=4.0, roller_wall=1.6, roller_len=6.0,
+                    crown=0.4, hub_t=6.0, wall=2.4, floor_t=4.0, flare_h=6.0,
+                    pin_d=3.0, shaft_len=30.0, clear=0.3, sections=48):
+    """Build a plunging tripod constant-velocity joint, posed and assembled.
+
+    Returns ``{"housing", "spider", "rollers", "shaft"}`` in assembled
+    coordinates. The housing (tulip) axis is +Z with the joint centre at the
+    origin, its mouth opening toward +Z and its closed floor toward -Z. Three
+    tracks -- parallel-walled slots running the full depth of the tulip at 0,
+    120 and 240 degrees -- straddle three crowned barrel rollers carried on the
+    spider's three radial trunnions. The inner shaft is tilted ``angle_deg``
+    about +X and both members are turned ``phase_deg``; ``plunge`` slides the
+    whole inner assembly along the housing axis.
+
+    Unlike a Hooke joint this transmits genuinely constant angular velocity:
+    the housing turns degree for degree with the input at every angle and
+    every phase (see ``tripod_pose`` for the algebra and ``cv_velocity_ratio``
+    for what a single Cardan joint costs you instead). The spider centre
+    orbits a small circle at three times input speed, which is the tripod's
+    known third-order excitation, and the joint plunges freely along the
+    housing axis because nothing constrains that direction.
+
+    The tripod type is chosen over the Rzeppa ball type deliberately. A Rzeppa
+    needs six hardened steel balls running in ground meridional raceways held
+    by a slotted cage; nothing about that is an honest FDM part. Trunnions in
+    straddling tracks print natively: the tulip prints mouth-up so its tracks
+    are vertical open-ended slots with no bridging, the barrels print on end,
+    and the only real compromise is the spider, whose three trunnions are
+    horizontal cylinders that want a sliver of support or a lay-flat
+    orientation. Nothing here needs bought hardware; a boot or a circlip is
+    still wanted in service to stop the joint pulling apart at the open mouth.
+
+    Metadata carries ``angle_max_deg`` and ``plunge_mm``, both measured off the
+    part that was actually built rather than asserted: ``angle_max_deg`` is
+    bisected against the three real limits (the shaft fouling the flared mouth,
+    the spider hub fouling the tulip bore, and a barrel running out of track),
+    and ``plunge_mm`` is the axial travel left before the lowest barrel lands
+    on the tulip floor at the current angle. The bisection treats the inner
+    shaft as a full round of ``shaft_d`` and ignores its drive flats, so it is
+    a lower bound: at ``angle_max_deg`` every pair still measures at least
+    ``clear`` apart. Also carried: ``velocity_ratio``
+    (always 1.0), ``fluctuation`` (always 0.0), and ``hooke_fluctuation``, the
+    peak-to-peak speed error a single Cardan joint would show at the same
+    angle.
+
+    Dimensions in mm, angles in degrees. ``swing_deg`` is the articulation the
+    tulip is CUT for and drives every housing dimension; ``angle_deg`` and
+    ``phase_deg`` and ``plunge`` only pose the parts, so one housing can be
+    probed across its whole angular range. ``trunnion_d`` post diameter,
+    ``roller_wall`` barrel wall over the post, ``roller_len`` barrel length,
+    ``crown`` the radial relief at each barrel end (the crown is what keeps the
+    running clearance equal to ``clear`` at every angle -- a plain cylindrical
+    roller tilts out of its track plane and binds), ``hub_t`` spider hub
+    thickness, ``wall`` tulip wall over the track floor, ``floor_t`` tulip
+    floor thickness, ``flare_h`` height of the 45 degree mouth flare, ``pin_d``
+    the cross-pin hole near the shaft end, ``clear`` per-side running
+    clearance. Units are mm and degrees.
+    """
+    if trunnions != 3:
+        raise ValueError(
+            "tripod_cv_joint(): trunnions must be 3; the constant-velocity "
+            "constraint is inconsistent for any other count (four admits no "
+            "spider centre at all, six forces sin(2*phase)==0)")
+    if (shaft_d <= 0 or trunnion_d <= 0 or housing_d <= 0 or clear <= 0 or
+            roller_wall < 0.8 or roller_len < 2.0 or crown <= 0 or
+            hub_t < 2.0 or wall < 1.2 or floor_t < 1.2 or flare_h < 0 or
+            pin_d <= 0 or shaft_len <= 0 or plunge_travel < 0 or
+            sections < 16 or crown >= roller_len / 2.0):
+        raise ValueError("tripod_cv_joint(): invalid joint dimensions")
+    if not 0.0 < swing_deg <= 45.0:
+        raise ValueError("tripod_cv_joint(): swing_deg must be in (0, 45]")
+    if shaft_len < hub_t + 2.0 * pin_d + 6.0:
+        raise ValueError("tripod_cv_joint(): shaft_len is too short for the "
+                         "hub plus its cross-pin hole")
+    if angle_deg < 0.0:
+        raise ValueError("tripod_cv_joint(): angle_deg must be non-negative")
+
+    shaft_r = shaft_d / 2.0
+    flat = 0.75 * shaft_d
+    roller_ir = trunnion_d / 2.0 + clear
+    roller_r = roller_ir + roller_wall
+    track_hw = roller_r + clear
+    r_out = housing_d / 2.0
+    track_r_out = r_out - wall
+    hub_r = shaft_r + 2.5
+    half_len = roller_len / 2.0
+    crown_r = (half_len * half_len + crown * crown) / (2.0 * crown)
+    swing = math.radians(swing_deg)
+
+    # Pitch radius: at full swing the barrel's outer end must still sit inside
+    # the track floor with clearance, and the orbit itself scales with pitch_r,
+    # so solve the two together.
+    pitch_r = ((track_r_out - half_len - clear - 1.0) /
+               (1.0 + (1.0 - math.cos(swing)) / 2.0))
+    if pitch_r < hub_r + half_len + 1.0:
+        raise ValueError("tripod_cv_joint(): housing_d leaves no room between "
+                         "the spider hub and the track floor")
+
+    def _orbit(beta):
+        return pitch_r * (1.0 - math.cos(beta)) / 2.0
+
+    def _reach(beta):
+        """Axial half-extent of the lowest barrel about the spider centre."""
+        return ((pitch_r + half_len) * math.sin(beta) +
+                roller_r * math.cos(beta))
+
+    z_hi = _reach(swing) + plunge_travel
+    z_lo = -z_hi
+    z_flare = max(z_hi - flare_h, 0.5)
+    bore_r = 0.4 + max(
+        hub_r + (hub_t / 2.0) * math.sin(swing) + _orbit(swing) + clear,
+        shaft_r / math.cos(swing) + z_flare * math.tan(swing) +
+        _orbit(swing) + clear)
+    mouth_r = bore_r + (z_hi - z_flare)
+    if mouth_r > track_r_out - 1.2:
+        raise ValueError("tripod_cv_joint(): the flared mouth breaks into the "
+                         "track floor; reduce flare_h or swing_deg")
+    hub_drop = (hub_t / 2.0) * math.cos(swing) + hub_r * math.sin(swing)
+    if hub_drop >= _reach(swing):
+        raise ValueError("tripod_cv_joint(): the spider hub bottoms out "
+                         "before the barrels do; reduce hub_t")
+
+    def _slack(beta):
+        """Smallest of the three real articulation limits, in mm."""
+        orbit = _orbit(beta)
+        return min(
+            bore_r - (hub_r + (hub_t / 2.0) * math.sin(beta) + orbit + clear),
+            bore_r - (shaft_r / math.cos(beta) + z_flare * math.tan(beta) +
+                      orbit + clear),
+            z_hi - _reach(beta))
+
+    lo, hi = 0.0, math.radians(60.0)
+    if _slack(lo) <= 0.0:
+        raise ValueError("tripod_cv_joint(): the joint does not clear itself "
+                         "even at zero angle")
+    for _step in range(60):
+        mid = 0.5 * (lo + hi)
+        if _slack(mid) > 0.0:
+            lo = mid
+        else:
+            hi = mid
+    angle_max_deg = math.degrees(lo)
+    if angle_deg > angle_max_deg:
+        raise ValueError(
+            "tripod_cv_joint(): angle_deg %.2f exceeds the %.2f degree "
+            "articulation this housing was cut for; raise swing_deg"
+            % (angle_deg, angle_max_deg))
+    if abs(plunge) > z_hi + roller_len:
+        raise ValueError("tripod_cv_joint(): plunge is off the end of the "
+                         "tulip entirely")
+
+    beta = math.radians(angle_deg)
+    plunge_mm = z_hi - _reach(beta)
+    pose = tripod_pose(angle_deg=angle_deg, phase_deg=phase_deg,
+                       pitch_r=pitch_r, plunge=plunge)
+    ring = polar_ring(trunnions, 1.0)
+
+    # --- housing (tulip), built about +Z then turned by the phase -----------
+    depth = z_hi - (z_lo - floor_t)
+    body = cyl(r_out, depth, (0.0, 0.0, z_hi - depth / 2.0), sections=sections)
+    cavity = [
+        cyl(bore_r, z_flare - z_lo, (0.0, 0.0, (z_flare + z_lo) / 2.0),
+            sections=sections),
+        frustum(bore_r, mouth_r, z_hi - z_flare, z0=z_flare, sections=sections),
+    ]
+    slot_l = track_r_out + track_hw
+    slot_h = z_hi + 2.0 - z_lo
+    for ux, uy in ring:
+        slot = boxc((slot_l, 2.0 * track_hw, slot_h),
+                    (track_r_out - slot_l / 2.0, 0.0,
+                     (z_lo + z_hi + 2.0) / 2.0))
+        slot.apply_transform(tf.rotation_matrix(math.atan2(uy, ux),
+                                                (0.0, 0.0, 1.0)))
+        cavity.append(slot)
+    out_bore = dbore(shaft_d, flat, floor_t + 2.0, axis="z", clear=clear)
+    out_bore.apply_translation((0.0, 0.0, z_lo - floor_t / 2.0))
+    cavity.append(out_bore)
+    housing = sub(body, uni(cavity))
+
+    # --- spider, barrels and shaft, built about the inner shaft axis --------
+    posts = []
+    barrels = []
+    for ux, uy in ring:
+        azimuth = math.atan2(uy, ux)
+        tip = pitch_r + half_len + 0.4
+        posts.append(seg_cylinder((0.35 * hub_r * ux, 0.35 * hub_r * uy, 0.0),
+                                  (tip * ux, tip * uy, 0.0), trunnion_d))
+        barrel = _barrel(roller_r, half_len, crown_r, sections)
+        barrel = sub(barrel, cyl(roller_ir, roller_len + 2.0,
+                                 sections=sections))
+        barrel.apply_transform(tf.rotation_matrix(math.pi / 2.0,
+                                                  (0.0, 1.0, 0.0)))
+        barrel.apply_translation((pitch_r, 0.0, 0.0))
+        barrel.apply_transform(tf.rotation_matrix(azimuth, (0.0, 0.0, 1.0)))
+        barrels.append(barrel)
+    spider = uni([cyl(hub_r, hub_t, sections=sections)] + posts)
+    spider = sub(spider, dbore(shaft_d, flat, hub_t + 4.0, axis="z",
+                              clear=clear))
+    rollers = uni(barrels)
+
+    shaft_z0 = -hub_t / 2.0
+    shaft = cyl(shaft_r, shaft_len, (0.0, 0.0, shaft_z0 + shaft_len / 2.0),
+                sections=sections)
+    shaft = inter(shaft, boxc((flat, 4.0 * shaft_d, shaft_len + 2.0),
+                              (0.0, 0.0, shaft_z0 + shaft_len / 2.0)))
+    pin_cut = teardrop(pin_d / 2.0 + clear / 2.0, 3.0 * shaft_d, axis="x",
+                       up=(0.0, 0.0, 1.0))
+    pin_cut.apply_translation((0.0, 0.0, shaft_z0 + shaft_len - 6.0))
+    shaft = sub(shaft, pin_cut)
+
+    inner = (tf.translation_matrix(pose["centre"]) @
+             tf.rotation_matrix(beta, (1.0, 0.0, 0.0)) @
+             tf.rotation_matrix(math.radians(pose["spider_deg"]),
+                                (0.0, 0.0, 1.0)))
+    for mesh in (spider, rollers, shaft):
+        mesh.apply_transform(inner)
+    housing.apply_transform(tf.rotation_matrix(
+        math.radians(pose["housing_deg"]), (0.0, 0.0, 1.0)))
+
+    metadata = {
+        "trunnions": trunnions,
+        "angle_deg": float(angle_deg),
+        "angle_max_deg": angle_max_deg,
+        "plunge_mm": plunge_mm,
+        "pitch_r": pitch_r,
+        "orbit_r": pose["orbit_r"],
+        "track_w": 2.0 * track_hw,
+        "roller_d": 2.0 * roller_r,
+        "bore_r": bore_r,
+        "clear": clear,
+        "velocity_ratio": 1.0,
+        "fluctuation": 0.0,
+        "hooke_fluctuation": cv_velocity_fluctuation(angle_deg, "hooke"),
+    }
+    for mesh in (housing, spider, rollers, shaft):
+        mesh.metadata.update(metadata)
+    return {"housing": housing, "spider": spider, "rollers": rollers,
+            "shaft": shaft}
+
+
+def double_cardan_joint(shaft_d=10.0, bend_deg=15.0, inter_len=46.0,
+                        pin_d=5.0, fork_gap=18.0, tine_t=4.0, yoke_w=12.0,
+                        fork_len=15.0, web_t=2.0, shaft_len=12.0, boss_r=5.0,
+                        clearance=0.3, sections=48):
+    """Build a double Cardan (two Hooke joints in series) as five parts.
+
+    Returns ``{"yoke_in", "spider_in", "intermediate", "spider_out",
+    "yoke_out"}``. The input shaft runs along -Z from a first Hooke joint whose
+    centre is the origin; the intermediate shaft leaves at ``bend_deg`` about
+    +X; a second identical joint sits ``inter_len`` along that shaft and bends
+    the output by ``bend_deg`` again, so input and output are separated by
+    ``2 * bend_deg`` in one plane. The two intermediate yokes come out exactly
+    90 degrees apart on their own -- that falls out of the construction, it is
+    not clocked in by hand -- and 90 degrees is what makes the second joint's
+    Cardan error the exact inverse of the first's.
+
+    This is the OTHER classical fix for the Hooke joint's speed error, and it
+    is only a partial one: the OUTPUT runs at constant velocity, but the
+    intermediate shaft between the two joints still swings by the full single
+    joint fluctuation (``cv_velocity_fluctuation(bend_deg)``) and still carries
+    that inertia torque. A tripod or Rzeppa joint has no fluctuating member at
+    all. Cancellation also depends on the two shaft angles staying EQUAL: this
+    generator poses them equal by construction, and real drivelines hold that
+    with parallel flange faces or with a centring ball between the yokes, which
+    is not modelled here. Say so before trusting one at a varying angle.
+
+    Print each yoke with its fork mouth up so the tine bores are vertical, and
+    the cross spiders on end. Nothing needs bought hardware. Dimensions in mm,
+    angles in degrees; the yoke arguments are passed straight to
+    ``universal_joint``. ``inter_len`` sets the joint-centre spacing and must
+    leave the two intermediate yokes' shaft stubs overlapping, which is what
+    fuses them into one rigid intermediate body. Units are mm and degrees.
+    """
+    reach = fork_len + web_t
+    if not reach * 2.0 <= inter_len <= 2.0 * (reach + shaft_len):
+        raise ValueError(
+            "double_cardan_joint(): inter_len must lie in [%.1f, %.1f] so the "
+            "intermediate yokes clear each other yet still fuse into one body"
+            % (2.0 * reach, 2.0 * (reach + shaft_len)))
+    if not 0.0 <= bend_deg <= 45.0:
+        raise ValueError("double_cardan_joint(): bend_deg must be in [0, 45]")
+
+    common = dict(shaft_d=shaft_d, pin_d=pin_d, fork_gap=fork_gap,
+                  tine_t=tine_t, yoke_w=yoke_w, fork_len=fork_len,
+                  web_t=web_t, shaft_len=shaft_len, bend_deg=bend_deg,
+                  boss_r=boss_r, clearance=clearance, sections=sections)
+    first = universal_joint(**common)
+    second = universal_joint(**common)
+
+    beta = math.radians(bend_deg)
+    axis = (0.0, -math.sin(beta), math.cos(beta))
+    place = (tf.translation_matrix([inter_len * v for v in axis]) @
+             tf.rotation_matrix(beta, (1.0, 0.0, 0.0)))
+    for mesh in second.values():
+        mesh.apply_transform(place)
+    intermediate = uni([first["yoke_b"], second["yoke_a"]])
+
+    metadata = {
+        "bend_deg": bend_deg,
+        "total_angle_deg": 2.0 * bend_deg,
+        "inter_len": inter_len,
+        "phasing_deg": 90.0,
+        "output_fluctuation": cv_velocity_fluctuation(2.0 * bend_deg,
+                                                      "double_cardan"),
+        "intermediate_fluctuation": cv_velocity_fluctuation(bend_deg, "hooke"),
+    }
+    parts = {"yoke_in": first["yoke_a"], "spider_in": first["spider"],
+             "intermediate": intermediate, "spider_out": second["spider"],
+             "yoke_out": second["yoke_b"]}
+    for mesh in parts.values():
+        mesh.metadata.update(metadata)
+    return parts
+
+
+__all__ += (
+    "cv_velocity_ratio",
+    "cv_velocity_fluctuation",
+    "tripod_pose",
+    "tripod_cv_joint",
+    "double_cardan_joint",
 )

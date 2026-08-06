@@ -3,12 +3,11 @@
 import functools
 import math
 
-import shapely.affinity as affinity
 import shapely.geometry as sg
 import trimesh
 import trimesh.transformations as tf
 
-from .gears import mesh_phase, spur_gear_2d
+from .gears import internal_gear_2d, mesh_phase, spur_gear_2d
 from .meshutil import sub, uni
 from .prim import cyl, frustum, hex_poly
 from .sweep import extrude_twist
@@ -545,15 +544,21 @@ def planet_stage(
             (0.0, 0.0, carrier_height - shaft_relief_depth / 2.0))
         carrier = sub(carrier, relief)
 
-    ring_cutter = affinity.rotate(
-        spur_gear_2d(
-            ring_teeth, module, pa=pressure_angle, bl=0.0, t_relief=0.0),
-        180.0 / ring_teeth, origin=(0.0, 0.0))
-    ring_cutter = ring_cutter.buffer(ring_clearance)
-    ring_profile = sg.Point(0.0, 0.0).buffer(
-        ring_outer_d / 2.0, resolution=128).difference(ring_cutter).buffer(0)
-    if ring_profile.is_empty:
+    # True internal geometry, generated conjugate to the planet. This used to
+    # subtract a buffered EXTERNAL involute profile from a disc, which reuses
+    # the external tooth as the tooth space: no addendum/dedendum swap and no
+    # tip-interference check. The root circle lands in the same place as
+    # before (an external tip radius rp+m buffered by ring_clearance, versus a
+    # 1.25*m internal dedendum), so ring_outer_d still means what it meant.
+    # ring_clearance is a NORMAL flank offset; a tooth space widened by bl at
+    # the pitch circle offsets each flank by (bl/2)*cos(pa), hence the factor.
+    ring_rim = ring_outer_d / 2.0 - (module * ring_teeth / 2.0 + 1.25 * module)
+    if ring_rim < 0.8:
         raise ValueError("planet_stage(): ring_outer_d leaves no fixed-ring rim")
+    ring_profile = internal_gear_2d(
+        z=ring_teeth, m=module, pa_deg=pressure_angle, rim=ring_rim,
+        bl=2.0 * ring_clearance / math.cos(math.radians(pressure_angle)),
+        z_pinion=planet_teeth)
     ring = trimesh.creation.extrude_polygon(ring_profile, ring_face_width)
     ring.apply_translation((0.0, 0.0, gear_z0 - 0.1))
 

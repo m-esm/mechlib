@@ -36,8 +36,21 @@ from mechlib.closures import (
     setscrew,
     ydovetail,
 )
+from mechlib.bearings import plain_bushing, printed_ball_bearing, thrust_washer
+from mechlib.chains import (
+    drag_chain,
+    drag_chain_link,
+    roller_chain,
+    roller_chain_link,
+)
 from mechlib.clutches import freewheel_clutch, torque_limiter
-from mechlib.couplings import jaw_coupling, oldham_coupling, universal_joint
+from mechlib.couplings import (
+    double_cardan_joint,
+    jaw_coupling,
+    oldham_coupling,
+    tripod_cv_joint,
+    universal_joint,
+)
 from mechlib.cutters import (
     bearing_seat,
     blind_socket,
@@ -45,6 +58,9 @@ from mechlib.cutters import (
     crush_ribs,
     dbore,
     dbore_hub,
+    gasket_channel,
+    labyrinth_seal,
+    oring_groove,
     revolved_gable_cavity,
     slot_cutter,
     ss_bore,
@@ -60,26 +76,58 @@ from mechlib.drives import (
     worm_wheel_band,
 )
 from mechlib.fasteners import fastener_mesh, hex_nut_mesh, washer_mesh
-from mechlib.fixtures import board_cradle, saddle
-from mechlib.flexures import bistable_beam, cross_flexure, wave_spring
+from mechlib.fixtures import (
+    board_cradle,
+    kinematic_coupling,
+    repeatable_dock,
+    saddle,
+    three_point_leveller,
+)
+from mechlib.flexures import (
+    belleville_washer,
+    bistable_beam,
+    coil_spring,
+    cross_flexure,
+    flexure_stage,
+    leaf_spring,
+    spiral_power_spring,
+    wave_spring,
+)
+from mechlib.fluid import (
+    gerotor_pump,
+    hose_barb,
+    peristaltic_pump_head,
+    rotary_spool_valve,
+)
 from mechlib.gears import (
     bevel_gear_pair,
     cycloidal_drive,
     herringbone_gear,
     mesh_phase,
     rack_2d,
+    ring_gear,
+    ring_gear_mesh,
     roller_sprocket_2d,
     spur_gear_2d,
     spur_gear,
     spur_gear_mesh,
     worm,
 )
+from mechlib.grippers import (
+    collet_chuck,
+    eccentric_cam_clamp,
+    iris_control_range,
+    iris_diaphragm,
+)
+from mechlib.guides import linear_way, telescoping_stage
 from mechlib.indexing import (
     escapement,
     geneva_pair,
     geneva_wheel_angle,
     intermittent_gear_pair,
 )
+from mechlib.joints import ball_socket_joint, gimbal_rings, knuckle_hinge
+from mechlib.lattices import auxetic_panel, kerf_bend_cutter
 from mechlib.linear import (
     archimedes_screw,
     differential_screw,
@@ -87,9 +135,14 @@ from mechlib.linear import (
 )
 from mechlib.linkages import (
     four_bar,
+    lazy_tongs,
+    pantograph_linkage,
+    peaucellier_linkage,
     quick_return,
+    sarrus_linkage,
     scotch_yoke,
     toggle_clamp,
+    watt_linkage,
 )
 from mechlib.mechanisms import (
     dog_slot_coupling,
@@ -103,7 +156,13 @@ from mechlib.mechanisms import (
 from mechlib.meshutil import sub, uni
 from mechlib.patterns import directed_holes, lighten_cell_poly, lighten_grid_centres, polar_ring
 from mechlib.prim import boxc, chamfer_prism, cyl, frustum, hex_poly, rbox, sector2d, seg_cylinder
-from mechlib.pulleys import grooved_drum, timing_pulley
+from mechlib.pulleys import (
+    belt_tensioner,
+    eccentric_idler_mount,
+    grooved_drum,
+    idler_pulley,
+    timing_pulley,
+)
 from mechlib.ratchets import (
     arc_ratchet_2d,
     compliant_clutch,
@@ -632,6 +691,227 @@ PLAY: dict = {
         "mean_r": (4.8, 9.8, 1.0),
         "wire": (0.8, 2.0, 0.2),
         "turns": (3.0, 8.0, 1.0),
+    },
+    # --- gap-analysis wave v0.8.0 ---------------------------------------
+    "demo_peaucellier": {
+        "drive_deg": (0.0, 360.0, 15.0),
+        "rhomb_len": (13.0, 18.0, 1.0),
+    },
+    "demo_watt": {
+        "drive_deg": (0.0, 360.0, 15.0),
+        "coupler_len": (16.0, 32.0, 2.0),
+    },
+    "demo_sarrus": {
+        "drive_deg": (0.0, 360.0, 15.0),
+        "bar_len": (14.0, 26.0, 2.0),
+    },
+    "demo_pantograph": {
+        "crank_angle_deg": (0.0, 360.0, 15.0),
+        "ratio": (1.5, 3.0, 0.25),
+    },
+    "demo_lazy_tongs": {
+        "drive_deg": (0.0, 360.0, 15.0),
+        "rhombs": (2, 6, 1),
+    },
+    "demo_iris_diaphragm": {
+        "blades": (4, 12, 1),
+        "close_pct": (0.0, 100.0, 5.0),
+        "blade_t": (0.8, 2.0, 0.2),
+    },
+    "demo_collet_chuck": {
+        "bore_d": (3.0, 12.0, 1.0),
+        "slots": (2, 8, 2),
+        "taper_deg": (4.0, 12.0, 2.0),
+    },
+    "demo_eccentric_cam_clamp": {
+        "handle_deg": (0.0, 360.0, 15.0),
+        "ecc": (2.0, 6.0, 0.5),
+        "cam_r": (12.0, 20.0, 1.0),
+    },
+    "demo_ring_gear_mesh": {
+        "z": (28, 48, 2),
+        "m": (1.0, 2.5, 0.25),
+        "width": (4.0, 12.0, 1.0),
+    },
+    "demo_tripod_cv_joint": {
+        "angle_deg": (0.0, 24.0, 3.0),
+        "phase_deg": (0.0, 360.0, 15.0),
+        "clear": (0.2, 0.5, 0.05),
+        "sections": (24, 64, 8),
+    },
+    "demo_double_cardan_joint": {
+        "bend_deg": (0.0, 30.0, 5.0),
+        "inter_len": (36.0, 56.0, 5.0),
+        "clearance": (0.2, 0.5, 0.05),
+        "sections": (24, 64, 8),
+    },
+    "demo_ball_socket_joint": {
+        "ball_d": (8, 16, 1),
+        "capture_deg": (10, 35, 5),
+        "fingers": (3, 6, 1),
+        "pose_deg": (0, 30, 5),
+    },
+    "demo_knuckle_hinge": {
+        "knuckles": (3, 9, 2),
+        "stop_deg": (60, 150, 10),
+        "open_deg": (90, 180, 10),
+        "leaf_len": (10, 26, 2),
+    },
+    "demo_gimbal_rings": {
+        "rings": (2, 3, 1),
+        "outer_d": (40, 70, 2),
+        "ring_t": (6.0, 10.0, 0.5),
+        "tilt_deg": (0, 60, 5),
+    },
+    "demo_gerotor_pump": {
+        "rotor_deg": (0.0, 360.0, 5.0),
+        "lobes": (4, 9, 1),
+        "ecc": (1.1, 1.9, 0.1),
+        "rotor_h": (4.0, 14.0, 1.0),
+    },
+    "demo_hose_barb": {
+        "tube_id": (4.0, 14.0, 0.5),
+        "barbs": (1, 6, 1),
+        "interference": (0.2, 1.2, 0.1),
+        "ramp_deg": (10.0, 45.0, 5.0),
+    },
+    "demo_rotary_spool_valve": {
+        "plug_deg": (0.0, 360.0, 5.0),
+        "ports": (2, 6, 1),
+        "body_d": (26.0, 48.0, 2.0),
+        "plug_d": (10.0, 22.0, 1.0),
+    },
+    "demo_peristaltic_pump_head": {
+        "rollers": (2, 6, 1),
+        "tube_od": (4.0, 10.0, 0.5),
+        "occlusion": (0.5, 1.0, 0.05),
+        "wrap_deg": (200.0, 320.0, 10.0),
+    },
+    "demo_linear_way": {
+        "profile_index": (0, 2, 1),
+        "angle_deg": (45.0, 70.0, 5.0),
+        "clear": (0.15, 0.5, 0.05),
+        "section_w": (18.0, 36.0, 2.0),
+    },
+    "demo_telescoping_stage": {
+        "sections": (2, 4, 1),
+        "extend": (0.0, 1.0, 0.1),
+        "clear": (0.2, 0.5, 0.05),
+        "length": (30.0, 90.0, 10.0),
+    },
+    "demo_idler_pulley": {
+        "od": (10, 24, 2),
+        "crown": (0.0, 0.6, 0.05),
+    },
+    "demo_eccentric_idler_mount": {
+        "eccentricity": (0.5, 2.5, 0.5),
+        "rotation_deg": (0, 360, 30),
+    },
+    "demo_belt_tensioner": {
+        "preload_mm": (0.5, 4.0, 0.5),
+        "sweep_deg": (20, 120, 10),
+    },
+    "demo_drag_chain_link": {
+        "bend_deg": (15, 45, 5),
+        "width": (8, 12, 1),
+    },
+    "demo_drag_chain": {
+        "links": (6, 10, 1),
+        "bend_deg": (15, 45, 5),
+    },
+    "demo_roller_chain_link": {
+        "roller_d": (7.75, 11.75, 1.0),
+        "pitch": (12.7, 25.4, 6.35),
+    },
+    "demo_roller_chain": {
+        "n_teeth": (8, 20, 2),
+        "wrap_deg": (100, 300, 50),
+    },
+    "demo_belleville_washer": {
+        "free_h": (1.2, 4.0, 0.2),
+        "stack": (1, 5, 1),
+        "inner_d": (6.0, 14.0, 1.0),
+    },
+    "demo_coil_spring": {
+        "turns": (3.0, 10.0, 1.0),
+        "pitch": (3.0, 8.0, 0.5),
+        "wire_d": (1.2, 2.4, 0.2),
+    },
+    "demo_spiral_power_spring": {
+        "turns": (3.0, 8.0, 1.0),
+        "gap": (0.4, 0.8, 0.1),
+        "strip_t": (0.8, 1.2, 0.2),
+    },
+    "demo_leaf_spring": {
+        "leaves": (3, 6, 1),
+        "leaf_t": (2.0, 3.0, 0.2),
+        "camber": (5.0, 14.0, 1.0),
+    },
+    "demo_flexure_stage": {
+        "travel": (1.0, 3.0, 0.5),
+        "blade_len": (25.0, 45.0, 5.0),
+        "blade_t": (0.8, 1.2, 0.2),
+    },
+    "demo_plain_bushing": {
+        "bore_d": (4, 20, 1),
+        "length": (6, 30, 1),
+        "relief_grooves": (0, 6, 1),
+    },
+    "demo_thrust_washer": {
+        "outer_d": (20, 36, 2),
+        "balls": (4, 8, 1),
+        "thickness": (1.6, 4.0, 0.4),
+    },
+    "demo_printed_ball_bearing": {
+        "outer_d": (30, 44, 2),
+        "balls": (3, 6, 1),
+        "width": (10, 18, 1),
+    },
+    "demo_kinematic_coupling": {
+        "pcd": (24.0, 64.0, 2.0),
+        "ball_d": (4.0, 10.0, 1.0),
+        "plate_t": (4.0, 10.0, 0.5),
+        "kind_index": (0, 1, 1),
+    },
+    "demo_repeatable_dock": {
+        "pcd": (30.0, 56.0, 2.0),
+        "magnet_d": (6.0, 16.0, 1.0),
+        "plate_t": (5.0, 9.0, 0.5),
+        "preload_index": (0, 1, 1),
+    },
+    "demo_three_point_leveller": {
+        "screw_pcd": (30.0, 60.0, 2.0),
+        "screw_index": (0, 3, 1),
+        "lift": (4.0, 12.0, 1.0),
+        "kind_index": (0, 1, 1),
+    },
+    "demo_oring_groove": {
+        "face_pcd": (24.0, 50.0, 2.0),
+        "cs": (1.78, 3.53, 0.28),
+        "squeeze": (0.10, 0.30, 0.02),
+        "block": (58.0, 78.0, 2.0),
+    },
+    "demo_labyrinth_seal": {
+        "shaft_d": (4.0, 12.0, 1.0),
+        "teeth": (2, 6, 1),
+        "tooth_t": (0.8, 2.0, 0.2),
+        "gap": (0.2, 0.4, 0.05),
+    },
+    "demo_gasket_channel": {
+        "width": (1.5, 5.0, 0.5),
+        "depth": (0.9, 2.7, 0.3),
+        "lid_w": (40.0, 70.0, 5.0),
+        "lid_d": (28.0, 50.0, 4.0),
+    },
+    "demo_auxetic_panel": {
+        "mode_index": (0, 2, 1),
+        "cell": (8.0, 16.0, 2.0),
+        "strut_t": (0.4, 1.2, 0.4),
+    },
+    "demo_kerf_bend_cutter": {
+        "mode_index": (0, 2, 1),
+        "kerf": (0.4, 0.8, 0.1),
+        "pitch": (4.0, 10.0, 1.0),
     },
 }
 
@@ -2078,3 +2358,723 @@ def demo_wave_spring(waves: int = 3, turns: int = 2,
 def demo_bistable_beam(apex: float = 3.0, beam_t: float = 1.0) -> MeshList:
     switch = bistable_beam(apex=apex, beam_t=beam_t)
     return [("bistable_switch", switch, PALETTE[9])]
+
+
+# ---------------------------------------------------------------------------
+# Straight-line and scaling linkages (gap-analysis wave v0.8.0)
+# ---------------------------------------------------------------------------
+
+# Four of these five mechanisms are driven by an oscillating input rather than
+# a whole crank turn (a Peaucellier crank that made a full revolution would
+# send its tracer to infinity), so their demos take a 0-360 deg DRIVE PHASE and
+# map it onto the working arc with a sine -- the motion a long connecting rod
+# or a Scotch yoke gives. That keeps one linear phase ramp per demo, which is
+# what ANIMATE can express, while the mechanism itself still travels out and
+# back. The pantograph needs no such trick: its stylus really does go round.
+PEAUCELLIER_SWING_DEG = 50.0
+WATT_SWING_DEG = 25.0
+SARRUS_FOLD_MID_DEG = 45.0
+SARRUS_FOLD_SWING_DEG = 30.0
+TONGS_MID_DEG = 37.5
+TONGS_SWING_DEG = 17.5
+
+
+def demo_peaucellier(drive_deg: float = 0.0, rhomb_len: float = 15.0):
+    crank = PEAUCELLIER_SWING_DEG * math.sin(math.radians(drive_deg))
+    parts = peaucellier_linkage(rhomb_len=rhomb_len, crank_angle_deg=crank)
+    entries = [
+        ("anchor_link_a", parts["long_a"], PALETTE[2]),
+        ("anchor_link_b", parts["long_b"], PALETTE[2]),
+        ("rhombus_pa", parts["rhomb_pa"], PALETTE[5]),
+        ("rhombus_bq", parts["rhomb_bq"], PALETTE[5]),
+        ("rhombus_pb", parts["rhomb_pb"], PALETTE[3]),
+        ("rhombus_aq", parts["rhomb_aq"], PALETTE[3]),
+        ("ground_link", parts["ground"], PALETTE[7]),
+        ("crank", parts["crank"], PALETTE[4]),
+    ]
+    names = ("pin_o", "pin_c", "pin_p", "pin_a", "pin_b", "tracer_q")
+    for name, pin in zip(names, parts["pins"]):
+        entries.append((name, pin,
+                        PALETTE[10] if name == "tracer_q" else PALETTE[11]))
+    return entries
+
+
+def demo_watt(drive_deg: float = 0.0, coupler_len: float = 24.0):
+    angle = WATT_SWING_DEG * math.sin(math.radians(drive_deg))
+    parts = watt_linkage(coupler_len=coupler_len, lever_angle_deg=angle)
+    entries = [
+        ("ground_link", parts["ground"], PALETTE[7]),
+        ("lever_a", parts["lever_a"], PALETTE[2]),
+        ("lever_b", parts["lever_b"], PALETTE[4]),
+        ("coupler", parts["coupler"], PALETTE[5]),
+        ("tracer_point", parts["tracer"], PALETTE[10]),
+    ]
+    for index, pin in enumerate(parts["pins"]):
+        entries.append(("pin_%d" % index, pin, PALETTE[11]))
+    return entries
+
+
+def demo_sarrus(drive_deg: float = 0.0, bar_len: float = 20.0):
+    fold = SARRUS_FOLD_MID_DEG + SARRUS_FOLD_SWING_DEG * math.sin(
+        math.radians(drive_deg))
+    parts = sarrus_linkage(bar_len=bar_len, fold_deg=fold)
+    entries = [
+        ("base_plate", parts["base"], PALETTE[7]),
+        ("platform", parts["platform"], PALETTE[0]),
+    ]
+    names = ("chain_a_lower", "chain_a_upper", "chain_b_lower", "chain_b_upper")
+    colors = (PALETTE[2], PALETTE[5], PALETTE[3], PALETTE[4])
+    for name, bar, color in zip(names, parts["bars"], colors):
+        entries.append((name, bar, color))
+    for index, pin in enumerate(parts["pins"]):
+        entries.append(("hinge_pin_%d" % index, pin, PALETTE[11]))
+    return entries
+
+
+def demo_pantograph(crank_angle_deg: float = 0.0, ratio: float = 2.0):
+    angle = math.radians(crank_angle_deg)
+    parts = pantograph_linkage(ratio=ratio,
+                               p_x=32.0 + 9.0 * math.cos(angle),
+                               p_y=9.0 * math.sin(angle))
+    entries = [
+        ("base_pad", parts["base"], PALETTE[7]),
+        ("bar_pivot", parts["bar1"], PALETTE[2]),
+        ("bar_stylus", parts["bar2"], PALETTE[5]),
+        ("bar_output", parts["bar3"], PALETTE[4]),
+        ("bar_closer", parts["bar4"], PALETTE[3]),
+        ("output_point", parts["tracer"], PALETTE[10]),
+    ]
+    names = ("pin_f", "pin_a", "pin_c", "pin_d", "stylus_pin")
+    for name, pin in zip(names, parts["pins"]):
+        entries.append((name, pin, PALETTE[11]))
+    return entries
+
+
+def demo_lazy_tongs(drive_deg: float = 0.0, rhombs: int = 3):
+    angle = TONGS_MID_DEG + TONGS_SWING_DEG * math.sin(math.radians(drive_deg))
+    parts = lazy_tongs(rhombs=int(rhombs), angle_deg=angle)
+    entries = [
+        ("frame", parts["frame"], PALETTE[7]),
+        ("output_yoke", parts["output"], PALETTE[10]),
+    ]
+    for index, bar in enumerate(parts["bars"]):
+        entries.append(("bar_%d" % index, bar,
+                        PALETTE[2] if index % 2 == 0 else PALETTE[5]))
+    for index, pin in enumerate(parts["pins"]):
+        entries.append(("pin_%d" % index, pin, PALETTE[11]))
+    return entries
+
+
+# ---------------------------------------------------------------------------
+# Grippers and clamps (gap-analysis wave v0.8.0)
+# ---------------------------------------------------------------------------
+
+
+def demo_iris_diaphragm(blades: int = 6, close_pct: float = 0.0,
+                        blade_t: float = 1.0) -> MeshList:
+    # close_pct rather than control_deg: the usable ring travel is only a few
+    # degrees and depends on the aperture geometry, so the slider is a
+    # percentage of the range iris_control_range() reports for these defaults.
+    parts = iris_diaphragm(
+        blades=int(blades), blade_t=blade_t,
+        control_deg=iris_control_range() * close_pct / 100.0)
+    entries = [
+        ("base_ring", parts["base"], PALETTE[7]),
+        ("drive_ring", parts["drive_ring"], PALETTE[4]),
+        ("retainer_cap", parts["cap"], PALETTE[12]),
+    ]
+    for index, blade in enumerate(parts["blades"]):
+        entries.append(("leaf_%d" % index, blade, PALETTE[index % 3]))
+    return entries
+
+
+def demo_collet_chuck(bore_d: float = 6.0, slots: int = 4,
+                      taper_deg: float = 8.0) -> MeshList:
+    parts = collet_chuck(bore_d=bore_d, slots=int(slots), taper_deg=taper_deg)
+    return [
+        ("spindle_nose", parts["spindle_nose"], PALETTE[7]),
+        ("split_collet", parts["collet"], PALETTE[1]),
+        ("taper_nut", parts["nut"], PALETTE[9]),
+    ]
+
+
+def demo_eccentric_cam_clamp(handle_deg: float = 0.0, ecc: float = 4.0,
+                             cam_r: float = 14.0) -> MeshList:
+    parts = eccentric_cam_clamp(handle_deg=handle_deg, ecc=ecc, cam_r=cam_r)
+    return [
+        ("clamp_base", parts["base"], PALETTE[7]),
+        ("eccentric_cam", parts["cam"], PALETTE[4]),
+        ("follower_plate", parts["follower"], PALETTE[2]),
+        ("pivot_pin", parts["pin"], PALETTE[10]),
+    ]
+
+
+# ---------------------------------------------------------------------------
+# Internal (ring) gears (gap-analysis wave v0.8.0)
+# ---------------------------------------------------------------------------
+
+
+def demo_ring_gear(z: int = 32, m: float = 1.5, width: float = 8.0) -> MeshList:
+    """Internal involute ring gear: teeth cut inward from an annular rim."""
+    return [("internal_ring_gear", ring_gear(z=z, m=m, width=width), PALETTE[7])]
+
+
+def demo_ring_gear_mesh(z: int = 40, m: float = 1.5, width: float = 6.0,
+                        drive_deg: float = 0.0) -> MeshList:
+    """Pinion running inside an internal ring gear, posed in mesh.
+
+    Internal mesh: the two members turn the SAME way (an external pair
+    counter-rotates) and the ring turns at z_pinion/z of the pinion. The
+    pinion spins about its own centre at (centre_distance, 0), which is the
+    DIFFERENCE of the pitch radii, not the sum.
+    """
+    z_pinion = 20
+    pair = ring_gear_mesh(z=z, z_pinion=z_pinion, m=m, width=width,
+                          bore_d=5.0, bl=0.35)
+    centre = pair["ring"].metadata["centre_distance"]
+    return [
+        ("internal_ring_gear", _spin(pair["ring"], drive_deg * z_pinion / z),
+         PALETTE[7]),
+        ("ring_pinion", _spin(pair["pinion"], drive_deg,
+                              center=(centre, 0.0, 0.0)), PALETTE[1]),
+    ]
+
+
+# ---------------------------------------------------------------------------
+# Constant-velocity couplings (gap-analysis wave v0.8.0)
+# ---------------------------------------------------------------------------
+
+
+def demo_tripod_cv_joint(
+    angle_deg: float = 15.0,
+    phase_deg: float = 0.0,
+    clear: float = 0.3,
+    sections: int = 48,
+) -> MeshList:
+    parts = tripod_cv_joint(
+        angle_deg=angle_deg, phase_deg=phase_deg, clear=clear,
+        sections=sections)
+    return [
+        ("tulip_housing", parts["housing"], PALETTE[7]),
+        ("tripod_spider", parts["spider"], PALETTE[5]),
+        ("crowned_barrels", parts["rollers"], PALETTE[4]),
+        ("tripod_input_shaft", parts["shaft"], PALETTE[1]),
+    ]
+
+
+def demo_double_cardan_joint(
+    bend_deg: float = 15.0,
+    inter_len: float = 46.0,
+    clearance: float = 0.3,
+    sections: int = 48,
+) -> MeshList:
+    parts = double_cardan_joint(
+        bend_deg=bend_deg, inter_len=inter_len, clearance=clearance,
+        sections=sections)
+    return [
+        ("cardan_input_yoke", parts["yoke_in"], PALETTE[0]),
+        ("cardan_spider_in", parts["spider_in"], PALETTE[5]),
+        ("cardan_intermediate", parts["intermediate"], PALETTE[8]),
+        ("cardan_spider_out", parts["spider_out"], PALETTE[9]),
+        ("cardan_output_yoke", parts["yoke_out"], PALETTE[3]),
+    ]
+
+
+# ---------------------------------------------------------------------------
+# Joints (gap-analysis wave v0.8.0)
+# ---------------------------------------------------------------------------
+
+
+def demo_ball_socket_joint(
+    ball_d: float = 10.0,
+    capture_deg: float = 20.0,
+    fingers: int = 4,
+    pose_deg: float = 15.0,
+) -> MeshList:
+    parts = ball_socket_joint(ball_d=ball_d, capture_deg=capture_deg,
+                              fingers=fingers)
+    # The swing cone shrinks as capture_deg grows, so the slider pose is
+    # clamped to whatever this geometry actually allows.
+    limit = parts["ball"].metadata["swing_half_deg"]
+    stud = _spin(parts["ball"], max(-limit, min(limit, pose_deg)),
+                 axis=(1.0, 0.0, 0.0))
+    return [
+        ("socket_cup", parts["socket"], PALETTE[7]),
+        ("ball_stud", stud, PALETTE[4]),
+    ]
+
+
+def demo_knuckle_hinge(
+    knuckles: int = 5,
+    stop_deg: float = 90.0,
+    open_deg: float = 110.0,
+    leaf_len: float = 16.0,
+) -> MeshList:
+    parts = knuckle_hinge(knuckles=knuckles, stop_deg=stop_deg,
+                          open_deg=max(open_deg, stop_deg), leaf_len=leaf_len)
+    return [
+        ("hinge_leaf_fixed", parts["leaf_a"], PALETTE[0]),
+        ("hinge_leaf_swinging", parts["leaf_b"], PALETTE[2]),
+    ]
+
+
+def demo_gimbal_rings(
+    rings: int = 3,
+    outer_d: float = 44.0,
+    ring_t: float = 6.5,
+    tilt_deg: float = 20.0,
+) -> MeshList:
+    parts = gimbal_rings(rings=rings, outer_d=outer_d, ring_t=ring_t,
+                         tilt_deg=tilt_deg)
+    return [("gimbal_ring_%d" % index, parts["ring_%d" % index],
+             PALETTE[(4 * index) % 13])
+            for index in range(int(round(rings)))]
+
+
+# ---------------------------------------------------------------------------
+# Pumps and valves (gap-analysis wave v0.8.0)
+# ---------------------------------------------------------------------------
+
+
+def demo_gerotor_pump(
+    lobes: int = 6,
+    ecc: float = 1.6,
+    rotor_h: float = 8.0,
+    rotor_deg: float = 0.0,
+) -> MeshList:
+    # lobe_circle_r is derived, not an independent PLAY param: the outer tooth
+    # radius falls as the lobe count rises, and gerotor_pump() rejects any
+    # combination where it drops below ecc (the teeth would become islands in
+    # the cavity instead of protrusions). Scaling the pitch circle with the
+    # lobe count keeps every slider corner inside that limit, and at lobes=6 it
+    # reproduces gerotor_pump()'s own default of 16.0 exactly, so the default
+    # GLB is the plain-default part.
+    parts = gerotor_pump(lobes=lobes, lobe_circle_r=16.0 * lobes / 6.0,
+                         ecc=ecc, rotor_h=rotor_h, phase_deg=rotor_deg)
+    return [
+        ("gerotor_housing", parts["housing"], PALETTE[7]),
+        ("gerotor_outer_rotor", parts["outer"], PALETTE[2]),
+        ("gerotor_inner_rotor", parts["inner"], PALETTE[4]),
+        ("gerotor_port_cap", parts["cap"], PALETTE[0]),
+    ]
+
+
+def demo_hose_barb(
+    tube_id: float = 6.0,
+    barbs: int = 3,
+    interference: float = 0.6,
+    ramp_deg: float = 25.0,
+) -> MeshList:
+    return [("hose_barb", hose_barb(tube_id=tube_id, barbs=barbs,
+                                    interference=interference,
+                                    ramp_deg=ramp_deg), PALETTE[5])]
+
+
+def demo_rotary_spool_valve(
+    ports: int = 3,
+    body_d: float = 34.0,
+    plug_d: float = 16.0,
+    plug_deg: float = 0.0,
+) -> MeshList:
+    # Every diameter that could collide is derived from the port count and the
+    # plug size, so no slider corner asks for bores that merge at the plug
+    # surface or a passage that reaches no second port. At the defaults these
+    # formulas reproduce rotary_spool_valve()'s own defaults (port_d=5.0,
+    # passage_d=4.5 rounds to 4.5, passages=((0, 120),)).
+    body_d = max(body_d, plug_d + 10.0)
+    pitch = plug_d * math.sin(math.pi / ports)
+    port_d = max(2.0, min(5.0, pitch - 1.2))
+    passage_d = max(2.0, min(port_d, plug_d - 3.0))
+    parts = rotary_spool_valve(ports=ports, body_d=body_d, plug_d=plug_d,
+                               port_d=port_d, passage_d=passage_d,
+                               passages=((0.0, 360.0 / ports),),
+                               plug_deg=plug_deg)
+    return [
+        ("spool_valve_body", parts["body"], PALETTE[7]),
+        ("spool_valve_plug", parts["plug"], PALETTE[10]),
+        ("spool_valve_cap", parts["cap"], PALETTE[1]),
+    ]
+
+
+def demo_peristaltic_pump_head(
+    rollers: int = 3,
+    tube_od: float = 6.0,
+    occlusion: float = 0.9,
+    wrap_deg: float = 240.0,
+) -> MeshList:
+    # Wall thickness tracks the tube size (a quarter of the OD is typical for
+    # peristaltic silicone) so the squeeze gap stays sane across the slider.
+    parts = peristaltic_pump_head(rollers=rollers, tube_od=tube_od,
+                                  tube_wall=tube_od / 4.0,
+                                  occlusion=occlusion, wrap_deg=wrap_deg)
+    return [
+        ("peristaltic_body", parts["body"], PALETTE[7]),
+        ("peristaltic_rotor", parts["rotor"], PALETTE[3]),
+        ("peristaltic_cap", parts["cap"], PALETTE[6]),
+    ]
+
+
+# ---------------------------------------------------------------------------
+# Guides and ways (gap-analysis wave v0.8.0)
+# ---------------------------------------------------------------------------
+
+_WAY_PROFILES = ("dovetail", "vee", "tslot")
+
+
+def demo_linear_way(
+    profile_index: int = 0,
+    angle_deg: float = 55.0,
+    clear: float = 0.25,
+    section_w: float = 26.0,
+) -> MeshList:
+    parts = linear_way(
+        profile=_WAY_PROFILES[int(profile_index) % len(_WAY_PROFILES)],
+        section_w=section_w, angle_deg=angle_deg, clear=clear)
+    out = [
+        ("way_rail", parts["rail"], PALETTE[7]),
+        ("way_carriage", parts["carriage"], PALETTE[1]),
+    ]
+    if "gib" in parts:
+        out.append(("way_gib", parts["gib"], PALETTE[4]))
+    return out
+
+
+def demo_telescoping_stage(
+    sections: int = 3,
+    extend: float = 0.6,
+    clear: float = 0.3,
+    length: float = 60.0,
+) -> MeshList:
+    count = int(sections)
+    parts = telescoping_stage(sections=count, extend=extend, clear=clear,
+                              length=length, outer_w=36.0)
+    order = (0, 2, 5, 9)
+    return [("stage_section_%d" % i, parts["section_%d" % i],
+             PALETTE[order[i % len(order)]]) for i in range(count)]
+
+
+# ---------------------------------------------------------------------------
+# Idlers and belt tensioners (gap-analysis wave v0.8.0)
+# ---------------------------------------------------------------------------
+
+
+def demo_idler_pulley(od: float = 16.0, crown: float = 0.15) -> MeshList:
+    idler = idler_pulley(od=od, width=8.0, bore_d=5.0, crown=crown)
+    driver = timing_pulley(teeth=20, pitch=2.0, belt_w=8.0, bore_d=5.0,
+                           hub_len=0.0)
+    driver.apply_translation(
+        (od / 2.0 + driver.metadata["tip_d"] / 2.0 + 6.0, 0, 0))
+    return [
+        ("idler", idler, PALETTE[0]),
+        ("driver_pulley", driver, PALETTE[1]),
+    ]
+
+
+def demo_eccentric_idler_mount(eccentricity: float = 1.5,
+                               rotation_deg: float = 0.0) -> MeshList:
+    parts = eccentric_idler_mount(eccentricity=eccentricity,
+                                  rotation_deg=rotation_deg)
+    return [
+        ("bushing", parts["bushing"], PALETTE[2]),
+        ("idler", parts["pulley"], PALETTE[0]),
+    ]
+
+
+def demo_belt_tensioner(preload_mm: float = 2.5,
+                        sweep_deg: float = 50.0) -> MeshList:
+    tensioner = belt_tensioner(preload_mm=preload_mm, sweep_deg=sweep_deg)
+    tip_x, tip_y = tensioner.metadata["tip_xy"]
+    idler = idler_pulley(od=12.0, width=6.0, bore_d=5.0, clearance=0.25)
+    idler.apply_translation((tip_x, tip_y, 6.0))
+    return [
+        ("tensioner_arm", tensioner, PALETTE[3]),
+        ("idler", idler, PALETTE[0]),
+    ]
+
+
+# ---------------------------------------------------------------------------
+# Chains and cable carriers (gap-analysis wave v0.8.0)
+# ---------------------------------------------------------------------------
+
+
+def demo_drag_chain_link(bend_deg: float = 30.0, width: float = 9.0) -> MeshList:
+    parts = drag_chain_link(bend_deg=bend_deg, width=width)
+    out = [
+        ("link", parts["link"], PALETTE[0]),
+        ("pin", parts["pin"], PALETTE[4]),
+    ]
+    if "lid" in parts:
+        out.append(("lid", parts["lid"], PALETTE[7]))
+    return out
+
+
+def demo_drag_chain(links: int = 8, bend_deg: float = 30.0) -> MeshList:
+    parts = drag_chain(links=links, bend_deg=bend_deg)
+    out = []
+    for name, mesh in parts.items():
+        if name.startswith("link_"):
+            out.append((name, mesh, PALETTE[0]))
+        elif name.startswith("pin_"):
+            out.append((name, mesh, PALETTE[4]))
+        else:
+            out.append((name, mesh, PALETTE[7]))
+    return out
+
+
+def demo_roller_chain_link(roller_d: float = 7.75, pitch: float = 12.7) -> MeshList:
+    parts = roller_chain_link(roller_d=roller_d, pitch=pitch)
+    return [
+        ("outer_plate", parts["outer_plate"], PALETTE[0]),
+        ("inner_plate", parts["inner_plate"], PALETTE[1]),
+        ("roller", parts["roller"], PALETTE[4]),
+        ("bushing", parts["bushing"], PALETTE[7]),
+        ("pin", parts["pin"], PALETTE[9]),
+    ]
+
+
+def demo_roller_chain(n_teeth: int = 14, wrap_deg: float = 200.0) -> MeshList:
+    parts = roller_chain(n_teeth=n_teeth, wrap_deg=wrap_deg)
+    out = [("sprocket", parts["sprocket"], PALETTE[0])]
+    for name, mesh in parts.items():
+        if name != "sprocket":
+            out.append((name, mesh, PALETTE[4]))
+    return out
+
+
+# ---------------------------------------------------------------------------
+# Springs and linear flexures (gap-analysis wave v0.8.0)
+# ---------------------------------------------------------------------------
+
+
+def demo_belleville_washer(free_h: float = 2.4, stack: int = 3,
+                           inner_d: float = 10.0) -> MeshList:
+    washer = belleville_washer(free_h=free_h, inner_d=inner_d, stack=stack,
+                               arrangement="series")
+    return [("belleville_stack", washer, PALETTE[5])]
+
+
+def demo_coil_spring(turns: float = 6.0, pitch: float = 4.0,
+                     wire_d: float = 2.0) -> MeshList:
+    spring = coil_spring(turns=turns, pitch=pitch, wire_d=wire_d,
+                         ends="closed")
+    return [("coil_spring", spring, PALETTE[0])]
+
+
+def demo_spiral_power_spring(turns: float = 6.0, gap: float = 0.5,
+                             strip_t: float = 1.0) -> MeshList:
+    parts = spiral_power_spring(turns=turns, gap=gap, strip_t=strip_t)
+    return [
+        ("mainspring_barrel", parts["barrel"], PALETTE[7]),
+        ("mainspring_strip", parts["spring"], PALETTE[3]),
+        ("mainspring_arbor", parts["arbor"], PALETTE[1]),
+    ]
+
+
+def demo_leaf_spring(leaves: int = 3, leaf_t: float = 2.0,
+                     camber: float = 9.0) -> MeshList:
+    parts = leaf_spring(leaves=leaves, leaf_t=leaf_t, camber=camber)
+    out = [("leaf_clamp", parts["clamp"], PALETTE[6])]
+    for k in range(leaves):
+        out.append(("leaf_%d" % (k + 1), parts["leaf_%d" % (k + 1)],
+                    PALETTE[(k + 2) % 13]))
+    return out
+
+
+def demo_flexure_stage(travel: float = 2.0, blade_len: float = 25.0,
+                       blade_t: float = 1.0) -> MeshList:
+    stage = flexure_stage(travel=travel, blade_len=blade_len, blade_t=blade_t)
+    return [("flexure_stage", stage, PALETTE[11])]
+
+
+# ---------------------------------------------------------------------------
+# Bearings and bushings (gap-analysis wave v0.8.0)
+# ---------------------------------------------------------------------------
+
+
+def demo_plain_bushing(bore_d: float = 8.0, length: float = 12.0,
+                       relief_grooves: int = 4) -> MeshList:
+    bushing = plain_bushing(bore_d=bore_d, length=length,
+                            relief_grooves=relief_grooves)
+    return [("flanged_plain_bushing", bushing, PALETTE[5])]
+
+
+def demo_thrust_washer(outer_d: float = 24.0, balls: int = 6,
+                       thickness: float = 2.4) -> MeshList:
+    parts = thrust_washer(outer_d=outer_d, thickness=thickness, pair=True,
+                          balls=balls)
+    return [
+        ("thrust_housing_washer", parts["housing_washer"], PALETTE[1]),
+        ("thrust_ball_cage", parts["cage"], PALETTE[6]),
+        ("thrust_steel_balls", parts["balls"], PALETTE[9]),
+        ("thrust_rotor_washer", parts["rotor_washer"], PALETTE[3]),
+    ]
+
+
+def demo_printed_ball_bearing(outer_d: float = 32.0, balls: int = 6,
+                              width: float = 10.0) -> MeshList:
+    parts = printed_ball_bearing(outer_d=outer_d, balls=balls, width=width)
+    return [
+        ("bearing_inner_race", parts["inner_race"], PALETTE[2]),
+        ("bearing_ball_cage", parts["cage"], PALETTE[6]),
+        ("bearing_balls", parts["balls"], PALETTE[8]),
+        ("bearing_outer_race", parts["outer_race"], PALETTE[0]),
+    ]
+
+
+# ---------------------------------------------------------------------------
+# Exact-constraint mounts (gap-analysis wave v0.8.0)
+# ---------------------------------------------------------------------------
+
+
+def _flip_aside(mesh, pivot, dx, dz):
+    """Book-flip a mating half beside its partner so both faces point up."""
+    out = mesh.copy()
+    out.apply_transform(trimesh.transformations.rotation_matrix(
+        math.pi, (0, 1, 0), pivot))
+    out.apply_translation((dx, 0.0, dz))
+    return out
+
+
+def demo_kinematic_coupling(pcd: float = 40.0, ball_d: float = 6.0,
+                            plate_t: float = 6.0, kind_index: int = 0):
+    ball_d = float(ball_d)
+    # kind is a string, so the slider drives an index; pcd and plate_t are
+    # clamped to what the ball size can physically support.
+    pcd = max(float(pcd), 3.0 * ball_d)
+    plate_t = max(float(plate_t), ball_d / 2.0 + 1.7)
+    kind = ("maxwell", "kelvin")[int(kind_index) % 2]
+    parts = kinematic_coupling(kind=kind, pcd=pcd, ball_d=ball_d,
+                               plate_t=plate_t, ball="hardware")
+    span = parts["base"].metadata["plate_d"]
+    pivot = (0.0, 0.0, parts["top"].bounds.mean(axis=0)[2])
+    dx, dz = 1.12 * span, 0.1 * span
+    return [
+        ("coupling_base", parts["base"], PALETTE[7]),
+        ("coupling_top", _flip_aside(parts["top"], pivot, dx, dz), PALETTE[3]),
+        ("coupling_balls", _flip_aside(parts["balls"], pivot, dx, dz), PALETTE[5]),
+    ]
+
+
+def demo_repeatable_dock(pcd: float = 40.0, magnet_d: float = 10.0,
+                         plate_t: float = 6.0, preload_index: int = 0):
+    pcd = float(pcd)
+    preload = ("magnet", "screw")[int(preload_index) % 2]
+    magnet_d = min(float(magnet_d), pcd - 2.0 * 6.0 - 3.4)
+    parts = repeatable_dock(preload=preload, pcd=pcd, magnet_d=magnet_d,
+                            plate_t=max(float(plate_t), 5.0), ball="hardware")
+    span = parts["base"].metadata["plate_d"]
+    pivot = (0.0, 0.0, parts["top"].bounds.mean(axis=0)[2])
+    dx, dz = 1.12 * span, 0.1 * span
+    return [
+        ("dock_base", parts["base"], PALETTE[6]),
+        ("dock_top", _flip_aside(parts["top"], pivot, dx, dz), PALETTE[1]),
+        ("dock_balls", _flip_aside(parts["balls"], pivot, dx, dz), PALETTE[5]),
+    ]
+
+
+def demo_three_point_leveller(screw_pcd: float = 44.0, screw_index: int = 2,
+                              lift: float = 8.0, kind_index: int = 1):
+    # Only nominal diameters with a printable coarse pitch are legal.
+    screw_d = (4.0, 5.0, 6.0, 8.0)[int(screw_index) % 4]
+    kind = ("maxwell", "kelvin")[int(kind_index) % 2]
+    screw_pcd = float(screw_pcd)
+    # Base wider than the table, so the seats stay visible in the gallery.
+    parts = three_point_leveller(kind=kind, screw_pcd=screw_pcd,
+                                 screw_d=screw_d, lift=float(lift),
+                                 screw_len=float(lift) + 14.0,
+                                 plate_d=screw_pcd + 5.0 * screw_d,
+                                 table_d=screw_pcd + 2.0 * screw_d + 4.0,
+                                 base_t=max(6.0, 0.35 * screw_d + 1.7))
+    return [
+        ("leveller_base", parts["base"], PALETTE[7]),
+        ("leveller_table", parts["table"], PALETTE[2]),
+        ("leveller_screws", parts["screws"], PALETTE[10]),
+    ]
+
+
+# ---------------------------------------------------------------------------
+# Sealing cutters (gap-analysis wave v0.8.0)
+# ---------------------------------------------------------------------------
+
+
+def demo_oring_groove(
+    face_pcd: float = 40.0,
+    cs: float = 2.62,
+    squeeze: float = 0.20,
+    block: float = 60.0,
+) -> MeshList:
+    block_h = 8.0
+    groove = oring_groove(face_pcd=face_pcd, cs=cs, squeeze=squeeze, mode="face")
+    body = boxc((block, block, block_h), (0, 0, -block_h / 2.0))
+    hollow = sub(body, groove)
+    cutaway = sub(hollow, boxc((block + 4, block, block_h + 4),
+                               (0, -block / 2.0 - 0.1, -block_h / 2.0)))
+    return [("groove_cutaway", cutaway, PALETTE[6])]
+
+
+def demo_labyrinth_seal(
+    shaft_d: float = 8.0,
+    teeth: int = 4,
+    tooth_t: float = 1.2,
+    gap: float = 0.3,
+) -> MeshList:
+    parts = labyrinth_seal(shaft_d=shaft_d, teeth=teeth, tooth_t=tooth_t, gap=gap)
+    rotor, stator = parts["rotor"], parts["stator"]
+    total_len = rotor.metadata["total_len"]
+    half = boxc((100.0, 100.0, total_len + 4.0), (0, -50.0, total_len / 2.0))
+    rotor_cut = sub(rotor, half)
+    stator_cut = sub(stator, half)
+    return [("rotor_cutaway", rotor_cut, PALETTE[3]),
+            ("stator_cutaway", stator_cut, PALETTE[9])]
+
+
+def demo_gasket_channel(
+    width: float = 3.0,
+    depth: float = 1.5,
+    lid_w: float = 50.0,
+    lid_d: float = 36.0,
+) -> MeshList:
+    lid_h = 8.0
+    corner_r = 6.0
+    outline = sg.box(-lid_w / 2, -lid_d / 2, lid_w / 2, lid_d / 2).buffer(
+        corner_r, join_style=1).buffer(-corner_r, join_style=1)
+    inset = 8.0
+    channel_r = max(1.5, corner_r - 2.0)
+    path = sg.box(-(lid_w / 2 - inset), -(lid_d / 2 - inset),
+                  lid_w / 2 - inset, lid_d / 2 - inset).buffer(
+        channel_r, join_style=1).buffer(-channel_r, join_style=1).exterior
+    groove = gasket_channel(path=path, width=width, depth=depth)
+    lid = trimesh.creation.extrude_polygon(outline, lid_h)
+    lid.apply_translation((0, 0, -lid_h))
+    cut = sub(lid, groove)
+    cutaway = sub(cut, boxc((lid_w + 4, lid_d, lid_h + 4),
+                            (0, -lid_d / 2.0 - 0.1, -lid_h / 2.0)))
+    return [("gasket_lid_cutaway", cutaway, PALETTE[10])]
+
+
+# ---------------------------------------------------------------------------
+# Lattices and kerf patterns (gap-analysis wave v0.8.0)
+# ---------------------------------------------------------------------------
+
+_LATTICE_AUXETIC_MODES = ("reentrant", "rotating_squares", "chiral")
+_LATTICE_KERF_MODES = ("lattice", "diagonal", "spiral")
+
+
+def demo_auxetic_panel(mode_index: int = 0, cell: float = 12.0,
+                       strut_t: float = 1.2) -> MeshList:
+    mode = _LATTICE_AUXETIC_MODES[mode_index % 3]
+    panel = auxetic_panel(mode=mode, width=60.0, height=60.0, thickness=3.0,
+                          cell=cell, strut_t=strut_t)
+    return [("auxetic_panel", panel, PALETTE[5])]
+
+
+def demo_kerf_bend_cutter(mode_index: int = 0, kerf: float = 0.5,
+                          pitch: float = 6.0) -> MeshList:
+    mode = _LATTICE_KERF_MODES[mode_index % 3]
+    width, height, thickness = 60.0, 40.0, 3.0
+    cutters = kerf_bend_cutter(mode=mode, width=width, height=height,
+                               thickness=thickness, kerf=kerf, pitch=pitch,
+                               bridge=1.0)
+    slab = boxc((width, height, thickness), center=(0.0, 0.0, thickness / 2.0))
+    cut = sub(slab, uni(cutters))
+    return [("kerf_bend_panel", cut, PALETTE[8])]

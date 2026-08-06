@@ -11,7 +11,7 @@ import shapely.geometry as sg
 import trimesh
 import trimesh.transformations as tf
 
-from .meshutil import inter, orient, sub, uni
+from .meshutil import extrude_poly_z, inter, orient, sub, uni
 from .prim import boxc, cyl, frustum
 
 
@@ -426,3 +426,272 @@ def revolved_gable_cavity(r_in, r_out, z0, h, roof_angle=45.0, sections=128):
         [r_in, z0],
     ])
     return trimesh.creation.revolve(prof, sections=sections)
+
+
+# AS568/ISO 3601 standard O-ring cross-sections in mm. Documented here as a
+# reference convenience only -- ``oring_groove`` never looks values up in
+# this tuple, every groove dimension below is derived from whatever ``cs``
+# is passed, so this is not a hand-maintained size table.
+AS568_CS_MM = (1.78, 2.62, 3.53, 5.33, 6.99)
+
+
+def oring_groove(bore_d=None, face_pcd=None, cs=2.62, squeeze=0.20, fill=0.78,
+                 mode="face", width=None, depth=None, z0=0.0, sections=128):
+    """Build an O-ring gland cutter sized from AS568/ISO 3601 gland relations.
+
+    ``cs`` is the O-ring cross-section diameter (AS568 standard sizes are
+    listed in ``AS568_CS_MM`` for reference; ``cs`` itself stays a free float
+    and every dimension below is derived from it). ``squeeze`` is the target
+    radial compression fraction of the cross-section (0.20 = 20%, the usual
+    static-seal figure) and must stay in [0.05, 0.35] -- looser leaks, tighter
+    overstresses the rubber and the print. The groove DEPTH follows the
+    standard gland relation ``depth = cs * (1 - squeeze)``.
+
+    The groove WIDTH is sized so the compressed ring fills ``fill`` (default
+    78%) of the groove's cross-sectional area, leaving the remainder as fill
+    allowance for the ring to bulge into rather than being hydraulically
+    locked and extruded out of the joint under pressure. ``fill`` must stay
+    in [0.70, 0.85]: this is the single most useful check the function makes,
+    since eyeballing gland fill is the most common O-ring mistake (too tight
+    and the ring can't compress or blows out; too loose and it rolls in the
+    groove and never seals). Pass explicit ``width``/``depth`` to override
+    the derived values (e.g. to match a hand gland chart); the achieved
+    squeeze and fill are recomputed from whatever you pass and validated
+    against the same bands, so a bad override still raises.
+
+    ``mode="face"`` cuts an annular trench into a flat face at pitch diameter
+    ``face_pcd`` for an axial (flange) seal; the face sits at ``z=z0`` and
+    the groove opens downward into the material below it. ``mode="bore"``
+    cuts a groove straddling ``bore_d`` (radial span ``bore_d/2 - depth`` to
+    ``bore_d/2 + depth``, centered at ``z0``) for a radial (piston/shaft)
+    seal -- the SAME cutter works whether you subtract it from a shaft OD or
+    a bore ID, because whichever half of the straddle falls outside the
+    solid is a no-op subtraction, so you never need to say which surface you
+    are sealing.
+
+    FDM note: an O-ring seals against layer lines, so print with the groove
+    OPENING UP -- the groove floor and side walls should be finished by the
+    nozzle's flat top layers, never by a vertical wall that crosses every
+    layer line. For ``mode="face"`` that means printing the part flat with
+    the sealing face as the top of the print. For ``mode="bore"`` on a
+    shaft, print with the shaft axis vertical so the groove is a
+    flat-bottomed annular pocket cut into the top layers, not a horizontal
+    groove running across every layer line.
+    Units are mm and degrees.
+    """
+    if cs <= 0:
+        raise ValueError("oring_groove(): cs must be positive")
+    if mode not in ("face", "bore"):
+        raise ValueError("oring_groove(): mode must be 'face' or 'bore'")
+    if mode == "face" and (face_pcd is None or face_pcd <= 0):
+        raise ValueError("oring_groove(): mode='face' requires a positive face_pcd")
+    if mode == "bore" and (bore_d is None or bore_d <= 0):
+        raise ValueError("oring_groove(): mode='bore' requires a positive bore_d")
+    if not 0.05 <= squeeze <= 0.35:
+        raise ValueError(
+            "oring_groove(): squeeze must be in [0.05, 0.35] (static-seal practice)")
+    if not 0.70 <= fill <= 0.85:
+        raise ValueError(
+            "oring_groove(): fill target must be in [0.70, 0.85] gland-fill band")
+
+    depth = cs * (1.0 - squeeze) if depth is None else float(depth)
+    if depth <= 0 or depth >= cs:
+        raise ValueError("oring_groove(): depth must be between 0 and cs")
+
+    ring_area = math.pi * (cs / 2.0) ** 2
+    width = ring_area / (fill * depth) if width is None else float(width)
+    if width <= 0:
+        raise ValueError("oring_groove(): width must be positive")
+
+    achieved_fill = ring_area / (width * depth)
+    if not 0.70 - 1e-6 <= achieved_fill <= 0.85 + 1e-6:
+        raise ValueError(
+            "oring_groove(): achieved gland fill %.1f%% outside the 70-85%% "
+            "band; adjust width/depth" % (achieved_fill * 100.0))
+    achieved_squeeze = 1.0 - depth / cs
+    if not 0.05 - 1e-6 <= achieved_squeeze <= 0.35 + 1e-6:
+        raise ValueError(
+            "oring_groove(): achieved squeeze %.1f%% outside the 5-35%% band"
+            % (achieved_squeeze * 100.0))
+
+    if mode == "face":
+        inner_r = face_pcd / 2.0 - width / 2.0
+        if inner_r <= 0:
+            raise ValueError("oring_groove(): width too large for face_pcd")
+        outer_r = face_pcd / 2.0 + width / 2.0
+        m = trimesh.creation.annulus(inner_r, outer_r, depth, sections=sections)
+        m.apply_translation((0.0, 0.0, z0 - depth / 2.0))
+    else:
+        if bore_d / 2.0 - depth <= 0.05:
+            raise ValueError("oring_groove(): depth too large relative to bore_d")
+        inner_r = bore_d / 2.0 - depth
+        outer_r = bore_d / 2.0 + depth
+        m = trimesh.creation.annulus(inner_r, outer_r, width, sections=sections)
+        m.apply_translation((0.0, 0.0, z0))
+
+    m.metadata.update({
+        "mode": mode,
+        "cs": cs,
+        "groove_width": width,
+        "groove_depth": depth,
+        "squeeze_pct": achieved_squeeze * 100.0,
+        "gland_fill_pct": achieved_fill * 100.0,
+    })
+    return m
+
+
+def labyrinth_seal(shaft_d=8.0, teeth=4, tooth_t=1.2, gap=0.3, pitch=None,
+                   fin_h=2.0, hub_wall=1.6, stator_wall=1.6, end_margin=None,
+                   sections=96):
+    """Build an interleaved-comb labyrinth seal: a non-contact rotary seal.
+
+    This is the correct PRINTABLE seal for a rotating joint: it needs no
+    elastomer and has no rubbing surface, so it never wears and never needs
+    replacing, at the cost of throttling rather than fully stopping flow (use
+    it for dust, splash, or low-pressure gas, not for holding real pressure).
+
+    The rotor is a hub (through-bore ``shaft_d`` for mounting on a shaft)
+    carrying ``teeth`` outward-facing fin rings spaced ``pitch`` apart along
+    the axis. The stator is a surrounding sleeve carrying ``teeth - 1``
+    inward-facing counter-teeth, each centered in the axial gap BETWEEN two
+    rotor fins -- offset by half a pitch, so the two combs interleave.
+    Flow crossing the seal must thread past every rotor fin tip (radial
+    clearance ``gap`` to the stator sleeve bore) and every stator tooth tip
+    (radial clearance ``gap`` to the rotor hub) in turn: ``2 * teeth - 1``
+    throttling stages, reported as ``metadata["stages"]``. Neither part ever
+    touches the other -- both the radial and axial clearance are ``gap``.
+    Assemble by sliding the rotor into the stator along the shared axis; the
+    rotor's Z=0 is its left end face and the stator spans the same Z range.
+
+    Print both parts with the axis vertical: every radial face then prints
+    as a horizontal top or bottom layer instead of a bridge or overhang, and
+    the ``gap`` clearance (keep it in the usual 0.25-0.35 mm FDM running-
+    clearance range) prints open rather than fusing shut.
+    Units are mm and degrees.
+    """
+    if teeth < 2:
+        raise ValueError("labyrinth_seal(): teeth must be >= 2")
+    if shaft_d <= 0 or tooth_t <= 0 or gap <= 0 or fin_h <= 0:
+        raise ValueError(
+            "labyrinth_seal(): shaft_d, tooth_t, gap, and fin_h must be positive")
+    if hub_wall <= 0 or stator_wall <= 0:
+        raise ValueError("labyrinth_seal(): hub_wall and stator_wall must be positive")
+    if pitch is None:
+        pitch = 2.0 * tooth_t + 4.0 * gap
+    if pitch < 2.0 * tooth_t + 2.0 * gap:
+        raise ValueError(
+            "labyrinth_seal(): pitch too small for tooth_t/gap; need "
+            "pitch >= 2*tooth_t + 2*gap to keep the rotor fins and stator "
+            "teeth from touching axially")
+    if end_margin is None:
+        end_margin = tooth_t
+    if end_margin <= 0:
+        raise ValueError("labyrinth_seal(): end_margin must be positive")
+
+    r0 = shaft_d / 2.0 + hub_wall
+    fin_tip_r = r0 + fin_h
+    r_big = fin_tip_r + gap
+    r_small = r0 + gap
+    stator_od = r_big + stator_wall
+
+    total_len = 2.0 * end_margin + tooth_t + (teeth - 1) * pitch
+    fin_centers = [end_margin + tooth_t / 2.0 + i * pitch for i in range(teeth)]
+    stator_tooth_centers = [fc + pitch / 2.0 for fc in fin_centers[:-1]]
+
+    hub = cyl(r0, total_len)
+    hub.apply_translation((0.0, 0.0, total_len / 2.0))
+    fins = []
+    for zc in fin_centers:
+        fin = trimesh.creation.annulus(r0, fin_tip_r, tooth_t, sections=sections)
+        fin.apply_translation((0.0, 0.0, zc))
+        fins.append(fin)
+    rotor = uni([hub] + fins)
+    bore = cyl(shaft_d / 2.0, total_len + 2.0)
+    bore.apply_translation((0.0, 0.0, total_len / 2.0))
+    rotor = sub(rotor, bore)
+
+    sleeve = trimesh.creation.annulus(r_big, stator_od, total_len, sections=sections)
+    sleeve.apply_translation((0.0, 0.0, total_len / 2.0))
+    stator_teeth = []
+    for zc in stator_tooth_centers:
+        tooth = trimesh.creation.annulus(r_small, r_big, tooth_t, sections=sections)
+        tooth.apply_translation((0.0, 0.0, zc))
+        stator_teeth.append(tooth)
+    stator = uni([sleeve] + stator_teeth)
+
+    metadata = {
+        "teeth": teeth,
+        "stages": teeth + len(stator_tooth_centers),
+        "radial_gap": gap,
+        "pitch": pitch,
+        "total_len": total_len,
+        "fin_tip_r": fin_tip_r,
+        "rotor_root_r": r0,
+    }
+    rotor.metadata.update(metadata)
+    stator.metadata.update(metadata)
+    return {"rotor": rotor, "stator": stator}
+
+
+def gasket_channel(path=None, width=3.0, depth=1.5, z0=0.0, join_style=1):
+    """Build a cord-stock gasket groove cutter following an arbitrary closed path.
+
+    ``path`` is a Shapely ``LinearRing``/``LineString``/``Polygon`` or a
+    sequence of ``(x, y)`` points describing a closed loop -- a rectangular
+    or kidney-shaped lid perimeter, for example; it is closed automatically
+    if the first and last points differ. The cutter is the band of points
+    within ``width / 2`` of that path, extruded ``depth`` mm downward from a
+    flat face at ``z=z0``, so subtracting it from a lid or box rim leaves a
+    gasket channel that follows the outline exactly, for shapes an O-ring
+    can't reach.
+
+    This generalizes ``oring_groove(mode="face")`` to non-circular paths; for
+    an actual circular seal prefer ``oring_groove``, since it derives width
+    and depth from the O-ring cross-section with squeeze/fill validation --
+    cord stock is sold by length rather than a matched cross-section
+    standard, so there is no equivalent fill check here. Size ``width`` and
+    ``depth`` from the cord diameter yourself using the same gland logic:
+    roughly ``depth = cord_d * 0.80`` for a 20% squeeze and
+    ``width = cord_d * 1.5`` for a comparable fill allowance.
+
+    ``join_style`` follows Shapely's buffer convention (1=round, 2=mitre,
+    3=bevel) for how path corners render in the channel outline; round is
+    the printable default and avoids a sharp inner corner that would trap
+    the cord.
+
+    Print with the sealing face (containing the channel opening) as the top
+    of the print, same as ``oring_groove``, so the groove floor and walls
+    are finished by flat top layers rather than a vertical wall.
+    Units are mm and degrees.
+    """
+    if path is None:
+        raise ValueError("gasket_channel(): path is required")
+    if width <= 0 or depth <= 0:
+        raise ValueError("gasket_channel(): width and depth must be positive")
+
+    if isinstance(path, sg.Polygon):
+        ring = path.exterior
+    elif isinstance(path, (sg.LinearRing, sg.LineString)):
+        ring = path
+    else:
+        pts = [tuple(p) for p in path]
+        if len(pts) < 3:
+            raise ValueError("gasket_channel(): path needs at least 3 points")
+        if pts[0] != pts[-1]:
+            pts = pts + [pts[0]]
+        ring = sg.LinearRing(pts)
+    if ring.is_empty or ring.length <= 0:
+        raise ValueError("gasket_channel(): degenerate path")
+
+    band = ring.buffer(width / 2.0, join_style=join_style)
+    if band.is_empty:
+        raise ValueError("gasket_channel(): buffered path produced no area")
+    m = extrude_poly_z(band, z0 - depth, z0)
+    if m is None:
+        raise ValueError("gasket_channel(): failed to extrude the channel")
+    m.metadata.update({
+        "groove_width": width,
+        "groove_depth": depth,
+        "path_length": float(ring.length),
+    })
+    return m

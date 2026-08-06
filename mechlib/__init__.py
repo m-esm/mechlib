@@ -1,5 +1,6 @@
-__version__ = "0.7.0"
+__version__ = "0.8.0"
 
+from .bearings import plain_bushing, printed_ball_bearing, thrust_washer
 from .cams import (
     DEFAULT_SEGMENTS,
     MOTION_LAWS,
@@ -10,6 +11,7 @@ from .cams import (
     plate_cam,
     snail_cam,
 )
+from .chains import drag_chain, drag_chain_link, roller_chain, roller_chain_link
 from .closures import (
     SnapSpec,
     clamshell_shiplap,
@@ -25,8 +27,18 @@ from .closures import (
     ydovetail,
 )
 from .clutches import freewheel_clutch, torque_limiter
-from .couplings import jaw_coupling, oldham_coupling, universal_joint
+from .couplings import (
+    cv_velocity_fluctuation,
+    cv_velocity_ratio,
+    double_cardan_joint,
+    jaw_coupling,
+    oldham_coupling,
+    tripod_cv_joint,
+    tripod_pose,
+    universal_joint,
+)
 from .cutters import (
+    AS568_CS_MM,
     bearing_seat,
     blind_socket,
     chamfer_cutter,
@@ -36,8 +48,11 @@ from .cutters import (
     dbore,
     dbore_hub,
     gable_roof,
+    gasket_channel,
     hex_corner_chamfer,
+    labyrinth_seal,
     lobe_cavity_polys,
+    oring_groove,
     revolved_gable_cavity,
     slot_cutter,
     slot_neg,
@@ -54,8 +69,29 @@ from .fasteners import (
     washer_mesh,
     zmin0,
 )
-from .fixtures import board_cradle, saddle
-from .flexures import bistable_beam, cross_flexure, wave_spring
+from .fixtures import (
+    board_cradle,
+    kinematic_coupling,
+    repeatable_dock,
+    saddle,
+    three_point_leveller,
+)
+from .flexures import (
+    belleville_washer,
+    bistable_beam,
+    coil_spring,
+    cross_flexure,
+    flexure_stage,
+    leaf_spring,
+    spiral_power_spring,
+    wave_spring,
+)
+from .fluid import (
+    gerotor_pump,
+    hose_barb,
+    peristaltic_pump_head,
+    rotary_spool_valve,
+)
 from .drives import (
     flat_worm,
     planet_stage,
@@ -67,29 +103,53 @@ from .gears import (
     bevel_gear_pair,
     cycloidal_drive,
     herringbone_gear,
+    internal_gear_2d,
+    internal_mesh_phase,
     mesh_phase,
     rack_2d,
+    ring_gear,
+    ring_gear_mesh,
     roller_sprocket_2d,
     spur_gear,
     spur_gear_2d,
     spur_gear_mesh,
+    trochoid_profile_2d,
     worm,
 )
+from .grippers import (
+    collet_chuck,
+    eccentric_cam_clamp,
+    iris_control_range,
+    iris_diaphragm,
+)
+from .guides import linear_way, telescoping_stage
 from .indexing import (
     escapement,
     geneva_pair,
     geneva_wheel_angle,
     intermittent_gear_pair,
 )
+from .joints import ball_socket_joint, gimbal_rings, knuckle_hinge
+from .lattices import auxetic_panel, kerf_bend_cutter
 from .linear import archimedes_screw, differential_screw, scroll_drive
 from .linkages import (
     four_bar,
     four_bar_pose,
+    lazy_tongs,
+    lazy_tongs_pose,
     link_bar,
+    pantograph_linkage,
+    pantograph_pose,
+    peaucellier_linkage,
+    peaucellier_pose,
     quick_return,
     quick_return_ratio,
+    sarrus_linkage,
+    sarrus_pose,
     scotch_yoke,
     toggle_clamp,
+    watt_linkage,
+    watt_pose,
 )
 from .mechanisms import (
     coarse_pitch,
@@ -147,7 +207,13 @@ from .prim import (
     sector2d,
     seg_cylinder,
 )
-from .pulleys import grooved_drum, timing_pulley
+from .pulleys import (
+    belt_tensioner,
+    eccentric_idler_mount,
+    grooved_drum,
+    idler_pulley,
+    timing_pulley,
+)
 from .ratchets import (
     arc_ratchet_2d,
     check_ratchet_sense_and_sweep,
@@ -323,4 +389,62 @@ __all__ = (
     "geneva_wheel_angle",
     "escapement",
     "intermittent_gear_pair",
+    # gap-analysis wave v0.8.0, grouped by module like everything above
+    "internal_gear_2d",
+    "internal_mesh_phase",
+    "ring_gear",
+    "ring_gear_mesh",
+    "trochoid_profile_2d",
+    "peaucellier_pose",
+    "peaucellier_linkage",
+    "watt_pose",
+    "watt_linkage",
+    "sarrus_pose",
+    "sarrus_linkage",
+    "pantograph_pose",
+    "pantograph_linkage",
+    "lazy_tongs_pose",
+    "lazy_tongs",
+    "tripod_pose",
+    "tripod_cv_joint",
+    "double_cardan_joint",
+    "cv_velocity_ratio",
+    "cv_velocity_fluctuation",
+    "ball_socket_joint",
+    "knuckle_hinge",
+    "gimbal_rings",
+    "gerotor_pump",
+    "hose_barb",
+    "rotary_spool_valve",
+    "peristaltic_pump_head",
+    "linear_way",
+    "telescoping_stage",
+    "iris_diaphragm",
+    "iris_control_range",
+    "collet_chuck",
+    "eccentric_cam_clamp",
+    "drag_chain_link",
+    "drag_chain",
+    "roller_chain_link",
+    "roller_chain",
+    "idler_pulley",
+    "eccentric_idler_mount",
+    "belt_tensioner",
+    "belleville_washer",
+    "coil_spring",
+    "spiral_power_spring",
+    "leaf_spring",
+    "flexure_stage",
+    "plain_bushing",
+    "thrust_washer",
+    "printed_ball_bearing",
+    "kinematic_coupling",
+    "repeatable_dock",
+    "three_point_leveller",
+    "AS568_CS_MM",
+    "oring_groove",
+    "labyrinth_seal",
+    "gasket_channel",
+    "auxetic_panel",
+    "kerf_bend_cutter",
 )

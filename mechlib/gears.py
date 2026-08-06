@@ -442,8 +442,8 @@ def herringbone_gear(m=1.5, z=24, h=10.0, helix_deg=25.0, bore_d=0.0,
     return gear
 
 
-def _cycloidal_disc_2d(pins, pin_circle_r, pin_d, ecc, clearance=0.0,
-                       samples=None):
+def trochoid_profile_2d(pins, pin_circle_r, pin_d, ecc, clearance=0.0,
+                        samples=None):
     """Shortened-epitrochoid cycloidal disc profile (closed form, shapely).
 
     In the disc frame each roller centre traces the shortened epitrochoid
@@ -475,6 +475,12 @@ def _cycloidal_disc_2d(pins, pin_circle_r, pin_d, ecc, clearance=0.0,
         poly = poly.buffer(-clearance / 2.0).buffer(0)
     return poly
 
+
+
+# Kept as the historical private name: cycloidal_drive used this before the
+# gerotor generator in mechlib.fluid became its second caller and the curve
+# earned a public name. Same function, no behaviour change.
+_cycloidal_disc_2d = trochoid_profile_2d
 
 def cycloidal_drive(pins=12, pin_d=4.0, pin_circle_r=22.0, ecc=1.5,
                     disc_thickness=6.0, out_pins=6, out_pin_d=4.0,
@@ -631,3 +637,282 @@ def bevel_gear_pair(m=1.5, z1=16, z2=24, face_w=None, pa=20.0, bl=0.35,
     pinion.metadata.update(metadata)
     gear.metadata.update(metadata)
     return {"pinion": pinion, "gear": gear}
+
+
+def _cutter_teeth_2d(z, m, pa_deg, bl, add, ded, n=14):
+    """Return the tooth polygons of a shaper cutter (no hub disc).
+
+    Same involute construction as ``spur_gear_2d`` -- same base circle, same
+    pitch-line half-thickness angle -- but with an explicit ``add`` addendum
+    and ``ded`` dedendum, and no tip relief. ``bl`` follows the
+    ``spur_gear_2d`` sign convention (positive thins the tooth at the pitch
+    circle), so a NEGATIVE ``bl`` thickens the cutter tooth and that is what
+    opens backlash in the ring it generates. Only the teeth are returned:
+    the cutter body never reaches the ring blank, so unioning a hub disc into
+    the swept region would only slow the sweep down.
+    """
+    import shapely.geometry as sg
+
+    a = math.radians(pa_deg)
+    rp = m * z / 2.0
+    rb = rp * math.cos(a)
+    rr = max(rp - ded, 0.5)
+    inv = lambda ang: math.tan(ang) - ang
+    half_p = math.pi / (2 * z) - (bl / 2.0) / rp
+    half_b = half_p + inv(a)
+    if half_p <= 0:
+        raise ValueError("_cutter_teeth_2d(): backlash swallows the tooth")
+
+    def half_angle(r):
+        return half_b - inv(math.acos(min(1.0, rb / r)))
+
+    rt = rp + add
+    if half_angle(rt) <= 1e-4:                  # pointed tooth: truncate the tip
+        lo, hi = max(rr, rb) + 1e-9, rt
+        for _ in range(48):
+            mid = 0.5 * (lo + hi)
+            if half_angle(mid) > 1e-4:
+                lo = mid
+            else:
+                hi = mid
+        rt = lo
+    P = lambda r, ang: (r * math.cos(ang), r * math.sin(ang))
+
+    def flank(sign):
+        pts = []
+        if rr < rb:
+            pts.append((rr, sign * half_b))     # radial stub below the base circle
+        for r in np.linspace(max(rr, rb), rt, n):
+            pts.append((r, sign * half_angle(r)))
+        return [P(r, ang) for r, ang in pts]
+
+    tooth = flank(-1) + list(reversed(flank(+1)))
+    out = []
+    for k in range(z):
+        base = 2.0 * math.pi * k / z
+        c, s = math.cos(base), math.sin(base)
+        out.append(sg.Polygon([(x * c - y * s, x * s + y * c)
+                               for x, y in tooth]))
+    return out, rt
+
+
+def internal_mesh_phase(z_ring, z_pinion, phi_deg=0.0):
+    """Rotation (degrees) that phases a pinion into an internal ring gear.
+
+    ``mesh_phase`` does NOT apply to an internal mesh; it differs in two ways,
+    and both matter. First, for two external gears the contact on the line of
+    centres is seen at azimuth ``phi`` from the driver and at ``phi + 180``
+    from the driven, which is where the 180 in ``mesh_phase`` comes from. In
+    an internal mesh the pinion sits INSIDE the ring, so the contact lies
+    beyond the pinion centre on the same ray and both bodies see it at azimuth
+    ``phi``. Second, the sign flips: at an external contact the two bodies'
+    CCW tangential directions oppose each other (the contact is on opposite
+    sides of the two centres), so their tooth phases run backwards relative to
+    one another; at an internal contact both centres are on the same side and
+    the phases run together. The rule itself is unchanged -- a pinion tooth
+    has to land in a ring tooth space. Substituting ``mesh_phase`` here is off
+    by half a tooth whenever ``z_pinion`` is odd (with an even pinion the
+    180 degree term happens to be a whole number of pitches, which is exactly
+    the sort of coincidence that hides the error).
+
+    ``z_ring`` and ``z_pinion`` are tooth counts, ``phi_deg`` is the azimuth of
+    the pinion centre measured at the ring centre. Both members are assumed
+    drawn with a tooth centred at their own angle zero, which is what
+    ``internal_gear_2d`` and ``spur_gear_2d`` both do. Units are degrees.
+    """
+    if z_ring < 3 or z_pinion < 3:
+        raise ValueError("internal_mesh_phase(): tooth counts must be >= 3")
+    par, pap = 360.0 / z_ring, 360.0 / z_pinion
+    fA = (phi_deg / par) % 1.0                  # ring tooth-phase at the contact
+    fB0 = (phi_deg / pap) % 1.0                 # pinion tooth-phase at the contact
+    fB = (fA + 0.5) % 1.0                       # want tooth against space
+    return ((fB0 - fB + 0.5) % 1.0 - 0.5) * pap
+
+
+def internal_gear_2d(z=40, m=1.5, pa_deg=20.0, rim=3.0, bl=0.35,
+                     z_pinion=None, add=None, ded=None, steps=18,
+                     simplify=0.005):
+    """Build a true internal (annular) involute ring-gear profile (shapely).
+
+    Returns one shapely ``Polygon``: a disc of outer radius
+    ``m*z/2 + ded + rim`` with a single toothed hole, so it extrudes straight
+    into a ring gear the same way ``spur_gear_2d``'s profile extrudes into a
+    spur gear. Addendum and dedendum swap relative to an external gear: the
+    teeth point INWARD, the tip circle sits at ``m*z/2 - add`` (INSIDE the
+    pitch circle) and the roots at ``m*z/2 + ded`` (OUTSIDE it). Teeth are
+    centred at ``k*(360/z)`` degrees, the same convention ``spur_gear_2d``
+    uses, so ``internal_mesh_phase`` places a mating pinion.
+
+    The flanks are generated, not drawn: a shaper cutter shaped like the
+    mating pinion (``z_pinion`` teeth, cutting addendum ``ded`` so it also
+    cuts the root clearance) is rolled through the conjugate internal motion
+    and the swept region is subtracted from the blank, the same
+    swept-envelope technique ``roller_sprocket_2d`` uses. Rolling one ring
+    pitch and copying the result ``z`` times is exact: advancing the roll by
+    one ring pitch is the same configuration rotated by one ring pitch, with
+    the cutter one tooth on. ``steps`` samples per ring pitch controls flank
+    fidelity; the default is deliberately modest because this runs in a
+    WASM playground, and the residual scallop is already far below the
+    backlash (raising 18 to 60 moves the profile area by 0.01%).
+
+    ``bl`` follows ``spur_gear_2d``'s convention: it thins the ring tooth at
+    the pitch circle, i.e. widens the tooth space by ``bl``, giving a flank
+    clearance of ``(bl/2)*cos(pa)`` against a pinion drawn with zero
+    backlash. ``z_pinion`` defaults to the tightest legal mate, ``z - 8``;
+    generating against the largest allowed pinion means any smaller one also
+    clears. ``add`` and ``ded`` default to ``m`` and ``1.25*m``.
+
+    Units are mm and degrees.
+    """
+    import shapely.affinity as sa
+    import shapely.geometry as sg
+    from shapely.ops import unary_union
+
+    from .meshutil import largest_poly
+
+    if m <= 0 or not 0.0 < pa_deg < 45.0 or bl < 0 or rim <= 0 or steps < 4:
+        raise ValueError("internal_gear_2d(): invalid module, pressure angle, "
+                         "backlash, rim, or step count")
+    if int(z) != z or z < 14:
+        raise ValueError("internal_gear_2d(): z must be a whole number >= 14")
+    z = int(z)
+    z_pinion = z - 8 if z_pinion is None else int(z_pinion)
+    if z_pinion < 6:
+        raise ValueError("internal_gear_2d(): z_pinion must be >= 6")
+    if z - z_pinion < 8:
+        raise ValueError(
+            "internal_gear_2d(): z - z_pinion is %d; an internal involute pair "
+            "needs at least 8 teeth of difference or the pinion tips foul the "
+            "ring tips" % (z - z_pinion))
+    add = m if add is None else add
+    ded = 1.25 * m if ded is None else ded
+    if add <= 0 or ded <= add:
+        raise ValueError("internal_gear_2d(): need 0 < add < ded "
+                         "(the dedendum carries the tip clearance)")
+    if rim < 0.8:
+        raise ValueError("internal_gear_2d(): rim %.2f mm is thinner than one "
+                         "printable wall; the tooth roots would break through "
+                         "the back of the ring" % rim)
+
+    rp = m * z / 2.0
+    tip_r = rp - add
+    root_r = rp + ded
+    outer_r = root_r + rim
+    rp_pinion = m * z_pinion / 2.0
+    centre_dist = rp - rp_pinion
+
+    # Cutter: the mating pinion with the cutting addendum that reaches the ring
+    # root circle (a + r_tip = rp + ded), thickened by bl to open the backlash.
+    teeth, _rt = _cutter_teeth_2d(z_pinion, m, pa_deg, -bl, ded, ded)
+    cutter = unary_union(teeth)
+
+    # Only the band the teeth live in can be cut, so clip the swept region to it
+    # before making the z copies. The cutter body (its root circle) stays clear
+    # of the ring tip circle by ded - add, which IS the tip clearance.
+    band = sg.Point(0, 0).buffer(root_r + 0.5, resolution=128).difference(
+        sg.Point(0, 0).buffer(max(tip_r - 0.5, 0.05), resolution=128))
+    # Conjugate internal roll: the cutter centre orbits at psi and the cutter
+    # spins at -(a/rp_pinion)*psi (pitch circles rolling inside one another).
+    # The +180/z_pinion seed faces a cutter TOOTH SPACE at psi=0, which is what
+    # leaves a ring tooth centred on angle zero.
+    spin0 = math.pi / z_pinion
+    swept = []
+    for psi in np.linspace(-math.pi / z, math.pi / z, int(steps)):
+        spin = spin0 - (centre_dist / rp_pinion) * psi
+        placed = sa.rotate(cutter, math.degrees(spin), origin=(0, 0))
+        swept.append(sa.translate(placed, centre_dist * math.cos(psi),
+                                  centre_dist * math.sin(psi)))
+    sweep = unary_union(swept).intersection(band)
+    gaps = unary_union([sa.rotate(sweep, 360.0 * k / z, origin=(0, 0))
+                        for k in range(z)])
+
+    blank = sg.Point(0, 0).buffer(outer_r, resolution=192).difference(
+        sg.Point(0, 0).buffer(tip_r, resolution=192))
+    profile = blank.difference(gaps).buffer(0)
+    if simplify > 0:
+        profile = profile.simplify(simplify).buffer(0)
+    profile = largest_poly(profile)
+    if len(profile.interiors) != 1:
+        raise ValueError("internal_gear_2d(): the tooth spaces broke the ring "
+                         "into %d loops; increase rim" % len(profile.interiors))
+    return profile
+
+
+def ring_gear(z=40, m=1.5, width=8.0, pa_deg=20.0, rim=3.0, bl=0.35,
+              z_pinion=None, add=None, ded=None, steps=18):
+    """Extrude an internal involute ring gear as one printable solid.
+
+    The teeth point inward from an annular rim, so the part is a ring whose
+    bore is toothed: tip diameter ``m*z - 2*add`` (smaller than the pitch
+    diameter), root diameter ``m*z + 2*ded`` (larger), outer diameter
+    ``m*z + 2*(ded + rim)``. It sits on z=0 and runs to ``z = width``, axis
+    +Z. Print it flat on the plate with the axis vertical: every tooth flank
+    is then a vertical wall, no overhang and no supports, and the layer lines
+    run around the teeth rather than across them.
+
+    ``metadata`` carries ``pitch_d``, ``tip_d``, ``root_d``, ``outer_d``,
+    ``z``, ``module``, and ``z_pinion`` (the pinion it was generated against).
+    See ``internal_gear_2d`` for the profile arguments.
+    Units are mm and degrees.
+    """
+    import trimesh
+
+    if width <= 0:
+        raise ValueError("ring_gear(): width must be positive")
+    profile = internal_gear_2d(z=z, m=m, pa_deg=pa_deg, rim=rim, bl=bl,
+                               z_pinion=z_pinion, add=add, ded=ded,
+                               steps=steps)
+    gear = trimesh.creation.extrude_polygon(profile, width)
+    add = m if add is None else add
+    ded = 1.25 * m if ded is None else ded
+    gear.metadata.update({
+        "pitch_d": m * z,
+        "tip_d": m * z - 2.0 * add,
+        "root_d": m * z + 2.0 * ded,
+        "outer_d": m * z + 2.0 * (ded + rim),
+        "z": int(z),
+        "module": m,
+        "z_pinion": (z - 8) if z_pinion is None else int(z_pinion),
+        "width": width,
+    })
+    return gear
+
+
+def ring_gear_mesh(z=40, z_pinion=20, m=1.5, width=8.0, pa_deg=20.0,
+                   rim=3.0, bl=0.35, bore_d=5.0, phi_deg=0.0, steps=18):
+    """Build an internal gear pair posed in mesh: pinion inside ring gear.
+
+    Returns ``{"ring", "pinion"}``. The ring is centred on the origin with its
+    axis +Z, the pinion centre sits at azimuth ``phi_deg`` and radius
+    ``m*(z - z_pinion)/2`` (the internal centre distance, the DIFFERENCE of
+    the pitch radii, not the sum), and the pinion is spun by
+    ``internal_mesh_phase`` so its teeth drop into the ring's tooth spaces.
+    Both parts span z=0 to ``width``. The ring is cut against this exact
+    pinion, so the flanks are conjugate and the running clearance is
+    ``bl*cos(pa)`` split between the two members.
+
+    Internal gears turn the same way as their pinion (external pairs
+    counter-rotate) and the ratio is ``z / z_pinion``. Print both flat on the
+    plate, axes vertical, no supports; they are separate parts, not
+    print-in-place. Units are mm and degrees.
+    """
+    import trimesh.transformations as tf
+
+    if bore_d < 0:
+        raise ValueError("ring_gear_mesh(): bore_d must be non-negative")
+    ring = ring_gear(z=z, m=m, width=width, pa_deg=pa_deg, rim=rim, bl=bl,
+                     z_pinion=z_pinion, steps=steps)
+    pinion = spur_gear_mesh(z_pinion, m, width, bore_d=bore_d, pa=pa_deg,
+                            bl=bl)
+    centre_dist = m * (z - z_pinion) / 2.0
+    pinion.apply_transform(tf.rotation_matrix(
+        math.radians(internal_mesh_phase(z, z_pinion, phi_deg)),
+        (0.0, 0.0, 1.0)))
+    pinion.apply_translation((centre_dist * math.cos(math.radians(phi_deg)),
+                              centre_dist * math.sin(math.radians(phi_deg)),
+                              0.0))
+    metadata = {"ratio": z / float(z_pinion), "centre_distance": centre_dist,
+                "z": int(z), "z_pinion": int(z_pinion), "module": m}
+    ring.metadata.update(metadata)
+    pinion.metadata.update(metadata)
+    return {"ring": ring, "pinion": pinion}

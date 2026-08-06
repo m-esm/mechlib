@@ -41,8 +41,21 @@ from mechlib.closures import (
     setscrew,
     ydovetail,
 )
+from mechlib.bearings import plain_bushing, printed_ball_bearing, thrust_washer
+from mechlib.chains import (
+    drag_chain,
+    drag_chain_link,
+    roller_chain,
+    roller_chain_link,
+)
 from mechlib.clutches import freewheel_clutch, torque_limiter
-from mechlib.couplings import jaw_coupling, oldham_coupling, universal_joint
+from mechlib.couplings import (
+    double_cardan_joint,
+    jaw_coupling,
+    oldham_coupling,
+    tripod_cv_joint,
+    universal_joint,
+)
 from mechlib.cutters import (
     bearing_seat,
     blind_socket,
@@ -50,6 +63,9 @@ from mechlib.cutters import (
     crush_ribs,
     dbore,
     dbore_hub,
+    gasket_channel,
+    labyrinth_seal,
+    oring_groove,
     revolved_gable_cavity,
     slot_cutter,
     ss_bore,
@@ -65,21 +81,48 @@ from mechlib.drives import (
     worm_wheel_band,
 )
 from mechlib.fasteners import fastener_mesh, hex_nut_mesh, washer_mesh
-from mechlib.fixtures import board_cradle, saddle
-from mechlib.flexures import bistable_beam, cross_flexure, wave_spring
+from mechlib.fixtures import (
+    board_cradle,
+    kinematic_coupling,
+    repeatable_dock,
+    saddle,
+    three_point_leveller,
+)
+from mechlib.flexures import (
+    belleville_washer,
+    bistable_beam,
+    coil_spring,
+    cross_flexure,
+    flexure_stage,
+    leaf_spring,
+    spiral_power_spring,
+    wave_spring,
+)
+from mechlib.fluid import (
+    gerotor_pump,
+    hose_barb,
+    peristaltic_pump_head,
+    rotary_spool_valve,
+)
 from mechlib.gears import (
     bevel_gear_pair,
     cycloidal_drive,
     herringbone_gear,
     mesh_phase,
     rack_2d,
+    ring_gear,
+    ring_gear_mesh,
     roller_sprocket_2d,
     spur_gear_2d,
     spur_gear,
     spur_gear_mesh,
     worm,
 )
+from mechlib.grippers import collet_chuck, eccentric_cam_clamp, iris_diaphragm
+from mechlib.guides import linear_way, telescoping_stage
 from mechlib.indexing import escapement, geneva_pair, intermittent_gear_pair
+from mechlib.joints import ball_socket_joint, gimbal_rings, knuckle_hinge
+from mechlib.lattices import auxetic_panel, kerf_bend_cutter
 from mechlib.linear import (
     archimedes_screw,
     differential_screw,
@@ -87,9 +130,14 @@ from mechlib.linear import (
 )
 from mechlib.linkages import (
     four_bar,
+    lazy_tongs,
+    pantograph_linkage,
+    peaucellier_linkage,
     quick_return,
+    sarrus_linkage,
     scotch_yoke,
     toggle_clamp,
+    watt_linkage,
 )
 from mechlib.mechanisms import (
     dog_slot_coupling,
@@ -102,7 +150,13 @@ from mechlib.mechanisms import (
 )
 from mechlib.patterns import directed_holes, lighten_cell_poly, lighten_grid_centres, polar_ring
 from mechlib.prim import boxc, chamfer_prism, cyl, frustum, hex_poly, rbox, sector2d, seg_cylinder
-from mechlib.pulleys import grooved_drum, timing_pulley
+from mechlib.pulleys import (
+    belt_tensioner,
+    eccentric_idler_mount,
+    grooved_drum,
+    idler_pulley,
+    timing_pulley,
+)
 from mechlib.ratchets import (
     arc_ratchet_2d,
     check_ratchet_sense_and_sweep,
@@ -156,27 +210,34 @@ CATEGORY_GROUPS = (
 
 CATEGORIES = {
     # movements
-    "linkages":   ("movements", "Linkages", "Bar mechanisms that trade rotation for stroke."),
+    "linkages":   ("movements", "Linkages", "Bar mechanisms that trade rotation for stroke, straight lines, or scale."),
+    "grippers":   ("movements", "Grippers & clamps", "Parts that hold, centre, and grip."),
     "cams":       ("movements", "Cams & followers", "Profiles that program a follower's displacement."),
     "indexing":   ("movements", "Indexing", "Continuous rotation in, stepped rotation out."),
-    "gears":      ("movements", "Gears", "Involute, herringbone, bevel, cycloidal, and racks."),
+    "gears":      ("movements", "Gears", "Involute, internal, herringbone, bevel, cycloidal, and racks."),
     "ratchets":   ("movements", "Ratchets", "One-way pawls, pips, and compliant detents."),
     "clutches":   ("movements", "Clutches", "Torque limiting and freewheeling."),
-    "couplings":  ("movements", "Couplings", "Shaft-to-shaft joints that tolerate misalignment."),
+    "couplings":  ("movements", "Couplings", "Shaft-to-shaft joints that tolerate misalignment, Cardan through constant-velocity."),
+    "joints":     ("movements", "Joints", "Kinematic pairs: spherical, hinge, gimbal."),
     "drives":     ("movements", "Worm & planetary", "High-ratio reductions in a printable envelope."),
+    "fluid":      ("movements", "Pumps & valves", "Rotors and plugs that move and route fluid."),
     "linear":     ("movements", "Rotary to linear", "Screws, scrolls, and augers."),
-    "pulleys":    ("movements", "Pulleys & drums", "Belt, cable, and constant-torque profiles."),
-    "flexures":   ("movements", "Flexures", "Monolithic springs, pivots, and bistable beams."),
+    "guides":     ("movements", "Guides & ways", "Prismatic ways that pin a body to a single axis."),
+    "pulleys":    ("movements", "Pulleys & drums", "Belt, cable, idler, and constant-torque profiles."),
+    "chains":     ("movements", "Chains & carriers", "Link trains that transmit force or carry cable."),
+    "flexures":   ("movements", "Flexures", "Springs, pivots, bistable beams, and straight-line stages."),
     # machine elements
     "mechanisms": ("elements", "Threads & shafts", "Printable threads, knurls, helices, and drive slots."),
     "fasteners":  ("elements", "Fasteners", "Screw, nut, and washer stand-ins for fit checks."),
+    "bearings":   ("elements", "Bearings & bushings", "Printed journal and thrust support for turning shafts."),
     "closures":   ("elements", "Closures & joints", "Lids, snaps, dovetails, and captive hardware."),
-    "fixtures":   ("elements", "Fixtures", "Cradles and saddles that hold other objects."),
+    "fixtures":   ("elements", "Fixtures", "Cradles, saddles, and exactly constrained mounts."),
     # building blocks
     "prim":       ("blocks", "Primitives", "The solids and profiles everything else starts from."),
     "sweep":      ("blocks", "Sweeps & lofts", "Profiles carried along a path."),
-    "cutters":    ("blocks", "Cutters", "Negative geometry: bores, sockets, cavities, and reliefs."),
+    "cutters":    ("blocks", "Cutters", "Negative geometry: bores, sockets, cavities, seals, and reliefs."),
     "patterns":   ("blocks", "Patterns", "Repeat, ring, and lighten across a surface."),
+    "lattices":   ("blocks", "Lattices & kerf patterns", "Metamaterial cells and bend patterns cut from flat stock."),
     "text":       ("blocks", "Text", "Embossed and engraved labels."),
     # utility-only modules (no gallery models, but utilities are grouped by them)
     "meshutil":   ("blocks", "Mesh utilities", "Booleans, probes, fitting, and export gates."),
@@ -382,6 +443,60 @@ ANIMATE = {
     "demo_spur_gear_pair":   ("drive_deg",         20.0,  13, True),
     # One gear, 20-fold symmetric to 0.065 mm, so one tooth is 18 degrees.
     "demo_spur_gear_mesh":   ("drive_deg",         18.0,  13, True),
+    # ----- gap-analysis wave v0.8.0 -----
+    # Internal 40:20 pair. Both members turn the SAME way (that is what makes it
+    # an internal mesh) and the ring runs at half the pinion's rate, so two
+    # pinion turns are needed to bring the ring's transform back to identity.
+    # 96 frames, not 24: the pinion's tooth pitch is 18 degrees, and the
+    # aliasing gate measures 74% apparent motion at 7.5 degrees a frame. The
+    # shorter one-tooth closed track was tried and rejected -- the ring blank is
+    # sampled at 768 segments, which is not a multiple of 40, so simplify()
+    # thins its arcs unevenly and the picture gap comes out at 0.51 mm.
+    "demo_ring_gear_mesh":   ("drive_deg",        720.0,  96, False),
+    # Straight-line and scaling linkages. Four of the five are oscillating
+    # mechanisms, not crank-through ones: a Peaucellier crank driven a whole
+    # turn passes through the fixed pivot and throws the tracer to infinity,
+    # Watt's levers rock, the Sarrus folds, the tongs squeeze. Their demos take
+    # a 0-360 deg drive PHASE and map it through a sine onto the working arc,
+    # which is what a long connecting rod does to a crank turn: one linear phase
+    # ramp, one out-and-back travel, and the cycle closes on its own pose. The
+    # pantograph needs none of that -- its stylus genuinely goes round a circle.
+    "demo_peaucellier":      ("drive_deg",        360.0,  24, False),
+    "demo_watt":             ("drive_deg",        360.0,  24, False),
+    "demo_sarrus":           ("drive_deg",        360.0,  24, False),
+    "demo_pantograph":       ("crank_angle_deg",  360.0,  24, False),
+    "demo_lazy_tongs":       ("drive_deg",        360.0,  24, False),
+    # Tripod CV joint: the one coupling whose motion law is in the module.
+    # tripod_pose gives it in closed form -- the housing angle equals the input
+    # angle exactly (that IS constant velocity), and the spider centre rides a
+    # circle of radius pitch_r*(1-cos b)/2 at three times input speed. One input
+    # turn closes everything. 360 rather than 120 degrees because the tulip
+    # floor carries a double-D output bore and the shaft carries drive flats, so
+    # neither member is 3-fold symmetric. 36 frames, not 24: the tulip is the
+    # coarsest body and 10 degree steps put its apparent motion at 0.91.
+    "demo_tripod_cv_joint":  ("phase_deg",        360.0,  36, False),
+    # Gerotor: the pair is 6/7, so the two rotors only return to the same POSE
+    # after seven inner turns. They return to the same PICTURE far sooner -- the
+    # inner rotor is exactly 6-fold symmetric and the outer exactly 7-fold, and
+    # one inner tooth pitch of 60 deg turns the outer by 60*6/7, which is one of
+    # its own tooth pitches. The symmetry is exact rather than approximate: the
+    # profile sample count and both circle tessellations are locked to multiples
+    # of the lobe counts. The full 2520 deg pose-closing cycle was tried and the
+    # gate rejects it on aliasing at any sane frame count.
+    "demo_gerotor_pump":     ("rotor_deg",         60.0,  13, True),
+    # Valve: body and cap are fixed, the plug is a rigid body on the Z axis, and
+    # a whole turn returns it to identity. 24 frames walks through all three
+    # detents plus the closed positions between them.
+    "demo_rotary_spool_valve": ("plug_deg",       360.0,  24, False),
+    # Gimbal: each ring is built once and rigidly transformed down the chain, and
+    # nothing limits a gimbal ring's rotation, so a full turn returns every
+    # body's transform to identity. Ring 2 turns about two axes at once, which
+    # is what sets the 36-frame count.
+    "demo_gimbal_rings":     ("tilt_deg",         360.0,  36, False),
+    # Eccentric cam lock: the handle angle is a genuine motion phase, the cam is
+    # built once at the clamped pose and then moved, and a whole turn brings all
+    # four bodies back to identity.
+    "demo_eccentric_cam_clamp": ("handle_deg",    360.0,  24, False),
 }
 
 # Mechanisms deliberately left out, and why. Each was measured, not assumed.
@@ -417,9 +532,24 @@ ANIMATE = {
 #   intermittent_gear_pair (unlike geneva_wheel_angle for the Geneva). Rotating
 #                          them at a continuous ratio would drive the locking
 #                          segment through the notch: an invented motion.
-#   oldham_coupling,       Their motion laws (the disc's 2-omega orbit, the
-#   universal_joint        Cardan tangent relation) are textbook but are not in
-#                          the module, so baking them would mean authoring one.
+#   oldham_coupling,       Their POSE laws (the disc's 2-omega orbit, the
+#   universal_joint,       Cardan tangent relation) are textbook but are not in
+#   double_cardan_joint    the module, so baking them would mean authoring one.
+#                          v0.8.0 added cv_velocity_ratio, which is the SPEED
+#                          relation only: it still does not place a spider.
+#                          tripod_cv_joint is the exception and does animate,
+#                          because tripod_pose returns the actual pose.
+#   iris_diaphragm,        Bounded out-and-back travels, which a single linear
+#   knuckle_hinge,         phase ramp cannot express, and with a hard stop in
+#   ball_socket_joint      the way there is no 360 to ramp through instead.
+#   collet_chuck,          These DEFORM rather than repose: fingers deflect,
+#   the flexure springs,   coils compress, panels flex. The rigid-recovery gate
+#   auxetic/kerf panels    rejects that by design.
+#   linear_way,            Pure translation along an open interval: the cycle
+#   telescoping_stage      genuinely does not close.
+#   eccentric_idler_mount  Geometrically it would pass, but it is a static
+#                          adjustment you set once and lock with a setscrew;
+#                          animating it would claim the part spins in service.
 #   jaw_coupling,          Every body turns together, so the whole model just
 #   freewheel_clutch,      rotates -- indistinguishable from moving the camera.
 #   timing_pulley
@@ -1712,6 +1842,702 @@ def build():
             "origin": ("Mechanical-movements wave v0.6.0; classic ref: "
                        "buckled-beam bistable compliant mechanism (BYU CMR)"),
             "demo": "demo_bistable_beam",
+        },
+        # ------------------------------------------------------------------
+        # Gap-analysis wave v0.8.0, in gallery category order.
+        # ------------------------------------------------------------------
+        {
+            "file": "peaucellier_linkage_demo.glb",
+            "name": "peaucellier_linkage",
+            "module": "mechlib.linkages",
+            "signature": signature(peaucellier_linkage),
+            "description": (
+                "Seven bars that draw a mathematically exact straight line: two "
+                "anchor links and a rhombus form an inversor about the fixed "
+                "pivot, and a crank holds the input point on a circle through "
+                "that pivot, so the tracer runs a perfect line. The first exact "
+                "straight-line linkage, and still the reference case for "
+                "guiding motion without a slideway."),
+            "origin": (
+                "Gap-analysis wave v0.8.0; classic ref: Peaucellier (1864) and "
+                "Lipkin (1871) inversor cell"),
+            "demo": "demo_peaucellier",
+        },
+        {
+            "file": "watt_linkage_demo.glb",
+            "name": "watt_linkage",
+            "module": "mechlib.linkages",
+            "signature": signature(watt_linkage),
+            "description": (
+                "Two rocking levers joined by a coupler, whose tracer point "
+                "holds an approximate straight line over its working stroke; "
+                "the departure from the line is measured across the stroke and "
+                "returned as mechanism metadata. Watt guided a beam-engine "
+                "piston rod with it, and it still locates the axle of a "
+                "solid-axle rear suspension."),
+            "origin": (
+                "Gap-analysis wave v0.8.0; classic ref: James Watt parallel "
+                "motion (1784)"),
+            "demo": "demo_watt",
+        },
+        {
+            "file": "sarrus_linkage_demo.glb",
+            "name": "sarrus_linkage",
+            "module": "mechlib.linkages",
+            "signature": signature(sarrus_linkage),
+            "description": (
+                "Two hinge chains folding in orthogonal planes constrain the "
+                "top plate to pure vertical translation: no rotation, no X or Y "
+                "travel, and no sliding pair anywhere. Platform height is "
+                "2*bar_len*sin(fold). The spatial answer to the straight-line "
+                "problem, and the one that suits FDM best because nothing "
+                "slides against a layer line."),
+            "origin": (
+                "Gap-analysis wave v0.8.0; classic ref: Sarrus (1853) "
+                "parallel-motion linkage"),
+            "demo": "demo_sarrus",
+        },
+        {
+            "file": "pantograph_linkage_demo.glb",
+            "name": "pantograph_linkage",
+            "module": "mechlib.linkages",
+            "signature": signature(pantograph_linkage),
+            "description": (
+                "A parallelogram chain anchored at one fixed pivot: trace a "
+                "shape with the stylus pin and the output pin draws the same "
+                "shape scaled about the pivot. The ratio comes from the "
+                "parallelogram closure, so it is exact at every position, and "
+                "the achieved value is measured back off the posed geometry."),
+            "origin": (
+                "Gap-analysis wave v0.8.0; classic ref: 507 Mechanical "
+                "Movements No. 246 / pantograph"),
+            "demo": "demo_pantograph",
+        },
+        {
+            "file": "lazy_tongs_demo.glb",
+            "name": "lazy_tongs",
+            "module": "mechlib.linkages",
+            "signature": signature(lazy_tongs),
+            "description": (
+                "Nuremberg scissors: bars pinned at their centres and ends form "
+                "a row of rhombs, so squeezing the frame end shoots the output "
+                "yoke out along a straight line at the rhomb count times the "
+                "stroke. Guide slots at both ends keep the travel on axis. The "
+                "extension of a lazy-tongs riveter and of a folding gate."),
+            "origin": (
+                "Gap-analysis wave v0.8.0; classic ref: 507 Mechanical "
+                "Movements No. 122 / lazy tongs, Nuremberg scissors"),
+            "demo": "demo_lazy_tongs",
+        },
+        {
+            "file": "iris_diaphragm_demo.glb",
+            "name": "iris_diaphragm",
+            "module": "mechlib.grippers",
+            "signature": signature(iris_diaphragm),
+            "description": (
+                "A print-in-place iris: leaves on their own pivot posts, each "
+                "on its own Z layer, swung together by a drive ring whose "
+                "radial slots pick up a pin on every leaf. Each leaf's inner "
+                "edge is a circular arc struck about a point that walks off "
+                "the axis as the leaf turns, so the opening stays round and "
+                "shrinks from 24 mm to 6 mm over 6.6 degrees of ring travel."),
+            "origin": (
+                "Gap-analysis wave v0.8.0; classic ref: Joseph Petzval's lens "
+                "diaphragm, 1840s, in the stacked-plane form FDM needs"),
+            "demo": "demo_iris_diaphragm",
+        },
+        {
+            "file": "collet_chuck_demo.glb",
+            "name": "collet_chuck",
+            "module": "mechlib.grippers",
+            "signature": signature(collet_chuck),
+            "description": (
+                "An ER-style split collet with its taper nut and spindle "
+                "nose. Slots cut alternately from each end turn the sleeve "
+                "into a ring of fingers, and drawing its 8 degree cone into "
+                "the matching cone in the nose squeezes them onto whatever is "
+                "in the bore. Grips on axis, and closes as far as the slots "
+                "can shut."),
+            "origin": (
+                "Gap-analysis wave v0.8.0; classic ref: ER collet system, "
+                "Rego-Fix, 1973"),
+            "demo": "demo_collet_chuck",
+        },
+        {
+            "file": "eccentric_cam_clamp_demo.glb",
+            "name": "eccentric_cam_clamp",
+            "module": "mechlib.grippers",
+            "signature": signature(eccentric_cam_clamp),
+            "description": (
+                "A rotary cam lock: a disc turning about a pivot offset from "
+                "its centre, so the lift under the follower plate is the cam "
+                "radius plus the eccentricity times the cosine of the handle "
+                "angle. It is set to clamp a few degrees past top dead "
+                "centre, where the clamped part's spring-back drives the "
+                "handle into its stop instead of backing it out."),
+            "origin": (
+                "Gap-analysis wave v0.8.0; classic ref: eccentric quick-clamp, "
+                "Brown 1868 US patent 79,000 lineage"),
+            "demo": "demo_eccentric_cam_clamp",
+        },
+        {
+            "file": "ring_gear_demo.glb",
+            "name": "ring_gear",
+            "module": "mechlib.gears",
+            "signature": signature(ring_gear),
+            "description": "An internal (annular) involute gear: the teeth are "
+                           "cut inward from a rim, so the tip circle is inside "
+                           "the pitch circle and the root circle outside it. "
+                           "The fixed ring of a planetary gearbox, a strain-wave "
+                           "drive's circular spline, and an involute spline "
+                           "socket are all this part.",
+            "origin": "Gap-analysis wave v0.8.0; classic ref: annular/internal "
+                      "involute gear, AGMA 917 internal-gear proportions",
+            "demo": "demo_ring_gear",
+        },
+        {
+            "file": "ring_gear_mesh_demo.glb",
+            "name": "ring_gear_mesh",
+            "module": "mechlib.gears",
+            "signature": signature(ring_gear_mesh),
+            "description": "A pinion posed in mesh inside an internal ring gear. "
+                           "The ring flanks are generated, not drawn: the mating "
+                           "pinion is rolled through the conjugate internal "
+                           "motion and the swept region is subtracted from the "
+                           "blank. Internal pairs turn the same way and sit at a "
+                           "centre distance equal to the DIFFERENCE of the pitch "
+                           "radii, which is why they pack a high ratio into a "
+                           "small envelope.",
+            "origin": "Gap-analysis wave v0.8.0; classic ref: internal spur "
+                      "gearing, shaper (Fellows) generation",
+            "demo": "demo_ring_gear_mesh",
+        },
+        {
+            "file": "tripod_cv_joint_demo.glb",
+            "name": "tripod_cv_joint",
+            "module": "mechlib.couplings",
+            "signature": signature(tripod_cv_joint),
+            "description": (
+                "Three crowned barrels on a tripod spider ride in three "
+                "straddling tracks of an outer tulip, transmitting genuinely "
+                "constant angular velocity across a shaft angle and plunging "
+                "freely along the housing axis. Unlike the Cardan joint there "
+                "is no speed fluctuation at all; unlike a Rzeppa ball joint it "
+                "needs no hardened balls or ground raceways, so it prints. The "
+                "inboard joint of most front-wheel-drive halfshafts."),
+            "origin": (
+                "Gap-analysis wave v0.8.0; classic ref: Glaenzer Spicer "
+                "tripode joint (1960s), the plunging half of the modern "
+                "front-drive halfshaft"),
+            "demo": "demo_tripod_cv_joint",
+        },
+        {
+            "file": "double_cardan_joint_demo.glb",
+            "name": "double_cardan_joint",
+            "module": "mechlib.couplings",
+            "signature": signature(double_cardan_joint),
+            "description": (
+                "Two Hooke joints in series with their intermediate yokes 90 "
+                "degrees apart, so the second joint's speed error is the exact "
+                "inverse of the first's and the output runs at constant "
+                "velocity. The intermediate shaft between them still swings by "
+                "the full single-joint fluctuation, which is the price this fix "
+                "pays and the tripod does not. The centred double Cardan of "
+                "truck driveshafts and steering columns."),
+            "origin": (
+                "Gap-analysis wave v0.8.0; classic ref: double Cardan (Spicer "
+                "10-series) constant-velocity driveshaft joint"),
+            "demo": "demo_double_cardan_joint",
+        },
+        {
+            "file": "ball_socket_joint_demo.glb",
+            "name": "ball_socket_joint",
+            "module": "mechlib.joints",
+            "signature": signature(ball_socket_joint),
+            "description": (
+                "A ball on a stem snaps into a split-finger socket whose mouth "
+                "is pinched narrower than the ball, so the lip wraps past the "
+                "equator and holds it: three rotational degrees of freedom "
+                "inside a cone limited by the stem hitting the mouth rim. The "
+                "tie-rod end and camera-mount joint, printed as two parts that "
+                "click together."),
+            "origin": "Gap-analysis wave v0.8.0",
+            "demo": "demo_ball_socket_joint",
+        },
+        {
+            "file": "knuckle_hinge_demo.glb",
+            "name": "knuckle_hinge",
+            "module": "mechlib.joints",
+            "signature": signature(knuckle_hinge),
+            "description": (
+                "Interleaved barrels around one captive printed pin give a "
+                "butt hinge that prints flat in a single piece and breaks free "
+                "on the first swing. A full-width collar on each leaf ends in a "
+                "radial flank through the pin axis, and the two flanks meet "
+                "face to face to arrest the leaf at exactly stop_deg."),
+            "origin": "Gap-analysis wave v0.8.0",
+            "demo": "demo_knuckle_hinge",
+        },
+        {
+            "file": "gimbal_rings_demo.glb",
+            "name": "gimbal_rings",
+            "module": "mechlib.joints",
+            "signature": signature(gimbal_rings),
+            "description": (
+                "Nested rings hang from integral trunnion pins on alternating "
+                "orthogonal axes and print flat as one piece: two rings are a "
+                "Cardan suspension, three a full gimbal that keeps the centre "
+                "level however the frame moves. Each ring radius is derived so "
+                "its outer corners stay one clearance off the parent bore "
+                "through the whole swing."),
+            "origin": (
+                "Gap-analysis wave v0.8.0; classic ref: Cardan suspension, "
+                "gimbal-mounted compass"),
+            "demo": "demo_gimbal_rings",
+        },
+        {
+            "file": "gerotor_pump_demo.glb",
+            "name": "gerotor_pump",
+            "module": "mechlib.fluid",
+            "signature": signature(gerotor_pump),
+            "description": (
+                "An internal-gear pump: a six-lobe trochoidal inner rotor "
+                "running inside a seven-lobe outer rotor at an offset axis. "
+                "The crescent chambers between the two open from zero on one "
+                "side of the offset and close again on the other, carrying "
+                "fluid from the inlet kidney port to the outlet. Displacement "
+                "is measured off the real swept chamber polygons and lands in "
+                "the metadata."),
+            "origin": "Gap-analysis wave v0.8.0; classic ref: Hill, gerotor patent US1682563 (1928)",
+            "demo": "demo_gerotor_pump",
+        },
+        {
+            "file": "hose_barb_demo.glb",
+            "name": "hose_barb",
+            "module": "mechlib.fluid",
+            "signature": signature(hose_barb),
+            "description": (
+                "A hose tail: a stack of sawtooth rings on a stop boss and a "
+                "mounting flange. Each ring steps straight out to a crest "
+                "wider than the tube bore and then tapers back, so the tube "
+                "walks on over the taper and jams against the square shoulder "
+                "coming off. The foot can also be an external printed thread."),
+            "origin": "Gap-analysis wave v0.8.0",
+            "demo": "demo_hose_barb",
+        },
+        {
+            "file": "rotary_spool_valve_demo.glb",
+            "name": "rotary_spool_valve",
+            "module": "mechlib.fluid",
+            "signature": signature(rotary_spool_valve),
+            "description": (
+                "A rotary plug valve: a cross-drilled cylinder in a ported "
+                "body. Each detent turns the plug so one L-shaped passage "
+                "bridges a chosen pair of body ports and blocks the rest; the "
+                "detent angles and the port pairs they join are derived from "
+                "the port and passage angles rather than tabulated. Printed "
+                "plug on printed bore leaks, so it routes rather than seals."),
+            "origin": "Gap-analysis wave v0.8.0",
+            "demo": "demo_rotary_spool_valve",
+        },
+        {
+            "file": "peristaltic_pump_head_demo.glb",
+            "name": "peristaltic_pump_head",
+            "module": "mechlib.fluid",
+            "signature": signature(peristaltic_pump_head),
+            "description": (
+                "A peristaltic pump head: three posts on a rotor pinch a "
+                "silicone tube against a circular race, so each post drags a "
+                "sealed slug of fluid round the wrap. The two tube slots leave "
+                "the race tangentially, which is what stops a post shearing "
+                "the tube where it peels off the wall. The tubing is a bought "
+                "consumable, not a printed part."),
+            "origin": "Gap-analysis wave v0.8.0",
+            "demo": "demo_peristaltic_pump_head",
+        },
+        {
+            "file": "linear_way_demo.glb",
+            "name": "linear_way",
+            "module": "mechlib.guides",
+            "signature": signature(linear_way),
+            "description": (
+                "A prismatic guideway that constrains a body to one axis: a "
+                "dovetail, vee, or T-slot section swept along the travel "
+                "direction, a carriage opened out by the running clearance, "
+                "and a tapered gib whose axial position sets the preload. "
+                "45-degree ramps at both ends stop the travel and every "
+                "inside corner carries a chip-relief groove."),
+            "origin": (
+                "Gap-analysis wave v0.8.0; classic ref: machine-tool slideways, "
+                "Whitworth/Maudslay lineage, standard in Machinery's Handbook"),
+            "demo": "demo_linear_way",
+        },
+        {
+            "file": "telescoping_stage_demo.glb",
+            "name": "telescoping_stage",
+            "module": "mechlib.guides",
+            "signature": signature(telescoping_stage),
+            "description": (
+                "Nested square tubes that extend to nearly the section count "
+                "times one section length and cannot pull apart. Each parent "
+                "carries a 45-degree inward lip at its far end and each child "
+                "an external collar at its near end; the collar is wider than "
+                "the lip opening, so the stage stops at full extension."),
+            "origin": "Gap-analysis wave v0.8.0",
+            "demo": "demo_telescoping_stage",
+        },
+        {
+            "file": "idler_pulley_demo.glb",
+            "name": "idler_pulley",
+            "module": "mechlib.pulleys",
+            "signature": signature(idler_pulley),
+            "description": (
+                "A crowned idler wheel shown facing a GT2 timing pulley: the "
+                "running surface bulges a fraction of a millimetre from edge to "
+                "mid-width so a flat belt walks itself back to centre under "
+                "tension, no flange required. The same function also builds a "
+                "toothed idler by reusing the timing_pulley tooth profile, and can "
+                "swap the plain bore for a 608/695/MR105 bearing pocket."),
+            "origin": "Gap-analysis wave v0.8.0; classic ref: crowned flat-belt idler pulley",
+            "demo": "demo_idler_pulley",
+        },
+        {
+            "file": "eccentric_idler_mount_demo.glb",
+            "name": "eccentric_idler_mount",
+            "module": "mechlib.pulleys",
+            "signature": signature(eccentric_idler_mount),
+            "description": (
+                "An eccentric take-up bushing carrying an idler pulley on its "
+                "offset bore: turning the bushing with a hex key sweeps the idler "
+                "through a circle equal to twice the eccentricity, setting belt "
+                "tension, and a radial setscrew boss locks it in place. The same "
+                "eccentric-bushing take-up used on printer belt idlers and chain "
+                "tensioner sprockets."),
+            "origin": "Gap-analysis wave v0.8.0; classic ref: eccentric take-up bushing / belt idler tensioner",
+            "demo": "demo_eccentric_idler_mount",
+        },
+        {
+            "file": "belt_tensioner_demo.glb",
+            "name": "belt_tensioner",
+            "module": "mechlib.pulleys",
+            "signature": signature(belt_tensioner),
+            "description": (
+                "A curved cantilever spring arm printed as one part: its tip is "
+                "pushed back a set preload distance when mounted against the "
+                "belt, so it keeps the idler loaded against the belt line with no "
+                "metal spring and re-deflects as the belt stretches. Peak bending "
+                "strain is checked against a PLA/PETG limit at build time."),
+            "origin": "Gap-analysis wave v0.8.0; classic ref: compliant cantilever belt/chain tensioner",
+            "demo": "demo_belt_tensioner",
+        },
+        {
+            "file": "drag_chain_link_demo.glb",
+            "name": "drag_chain_link",
+            "module": "mechlib.chains",
+            "signature": signature(drag_chain_link),
+            "description": (
+                "One link of a print-in-place cable-carrier (energy chain): a "
+                "male pivot boss nests into the next link's female socket on a "
+                "vertical (self-bridging) bore, with a keyway tab/groove pair "
+                "that lets the joint articulate freely up to bend_deg but jams "
+                "solid the other way, so a run of these curls one direction and "
+                "stays rigid the other. An optional press-fit lid caps the cable "
+                "trough."),
+            "origin": "Gap-analysis wave v0.8.0; classic ref: e.g. igus E-chain, 1970s",
+            "demo": "demo_drag_chain_link",
+        },
+        {
+            "file": "drag_chain_demo.glb",
+            "name": "drag_chain",
+            "module": "mechlib.chains",
+            "signature": signature(drag_chain),
+            "description": (
+                "An eight-link run of drag_chain_link posed with a straight "
+                "section and a bend that curls the tail to its designed minimum "
+                "bend radius, the classic U-turn a cable carrier makes guiding a "
+                "wire or hose along a moving axis. Shows the link's stop actually "
+                "working in an assembled run, not just in isolation."),
+            "origin": "Gap-analysis wave v0.8.0; classic ref: e.g. igus E-chain, 1970s",
+            "demo": "demo_drag_chain",
+        },
+        {
+            "file": "roller_chain_link_demo.glb",
+            "name": "roller_chain_link",
+            "module": "mechlib.chains",
+            "signature": signature(roller_chain_link),
+            "description": (
+                "One pitch segment of a bush roller chain: inner and outer link "
+                "plates, a bushing pressed between the inner plates, a roller "
+                "that spins free around the bushing, and the pin that runs "
+                "through it all. Sized to seat directly in a sprocket built by "
+                "gears.roller_sprocket_2d at the same pitch and roller diameter."),
+            "origin": "Gap-analysis wave v0.8.0; classic ref: Hans Renold bush roller chain, 1880",
+            "demo": "demo_roller_chain_link",
+        },
+        {
+            "file": "roller_chain_demo.glb",
+            "name": "roller_chain",
+            "module": "mechlib.chains",
+            "signature": signature(roller_chain),
+            "description": (
+                "A sprocket built by gears.roller_sprocket_2d with a run of bare "
+                "rollers wrapped around 200 degrees of its pitch circle, each "
+                "seated in its tooth gap with running clearance by construction: "
+                "the geometric proof that roller_chain_link's roller diameter and "
+                "pitch actually mate with the sprocket function."),
+            "origin": "Gap-analysis wave v0.8.0; classic ref: Hans Renold bush roller chain, 1880",
+            "demo": "demo_roller_chain",
+        },
+        {
+            "file": "belleville_washer_demo.glb",
+            "name": "belleville_washer",
+            "module": "mechlib.flexures",
+            "signature": signature(belleville_washer),
+            "description": (
+                "A coned annular disc spring, shown as a three-disc series "
+                "stack with the cone direction alternating. Disc springs give "
+                "the most force per unit volume of any printable spring, and "
+                "above a free-cone-height to thickness ratio of sqrt(2) they "
+                "snap through instead of resisting smoothly; the flag is "
+                "derived from the geometry and stored in metadata."),
+            "origin": ("Gap-analysis wave v0.8.0; classic ref: Julien "
+                       "Belleville disc spring 1867, DIN 2093 proportions"),
+            "demo": "demo_belleville_washer",
+        },
+        {
+            "file": "coil_spring_demo.glb",
+            "name": "coil_spring",
+            "module": "mechlib.flexures",
+            "signature": signature(coil_spring),
+            "description": (
+                "A helical compression spring swept along a cylinder, with one "
+                "dead coil at each end closed up to a flat seat and a choice "
+                "of round or rectangular wire. The pitch is bounded from below "
+                "by the wire diameter plus a printable kerf, and the helix "
+                "angle by a self-support floor, so unprintable geometry raises "
+                "rather than slicing into a solid tube."),
+            "origin": ("Gap-analysis wave v0.8.0; classic ref: closed-and-"
+                       "ground helical compression spring, ASM spring design"),
+            "demo": "demo_coil_spring",
+        },
+        {
+            "file": "spiral_power_spring_demo.glb",
+            "name": "spiral_power_spring",
+            "module": "mechlib.flexures",
+            "signature": signature(spiral_power_spring),
+            "description": (
+                "A flat Archimedean spiral strip anchored to an arbor at its "
+                "inner end and to the barrel wall at its outer end: a clock "
+                "mainspring. Winding the arbor stores the turns reported in "
+                "metadata, and because its torque falls as it unwinds it is "
+                "the part that pairs with grooved_drum(radius_law='fusee'), "
+                "which exists to compensate exactly this."),
+            "origin": ("Gap-analysis wave v0.8.0; classic ref: barrel and "
+                       "fusee clock mainspring, 507 Mechanical Movements No. 46"),
+            "demo": "demo_spiral_power_spring",
+        },
+        {
+            "file": "leaf_spring_demo.glb",
+            "name": "leaf_spring",
+            "module": "mechlib.flexures",
+            "signature": signature(leaf_spring),
+            "description": (
+                "A semi-elliptic multi-leaf spring: circular-arc leaves of "
+                "decreasing length stacked on a common centre, the longest "
+                "carrying a rolled eye at each end, held by a clamp band at "
+                "the crown. Metadata reports the free camber, the travel to "
+                "flat, and the rate from the classic n*E*b*t^3/(6*L^3) "
+                "formula at the supplied modulus."),
+            "origin": ("Gap-analysis wave v0.8.0; classic ref: semi-elliptic "
+                       "carriage leaf spring, Obadiah Elliott 1804"),
+            "demo": "demo_leaf_spring",
+        },
+        {
+            "file": "flexure_stage_demo.glb",
+            "name": "flexure_stage",
+            "module": "mechlib.flexures",
+            "signature": signature(flexure_stage),
+            "description": (
+                "A monolithic compound parallelogram flexure: an outer blade "
+                "pair carries a secondary bar and an inner pair hangs back "
+                "down from it to the motion stage, so the parasitic arc drop "
+                "of one parallelogram cancels the other and the stage runs "
+                "straight with no backlash or friction. Peak blade strain is "
+                "computed and over-strained configurations are refused."),
+            "origin": ("Gap-analysis wave v0.8.0; classic ref: compound "
+                       "parallelogram flexure, Awtar and Slocum MIT PERG"),
+            "demo": "demo_flexure_stage",
+        },
+        {
+            "file": "plain_bushing_demo.glb",
+            "name": "plain_bushing",
+            "module": "mechlib.bearings",
+            "signature": signature(plain_bushing),
+            "description": (
+                "A flanged plain bushing: a plastic sleeve that a steel shaft "
+                "turns directly inside, with the running fit set explicitly by "
+                "printing the bore at bore_d plus clear. Axial relief grooves "
+                "hold grease and give swarf somewhere to go; the flange takes "
+                "the light axial load a journal bearing can carry. The "
+                "low-precision, high-reliability choice wherever a rolling "
+                "bearing is overkill."),
+            "origin": ("Gap-analysis wave v0.8.0; classic ref: sintered bronze "
+                       "flange bushing (Oilite, 1930s)"),
+            "demo": "demo_plain_bushing",
+        },
+        {
+            "file": "thrust_washer_demo.glb",
+            "name": "thrust_washer",
+            "module": "mechlib.bearings",
+            "signature": signature(thrust_washer),
+            "description": (
+                "An axial thrust bearing built as a pair of washers with "
+                "toroidal raceways facing each other and a printed cage "
+                "spacing bought steel balls between them. Set pair=False for a "
+                "single flat thrust washer whose face is relieved with grease "
+                "pockets or raised pads, which drops the contact area and with "
+                "it the PV product."),
+            "origin": ("Gap-analysis wave v0.8.0; classic ref: 51100-series "
+                       "single-direction thrust ball bearing"),
+            "demo": "demo_thrust_washer",
+        },
+        {
+            "file": "printed_ball_bearing_demo.glb",
+            "name": "printed_ball_bearing",
+            "module": "mechlib.bearings",
+            "signature": signature(printed_ball_bearing),
+            "description": (
+                "A radial ball bearing that prints in one piece, already "
+                "assembled: inner race, spacer cage, balls, outer race. Each "
+                "raceway is a ball-radius groove truncated at 45 degrees of "
+                "latitude so no race wall ever overhangs past the FDM limit "
+                "and nothing bridges over the balls, and each ball has its "
+                "bottom cap cut off at 45 degrees so its first layer is a flat "
+                "disc. The shoulders left by that truncation are narrower than "
+                "the ball, which is what keeps it captured."),
+            "origin": ("Gap-analysis wave v0.8.0; classic ref: Conrad deep-"
+                       "groove ball bearing (1903), adapted to FDM limits"),
+            "demo": "demo_printed_ball_bearing",
+        },
+        {
+            "file": "kinematic_coupling_demo.glb",
+            "name": "kinematic_coupling",
+            "module": "mechlib.fixtures",
+            "signature": signature(kinematic_coupling),
+            "description": (
+                "An exactly constrained two-plate mount: three balls on the top plate "
+                "drop into three seats on the base and touch at exactly six points, one "
+                "per degree of freedom, so the top plate has one resting pose and returns "
+                "to it every time. Maxwell cuts three vee grooves; Kelvin cuts a trihedral "
+                "pit, a vee, and a flat. Shown book-flipped so both mating faces are visible."),
+            "origin": "Gap-analysis wave v0.8.0; classic ref: Maxwell 1871 and Kelvin's "
+                      "three-point clamp, still the standard optical-mount kinematic seat",
+            "demo": "demo_kinematic_coupling",
+        },
+        {
+            "file": "repeatable_dock_demo.glb",
+            "name": "repeatable_dock",
+            "module": "mechlib.fixtures",
+            "signature": signature(repeatable_dock),
+            "description": (
+                "A kinematic coupling plus the preload that keeps it closed, since a bare "
+                "coupling resists nothing in the lift-off direction and falls apart when "
+                "tipped. A disc magnet on a central boss or a central cap screw pulls along "
+                "the coupling axis only, so the preload never becomes a seventh contact, and "
+                "a bolt circle phased between the seats mounts both halves."),
+            "origin": "Gap-analysis wave v0.8.0; the standard tool-changer and probe-mount "
+                      "arrangement (magnetic kinematic mounts, Renishaw-style probe docks)",
+            "demo": "demo_repeatable_dock",
+        },
+        {
+            "file": "three_point_leveller_demo.glb",
+            "name": "three_point_leveller",
+            "module": "mechlib.fixtures",
+            "signature": signature(three_point_leveller),
+            "description": (
+                "Three screws thread through a table plate and rest their ball tips in "
+                "kinematic seats on a base plate, holding the table on exactly six contacts "
+                "while leaving height, tip, and tilt adjustable. One turn of one screw raises "
+                "its corner by one thread pitch; mm_per_turn and tilt_per_turn_deg are in the "
+                "metadata. This is how optical mounts and printer beds level without fighting "
+                "an over-constrained bolt pattern."),
+            "origin": "Gap-analysis wave v0.8.0; classic ref: the kinematic three-screw "
+                      "levelling mount used on optical tables and surface plates",
+            "demo": "demo_three_point_leveller",
+        },
+        {
+            "file": "oring_groove_demo.glb",
+            "name": "oring_groove",
+            "module": "mechlib.cutters",
+            "signature": signature(oring_groove),
+            "description": (
+                "An O-ring gland cut into a flat face at a given pitch diameter. "
+                "Groove width and depth are derived from the O-ring cross-section, "
+                "target squeeze, and target gland fill rather than hardcoded, and "
+                "the fill fraction is validated into the 70-85% band that keeps "
+                "the ring from either leaking (too loose) or hydrolocking and "
+                "extruding out of the joint (too tight)."),
+            "origin": "Gap-analysis wave v0.8.0; classic ref: Parker O-Ring Handbook gland design, AS568/ISO 3601.",
+            "demo": "demo_oring_groove",
+        },
+        {
+            "file": "labyrinth_seal_demo.glb",
+            "name": "labyrinth_seal",
+            "module": "mechlib.cutters",
+            "signature": signature(labyrinth_seal),
+            "description": (
+                "A rotor comb and stator comb whose fins interleave around a shaft "
+                "without ever touching, throttling flow across 2*teeth-1 stages "
+                "through radial and axial clearance alone. Needs no elastomer and "
+                "has no wear surface, so it is the seal to reach for on a printed "
+                "rotating joint that only needs to keep out dust or splash."),
+            "origin": "Gap-analysis wave v0.8.0; classic ref: turbine labyrinth seal, early 20th c.",
+            "demo": "demo_labyrinth_seal",
+        },
+        {
+            "file": "gasket_channel_demo.glb",
+            "name": "gasket_channel",
+            "module": "mechlib.cutters",
+            "signature": signature(gasket_channel),
+            "description": (
+                "A cord-stock gasket groove that follows an arbitrary closed 2D "
+                "path, here a rounded-rectangle lid, rather than only a "
+                "circular pitch diameter, for enclosures and kidney-shaped lids "
+                "an O-ring can't seal."),
+            "origin": "Gap-analysis wave v0.8.0; classic ref: O-ring cord stock gasket practice.",
+            "demo": "demo_gasket_channel",
+        },
+        {
+            "file": "auxetic_panel_demo.glb",
+            "name": "auxetic_panel",
+            "module": "mechlib.lattices",
+            "signature": signature(auxetic_panel),
+            "description": (
+                "A flat panel that gets WIDER, not narrower, when you stretch it: "
+                "its internal cell topology supplies a negative Poisson's ratio "
+                "instead of the base plastic. Three interchangeable cell types "
+                "(reentrant bowtie honeycomb, rigid rotating squares on corner "
+                "hinges, and a chiral node-and-tangent-ligament grid) trade off "
+                "stiffness, hinge fatigue life, and print complexity for the same "
+                "auxetic effect."),
+            "origin": "Gap-analysis wave v0.8.0; classic ref: auxetic re-entrant honeycomb (Lakes, 1987)",
+            "demo": "demo_auxetic_panel",
+        },
+        {
+            "file": "kerf_bend_cutter_demo.glb",
+            "name": "kerf_bend_cutter",
+            "module": "mechlib.lattices",
+            "signature": signature(kerf_bend_cutter),
+            "description": (
+                "A cutter that turns a rigid flat slab into a bendable, twistable, "
+                "or rollable one by slitting it with a staggered kerf pattern, the "
+                "same trick as laser-kerfed plywood. Three slit layouts (straight "
+                "lattice for single-axis bending or a living hinge, diagonal for "
+                "torsion, spiral for a helical cylindrical wrap) all validate kerf "
+                "width and bridge width against real FDM printability floors before "
+                "cutting."),
+            "origin": "Gap-analysis wave v0.8.0; classic ref: kerf bending (laser-cut plywood furniture)",
+            "demo": "demo_kerf_bend_cutter",
         },
     ]
 
