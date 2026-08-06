@@ -1,5 +1,15 @@
-__version__ = "0.5.0"
+__version__ = "0.6.0"
 
+from .cams import (
+    DEFAULT_SEGMENTS,
+    MOTION_LAWS,
+    barrel_cam,
+    cam_lift,
+    cam_profile_2d,
+    heart_cam,
+    plate_cam,
+    snail_cam,
+)
 from .closures import (
     SnapSpec,
     clamshell_shiplap,
@@ -14,6 +24,8 @@ from .closures import (
     setscrew,
     ydovetail,
 )
+from .clutches import freewheel_clutch, torque_limiter
+from .couplings import jaw_coupling, oldham_coupling, universal_joint
 from .cutters import (
     bearing_seat,
     blind_socket,
@@ -43,6 +55,7 @@ from .fasteners import (
     zmin0,
 )
 from .fixtures import board_cradle, saddle
+from .flexures import bistable_beam, cross_flexure, wave_spring
 from .drives import (
     flat_worm,
     planet_stage,
@@ -51,6 +64,9 @@ from .drives import (
     worm_wheel_band,
 )
 from .gears import (
+    bevel_gear_pair,
+    cycloidal_drive,
+    herringbone_gear,
     mesh_phase,
     rack_2d,
     roller_sprocket_2d,
@@ -58,6 +74,17 @@ from .gears import (
     spur_gear_2d,
     spur_gear_mesh,
     worm,
+)
+from .indexing import escapement, geneva_pair, intermittent_gear_pair
+from .linear import archimedes_screw, differential_screw, scroll_drive
+from .linkages import (
+    four_bar,
+    four_bar_pose,
+    link_bar,
+    quick_return,
+    quick_return_ratio,
+    scotch_yoke,
+    toggle_clamp,
 )
 from .mechanisms import (
     coarse_pitch,
@@ -115,6 +142,7 @@ from .prim import (
     sector2d,
     seg_cylinder,
 )
+from .pulleys import grooved_drum, timing_pulley
 from .ratchets import (
     arc_ratchet_2d,
     check_ratchet_sense_and_sweep,
@@ -154,6 +182,9 @@ __all__ = (
     "mesh_phase",
     "spur_gear",
     "worm",
+    "herringbone_gear",
+    "cycloidal_drive",
+    "bevel_gear_pair",
     "board_cradle",
     "saddle",
     "to_manifold",
@@ -255,4 +286,35 @@ __all__ = (
     "shelf_pack",
     "pack_by_category",
     "export_assembly",
+    "link_bar",
+    "four_bar_pose",
+    "four_bar",
+    "toggle_clamp",
+    "scotch_yoke",
+    "quick_return_ratio",
+    "quick_return",
+    "MOTION_LAWS",
+    "DEFAULT_SEGMENTS",
+    "cam_lift",
+    "cam_profile_2d",
+    "plate_cam",
+    "snail_cam",
+    "heart_cam",
+    "barrel_cam",
+    "scroll_drive",
+    "differential_screw",
+    "archimedes_screw",
+    "oldham_coupling",
+    "universal_joint",
+    "jaw_coupling",
+    "torque_limiter",
+    "freewheel_clutch",
+    "timing_pulley",
+    "grooved_drum",
+    "cross_flexure",
+    "wave_spring",
+    "bistable_beam",
+    "geneva_pair",
+    "escapement",
+    "intermittent_gear_pair",
 )

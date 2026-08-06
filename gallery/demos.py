@@ -10,11 +10,20 @@ import math
 from typing import List, Tuple
 
 import numpy as np
+import shapely.geometry as sg
 import trimesh
 from shapely import affinity
 from shapely.geometry import Point, box
+from shapely.ops import unary_union
 
 import mechlib
+from mechlib.cams import (
+    barrel_cam,
+    cam_lift,
+    heart_cam,
+    plate_cam,
+    snail_cam,
+)
 from mechlib.closures import (
     clamshell_shiplap,
     fix_pin,
@@ -27,6 +36,8 @@ from mechlib.closures import (
     setscrew,
     ydovetail,
 )
+from mechlib.clutches import freewheel_clutch, torque_limiter
+from mechlib.couplings import jaw_coupling, oldham_coupling, universal_joint
 from mechlib.cutters import (
     bearing_seat,
     blind_socket,
@@ -50,7 +61,11 @@ from mechlib.drives import (
 )
 from mechlib.fasteners import fastener_mesh, hex_nut_mesh, washer_mesh
 from mechlib.fixtures import board_cradle, saddle
+from mechlib.flexures import bistable_beam, cross_flexure, wave_spring
 from mechlib.gears import (
+    bevel_gear_pair,
+    cycloidal_drive,
+    herringbone_gear,
     mesh_phase,
     rack_2d,
     roller_sprocket_2d,
@@ -58,6 +73,18 @@ from mechlib.gears import (
     spur_gear,
     spur_gear_mesh,
     worm,
+)
+from mechlib.indexing import escapement, geneva_pair, intermittent_gear_pair
+from mechlib.linear import (
+    archimedes_screw,
+    differential_screw,
+    scroll_drive,
+)
+from mechlib.linkages import (
+    four_bar,
+    quick_return,
+    scotch_yoke,
+    toggle_clamp,
 )
 from mechlib.mechanisms import (
     dog_slot_coupling,
@@ -71,6 +98,7 @@ from mechlib.mechanisms import (
 from mechlib.meshutil import sub, uni
 from mechlib.patterns import directed_holes, lighten_cell_poly, lighten_grid_centres, polar_ring
 from mechlib.prim import boxc, chamfer_prism, cyl, frustum, hex_poly, rbox, sector2d, seg_cylinder
+from mechlib.pulleys import grooved_drum, timing_pulley
 from mechlib.ratchets import (
     arc_ratchet_2d,
     compliant_clutch,
@@ -407,6 +435,127 @@ PLAY: dict = {
     "demo_bearing_seat": {
         "housing_r": (12.0, 22.0, 0.5),
         "housing_h": (6.0, 16.0, 1.0),
+    },
+    "demo_four_bar": {
+        "crank_angle_deg": (0.0, 360.0, 5.0),
+        "l_crank": (6.0, 18.0, 1.0),
+    },
+    "demo_toggle_clamp": {
+        "overcenter_deg": (0.0, 12.0, 1.0),
+    },
+    "demo_scotch_yoke": {
+        "angle_deg": (0.0, 360.0, 5.0),
+    },
+    "demo_quick_return": {
+        "crank_angle_deg": (0.0, 360.0, 5.0),
+    },
+    "demo_plate_cam": {
+        "lift": (3.0, 10.0, 1.0),
+        "roller_r": (2.0, 5.0, 0.5),
+        "thickness": (3.0, 8.0, 0.5),
+        "follower_deg": (0.0, 330.0, 30.0),
+    },
+    "demo_snail_cam": {
+        "lift": (4.0, 12.0, 1.0),
+        "rise_deg": (280.0, 350.0, 10.0),
+        "thickness": (3.0, 8.0, 0.5),
+        "follower_deg": (0.0, 330.0, 30.0),
+    },
+    "demo_heart_cam": {
+        "lift": (3.0, 9.0, 1.0),
+        "thickness": (3.0, 8.0, 0.5),
+        "follower_deg": (0.0, 330.0, 30.0),
+    },
+    "demo_barrel_cam": {
+        "pin_phase_deg": (0.0, 330.0, 30.0),
+        "groove_d": (1.5, 4.0, 0.5),
+    },
+    "demo_geneva_pair": {
+        "slots": (3, 12, 1),
+        "clearance": (0.1, 0.5, 0.05),
+    },
+    "demo_escapement": {
+        "teeth": (20, 40, 2),
+        "clearance": (0.15, 0.5, 0.05),
+    },
+    "demo_intermittent_gear_pair": {
+        "module": (1.0, 2.5, 0.25),
+        "clearance": (0.1, 0.5, 0.05),
+    },
+    "demo_herringbone_gear": {
+        "z": (12, 36, 2),
+        "helix_deg": (10, 35, 5),
+    },
+    "demo_cycloidal_drive": {
+        "pins": (8, 14, 1),
+        "explode": (0, 10, 1),
+    },
+    "demo_bevel_gear_pair": {
+        "z1": (10, 24, 2),
+        "z2": (16, 40, 4),
+    },
+    "demo_scroll_drive": {
+        "spiral_pitch": (4.75, 5.25, 0.25),
+        "face_r": (8, 14, 1),
+    },
+    "demo_differential_screw": {
+        "p1": (2.0, 3.0, 0.25),
+        "p2": (1.25, 1.75, 0.25),
+    },
+    "demo_archimedes_screw": {
+        "lead": (10, 20, 1),
+        "turns": (2, 6, 1),
+    },
+    "demo_oldham_coupling": {
+        "misalign": (0.0, 5.0, 0.5),
+        "explode": (0.0, 12.0, 1.0),
+        "clearance": (0.15, 0.4, 0.05),
+        "sections": (24, 64, 8),
+    },
+    "demo_universal_joint": {
+        "bend_deg": (0.0, 35.0, 5.0),
+        "clearance": (0.2, 0.5, 0.05),
+        "sections": (24, 64, 8),
+    },
+    "demo_jaw_coupling": {
+        "jaws": (3, 4, 1),
+        "explode": (0.0, 12.0, 1.0),
+        "clearance": (0.15, 0.4, 0.05),
+        "sections": (24, 64, 8),
+    },
+    "demo_torque_limiter": {
+        "detents": (4, 8, 1),
+        "explode": (0.0, 14.0, 1.0),
+        "sections": (24, 64, 8),
+    },
+    "demo_freewheel_clutch": {
+        "rollers": (4, 7, 1),
+        "sections": (24, 64, 8),
+    },
+    "demo_timing_pulley": {
+        "teeth": (12, 64, 2),
+        "bore_d": (3, 6, 1),
+    },
+    "demo_winch_drum": {
+        "turns": (4, 16, 2),
+        "cable_d": (2.0, 4.0, 0.5),
+    },
+    "demo_fusee": {
+        "turns": (4, 12, 2),
+        "radius_rise": (4.0, 12.0, 1.0),
+    },
+    "demo_cross_flexure": {
+        "gap": (6, 16, 1),
+        "blade_angle_deg": (20, 55, 5),
+    },
+    "demo_wave_spring": {
+        "waves": (2, 6, 1),
+        "turns": (1, 4, 1),
+        "sections": (24, 64, 8),
+    },
+    "demo_bistable_beam": {
+        "apex": (1.5, 3.5, 0.5),
+        "beam_t": (0.6, 1.6, 0.2),
     },
 }
 
@@ -1307,3 +1456,451 @@ def demo_dog_slot_coupling(spacing: float = 17.0) -> MeshList:
         ("slotted_boss", coupling_boss, PALETTE[1]),
         ("dog_collar", coupling_collar, PALETTE[9]),
     ]
+
+
+# ---------------------------------------------------------------------------
+# Linkages (mechanical-movements wave v0.6.0)
+# ---------------------------------------------------------------------------
+
+
+def demo_four_bar(crank_angle_deg: float = 60.0, l_crank: float = 12.5):
+    parts = four_bar(l_ground=25.0, l_crank=l_crank, l_coupler=25.0,
+                     l_rocker=25.0, crank_angle_deg=crank_angle_deg,
+                     coupler_ext=25.0)
+    entries = [
+        ("ground_link", parts["ground"], PALETTE[7]),
+        ("rocker", parts["rocker"], PALETTE[2]),
+        ("coupler", parts["coupler"], PALETTE[5]),
+        ("crank", parts["crank"], PALETTE[4]),
+        ("trace_point", parts["trace"], PALETTE[10]),
+    ]
+    for index, pin in enumerate(parts["pins"]):
+        entries.append(("pin_%d" % index, pin, PALETTE[11]))
+    return entries
+
+
+def demo_toggle_clamp(overcenter_deg: float = 4.0):
+    parts = toggle_clamp(overcenter_deg=overcenter_deg)
+    return [
+        ("base", parts["base"], PALETTE[7]),
+        ("clamp_arm", parts["arm"], PALETTE[1]),
+        ("connecting_link", parts["link"], PALETTE[5]),
+        ("handle", parts["handle"], PALETTE[4]),
+        ("pin_arm", parts["pins"][0], PALETTE[11]),
+        ("pin_handle", parts["pins"][1], PALETTE[11]),
+        ("pin_knee", parts["pins"][2], PALETTE[11]),
+        ("pin_joint", parts["pins"][3], PALETTE[11]),
+    ]
+
+
+def demo_scotch_yoke(angle_deg: float = 35.0):
+    parts = scotch_yoke(angle_deg=angle_deg)
+    return [
+        ("crank_disc", parts["crank_disc"], PALETTE[1]),
+        ("crank_pin", parts["crank_pin"], PALETTE[5]),
+        ("slotted_yoke", parts["yoke"], PALETTE[0]),
+        ("rail_a", parts["rail_a"], PALETTE[7]),
+        ("rail_b", parts["rail_b"], PALETTE[7]),
+    ]
+
+
+def demo_quick_return(crank_angle_deg: float = 40.0):
+    parts = quick_return(crank_angle_deg=crank_angle_deg)
+    return [
+        ("base", parts["base"], PALETTE[7]),
+        ("crank_disc", parts["crank_disc"], PALETTE[1]),
+        ("crank_pin", parts["crank_pin"], PALETTE[5]),
+        ("slotted_lever", parts["lever"], PALETTE[2]),
+        ("pin_crank", parts["pins"][0], PALETTE[11]),
+        ("pin_lever", parts["pins"][1], PALETTE[11]),
+    ]
+
+
+# ---------------------------------------------------------------------------
+# Cams (mechanical-movements wave v0.6.0)
+# ---------------------------------------------------------------------------
+
+
+def _roller_follower(pitch_r, angle_deg, roller_r, thickness, stem_len=14.0,
+                     stem_w=6.0):
+    """Roller plus stem posed radially, roller center at ``pitch_r`` (mm)."""
+    angle = math.radians(angle_deg)
+    ca, sa = math.cos(angle), math.sin(angle)
+    roller = cyl(roller_r, thickness,
+                 center=(pitch_r * ca, pitch_r * sa, thickness / 2.0),
+                 sections=64)
+    stem_center = pitch_r + stem_len / 2.0 + roller_r * 0.3
+    stem = boxc((stem_len, stem_w, thickness * 0.6),
+                center=(0.0, 0.0, thickness / 2.0))
+    stem.apply_translation((stem_center, 0.0, 0.0))
+    stem.apply_transform(trimesh.transformations.rotation_matrix(angle, [0, 0, 1]))
+    return roller, stem
+
+
+def demo_plate_cam(lift: float = 8.0, roller_r: float = 3.0,
+                   thickness: float = 5.0, follower_deg: float = 60.0,
+                   base_r: float = 10.0) -> MeshList:
+    segments = (
+        ("cycloidal", lift, 120.0),
+        ("dwell", 0.0, 60.0),
+        ("cycloidal", -lift, 120.0),
+        ("dwell", 0.0, 60.0),
+    )
+    cam = plate_cam(base_r=base_r, segments=segments, thickness=thickness,
+                    roller_r=roller_r, hub_d=14.0, hub_h=3.0, bore_d=6.0,
+                    flat=2.3)
+    pitch_r = base_r + cam_lift(segments, follower_deg)
+    roller, stem = _roller_follower(pitch_r, follower_deg, roller_r, thickness)
+    return [
+        ("plate_cam", cam, PALETTE[0]),
+        ("roller", roller, PALETTE[1]),
+        ("follower_stem", stem, PALETTE[2]),
+    ]
+
+
+def demo_snail_cam(lift: float = 9.0, rise_deg: float = 320.0,
+                   thickness: float = 5.0, follower_deg: float = 250.0,
+                   base_r: float = 10.0) -> MeshList:
+    cam = snail_cam(base_r=base_r, lift=lift, thickness=thickness,
+                    rise_deg=rise_deg, bore_d=6.0, flat=2.3)
+    roller_r = 2.5
+    u = min(max(follower_deg / rise_deg, 0.0), 1.0)
+    pitch_r = base_r + lift * u + roller_r
+    roller, stem = _roller_follower(pitch_r, follower_deg, roller_r, thickness)
+    return [
+        ("snail_cam", cam, PALETTE[5]),
+        ("roller", roller, PALETTE[1]),
+        ("follower_stem", stem, PALETTE[2]),
+    ]
+
+
+def demo_heart_cam(lift: float = 6.0, thickness: float = 5.0,
+                   follower_deg: float = 90.0, base_r: float = 10.0) -> MeshList:
+    cam = heart_cam(base_r=base_r, lift=lift, thickness=thickness,
+                    bore_d=6.0, flat=2.3)
+    roller_r = 2.5
+    segments = (("linear", lift, 180.0), ("linear", -lift, 180.0))
+    pitch_r = base_r + cam_lift(segments, follower_deg) + roller_r
+    roller, stem = _roller_follower(pitch_r, follower_deg, roller_r, thickness)
+    return [
+        ("heart_cam", cam, PALETTE[4]),
+        ("roller", roller, PALETTE[1]),
+        ("follower_stem", stem, PALETTE[2]),
+    ]
+
+
+def demo_barrel_cam(pin_phase_deg: float = 40.0, groove_d: float = 3.0,
+                    radius: float = 11.0, length: float = 28.0) -> MeshList:
+    parts = barrel_cam(radius=radius, length=length, groove_w=4.25,
+                       groove_d=groove_d,
+                       segments=(("cycloidal", 10.0, 180.0),
+                                 ("cycloidal", -10.0, 180.0)),
+                       pin_d=4.0, pin_len=12.0,
+                       pin_phase_deg=pin_phase_deg,
+                       bore_d=6.0, flat=2.3)
+    pin = parts["pin"]
+    z_pin = pin.centroid[2]
+    angle = math.radians(pin_phase_deg)
+    block = boxc((8.0, 12.0, 9.0), center=(radius + 6.5, 0.0, z_pin))
+    hole = cyl(2.15, 12.0, center=(radius + 6.5, 0.0, z_pin), axis="x",
+               sections=48)
+    guide = sub(block, hole)
+    guide.apply_transform(trimesh.transformations.rotation_matrix(angle, [0, 0, 1]))
+    return [
+        ("barrel_cam", parts["barrel"], PALETTE[5]),
+        ("follower_pin", pin, PALETTE[1]),
+        ("pin_guide", guide, PALETTE[7]),
+    ]
+
+
+# ---------------------------------------------------------------------------
+# Indexing (mechanical-movements wave v0.6.0)
+# ---------------------------------------------------------------------------
+
+
+def demo_geneva_pair(slots: int = 6, clearance: float = 0.25) -> MeshList:
+    # Deep-slot counts need a long crank so the slot bottoms clear the hub;
+    # high counts keep crank 10 so the rim stays clear of the driver web even
+    # at the loosest clearance.
+    crank_r = {3: 28.0, 4: 19.0}.get(slots, 10.0)
+    pair = geneva_pair(slots=slots, crank_r=crank_r, clearance=clearance)
+    return [
+        ("pin_driver", pair["driver"], PALETTE[1]),
+        ("slotted_wheel", pair["wheel"], PALETTE[0]),
+    ]
+
+
+def demo_escapement(teeth: int = 30, clearance: float = 0.25) -> MeshList:
+    pair = escapement(teeth=teeth, style="anchor", clearance=clearance)
+    return [
+        ("escape_wheel", pair["wheel"], PALETTE[5]),
+        ("anchor", pair["anchor"], PALETTE[4]),
+    ]
+
+
+def demo_intermittent_gear_pair(module: float = 1.5,
+                                clearance: float = 0.25) -> MeshList:
+    pair = intermittent_gear_pair(module=module, clearance=clearance)
+    return [
+        ("mutilated_driver", pair["driver"], PALETTE[7]),
+        ("notched_driven", pair["driven"], PALETTE[9]),
+    ]
+
+
+# ---------------------------------------------------------------------------
+# Wave gears and linear drives (mechanical-movements wave v0.6.0)
+# ---------------------------------------------------------------------------
+
+
+def demo_herringbone_gear(m: float = 1.5, z: int = 24, helix_deg: float = 25.0,
+                          h: float = 10.0) -> MeshList:
+    """Meshed herringbone pair: mirrored chevrons, phased with mesh_phase.
+
+    The mid-plane is the untwisted meshing plane, so spur phasing applies;
+    the driven gear must carry the opposite hand or the helices cross.
+    """
+    driver = herringbone_gear(m=m, z=z, h=h, helix_deg=helix_deg,
+                              bore_d=5.0, hand=1)
+    driven = herringbone_gear(m=m, z=z, h=h, helix_deg=helix_deg,
+                              bore_d=5.0, hand=-1)
+    driven.apply_transform(trimesh.transformations.rotation_matrix(
+        math.radians(mesh_phase(z, z, 0.0)), (0.0, 0.0, 1.0)))
+    driven.apply_translation((m * z, 0.0, 0.0))
+    return [
+        ("herringbone_driver", driver, PALETTE[0]),
+        ("herringbone_driven", driven, PALETTE[1]),
+    ]
+
+
+def demo_cycloidal_drive(pins: int = 12, explode: float = 5.0) -> MeshList:
+    """Exploded-but-aligned cycloidal reducer stack."""
+    drive = cycloidal_drive(pins=pins)
+    drive["input"].apply_translation((0.0, 0.0, -explode))
+    drive["disc"].apply_translation((0.0, 0.0, explode))
+    drive["output"].apply_translation((0.0, 0.0, 2.0 * explode))
+    return [
+        ("housing_ring", drive["housing"], PALETTE[7]),
+        ("cycloidal_disc", drive["disc"], PALETTE[4]),
+        ("eccentric_input", drive["input"], PALETTE[5]),
+        ("output_plate", drive["output"], PALETTE[2]),
+    ]
+
+
+def demo_bevel_gear_pair(m: float = 1.5, z1: int = 16,
+                         z2: int = 24) -> MeshList:
+    """Straight bevel pair posed meshed on perpendicular axes."""
+    pair = bevel_gear_pair(m=m, z1=z1, z2=z2, bore1_d=4.0, bore2_d=5.0)
+    return [
+        ("bevel_pinion", pair["pinion"], PALETTE[0]),
+        ("bevel_gear", pair["gear"], PALETTE[9]),
+    ]
+
+
+def demo_scroll_drive(spiral_pitch: float = 5.0,
+                      face_r: float = 10.0) -> MeshList:
+    """Chuck scroll plate with three jaws posed self-centering."""
+    drive = scroll_drive(spiral_pitch=spiral_pitch, face_r=face_r)
+    meshes: MeshList = [("scroll_plate", drive["scroll"], PALETTE[7])]
+    for index, jaw in enumerate(drive["jaws"]):
+        meshes.append(("scroll_jaw_%d" % index, jaw, PALETTE[1 + index]))
+    return meshes
+
+
+def demo_differential_screw(p1: float = 2.0, p2: float = 1.75) -> MeshList:
+    """Differential screw with both nuts engaged on their thread sections."""
+    screw = differential_screw(p1=p1, p2=p2)
+    return [
+        ("twin_pitch_shaft", screw["shaft"], PALETTE[5]),
+        ("frame_nut", screw["nut_frame"], PALETTE[0]),
+        ("moving_nut", screw["nut_moving"], PALETTE[3]),
+    ]
+
+
+def demo_archimedes_screw(lead: float = 14.0, turns: float = 4.0) -> MeshList:
+    """Inclined water screw: helical flight inside a half-pipe trough."""
+    assembly = archimedes_screw(lead=lead, turns=turns)
+    return [
+        ("screw_flight", assembly["screw"], PALETTE[0]),
+        ("half_pipe_trough", assembly["trough"], PALETTE[6]),
+    ]
+
+
+# ---------------------------------------------------------------------------
+# Couplings and clutches (mechanical-movements wave v0.6.0)
+# ---------------------------------------------------------------------------
+
+
+def demo_oldham_coupling(
+    misalign: float = 3.0,
+    explode: float = 6.0,
+    clearance: float = 0.25,
+    sections: int = 64,
+) -> MeshList:
+    parts = oldham_coupling(clearance=clearance, sections=sections)
+    hub_a = parts["hub_a"]
+    hub_a.apply_translation((0.0, 0.0, -explode))
+    hub_b = parts["hub_b"]
+    # Hub B's tongue runs along Y, so its free sliding direction is Y.
+    hub_b.apply_translation((0.0, misalign, explode))
+    return [
+        ("tongue_hub_a", hub_a, PALETTE[0]),
+        ("cross_slotted_disc", parts["disc"], PALETTE[5]),
+        ("tongue_hub_b", hub_b, PALETTE[1]),
+    ]
+
+
+def demo_universal_joint(
+    bend_deg: float = 20.0,
+    clearance: float = 0.3,
+    sections: int = 64,
+) -> MeshList:
+    parts = universal_joint(
+        bend_deg=bend_deg, clearance=clearance, sections=sections)
+    return [
+        ("fork_yoke_input", parts["yoke_a"], PALETTE[7]),
+        ("cross_spider", parts["spider"], PALETTE[5]),
+        ("fork_yoke_output", parts["yoke_b"], PALETTE[3]),
+    ]
+
+
+def demo_jaw_coupling(
+    jaws: int = 3,
+    explode: float = 6.0,
+    clearance: float = 0.25,
+    sections: int = 64,
+) -> MeshList:
+    parts = jaw_coupling(jaws=jaws, clearance=clearance, sections=sections)
+    hub_a = parts["hub_a"]
+    hub_a.apply_translation((0.0, 0.0, -explode))
+    hub_b = parts["hub_b"]
+    hub_b.apply_translation((0.0, 0.0, explode))
+    return [
+        ("jaw_hub_a", hub_a, PALETTE[2]),
+        ("elastomer_spider", parts["spider"], PALETTE[4]),
+        ("jaw_hub_b", hub_b, PALETTE[6]),
+    ]
+
+
+def demo_torque_limiter(
+    detents: int = 6,
+    explode: float = 8.0,
+    clearance: float = 0.25,
+    sections: int = 64,
+) -> MeshList:
+    parts = torque_limiter(
+        detents=detents, clearance=clearance, sections=sections)
+    driven = parts["driven"]
+    driven.apply_translation((0.0, 0.0, explode))
+    cavity = parts["driven"].metadata
+    spring = helix_tube(
+        cavity["cavity_r"] - 1.4, 0.7, 4.0,
+        cavity["cavity_z0"] + explode, cavity["cavity_z1"] + explode)
+    return [
+        ("detent_driver", parts["driver"], PALETTE[9]),
+        ("pocket_driven", driven, PALETTE[11]),
+        ("preload_spring", spring, PALETTE[5]),
+    ]
+
+
+def demo_freewheel_clutch(
+    rollers: int = 6,
+    clearance: float = 0.25,
+    sections: int = 64,
+) -> MeshList:
+    parts = freewheel_clutch(
+        rollers=rollers, clearance=clearance, sections=sections)
+    meshes: MeshList = [
+        ("ramp_pocket_ring", parts["ring"], PALETTE[0]),
+        ("inner_hub", parts["hub"], PALETTE[8]),
+    ]
+    for index, roller in enumerate(parts["rollers"]):
+        meshes.append(("roller_%d" % index, roller, PALETTE[10]))
+    return meshes
+
+
+# ---------------------------------------------------------------------------
+# Pulleys and flexures (mechanical-movements wave v0.6.0)
+# ---------------------------------------------------------------------------
+
+
+def _polar(r, deg):
+    a = math.radians(deg)
+    return r * math.cos(a), r * math.sin(a)
+
+
+def _belt_segment_2d(teeth, pitch, wrap_deg=200.0, clearance=0.15):
+    """Return a toothed GT2 belt arc posed to mesh a ``timing_pulley`` blank."""
+    scale = pitch / 2.0
+    pitch_r = teeth * pitch / (2.0 * math.pi)
+    tip_r = pitch_r - 0.254 * scale
+    root_r = pitch_r - 0.75 * scale
+    r_back_in = tip_r + clearance + 0.25
+    r_back_out = r_back_in + 0.9 * scale
+    r_tooth_tip = root_r + clearance + 0.1
+    half = wrap_deg / 2.0
+    arc_out = [_polar(r_back_out, a) for a in np.linspace(-half, half, 72)]
+    arc_in = [_polar(r_back_in, a) for a in np.linspace(half, -half, 72)]
+    band = sg.Polygon(arc_out + arc_in)
+    teeth_polys = []
+    step = 360.0 / teeth
+    k = 0
+    while k * step <= half:
+        angles = (k * step,) if k == 0 else (k * step, -k * step)
+        for angle in angles:
+            w_root = math.degrees(0.28 * pitch / r_back_in)
+            w_tip = math.degrees(0.15 * pitch / r_tooth_tip)
+            teeth_polys.append(sg.Polygon([
+                _polar(r_back_in + 0.2, angle - w_root),
+                _polar(r_back_in + 0.2, angle + w_root),
+                _polar(r_tooth_tip, angle + w_tip),
+                _polar(r_tooth_tip, angle - w_tip),
+            ]))
+        k += 1
+    return unary_union([band] + teeth_polys).buffer(0)
+
+
+def demo_timing_pulley(teeth: int = 30, bore_d: float = 3.0) -> MeshList:
+    pulley = timing_pulley(teeth=teeth, bore_d=bore_d, hub_d=9.0,
+                           setscrew_boss=True, setscrew_d=2.0)
+    belt = trimesh.creation.extrude_polygon(
+        _belt_segment_2d(teeth, 2.0), 6.0)
+    belt.apply_translation((0, 0, 1.2))
+    return [
+        ("gt2_pulley", pulley, PALETTE[0]),
+        ("belt_segment", belt, PALETTE[4]),
+    ]
+
+
+def demo_winch_drum(turns: float = 8.0, cable_d: float = 3.0) -> MeshList:
+    drum = grooved_drum(radius_law="cylinder", turns=turns, cable_d=cable_d,
+                        core_r=10.0)
+    pitch = drum.metadata["groove_pitch"]
+    wound = min(2.0, turns - 1.0)
+    cable = helix_tube(10.0, cable_d / 2.0, wound, pitch, (1.0 + wound) * pitch)
+    return [
+        ("grooved_drum", drum, PALETTE[1]),
+        ("cable", cable, PALETTE[7]),
+    ]
+
+
+def demo_fusee(turns: float = 7.0, radius_rise: float = 9.0) -> MeshList:
+    fusee = grooved_drum(radius_law="fusee", turns=turns, cable_d=2.5,
+                         core_r=7.0, radius_rise=radius_rise)
+    return [("fusee_cone", fusee, PALETTE[5])]
+
+
+def demo_cross_flexure(gap: float = 10.0,
+                       blade_angle_deg: float = 45.0) -> MeshList:
+    flex = cross_flexure(gap=gap, blade_angle_deg=blade_angle_deg)
+    return [("cross_flexure_pivot", flex, PALETTE[2])]
+
+
+def demo_wave_spring(waves: int = 3, turns: int = 2,
+                     sections: int = 96) -> MeshList:
+    spring = wave_spring(waves=waves, turns=turns, sections=sections)
+    return [("crest_to_crest_spring", spring, PALETTE[3])]
+
+
+def demo_bistable_beam(apex: float = 3.0, beam_t: float = 1.0) -> MeshList:
+    switch = bistable_beam(apex=apex, beam_t=beam_t)
+    return [("bistable_switch", switch, PALETTE[9])]

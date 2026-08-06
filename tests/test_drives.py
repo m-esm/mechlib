@@ -21,7 +21,7 @@ def assert_mesh(mesh):
 
 
 def test_public_drive_api_and_version():
-    assert mechlib.__version__ == "0.5.0"
+    assert mechlib.__version__ == "0.6.0"
     names = (
         "printed_worm", "flat_worm", "worm_wheel_band",
         "worm_coupon", "planet_stage",

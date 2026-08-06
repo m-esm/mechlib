@@ -347,3 +347,247 @@ def worm(module, length, pitch_d, starts=1, pressure_angle=20.0, bore=0.0):
         worm_mesh = trimesh.boolean.difference([worm_mesh, cutter], engine="manifold")
     worm_mesh.metadata["lead_angle"] = lead_angle
     return worm_mesh, lead_angle
+
+
+def herringbone_gear(m=1.5, z=24, h=10.0, helix_deg=25.0, bore_d=0.0,
+                     pa=20.0, bl=0.35, t_relief=0.10, hand=1):
+    """Double-helical (herringbone) involute gear, fused watertight.
+
+    Two mirrored opposite-twist halves of the ``spur_gear_2d`` profile are
+    extruded to ``h``/2 each and unioned: tooth rotation is zero at the
+    mid-plane and grows to ±``(h/2)·tan(helix_deg)/pitch_r`` at the faces, so
+    the teeth form a chevron whose axial thrusts cancel. ``m`` module (mm),
+    ``z`` teeth, ``h`` face width (mm), ``helix_deg`` helix angle (degrees),
+    ``bore_d`` axial bore diameter (mm, 0 = solid), ``pa`` pressure angle
+    (degrees), ``bl`` backlash tooth thinning (mm), ``t_relief`` tip relief
+    (mm). ``hand`` selects the chevron direction: a meshing pair on parallel
+    shafts needs one ``hand=+1`` and one ``hand=-1`` gear (mirrored chevrons,
+    like any parallel helical pair). Because the mid-plane — the meshing
+    plane — is untwisted in both hands, the pair is phased with
+    ``mesh_phase`` exactly like spur gears. Prints vertically, no supports.
+    """
+    import trimesh
+
+    from .meshutil import sub, uni
+    from .prim import cyl
+
+    if (m <= 0 or z < 6 or h <= 0 or not 0.0 < helix_deg < 45.0 or
+            bore_d < 0 or not 0.0 < pa < 45.0 or bl < 0 or t_relief < 0 or
+            hand not in (-1, 1)):
+        raise ValueError("herringbone_gear(): invalid gear dimensions")
+    profile = spur_gear_2d(z, m, pa=pa, bl=bl, t_relief=t_relief)
+    rp = m * z / 2.0
+    half = h / 2.0
+    sweep = half * math.tan(math.radians(helix_deg)) / rp    # face rotation, rad
+    parts = []
+    for z0, sign in ((0.0, -1.0), (half, 1.0)):
+        part = trimesh.creation.extrude_polygon(profile, half)
+        part.apply_translation((0.0, 0.0, z0))
+        v = part.vertices
+        ang = hand * sign * sweep * (v[:, 2] - (z0 + half)) / half
+        c, s = np.cos(ang), np.sin(ang)
+        part.vertices = np.column_stack([
+            v[:, 0] * c - v[:, 1] * s,
+            v[:, 0] * s + v[:, 1] * c,
+            v[:, 2],
+        ])
+        parts.append(part)
+    gear = uni(parts)
+    if bore_d > 0:
+        gear = sub(gear, cyl(bore_d / 2.0, h + 2.0, (0.0, 0.0, half)))
+    gear.metadata.update({
+        "module": m, "teeth": z, "helix_deg": helix_deg, "pitch_r": rp,
+        "hand": hand,
+    })
+    return gear
+
+
+def _cycloidal_disc_2d(pins, pin_circle_r, pin_d, ecc, clearance=0.0,
+                       samples=None):
+    """Shortened-epitrochoid cycloidal disc profile (closed form, shapely).
+
+    In the disc frame each roller centre traces the shortened epitrochoid
+    ``E(u) = (R·cos u − e·cos(N·u), R·sin u − e·sin(N·u))``; the disc profile
+    is its inner equidistant, offset by the roller radius along the curve
+    normal. ``pins`` stationary rollers of diameter ``pin_d`` sit on
+    ``pin_circle_r`` with eccentricity ``ecc`` (all mm); the disc carries
+    ``pins - 1`` lobes and every roller stays tangent to it. ``clearance``
+    shrinks the disc radially for running clearance against the rollers.
+    """
+    import shapely.geometry as sg
+
+    n = pins
+    R = pin_circle_r
+    rr = pin_d / 2.0
+    if samples is None:
+        samples = max(240, 44 * n)
+    u = np.linspace(0.0, 2.0 * math.pi, int(samples), endpoint=False)
+    ex = R * np.cos(u) - ecc * np.cos(n * u)
+    ey = R * np.sin(u) - ecc * np.sin(n * u)
+    dx = -R * np.sin(u) + ecc * n * np.sin(n * u)
+    dy = R * np.cos(u) - ecc * n * np.cos(n * u)
+    norm = np.hypot(dx, dy)
+    pts = np.stack([ex - rr * dy / norm, ey + rr * dx / norm], axis=1)
+    poly = sg.Polygon(pts).buffer(0)
+    if poly.geom_type != "Polygon":
+        poly = max(poly.geoms, key=lambda g: g.area)
+    if clearance > 0:
+        poly = poly.buffer(-clearance / 2.0).buffer(0)
+    return poly
+
+
+def cycloidal_drive(pins=12, pin_d=4.0, pin_circle_r=22.0, ecc=1.5,
+                    disc_thickness=6.0, out_pins=6, out_pin_d=4.0,
+                    out_circle_r=10.0, cam_d=8.0, shaft_d=5.0,
+                    housing_t=4.0, rim_w=4.0, clearance=0.25,
+                    shaft_tail=6.0, samples=None):
+    """Single-stage cycloidal speed reducer as four printable parts.
+
+    Returns ``{"housing", "disc", "input", "output"}`` posed in assembled
+    coordinates (common axis +Z, disc orbiting at (+``ecc``, 0)). The housing
+    is a base plate carrying ``pins`` roller pins on ``pin_circle_r``; the disc
+    is the closed-form shortened-epitrochoid with ``pins - 1`` lobes and
+    reduction ratio ``pins - 1``:1; the input is a shaft with an eccentric cam
+    of ``cam_d`` offset by ``ecc``; the output plate carries ``out_pins`` pins
+    of ``out_pin_d`` on ``out_circle_r`` engaging disc holes of
+    ``hole_d = out_pin_d + 2*ecc + clearance`` (the classic oversize that
+    absorbs the disc's orbit, plus print clearance). All dimensions mm.
+    ``samples`` controls disc-curve resolution (modest by default).
+    """
+    import trimesh
+
+    from .meshutil import sub, uni
+    from .patterns import polar_ring
+    from .prim import cyl
+
+    if (pins < 4 or pin_d <= 0 or pin_circle_r <= 0 or ecc <= 0 or
+            disc_thickness <= 0 or out_pins < 3 or out_pin_d <= 0 or
+            out_circle_r <= 0 or cam_d <= 0 or shaft_d <= 0 or
+            housing_t <= 0 or rim_w <= 0 or clearance < 0 or shaft_tail < 0):
+        raise ValueError("cycloidal_drive(): invalid drive dimensions")
+    if ecc * pins >= pin_circle_r:
+        raise ValueError("cycloidal_drive(): ecc*pins must stay below pin_circle_r")
+    if pin_d / 2.0 + ecc >= pin_circle_r * math.sin(math.pi / pins):
+        raise ValueError("cycloidal_drive(): rollers undercut the disc curve")
+    hole_d = out_pin_d + 2.0 * ecc + clearance
+    if cam_d / 2.0 + ecc + clearance >= out_circle_r - hole_d / 2.0:
+        raise ValueError("cycloidal_drive(): cam collides with output holes")
+
+    disc2d = _cycloidal_disc_2d(pins, pin_circle_r, pin_d, ecc,
+                                clearance=clearance, samples=samples)
+    import shapely.geometry as sg
+    for hx, hy in polar_ring(out_pins, out_circle_r):
+        if not disc2d.covers(sg.Point(hx, hy).buffer(hole_d / 2.0 + 0.8)):
+            raise ValueError("cycloidal_drive(): output holes break the disc edge")
+    if not disc2d.covers(sg.Point(0.0, 0.0).buffer((cam_d + clearance) / 2.0 + 0.8)):
+        raise ValueError("cycloidal_drive(): cam bore breaks the disc edge")
+
+    disc = trimesh.creation.extrude_polygon(disc2d, disc_thickness)
+    cutters = [cyl((cam_d + clearance) / 2.0, disc_thickness + 2.0,
+                   (0.0, 0.0, disc_thickness / 2.0))]
+    for hx, hy in polar_ring(out_pins, out_circle_r):
+        cutters.append(cyl(hole_d / 2.0, disc_thickness + 2.0,
+                           (hx, hy, disc_thickness / 2.0), sections=48))
+    disc = sub(disc, uni(cutters))
+    disc_z0 = housing_t + clearance
+    disc.apply_translation((ecc, 0.0, disc_z0))
+
+    plate_r = pin_circle_r + pin_d / 2.0 + rim_w
+    plate = cyl(plate_r, housing_t, (0.0, 0.0, housing_t / 2.0))
+    rollers = [cyl(pin_d / 2.0, disc_thickness + clearance,
+                   (px, py, housing_t + (disc_thickness + clearance) / 2.0))
+               for px, py in polar_ring(pins, pin_circle_r)]
+    housing = uni([plate] + rollers)
+    housing = sub(housing, cyl((shaft_d + clearance) / 2.0, housing_t + 2.0,
+                               (0.0, 0.0, housing_t / 2.0)))
+
+    shaft_top = disc_z0 + disc_thickness + clearance
+    shaft = cyl(shaft_d / 2.0, shaft_top + shaft_tail,
+                (0.0, 0.0, (shaft_top - shaft_tail) / 2.0))
+    cam = cyl(cam_d / 2.0, disc_thickness,
+              (ecc, 0.0, disc_z0 + disc_thickness / 2.0))
+    input_shaft = uni([shaft, cam])
+
+    out_z0 = disc_z0 + disc_thickness + clearance
+    out_t = max(2.0, housing_t / 2.0)
+    out_plate_r = out_circle_r + out_pin_d / 2.0 + rim_w / 2.0
+    out_plate = cyl(out_plate_r, out_t, (0.0, 0.0, out_z0 + out_t / 2.0))
+    out_pin_bottom = disc_z0 + 0.5
+    out_rod = [cyl(out_pin_d / 2.0, out_z0 - out_pin_bottom,
+                   (px, py, (out_z0 + out_pin_bottom) / 2.0))
+               for px, py in polar_ring(out_pins, out_circle_r)]
+    output = uni([out_plate] + out_rod)
+
+    metadata = {"ratio": float(pins - 1), "lobes": pins - 1, "ecc": ecc,
+                "hole_d": hole_d}
+    for mesh in (housing, disc, input_shaft, output):
+        mesh.metadata.update(metadata)
+    return {"housing": housing, "disc": disc,
+            "input": input_shaft, "output": output}
+
+
+def bevel_gear_pair(m=1.5, z1=16, z2=24, face_w=None, pa=20.0, bl=0.35,
+                    bore1_d=0.0, bore2_d=0.0, layers=10):
+    """Straight bevel gear pair on 90-degree intersecting axes.
+
+    Tredgold (back-cone equivalent) approximation: the ``spur_gear_2d``
+    involute profile at the outer cone is lofted toward the pitch apex,
+    scaling linearly with cone distance, so teeth taper straight at the apex.
+    ``m`` outer module (mm), ``z1``/``z2`` tooth counts (pinion/gear),
+    ``face_w`` face width along the cone (mm, default a quarter of the cone
+    distance), ``pa`` pressure angle (degrees), ``bl`` backlash (mm),
+    ``bore1_d``/``bore2_d`` axial bores (mm), ``layers`` loft resolution.
+    Returns ``{"pinion", "gear"}`` posed meshed: pinion axis +Z, gear axis
+    +Y, both pitch apexes coincident at the origin; the gear is spun with
+    ``mesh_phase`` at the contact generator. Pitch cone half-angles follow
+    tan(delta1) = z1/z2, delta1 + delta2 = 90 deg.
+    """
+    import trimesh
+    import trimesh.transformations as tf
+
+    from .meshutil import sub
+    from .prim import cyl
+    from .sweep import loft
+
+    if (m <= 0 or z1 < 6 or z2 < 6 or not 0.0 < pa < 45.0 or bl < 0 or
+            bore1_d < 0 or bore2_d < 0 or layers < 2):
+        raise ValueError("bevel_gear_pair(): invalid gear dimensions")
+    delta1 = math.atan2(z1, z2)
+    delta2 = math.pi / 2.0 - delta1
+    r1 = m * z1 / 2.0
+    r2 = m * z2 / 2.0
+    cone = math.hypot(r1, r2)                       # pitch cone distance, mm
+    if face_w is None:
+        face_w = cone / 4.0
+    if not 0.0 < face_w < cone / 2.0:
+        raise ValueError("bevel_gear_pair(): face_w must be within (0, cone/2)")
+
+    def one_gear(z, delta, bore_d):
+        profile = spur_gear_2d(z, m, pa=pa, bl=bl)
+        coords = list(profile.exterior.coords)[:-1]
+        rings = []
+        for k in range(layers + 1):
+            rho = cone - face_w + face_w * k / float(layers)
+            s = rho / cone
+            zz = rho * math.cos(delta)
+            rings.append(np.array([[x * s, y * s, zz] for x, y in coords]))
+        gear = loft(rings)
+        if bore_d > 0:
+            z_top = cone * math.cos(delta)
+            gear = sub(gear, cyl(bore_d / 2.0, z_top + 2.0,
+                                 (0.0, 0.0, z_top / 2.0)))
+        return gear
+
+    pinion = one_gear(z1, delta1, bore1_d)
+    gear = one_gear(z2, delta2, bore2_d)
+    gear.apply_transform(tf.rotation_matrix(
+        math.radians(mesh_phase(z1, z2, 90.0)), (0.0, 0.0, 1.0)))
+    gear.apply_transform(tf.rotation_matrix(-math.pi / 2.0, (1.0, 0.0, 0.0)))
+
+    metadata = {"module": m, "ratio": z2 / float(z1),
+                "delta1_deg": math.degrees(delta1),
+                "delta2_deg": math.degrees(delta2),
+                "cone_distance": cone}
+    pinion.metadata.update(metadata)
+    gear.metadata.update(metadata)
+    return {"pinion": pinion, "gear": gear}

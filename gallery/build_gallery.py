@@ -19,6 +19,13 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 import mechlib
+from mechlib.cams import (
+    barrel_cam,
+    cam_lift,
+    heart_cam,
+    plate_cam,
+    snail_cam,
+)
 from mechlib.closures import (
     clamshell_shiplap,
     fix_pin,
@@ -31,6 +38,8 @@ from mechlib.closures import (
     setscrew,
     ydovetail,
 )
+from mechlib.clutches import freewheel_clutch, torque_limiter
+from mechlib.couplings import jaw_coupling, oldham_coupling, universal_joint
 from mechlib.cutters import (
     bearing_seat,
     blind_socket,
@@ -54,7 +63,11 @@ from mechlib.drives import (
 )
 from mechlib.fasteners import fastener_mesh, hex_nut_mesh, washer_mesh
 from mechlib.fixtures import board_cradle, saddle
+from mechlib.flexures import bistable_beam, cross_flexure, wave_spring
 from mechlib.gears import (
+    bevel_gear_pair,
+    cycloidal_drive,
+    herringbone_gear,
     mesh_phase,
     rack_2d,
     roller_sprocket_2d,
@@ -62,6 +75,18 @@ from mechlib.gears import (
     spur_gear,
     spur_gear_mesh,
     worm,
+)
+from mechlib.indexing import escapement, geneva_pair, intermittent_gear_pair
+from mechlib.linear import (
+    archimedes_screw,
+    differential_screw,
+    scroll_drive,
+)
+from mechlib.linkages import (
+    four_bar,
+    quick_return,
+    scotch_yoke,
+    toggle_clamp,
 )
 from mechlib.mechanisms import (
     dog_slot_coupling,
@@ -74,6 +99,7 @@ from mechlib.mechanisms import (
 )
 from mechlib.patterns import directed_holes, lighten_cell_poly, lighten_grid_centres, polar_ring
 from mechlib.prim import boxc, chamfer_prism, cyl, frustum, hex_poly, rbox, sector2d, seg_cylinder
+from mechlib.pulleys import grooved_drum, timing_pulley
 from mechlib.ratchets import (
     arc_ratchet_2d,
     check_ratchet_sense_and_sweep,
@@ -727,6 +753,413 @@ def build():
             "description": "A downward collar dog riding in a boss arc slot to provide controlled angular lost motion.",
             "origin": "Generalized from finnish-doors coupling variant A.",
             "demo": "demo_dog_slot_coupling",
+        },
+        {
+            "file": "four_bar_demo.glb",
+            "name": "four_bar",
+            "module": "mechlib.linkages",
+            "signature": signature(four_bar),
+            "description": (
+                "A flat-printable four-bar linkage kit with printed pivot pins, "
+                "assembled by circle-circle position kinematics; the defaults are "
+                "Hoecken straight-line proportions with an extended coupler "
+                "tracer point. The canonical leg drive for hobby walking robots."),
+            "origin": (
+                "Mechanical-movements wave v0.6.0; classic ref: Hoecken "
+                "straight-line linkage (1926), cognate of the Chebyshev linkage"),
+            "demo": "demo_four_bar",
+        },
+        {
+            "file": "toggle_clamp_demo.glb",
+            "name": "toggle_clamp",
+            "module": "mechlib.linkages",
+            "signature": signature(toggle_clamp),
+            "description": (
+                "An over-center knee toggle clamp — base, clamp arm, connecting "
+                "link, and handle posed just past dead center where the mechanism "
+                "self-locks. The ubiquitous hold-down clamp of workshop jigs and "
+                "welding fixtures."),
+            "origin": (
+                "Mechanical-movements wave v0.6.0; classic ref: 507 Mechanical "
+                "Movements No. 175 / toggle (knee) joint"),
+            "demo": "demo_toggle_clamp",
+        },
+        {
+            "file": "scotch_yoke_demo.glb",
+            "name": "scotch_yoke",
+            "module": "mechlib.linkages",
+            "signature": signature(scotch_yoke),
+            "description": (
+                "A crank disc and pin driving a slotted yoke between guide rails, "
+                "converting rotation into exact simple-harmonic reciprocation. "
+                "The standard rotary-to-linear drive of pneumatic valve "
+                "actuators."),
+            "origin": (
+                "Mechanical-movements wave v0.6.0; classic ref: 507 Mechanical "
+                "Movements No. 94 / Scotch yoke"),
+            "demo": "demo_scotch_yoke",
+        },
+        {
+            "file": "quick_return_demo.glb",
+            "name": "quick_return",
+            "module": "mechlib.linkages",
+            "signature": signature(quick_return),
+            "description": (
+                "A crank and slotted-lever quick-return whose pivot offset sweeps "
+                "toward the Whitworth configuration; the working:return time "
+                "ratio is exposed as mechanism metadata. The classic ram drive of "
+                "metal shaping machines."),
+            "origin": (
+                "Mechanical-movements wave v0.6.0; classic ref: 507 Mechanical "
+                "Movements Nos. 98-100 / crank and slotted lever, Whitworth "
+                "quick return"),
+            "demo": "demo_quick_return",
+        },
+        {
+            "file": "plate_cam_demo.glb",
+            "name": "plate_cam",
+            "module": "mechlib.cams",
+            "signature": "%s; follower lift from %s" % (
+                signature(plate_cam), signature(cam_lift)),
+            "description": "A radial plate cam synthesized from dwell, linear, SHM, and cycloidal motion-law segments, roller-compensated and extruded with a hub and D-flat bore. Programs the valve timing of a model engine or an automaton's motion.",
+            "origin": "Mechanical-movements wave v0.6.0; classic ref: 507 Mechanical Movements No. 380 / plate cam",
+            "demo": "demo_plate_cam",
+        },
+        {
+            "file": "snail_cam_demo.glb",
+            "name": "snail_cam",
+            "module": "mechlib.cams",
+            "signature": signature(snail_cam),
+            "description": "A snail drop cam with an Archimedean rise over most of a revolution and a single radial drop face for slow-lift, sudden-release duty. Trips the strike train of a clock or a trip hammer.",
+            "origin": "Mechanical-movements wave v0.6.0; classic ref: 507 Mechanical Movements No. 382 / snail drop cam",
+            "demo": "demo_snail_cam",
+        },
+        {
+            "file": "heart_cam_demo.glb",
+            "name": "heart_cam",
+            "module": "mechlib.cams",
+            "signature": "%s; follower lift from %s" % (
+                signature(heart_cam), signature(cam_lift)),
+            "description": "A heart cam with symmetric linear rise and fall, giving constant-velocity follower motion and a unique angular reset position. Returns a chronograph seconds hand to zero.",
+            "origin": "Mechanical-movements wave v0.6.0; classic ref: heart piece, chronograph reset (horology)",
+            "demo": "demo_heart_cam",
+        },
+        {
+            "file": "barrel_cam_demo.glb",
+            "name": "barrel_cam",
+            "module": "mechlib.cams",
+            "signature": signature(barrel_cam),
+            "description": "A barrel cam whose closed groove follows a motion-law z(theta) program around the drum, with a mating follower pin and guide. Winds the level line of a fishing reel or drives a toolchanger drum.",
+            "origin": "Mechanical-movements wave v0.6.0; classic ref: 507 Mechanical Movements No. 389 / barrel cam",
+            "demo": "demo_barrel_cam",
+        },
+        {
+            "file": "geneva_pair_demo.glb",
+            "name": "geneva_pair",
+            "module": "mechlib.indexing",
+            "signature": signature(geneva_pair),
+            "description": (
+                "An external Geneva (Maltese cross) pair posed mid-engagement: "
+                "the driver's crank pin indexes the slotted wheel one slot per "
+                "revolution while its crescent-cut locking disc holds the wheel "
+                "during dwell. The film-advance indexer of movie projectors and "
+                "automated assembly turrets."
+            ),
+            "origin": ("Mechanical-movements wave v0.6.0; classic ref: "
+                       "507 Mechanical Movements No. 214 region / Geneva drive"),
+            "demo": "demo_geneva_pair",
+        },
+        {
+            "file": "escapement_demo.glb",
+            "name": "escapement",
+            "module": "mechlib.indexing",
+            "signature": signature(escapement),
+            "description": (
+                "A clock escapement: a forward-raked escape wheel and a pivoted "
+                "anchor, flat parts posed with one pallet resting on a tooth tip; "
+                "the style parameter selects recoil anchor or Graham deadbeat "
+                "pallet faces. The visible tick of longcase and printed clock "
+                "builds."
+            ),
+            "origin": ("Mechanical-movements wave v0.6.0; classic ref: "
+                       "anchor escapement (Hooke, c. 1657) / Graham deadbeat"),
+            "demo": "demo_escapement",
+        },
+        {
+            "file": "intermittent_gear_pair_demo.glb",
+            "name": "intermittent_gear_pair",
+            "module": "mechlib.indexing",
+            "signature": signature(intermittent_gear_pair),
+            "description": (
+                "A mutilated-gear intermittent pair posed meshed: the driver "
+                "keeps involute teeth on one arc with a plain locking segment, "
+                "advancing the notch-locked driven gear one tooth group per "
+                "revolution. The digit-advance scheme of mechanical counters and "
+                "washing-machine timers."
+            ),
+            "origin": ("Mechanical-movements wave v0.6.0; classic ref: "
+                       "507 Mechanical Movements intermittent-gearing plates"),
+            "demo": "demo_intermittent_gear_pair",
+        },
+        {
+            "file": "herringbone_gear_demo.glb",
+            "name": "herringbone_gear",
+            "module": "mechlib.gears",
+            "signature": "%s; phased with %s" % (
+                signature(herringbone_gear), signature(mesh_phase)),
+            "description": "A double-helical involute gear whose mirrored tooth "
+                           "halves cancel axial thrust and self-center in mesh. "
+                           "The standard drive gear of printed extruders and "
+                           "quiet printed gearboxes.",
+            "origin": "Mechanical-movements wave v0.6.0; classic ref: Citroen "
+                      "double-helical (herringbone) gear",
+            "demo": "demo_herringbone_gear",
+        },
+        {
+            "file": "cycloidal_drive_demo.glb",
+            "name": "cycloidal_drive",
+            "module": "mechlib.gears",
+            "signature": signature(cycloidal_drive),
+            "description": "A single-stage cycloidal reducer: an eccentric input "
+                           "precesses a shortened-epitrochoid disc against a ring "
+                           "of housing pins, with output taken through oversized "
+                           "pin holes. The robot-joint reducer of Nabtesco RV "
+                           "and DIY actuators.",
+            "origin": "Mechanical-movements wave v0.6.0; classic ref: cycloidal "
+                      "speed reducer",
+            "demo": "demo_cycloidal_drive",
+        },
+        {
+            "file": "bevel_gear_pair_demo.glb",
+            "name": "bevel_gear_pair",
+            "module": "mechlib.gears",
+            "signature": signature(bevel_gear_pair),
+            "description": "A straight bevel pair on 90-degree axes, the involute "
+                           "profile lofted toward the pitch apex in the Tredgold "
+                           "approximation. Right-angle drives of hand drills, "
+                           "angle grinders, and differentials.",
+            "origin": "Mechanical-movements wave v0.6.0; classic ref: straight "
+                      "bevel / miter gear pair",
+            "demo": "demo_bevel_gear_pair",
+        },
+        {
+            "file": "scroll_drive_demo.glb",
+            "name": "scroll_drive",
+            "module": "mechlib.linear",
+            "signature": signature(scroll_drive),
+            "description": "A lathe-chuck scroll plate whose raised Archimedean "
+                           "spiral rib drives three arc-toothed jaws in sync on a "
+                           "common gripping circle. The self-centering heart of "
+                           "every 3-jaw lathe chuck.",
+            "origin": "Mechanical-movements wave v0.6.0; classic ref: 3-jaw "
+                      "scroll chuck",
+            "demo": "demo_scroll_drive",
+        },
+        {
+            "file": "differential_screw_demo.glb",
+            "name": "differential_screw",
+            "module": "mechlib.linear",
+            "signature": signature(differential_screw),
+            "description": "One shaft with two same-hand thread sections of "
+                           "slightly different pitch; travel per revolution is "
+                           "the pitch difference, giving micrometer-fine motion "
+                           "from coarse printed threads. Micrometer heads and "
+                           "optical fine-focus stages.",
+            "origin": "Mechanical-movements wave v0.6.0; classic ref: 507 "
+                      "Mechanical Movements differential screw plates",
+            "demo": "demo_differential_screw",
+        },
+        {
+            "file": "archimedes_screw_demo.glb",
+            "name": "archimedes_screw",
+            "module": "mechlib.linear",
+            "signature": signature(archimedes_screw),
+            "description": "A helical flight on a shaft inside a half-pipe "
+                           "trough, posed inclined; each turn carries one pocket "
+                           "of material uphill. Grain augers, snowblowers, and "
+                           "wastewater lift screws.",
+            "origin": "Mechanical-movements wave v0.6.0; classic ref: Archimedes "
+                      "water screw",
+            "demo": "demo_archimedes_screw",
+        },
+        {
+            "file": "oldham_coupling_demo.glb",
+            "name": "oldham_coupling",
+            "module": "mechlib.couplings",
+            "signature": signature(oldham_coupling),
+            "description": (
+                "Two hubs with perpendicular diametral tongues drive a floating "
+                "cross-slotted disc, transmitting constant-velocity rotation "
+                "between parallel shafts with lateral offset. The anti-rotation "
+                "coupling of scroll compressors and the stepper-to-leadscrew "
+                "coupler of 3D printers."
+            ),
+            "origin": (
+                "Mechanical-movements wave v0.6.0; classic ref: Oldham "
+                "double-slider coupling (507 Mechanical Movements, shaft "
+                "couplings)"
+            ),
+            "demo": "demo_oldham_coupling",
+        },
+        {
+            "file": "universal_joint_demo.glb",
+            "name": "universal_joint",
+            "module": "mechlib.couplings",
+            "signature": signature(universal_joint),
+            "description": (
+                "Two forked yokes joined by a four-trunnion cross spider transmit "
+                "rotation between shafts intersecting at an angle, with the "
+                "classic sinusoidal speed fluctuation twice per revolution. The "
+                "joint of automotive driveshafts and socket-wrench extensions."
+            ),
+            "origin": (
+                "Mechanical-movements wave v0.6.0; classic ref: Cardan/Hooke's "
+                "universal joint (507 Mechanical Movements)"
+            ),
+            "demo": "demo_universal_joint",
+        },
+        {
+            "file": "jaw_coupling_demo.glb",
+            "name": "jaw_coupling",
+            "module": "mechlib.couplings",
+            "signature": signature(jaw_coupling),
+            "description": (
+                "Two jaw hubs interleave through a lobed elastomer spider "
+                "(printed in TPU in practice) that carries torque in compression, "
+                "damping vibration and failing safe if the spider dies. The "
+                "Lovejoy-style motor-to-pump coupling of light industry."
+            ),
+            "origin": (
+                "Mechanical-movements wave v0.6.0; classic ref: Lovejoy "
+                "elastomeric jaw (spider) coupling"
+            ),
+            "demo": "demo_jaw_coupling",
+        },
+        {
+            "file": "torque_limiter_demo.glb",
+            "name": "torque_limiter",
+            "module": "mechlib.clutches",
+            "signature": "%s; preload spring %s" % (
+                signature(torque_limiter), signature(helix_tube)),
+            "description": (
+                "Spring-seated radiused detent bumps engage matching pockets "
+                "between two faces; above the trip torque set by the detent "
+                "geometry they cam out and ratchet past, protecting the "
+                "drivetrain. The slip clutch inside every cordless drill clutch "
+                "collar."
+            ),
+            "origin": (
+                "Mechanical-movements wave v0.6.0; classic ref: spring-detent "
+                "safety (overload) clutch"
+            ),
+            "demo": "demo_torque_limiter",
+        },
+        {
+            "file": "freewheel_clutch_demo.glb",
+            "name": "freewheel_clutch",
+            "module": "mechlib.clutches",
+            "signature": signature(freewheel_clutch),
+            "description": (
+                "Cylindrical rollers between a smooth inner hub and ramped "
+                "outer-ring pockets wedge instantly in one direction and release "
+                "in the other, a silent one-way clutch with no tooth steps. Used "
+                "in starter-motor bendix drives and conveyor backstops."
+            ),
+            "origin": (
+                "Mechanical-movements wave v0.6.0; classic ref: roller-ramp "
+                "overrunning (sprag-less one-way) clutch"
+            ),
+            "demo": "demo_freewheel_clutch",
+        },
+        {
+            "file": "timing_pulley_demo.glb",
+            "name": "timing_pulley",
+            "module": "mechlib.pulleys",
+            "signature": signature(timing_pulley),
+            "description": (
+                "A GT2-style toothed belt pulley with flanges, hub and setscrew "
+                "boss, its tooth spaces cut as circular arcs per the GT2 "
+                "approximation, shown meshing a toothed belt segment. A printed "
+                "drop-in for 3D-printer and benchtop CNC belt axes."),
+            "origin": ("Mechanical-movements wave v0.6.0; classic ref: GT2 "
+                       "synchronous belt drive (507 Mechanical Movements "
+                       "belt-drive series)"),
+            "demo": "demo_timing_pulley",
+        },
+        {
+            "file": "winch_drum_demo.glb",
+            "name": "grooved_drum",
+            "module": "mechlib.pulleys",
+            "signature": "%s; wound cable %s" % (
+                signature(grooved_drum), signature(helix_tube)),
+            "description": (
+                "A cylindrical winch drum with a helical groove pitched to the "
+                "cable so the rope spools in a single controlled layer, shown "
+                "with its first wound turns. Used on crane hoists and 4x4 "
+                "recovery winches."),
+            "origin": ("Mechanical-movements wave v0.6.0; classic ref: 507 "
+                       "Mechanical Movements winch/windlass entries (LeBus "
+                       "grooved drum)"),
+            "demo": "demo_winch_drum",
+        },
+        {
+            "file": "fusee_demo.glb",
+            "name": "grooved_drum",
+            "module": "mechlib.pulleys",
+            "signature": signature(grooved_drum),
+            "description": (
+                "A conical spirally grooved fusee whose hyperbolic winding "
+                "radius compensates a weakening mainspring to hold drive torque "
+                "constant. The classic constant-torque heart of marine "
+                "chronometers and English pocket watches."),
+            "origin": ("Mechanical-movements wave v0.6.0; classic ref: 507 "
+                       "Mechanical Movements No. 46 / fusee chain and "
+                       "spring-box"),
+            "demo": "demo_fusee",
+        },
+        {
+            "file": "cross_flexure_demo.glb",
+            "name": "cross_flexure",
+            "module": "mechlib.flexures",
+            "signature": signature(cross_flexure),
+            "description": (
+                "A monolithic cross-axis flexural pivot: two rigid blocks joined "
+                "only by two crossing thin blades, giving limited frictionless, "
+                "backlash-free rotation about the crossing point. Used in "
+                "precision instruments, optical mounts and printed robot "
+                "joints."),
+            "origin": ("Mechanical-movements wave v0.6.0; classic ref: "
+                       "cross-spring pivot (Bendix Free-Flex)"),
+            "demo": "demo_cross_flexure",
+        },
+        {
+            "file": "wave_spring_demo.glb",
+            "name": "wave_spring",
+            "module": "mechlib.flexures",
+            "signature": signature(wave_spring),
+            "description": (
+                "A crest-to-crest wave spring: annular strips with sinusoidal "
+                "axial waviness stacked half a wave apart so opposing crests "
+                "bear on each other, giving spring rate in half the height of a "
+                "coil spring. Used for bearing preload and clutch-pack "
+                "take-up."),
+            "origin": ("Mechanical-movements wave v0.6.0; classic ref: Smalley "
+                       "crest-to-crest wave spring"),
+            "demo": "demo_wave_spring",
+        },
+        {
+            "file": "bistable_beam_demo.glb",
+            "name": "bistable_beam",
+            "module": "mechlib.flexures",
+            "signature": signature(bistable_beam),
+            "description": (
+                "A flat-printed buckled-beam bistable switch: pre-curved cosine "
+                "beams clamped in a frame carry a central shuttle that snaps "
+                "between two stable positions. Used for clicky toggle latches, "
+                "haptic buttons and one-piece switches."),
+            "origin": ("Mechanical-movements wave v0.6.0; classic ref: "
+                       "buckled-beam bistable compliant mechanism (BYU CMR)"),
+            "demo": "demo_bistable_beam",
         },
     ]
 

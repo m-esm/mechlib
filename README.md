@@ -139,6 +139,9 @@ ml.export_stl(body, "bracket.stl")
 | `rack_2d` | Generate a finite pressure-angle rack matching `spur_gear_2d`. | finnish-doors `src/intercom/fixture.py` |
 | `spur_gear` | Build a full 3D helical, sector, or hubbed gear. | dual-axis-turntable `src/gears.py` |
 | `worm` | Build a true helical worm and report its lead angle. | dual-axis-turntable `src/gears.py` |
+| `herringbone_gear` | Build a double-helical (herringbone) involute gear. | New, mechanical-movements wave v0.6.0 |
+| `cycloidal_drive` | Build a single-stage cycloidal reducer stack. | New, mechanical-movements wave v0.6.0 |
+| `bevel_gear_pair` | Build a straight bevel pair on 90-degree axes (Tredgold approximation). | New, mechanical-movements wave v0.6.0 |
 
 ### `mechlib.drives`
 
@@ -178,6 +181,67 @@ ml.export_stl(body, "bracket.stl")
 | `compliant_clutch_2d` | Generate a compliant one-way or torque-limiting race and hub. | finnish-doors Klonk `gen_compliant_2d` |
 | `compliant_clutch` | Extrude the compliant clutch race and flexure hub. | finnish-doors Klonk `gen_compliant_2d` |
 | `arc_ratchet_2d` | Generate a tension-loaded compliant arc-arm ratchet. | finnish-doors historical Klonk follower ratchet |
+
+### `mechlib.linkages`
+
+| Function | Purpose | Origin project |
+| --- | --- | --- |
+| `link_bar` | Build a flat link bar with bored pivot holes. | New, mechanical-movements wave v0.6.0 |
+| `four_bar_pose` | Solve four-bar joint positions by circle-circle intersection. | New, mechanical-movements wave v0.6.0 |
+| `four_bar` | Build an assembled four-bar linkage kit with printed pivot pins. | New, mechanical-movements wave v0.6.0 |
+| `toggle_clamp` | Build an over-center knee toggle clamp posed near self-lock. | New, mechanical-movements wave v0.6.0 |
+| `scotch_yoke` | Build a crank-and-pin slotted yoke with guide rails. | New, mechanical-movements wave v0.6.0 |
+| `quick_return_ratio` | Compute the working:return time ratio of a crank quick-return. | New, mechanical-movements wave v0.6.0 |
+| `quick_return` | Build a slotted-lever (Whitworth) quick-return mechanism. | New, mechanical-movements wave v0.6.0 |
+
+### `mechlib.cams`
+
+| Function | Purpose | Origin project |
+| --- | --- | --- |
+| `MOTION_LAWS` | The motion-law names usable in cam segments (dwell, linear, shm, cycloidal). | New, mechanical-movements wave v0.6.0 |
+| `DEFAULT_SEGMENTS` | A stock rise-dwell-return-dwell cam segment program. | New, mechanical-movements wave v0.6.0 |
+| `cam_lift` | Evaluate follower lift at an angle over motion-law segments. | New, mechanical-movements wave v0.6.0 |
+| `cam_profile_2d` | Synthesize a roller-compensated cam profile polygon from segments. | New, mechanical-movements wave v0.6.0 |
+| `plate_cam` | Extrude a plate cam with hub and D-flat or keyway bore. | New, mechanical-movements wave v0.6.0 |
+| `snail_cam` | Build a snail drop cam with a single radial drop face. | New, mechanical-movements wave v0.6.0 |
+| `heart_cam` | Build a constant-velocity heart cam with linear rise-fall. | New, mechanical-movements wave v0.6.0 |
+| `barrel_cam` | Build a barrel cam with a closed motion-law groove and follower pin. | New, mechanical-movements wave v0.6.0 |
+
+### `mechlib.indexing`
+
+| Function | Purpose | Origin project |
+| --- | --- | --- |
+| `geneva_pair` | Build an external Geneva driver and slotted wheel posed mid-engagement. | New, mechanical-movements wave v0.6.0 |
+| `escapement` | Build an escape wheel and anchor/deadbeat pallets with one pallet engaged. | New, mechanical-movements wave v0.6.0 |
+| `intermittent_gear_pair` | Build a mutilated-gear intermittent pair with locking segments, posed meshed. | New, mechanical-movements wave v0.6.0 |
+
+### `mechlib.linear`
+
+| Function | Purpose | Origin project |
+| --- | --- | --- |
+| `scroll_drive` | Build a lathe-chuck scroll plate with three self-centering jaws. | New, mechanical-movements wave v0.6.0 |
+| `differential_screw` | Build a two-pitch differential screw with its nut blocks. | New, mechanical-movements wave v0.6.0 |
+| `archimedes_screw` | Build an inclined helical water screw in a half-pipe trough. | New, mechanical-movements wave v0.6.0 |
+
+### `mechlib.couplings` and `mechlib.clutches`
+
+| Function | Purpose | Origin project |
+| --- | --- | --- |
+| `oldham_coupling` | Build a cross-slotted Oldham coupling for offset parallel shafts. | New, mechanical-movements wave v0.6.0 |
+| `universal_joint` | Build a Cardan universal joint posed at a bend angle. | New, mechanical-movements wave v0.6.0 |
+| `jaw_coupling` | Build interleaved jaw hubs with an elastomer spider. | New, mechanical-movements wave v0.6.0 |
+| `torque_limiter` | Build a spring-detent slip clutch with geometry-set trip torque. | New, mechanical-movements wave v0.6.0 |
+| `freewheel_clutch` | Build a roller-ramp one-way overrunning clutch. | New, mechanical-movements wave v0.6.0 |
+
+### `mechlib.pulleys` and `mechlib.flexures`
+
+| Function | Purpose | Origin project |
+| --- | --- | --- |
+| `timing_pulley` | Build a GT2-style toothed belt pulley with flanges and hub. | New, mechanical-movements wave v0.6.0 |
+| `grooved_drum` | Build a helically grooved cable drum (cylinder, cone, or fusee). | New, mechanical-movements wave v0.6.0 |
+| `cross_flexure` | Build a monolithic cross-axis flexural pivot. | New, mechanical-movements wave v0.6.0 |
+| `wave_spring` | Build a crest-to-crest annular wave spring. | New, mechanical-movements wave v0.6.0 |
+| `bistable_beam` | Build a buckled-beam bistable switch with a central shuttle. | New, mechanical-movements wave v0.6.0 |
 
 ### `mechlib.fasteners`
 

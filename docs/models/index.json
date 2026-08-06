@@ -1,10 +1,10 @@
 {
-  "version": "0.5.0",
+  "version": "0.6.0",
   "playground": {
     "pyodide": "0.27.7",
     "wheels": [
       "wheels/manifold3d-3.5.2-cp312-cp312-emscripten_3_1_58_wasm32.whl",
-      "wheels/mechlib-0.5.0-py3-none-any.whl"
+      "wheels/mechlib-0.6.0-py3-none-any.whl"
     ],
     "demos": "playground/demos.py"
   },
@@ -2516,6 +2516,955 @@
             "min": 10.0,
             "max": 28.0,
             "step": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "file": "four_bar_demo.glb",
+      "name": "four_bar",
+      "module": "mechlib.linkages",
+      "signature": "four_bar(l_ground=25.0, l_crank=12.5, l_coupler=25.0, l_rocker=25.0, crank_angle_deg=60.0, branch=1, coupler_ext=0.0, width=6.0, thickness=4.0, bore_d=3.0, clearance=0.25, pin_extra=2.0)",
+      "description": "A flat-printable four-bar linkage kit with printed pivot pins, assembled by circle-circle position kinematics; the defaults are Hoecken straight-line proportions with an extended coupler tracer point. The canonical leg drive for hobby walking robots.",
+      "origin": "Mechanical-movements wave v0.6.0; classic ref: Hoecken straight-line linkage (1926), cognate of the Chebyshev linkage",
+      "play": {
+        "demo": "demo_four_bar",
+        "params": [
+          {
+            "name": "crank_angle_deg",
+            "label": "Crank Angle Deg",
+            "type": "float",
+            "default": 60.0,
+            "min": 0.0,
+            "max": 360.0,
+            "step": 5.0
+          },
+          {
+            "name": "l_crank",
+            "label": "L Crank",
+            "type": "float",
+            "default": 12.5,
+            "min": 6.0,
+            "max": 18.0,
+            "step": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "file": "toggle_clamp_demo.glb",
+      "name": "toggle_clamp",
+      "module": "mechlib.linkages",
+      "signature": "toggle_clamp(arm_len=34.0, link_c=14.0, handle_len=22.0, link_k=10.0, pivot_angle_deg=-105.0, overcenter_deg=4.0, width=6.0, thickness=4.0, base_h=4.0, bore_d=3.0, clearance=0.25, base_pad=6.0, pin_extra=2.0)",
+      "description": "An over-center knee toggle clamp \u2014 base, clamp arm, connecting link, and handle posed just past dead center where the mechanism self-locks. The ubiquitous hold-down clamp of workshop jigs and welding fixtures.",
+      "origin": "Mechanical-movements wave v0.6.0; classic ref: 507 Mechanical Movements No. 175 / toggle (knee) joint",
+      "play": {
+        "demo": "demo_toggle_clamp",
+        "params": [
+          {
+            "name": "overcenter_deg",
+            "label": "Overcenter Deg",
+            "type": "float",
+            "default": 4.0,
+            "min": 0.0,
+            "max": 12.0,
+            "step": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "file": "scotch_yoke_demo.glb",
+      "name": "scotch_yoke",
+      "module": "mechlib.linkages",
+      "signature": "scotch_yoke(crank_r=12.0, disc_r=17.0, pin_d=6.0, angle_deg=35.0, thickness=5.0, pin_h=6.0, yoke_wall=2.5, stem_w=8.0, stem_len=22.0, rail_w=4.0, clearance=0.25)",
+      "description": "A crank disc and pin driving a slotted yoke between guide rails, converting rotation into exact simple-harmonic reciprocation. The standard rotary-to-linear drive of pneumatic valve actuators.",
+      "origin": "Mechanical-movements wave v0.6.0; classic ref: 507 Mechanical Movements No. 94 / Scotch yoke",
+      "play": {
+        "demo": "demo_scotch_yoke",
+        "params": [
+          {
+            "name": "angle_deg",
+            "label": "Angle Deg",
+            "type": "float",
+            "default": 35.0,
+            "min": 0.0,
+            "max": 360.0,
+            "step": 5.0
+          }
+        ]
+      }
+    },
+    {
+      "file": "quick_return_demo.glb",
+      "name": "quick_return",
+      "module": "mechlib.linkages",
+      "signature": "quick_return(crank_r=14.0, pivot_dist=34.0, lever_len=60.0, crank_angle_deg=40.0, disc_r=18.0, pin_d=6.0, lever_w=10.0, thickness=5.0, base_h=4.0, pivot_bore_d=6.0, crank_bore_d=5.0, clearance=0.25, base_pad=4.0, pin_extra=2.0)",
+      "description": "A crank and slotted-lever quick-return whose pivot offset sweeps toward the Whitworth configuration; the working:return time ratio is exposed as mechanism metadata. The classic ram drive of metal shaping machines.",
+      "origin": "Mechanical-movements wave v0.6.0; classic ref: 507 Mechanical Movements Nos. 98-100 / crank and slotted lever, Whitworth quick return",
+      "play": {
+        "demo": "demo_quick_return",
+        "params": [
+          {
+            "name": "crank_angle_deg",
+            "label": "Crank Angle Deg",
+            "type": "float",
+            "default": 40.0,
+            "min": 0.0,
+            "max": 360.0,
+            "step": 5.0
+          }
+        ]
+      }
+    },
+    {
+      "file": "plate_cam_demo.glb",
+      "name": "plate_cam",
+      "module": "mechlib.cams",
+      "signature": "plate_cam(base_r=10.0, segments=(('shm', 6.0, 90.0), ('dwell', 0.0, 90.0), ('cycloidal', -6.0, 120.0), ('dwell', 0.0, 60.0)), thickness=5.0, roller_r=0.0, hub_d=0.0, hub_h=0.0, bore_d=0.0, flat=None, keyway_w=0.0, keyway_d=0.0, clearance=0.25, n=96); follower lift from cam_lift(segments, angle_deg)",
+      "description": "A radial plate cam synthesized from dwell, linear, SHM, and cycloidal motion-law segments, roller-compensated and extruded with a hub and D-flat bore. Programs the valve timing of a model engine or an automaton's motion.",
+      "origin": "Mechanical-movements wave v0.6.0; classic ref: 507 Mechanical Movements No. 380 / plate cam",
+      "play": {
+        "demo": "demo_plate_cam",
+        "params": [
+          {
+            "name": "lift",
+            "label": "Lift",
+            "type": "float",
+            "default": 8.0,
+            "min": 3.0,
+            "max": 10.0,
+            "step": 1.0
+          },
+          {
+            "name": "roller_r",
+            "label": "Roller R",
+            "type": "float",
+            "default": 3.0,
+            "min": 2.0,
+            "max": 5.0,
+            "step": 0.5
+          },
+          {
+            "name": "thickness",
+            "label": "Thickness",
+            "type": "float",
+            "default": 5.0,
+            "min": 3.0,
+            "max": 8.0,
+            "step": 0.5
+          },
+          {
+            "name": "follower_deg",
+            "label": "Follower Deg",
+            "type": "float",
+            "default": 60.0,
+            "min": 0.0,
+            "max": 330.0,
+            "step": 30.0
+          }
+        ]
+      }
+    },
+    {
+      "file": "snail_cam_demo.glb",
+      "name": "snail_cam",
+      "module": "mechlib.cams",
+      "signature": "snail_cam(base_r=12.0, lift=8.0, thickness=5.0, rise_deg=330.0, bore_d=6.0, flat=None, clearance=0.25, n=96)",
+      "description": "A snail drop cam with an Archimedean rise over most of a revolution and a single radial drop face for slow-lift, sudden-release duty. Trips the strike train of a clock or a trip hammer.",
+      "origin": "Mechanical-movements wave v0.6.0; classic ref: 507 Mechanical Movements No. 382 / snail drop cam",
+      "play": {
+        "demo": "demo_snail_cam",
+        "params": [
+          {
+            "name": "lift",
+            "label": "Lift",
+            "type": "float",
+            "default": 9.0,
+            "min": 4.0,
+            "max": 12.0,
+            "step": 1.0
+          },
+          {
+            "name": "rise_deg",
+            "label": "Rise Deg",
+            "type": "float",
+            "default": 320.0,
+            "min": 280.0,
+            "max": 350.0,
+            "step": 10.0
+          },
+          {
+            "name": "thickness",
+            "label": "Thickness",
+            "type": "float",
+            "default": 5.0,
+            "min": 3.0,
+            "max": 8.0,
+            "step": 0.5
+          },
+          {
+            "name": "follower_deg",
+            "label": "Follower Deg",
+            "type": "float",
+            "default": 250.0,
+            "min": 0.0,
+            "max": 330.0,
+            "step": 30.0
+          }
+        ]
+      }
+    },
+    {
+      "file": "heart_cam_demo.glb",
+      "name": "heart_cam",
+      "module": "mechlib.cams",
+      "signature": "heart_cam(base_r=10.0, lift=6.0, thickness=5.0, roller_r=0.0, bore_d=6.0, flat=None, clearance=0.25, n=96); follower lift from cam_lift(segments, angle_deg)",
+      "description": "A heart cam with symmetric linear rise and fall, giving constant-velocity follower motion and a unique angular reset position. Returns a chronograph seconds hand to zero.",
+      "origin": "Mechanical-movements wave v0.6.0; classic ref: heart piece, chronograph reset (horology)",
+      "play": {
+        "demo": "demo_heart_cam",
+        "params": [
+          {
+            "name": "lift",
+            "label": "Lift",
+            "type": "float",
+            "default": 6.0,
+            "min": 3.0,
+            "max": 9.0,
+            "step": 1.0
+          },
+          {
+            "name": "thickness",
+            "label": "Thickness",
+            "type": "float",
+            "default": 5.0,
+            "min": 3.0,
+            "max": 8.0,
+            "step": 0.5
+          },
+          {
+            "name": "follower_deg",
+            "label": "Follower Deg",
+            "type": "float",
+            "default": 90.0,
+            "min": 0.0,
+            "max": 330.0,
+            "step": 30.0
+          }
+        ]
+      }
+    },
+    {
+      "file": "barrel_cam_demo.glb",
+      "name": "barrel_cam",
+      "module": "mechlib.cams",
+      "signature": "barrel_cam(radius=11.0, length=28.0, groove_w=4.25, groove_d=3.0, segments=(('cycloidal', 10.0, 180.0), ('cycloidal', -10.0, 180.0)), pin_d=4.0, pin_len=10.0, pin_phase_deg=0.0, bore_d=0.0, flat=None, clearance=0.25, n=96)",
+      "description": "A barrel cam whose closed groove follows a motion-law z(theta) program around the drum, with a mating follower pin and guide. Winds the level line of a fishing reel or drives a toolchanger drum.",
+      "origin": "Mechanical-movements wave v0.6.0; classic ref: 507 Mechanical Movements No. 389 / barrel cam",
+      "play": {
+        "demo": "demo_barrel_cam",
+        "params": [
+          {
+            "name": "pin_phase_deg",
+            "label": "Pin Phase Deg",
+            "type": "float",
+            "default": 40.0,
+            "min": 0.0,
+            "max": 330.0,
+            "step": 30.0
+          },
+          {
+            "name": "groove_d",
+            "label": "Groove D",
+            "type": "float",
+            "default": 3.0,
+            "min": 1.5,
+            "max": 4.0,
+            "step": 0.5
+          }
+        ]
+      }
+    },
+    {
+      "file": "geneva_pair_demo.glb",
+      "name": "geneva_pair",
+      "module": "mechlib.indexing",
+      "signature": "geneva_pair(slots=6, crank_r=10.0, pin_d=3.0, thickness=4.0, clearance=0.25, bore_d=2.0, arm_thickness=2.4, pocket_margin=0.3)",
+      "description": "An external Geneva (Maltese cross) pair posed mid-engagement: the driver's crank pin indexes the slotted wheel one slot per revolution while its crescent-cut locking disc holds the wheel during dwell. The film-advance indexer of movie projectors and automated assembly turrets.",
+      "origin": "Mechanical-movements wave v0.6.0; classic ref: 507 Mechanical Movements No. 214 region / Geneva drive",
+      "play": {
+        "demo": "demo_geneva_pair",
+        "params": [
+          {
+            "name": "slots",
+            "label": "Slots",
+            "type": "int",
+            "default": 6,
+            "min": 3,
+            "max": 12,
+            "step": 1
+          },
+          {
+            "name": "clearance",
+            "label": "Clearance",
+            "type": "float",
+            "default": 0.25,
+            "min": 0.1,
+            "max": 0.5,
+            "step": 0.05
+          }
+        ]
+      }
+    },
+    {
+      "file": "escapement_demo.glb",
+      "name": "escapement",
+      "module": "mechlib.indexing",
+      "signature": "escapement(teeth=30, style='anchor', wheel_r=22.0, tooth_depth=3.2, pallet_span=7.5, thickness=4.0, clearance=0.25, bore_d=3.0, recoil_deg=12.0)",
+      "description": "A clock escapement: a forward-raked escape wheel and a pivoted anchor, flat parts posed with one pallet resting on a tooth tip; the style parameter selects recoil anchor or Graham deadbeat pallet faces. The visible tick of longcase and printed clock builds.",
+      "origin": "Mechanical-movements wave v0.6.0; classic ref: anchor escapement (Hooke, c. 1657) / Graham deadbeat",
+      "play": {
+        "demo": "demo_escapement",
+        "params": [
+          {
+            "name": "teeth",
+            "label": "Teeth",
+            "type": "int",
+            "default": 30,
+            "min": 20,
+            "max": 40,
+            "step": 2
+          },
+          {
+            "name": "clearance",
+            "label": "Clearance",
+            "type": "float",
+            "default": 0.25,
+            "min": 0.15,
+            "max": 0.5,
+            "step": 0.05
+          }
+        ]
+      }
+    },
+    {
+      "file": "intermittent_gear_pair_demo.glb",
+      "name": "intermittent_gear_pair",
+      "module": "mechlib.indexing",
+      "signature": "intermittent_gear_pair(module=1.5, z1=18, z2=18, groups=3, thickness=4.0, clearance=0.25, lock_drop=0.5, margin_deg=12.0, bore_d=0.0)",
+      "description": "A mutilated-gear intermittent pair posed meshed: the driver keeps involute teeth on one arc with a plain locking segment, advancing the notch-locked driven gear one tooth group per revolution. The digit-advance scheme of mechanical counters and washing-machine timers.",
+      "origin": "Mechanical-movements wave v0.6.0; classic ref: 507 Mechanical Movements intermittent-gearing plates",
+      "play": {
+        "demo": "demo_intermittent_gear_pair",
+        "params": [
+          {
+            "name": "module",
+            "label": "Module",
+            "type": "float",
+            "default": 1.5,
+            "min": 1.0,
+            "max": 2.5,
+            "step": 0.25
+          },
+          {
+            "name": "clearance",
+            "label": "Clearance",
+            "type": "float",
+            "default": 0.25,
+            "min": 0.1,
+            "max": 0.5,
+            "step": 0.05
+          }
+        ]
+      }
+    },
+    {
+      "file": "herringbone_gear_demo.glb",
+      "name": "herringbone_gear",
+      "module": "mechlib.gears",
+      "signature": "herringbone_gear(m=1.5, z=24, h=10.0, helix_deg=25.0, bore_d=0.0, pa=20.0, bl=0.35, t_relief=0.1, hand=1); phased with mesh_phase(N_drv, N_drn, phi_deg)",
+      "description": "A double-helical involute gear whose mirrored tooth halves cancel axial thrust and self-center in mesh. The standard drive gear of printed extruders and quiet printed gearboxes.",
+      "origin": "Mechanical-movements wave v0.6.0; classic ref: Citroen double-helical (herringbone) gear",
+      "play": {
+        "demo": "demo_herringbone_gear",
+        "params": [
+          {
+            "name": "z",
+            "label": "Z",
+            "type": "int",
+            "default": 24,
+            "min": 12,
+            "max": 36,
+            "step": 2
+          },
+          {
+            "name": "helix_deg",
+            "label": "Helix Deg",
+            "type": "float",
+            "default": 25.0,
+            "min": 10,
+            "max": 35,
+            "step": 5
+          }
+        ]
+      }
+    },
+    {
+      "file": "cycloidal_drive_demo.glb",
+      "name": "cycloidal_drive",
+      "module": "mechlib.gears",
+      "signature": "cycloidal_drive(pins=12, pin_d=4.0, pin_circle_r=22.0, ecc=1.5, disc_thickness=6.0, out_pins=6, out_pin_d=4.0, out_circle_r=10.0, cam_d=8.0, shaft_d=5.0, housing_t=4.0, rim_w=4.0, clearance=0.25, shaft_tail=6.0, samples=None)",
+      "description": "A single-stage cycloidal reducer: an eccentric input precesses a shortened-epitrochoid disc against a ring of housing pins, with output taken through oversized pin holes. The robot-joint reducer of Nabtesco RV and DIY actuators.",
+      "origin": "Mechanical-movements wave v0.6.0; classic ref: cycloidal speed reducer",
+      "play": {
+        "demo": "demo_cycloidal_drive",
+        "params": [
+          {
+            "name": "pins",
+            "label": "Pins",
+            "type": "int",
+            "default": 12,
+            "min": 8,
+            "max": 14,
+            "step": 1
+          },
+          {
+            "name": "explode",
+            "label": "Explode",
+            "type": "float",
+            "default": 5.0,
+            "min": 0,
+            "max": 10,
+            "step": 1
+          }
+        ]
+      }
+    },
+    {
+      "file": "bevel_gear_pair_demo.glb",
+      "name": "bevel_gear_pair",
+      "module": "mechlib.gears",
+      "signature": "bevel_gear_pair(m=1.5, z1=16, z2=24, face_w=None, pa=20.0, bl=0.35, bore1_d=0.0, bore2_d=0.0, layers=10)",
+      "description": "A straight bevel pair on 90-degree axes, the involute profile lofted toward the pitch apex in the Tredgold approximation. Right-angle drives of hand drills, angle grinders, and differentials.",
+      "origin": "Mechanical-movements wave v0.6.0; classic ref: straight bevel / miter gear pair",
+      "play": {
+        "demo": "demo_bevel_gear_pair",
+        "params": [
+          {
+            "name": "z1",
+            "label": "Z1",
+            "type": "int",
+            "default": 16,
+            "min": 10,
+            "max": 24,
+            "step": 2
+          },
+          {
+            "name": "z2",
+            "label": "Z2",
+            "type": "int",
+            "default": 24,
+            "min": 16,
+            "max": 40,
+            "step": 4
+          }
+        ]
+      }
+    },
+    {
+      "file": "scroll_drive_demo.glb",
+      "name": "scroll_drive",
+      "module": "mechlib.linear",
+      "signature": "scroll_drive(plate_r=30.0, plate_t=4.0, spiral_r0=6.0, spiral_pitch=5.0, turns=4.0, rib_w=3.0, rib_h=4.0, jaw_span_deg=20.0, jaw_h=9.0, face_r=10.0, bore_d=6.0, clearance=0.25, spiral_pts=240)",
+      "description": "A lathe-chuck scroll plate whose raised Archimedean spiral rib drives three arc-toothed jaws in sync on a common gripping circle. The self-centering heart of every 3-jaw lathe chuck.",
+      "origin": "Mechanical-movements wave v0.6.0; classic ref: 3-jaw scroll chuck",
+      "play": {
+        "demo": "demo_scroll_drive",
+        "params": [
+          {
+            "name": "spiral_pitch",
+            "label": "Spiral Pitch",
+            "type": "float",
+            "default": 5.0,
+            "min": 4.75,
+            "max": 5.25,
+            "step": 0.25
+          },
+          {
+            "name": "face_r",
+            "label": "Face R",
+            "type": "float",
+            "default": 10.0,
+            "min": 8,
+            "max": 14,
+            "step": 1
+          }
+        ]
+      }
+    },
+    {
+      "file": "differential_screw_demo.glb",
+      "name": "differential_screw",
+      "module": "mechlib.linear",
+      "signature": "differential_screw(d=12.0, p1=2.0, p2=1.75, len1=14.0, len2=14.0, nut_w=20.0, nut_h=10.0, knob_d=16.0, knob_h=4.0, clearance=0.3)",
+      "description": "One shaft with two same-hand thread sections of slightly different pitch; travel per revolution is the pitch difference, giving micrometer-fine motion from coarse printed threads. Micrometer heads and optical fine-focus stages.",
+      "origin": "Mechanical-movements wave v0.6.0; classic ref: 507 Mechanical Movements differential screw plates",
+      "play": {
+        "demo": "demo_differential_screw",
+        "params": [
+          {
+            "name": "p1",
+            "label": "P1",
+            "type": "float",
+            "default": 2.0,
+            "min": 2.0,
+            "max": 3.0,
+            "step": 0.25
+          },
+          {
+            "name": "p2",
+            "label": "P2",
+            "type": "float",
+            "default": 1.75,
+            "min": 1.25,
+            "max": 1.75,
+            "step": 0.25
+          }
+        ]
+      }
+    },
+    {
+      "file": "archimedes_screw_demo.glb",
+      "name": "archimedes_screw",
+      "module": "mechlib.linear",
+      "signature": "archimedes_screw(shaft_r=4.0, flight_r=12.0, lead=14.0, turns=4.0, flight_t=1.6, trough_wall=2.0, clearance=0.3, incline_deg=30.0, seg=64)",
+      "description": "A helical flight on a shaft inside a half-pipe trough, posed inclined; each turn carries one pocket of material uphill. Grain augers, snowblowers, and wastewater lift screws.",
+      "origin": "Mechanical-movements wave v0.6.0; classic ref: Archimedes water screw",
+      "play": {
+        "demo": "demo_archimedes_screw",
+        "params": [
+          {
+            "name": "lead",
+            "label": "Lead",
+            "type": "float",
+            "default": 14.0,
+            "min": 10,
+            "max": 20,
+            "step": 1
+          },
+          {
+            "name": "turns",
+            "label": "Turns",
+            "type": "float",
+            "default": 4.0,
+            "min": 2,
+            "max": 6,
+            "step": 1
+          }
+        ]
+      }
+    },
+    {
+      "file": "oldham_coupling_demo.glb",
+      "name": "oldham_coupling",
+      "module": "mechlib.couplings",
+      "signature": "oldham_coupling(d=30.0, bore_d=8.0, tongue_w=8.0, tongue_h=4.0, hub_len=12.0, face_gap=0.4, web=1.6, clearance=0.25, sections=96)",
+      "description": "Two hubs with perpendicular diametral tongues drive a floating cross-slotted disc, transmitting constant-velocity rotation between parallel shafts with lateral offset. The anti-rotation coupling of scroll compressors and the stepper-to-leadscrew coupler of 3D printers.",
+      "origin": "Mechanical-movements wave v0.6.0; classic ref: Oldham double-slider coupling (507 Mechanical Movements, shaft couplings)",
+      "play": {
+        "demo": "demo_oldham_coupling",
+        "params": [
+          {
+            "name": "misalign",
+            "label": "Misalign",
+            "type": "float",
+            "default": 3.0,
+            "min": 0.0,
+            "max": 5.0,
+            "step": 0.5
+          },
+          {
+            "name": "explode",
+            "label": "Explode",
+            "type": "float",
+            "default": 6.0,
+            "min": 0.0,
+            "max": 12.0,
+            "step": 1.0
+          },
+          {
+            "name": "clearance",
+            "label": "Clearance",
+            "type": "float",
+            "default": 0.25,
+            "min": 0.15,
+            "max": 0.4,
+            "step": 0.05
+          },
+          {
+            "name": "sections",
+            "label": "Sections",
+            "type": "int",
+            "default": 64,
+            "min": 24,
+            "max": 64,
+            "step": 8
+          }
+        ]
+      }
+    },
+    {
+      "file": "universal_joint_demo.glb",
+      "name": "universal_joint",
+      "module": "mechlib.couplings",
+      "signature": "universal_joint(shaft_d=10.0, pin_d=5.0, fork_gap=18.0, tine_t=4.0, yoke_w=12.0, fork_len=15.0, web_t=2.0, shaft_len=12.0, bend_deg=20.0, boss_r=5.0, clearance=0.3, sections=64)",
+      "description": "Two forked yokes joined by a four-trunnion cross spider transmit rotation between shafts intersecting at an angle, with the classic sinusoidal speed fluctuation twice per revolution. The joint of automotive driveshafts and socket-wrench extensions.",
+      "origin": "Mechanical-movements wave v0.6.0; classic ref: Cardan/Hooke's universal joint (507 Mechanical Movements)",
+      "play": {
+        "demo": "demo_universal_joint",
+        "params": [
+          {
+            "name": "bend_deg",
+            "label": "Bend Deg",
+            "type": "float",
+            "default": 20.0,
+            "min": 0.0,
+            "max": 35.0,
+            "step": 5.0
+          },
+          {
+            "name": "clearance",
+            "label": "Clearance",
+            "type": "float",
+            "default": 0.3,
+            "min": 0.2,
+            "max": 0.5,
+            "step": 0.05
+          },
+          {
+            "name": "sections",
+            "label": "Sections",
+            "type": "int",
+            "default": 64,
+            "min": 24,
+            "max": 64,
+            "step": 8
+          }
+        ]
+      }
+    },
+    {
+      "file": "jaw_coupling_demo.glb",
+      "name": "jaw_coupling",
+      "module": "mechlib.couplings",
+      "signature": "jaw_coupling(d=30.0, bore_d=8.0, jaws=3, jaw_deg=30.0, jaw_h=7.0, hub_len=12.0, jaw_r0=5.5, jaw_r1=13.0, spider_t=5.0, face_gap=0.5, clearance=0.25, sections=96)",
+      "description": "Two jaw hubs interleave through a lobed elastomer spider (printed in TPU in practice) that carries torque in compression, damping vibration and failing safe if the spider dies. The Lovejoy-style motor-to-pump coupling of light industry.",
+      "origin": "Mechanical-movements wave v0.6.0; classic ref: Lovejoy elastomeric jaw (spider) coupling",
+      "play": {
+        "demo": "demo_jaw_coupling",
+        "params": [
+          {
+            "name": "jaws",
+            "label": "Jaws",
+            "type": "int",
+            "default": 3,
+            "min": 3,
+            "max": 4,
+            "step": 1
+          },
+          {
+            "name": "explode",
+            "label": "Explode",
+            "type": "float",
+            "default": 6.0,
+            "min": 0.0,
+            "max": 12.0,
+            "step": 1.0
+          },
+          {
+            "name": "clearance",
+            "label": "Clearance",
+            "type": "float",
+            "default": 0.25,
+            "min": 0.15,
+            "max": 0.4,
+            "step": 0.05
+          },
+          {
+            "name": "sections",
+            "label": "Sections",
+            "type": "int",
+            "default": 64,
+            "min": 24,
+            "max": 64,
+            "step": 8
+          }
+        ]
+      }
+    },
+    {
+      "file": "torque_limiter_demo.glb",
+      "name": "torque_limiter",
+      "module": "mechlib.clutches",
+      "signature": "torque_limiter(d=30.0, bore_d=8.0, detents=6, detent_r=10.0, bump_r=2.5, driver_t=4.0, driven_t=4.0, hub_r=9.0, hub_len=6.0, cavity_r=6.0, cavity_depth=4.5, face_gap=0.2, clearance=0.25, sections=96); preload spring helix_tube(R, rw, turns, z0, z1, M=16, N=420)",
+      "description": "Spring-seated radiused detent bumps engage matching pockets between two faces; above the trip torque set by the detent geometry they cam out and ratchet past, protecting the drivetrain. The slip clutch inside every cordless drill clutch collar.",
+      "origin": "Mechanical-movements wave v0.6.0; classic ref: spring-detent safety (overload) clutch",
+      "play": {
+        "demo": "demo_torque_limiter",
+        "params": [
+          {
+            "name": "detents",
+            "label": "Detents",
+            "type": "int",
+            "default": 6,
+            "min": 4,
+            "max": 8,
+            "step": 1
+          },
+          {
+            "name": "explode",
+            "label": "Explode",
+            "type": "float",
+            "default": 8.0,
+            "min": 0.0,
+            "max": 14.0,
+            "step": 1.0
+          },
+          {
+            "name": "sections",
+            "label": "Sections",
+            "type": "int",
+            "default": 64,
+            "min": 24,
+            "max": 64,
+            "step": 8
+          }
+        ]
+      }
+    },
+    {
+      "file": "freewheel_clutch_demo.glb",
+      "name": "freewheel_clutch",
+      "module": "mechlib.clutches",
+      "signature": "freewheel_clutch(rollers=6, hub_r=8.0, roller_r=3.0, pocket_deg=45.0, wedge=0.15, ramp=1.5, wall=3.0, bore_d=5.0, height=8.0, clearance=0.25, sections=96)",
+      "description": "Cylindrical rollers between a smooth inner hub and ramped outer-ring pockets wedge instantly in one direction and release in the other, a silent one-way clutch with no tooth steps. Used in starter-motor bendix drives and conveyor backstops.",
+      "origin": "Mechanical-movements wave v0.6.0; classic ref: roller-ramp overrunning (sprag-less one-way) clutch",
+      "play": {
+        "demo": "demo_freewheel_clutch",
+        "params": [
+          {
+            "name": "rollers",
+            "label": "Rollers",
+            "type": "int",
+            "default": 6,
+            "min": 4,
+            "max": 7,
+            "step": 1
+          },
+          {
+            "name": "sections",
+            "label": "Sections",
+            "type": "int",
+            "default": 64,
+            "min": 24,
+            "max": 64,
+            "step": 8
+          }
+        ]
+      }
+    },
+    {
+      "file": "timing_pulley_demo.glb",
+      "name": "timing_pulley",
+      "module": "mechlib.pulleys",
+      "signature": "timing_pulley(teeth=20, pitch=2.0, belt_w=6.0, bore_d=5.0, hub_d=12.0, hub_len=7.0, flanges=True, flange_t=1.2, flange_extra=1.5, setscrew_boss=False, setscrew_d=3.0, clearance=0.25, sections=96)",
+      "description": "A GT2-style toothed belt pulley with flanges, hub and setscrew boss, its tooth spaces cut as circular arcs per the GT2 approximation, shown meshing a toothed belt segment. A printed drop-in for 3D-printer and benchtop CNC belt axes.",
+      "origin": "Mechanical-movements wave v0.6.0; classic ref: GT2 synchronous belt drive (507 Mechanical Movements belt-drive series)",
+      "play": {
+        "demo": "demo_timing_pulley",
+        "params": [
+          {
+            "name": "teeth",
+            "label": "Teeth",
+            "type": "int",
+            "default": 30,
+            "min": 12,
+            "max": 64,
+            "step": 2
+          },
+          {
+            "name": "bore_d",
+            "label": "Bore D",
+            "type": "float",
+            "default": 3.0,
+            "min": 3,
+            "max": 6,
+            "step": 1
+          }
+        ]
+      }
+    },
+    {
+      "file": "winch_drum_demo.glb",
+      "name": "grooved_drum",
+      "module": "mechlib.pulleys",
+      "signature": "grooved_drum(radius_law='cylinder', turns=8.0, cable_d=3.0, core_r=10.0, radius_rise=6.0, groove_factor=1.25, flange_extra=1.5, flange_t=1.6, bore_d=6.0, clearance=0.25, sections=64); wound cable helix_tube(R, rw, turns, z0, z1, M=16, N=420)",
+      "description": "A cylindrical winch drum with a helical groove pitched to the cable so the rope spools in a single controlled layer, shown with its first wound turns. Used on crane hoists and 4x4 recovery winches.",
+      "origin": "Mechanical-movements wave v0.6.0; classic ref: 507 Mechanical Movements winch/windlass entries (LeBus grooved drum)",
+      "play": {
+        "demo": "demo_winch_drum",
+        "params": [
+          {
+            "name": "turns",
+            "label": "Turns",
+            "type": "float",
+            "default": 8.0,
+            "min": 4,
+            "max": 16,
+            "step": 2
+          },
+          {
+            "name": "cable_d",
+            "label": "Cable D",
+            "type": "float",
+            "default": 3.0,
+            "min": 2.0,
+            "max": 4.0,
+            "step": 0.5
+          }
+        ]
+      }
+    },
+    {
+      "file": "fusee_demo.glb",
+      "name": "grooved_drum",
+      "module": "mechlib.pulleys",
+      "signature": "grooved_drum(radius_law='cylinder', turns=8.0, cable_d=3.0, core_r=10.0, radius_rise=6.0, groove_factor=1.25, flange_extra=1.5, flange_t=1.6, bore_d=6.0, clearance=0.25, sections=64)",
+      "description": "A conical spirally grooved fusee whose hyperbolic winding radius compensates a weakening mainspring to hold drive torque constant. The classic constant-torque heart of marine chronometers and English pocket watches.",
+      "origin": "Mechanical-movements wave v0.6.0; classic ref: 507 Mechanical Movements No. 46 / fusee chain and spring-box",
+      "play": {
+        "demo": "demo_fusee",
+        "params": [
+          {
+            "name": "turns",
+            "label": "Turns",
+            "type": "float",
+            "default": 7.0,
+            "min": 4,
+            "max": 12,
+            "step": 2
+          },
+          {
+            "name": "radius_rise",
+            "label": "Radius Rise",
+            "type": "float",
+            "default": 9.0,
+            "min": 4.0,
+            "max": 12.0,
+            "step": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "file": "cross_flexure_demo.glb",
+      "name": "cross_flexure",
+      "module": "mechlib.flexures",
+      "signature": "cross_flexure(block_w=22.0, block_d=16.0, block_h=6.0, gap=10.0, blade_t=0.8, blade_w=6.0, blade_angle_deg=45.0, blade_gap=1.0, embed=1.5)",
+      "description": "A monolithic cross-axis flexural pivot: two rigid blocks joined only by two crossing thin blades, giving limited frictionless, backlash-free rotation about the crossing point. Used in precision instruments, optical mounts and printed robot joints.",
+      "origin": "Mechanical-movements wave v0.6.0; classic ref: cross-spring pivot (Bendix Free-Flex)",
+      "play": {
+        "demo": "demo_cross_flexure",
+        "params": [
+          {
+            "name": "gap",
+            "label": "Gap",
+            "type": "float",
+            "default": 10.0,
+            "min": 6,
+            "max": 16,
+            "step": 1
+          },
+          {
+            "name": "blade_angle_deg",
+            "label": "Blade Angle Deg",
+            "type": "float",
+            "default": 45.0,
+            "min": 20,
+            "max": 55,
+            "step": 5
+          }
+        ]
+      }
+    },
+    {
+      "file": "wave_spring_demo.glb",
+      "name": "wave_spring",
+      "module": "mechlib.flexures",
+      "signature": "wave_spring(d=30.0, waves=3, turns=2, strip_w=3.0, strip_t=0.8, amplitude=1.0, crest_fuse=0.15, sections=96)",
+      "description": "A crest-to-crest wave spring: annular strips with sinusoidal axial waviness stacked half a wave apart so opposing crests bear on each other, giving spring rate in half the height of a coil spring. Used for bearing preload and clutch-pack take-up.",
+      "origin": "Mechanical-movements wave v0.6.0; classic ref: Smalley crest-to-crest wave spring",
+      "play": {
+        "demo": "demo_wave_spring",
+        "params": [
+          {
+            "name": "waves",
+            "label": "Waves",
+            "type": "int",
+            "default": 3,
+            "min": 2,
+            "max": 6,
+            "step": 1
+          },
+          {
+            "name": "turns",
+            "label": "Turns",
+            "type": "int",
+            "default": 2,
+            "min": 1,
+            "max": 4,
+            "step": 1
+          },
+          {
+            "name": "sections",
+            "label": "Sections",
+            "type": "int",
+            "default": 96,
+            "min": 24,
+            "max": 64,
+            "step": 8
+          }
+        ]
+      }
+    },
+    {
+      "file": "bistable_beam_demo.glb",
+      "name": "bistable_beam",
+      "module": "mechlib.flexures",
+      "signature": "bistable_beam(span=44.0, frame_h=24.0, wall=2.0, beams=2, beam_t=1.0, beam_gap=8.0, apex=3.0, shuttle_w=6.0, travel=2.5, clearance=0.3, thickness=3.0, sections=48)",
+      "description": "A flat-printed buckled-beam bistable switch: pre-curved cosine beams clamped in a frame carry a central shuttle that snaps between two stable positions. Used for clicky toggle latches, haptic buttons and one-piece switches.",
+      "origin": "Mechanical-movements wave v0.6.0; classic ref: buckled-beam bistable compliant mechanism (BYU CMR)",
+      "play": {
+        "demo": "demo_bistable_beam",
+        "params": [
+          {
+            "name": "apex",
+            "label": "Apex",
+            "type": "float",
+            "default": 3.0,
+            "min": 1.5,
+            "max": 3.5,
+            "step": 0.5
+          },
+          {
+            "name": "beam_t",
+            "label": "Beam T",
+            "type": "float",
+            "default": 1.0,
+            "min": 0.6,
+            "max": 1.6,
+            "step": 0.2
           }
         ]
       }
