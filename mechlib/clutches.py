@@ -3,11 +3,20 @@
 import math
 
 import shapely.geometry as sg
-from shapely.ops import unary_union
+from shapely import union_all
 import trimesh
 
 from .meshutil import largest_poly, sub, uni
 from .prim import cyl
+
+
+# Fixed-precision overlay grid, in mm. See the matching note in
+# ``mechlib/indexing.py``: GEOS' floating-point overlay throws "found
+# non-noded intersection" on near-coincident boundaries, and in the WASM
+# build (Pyodide) that is a C++ abort, not a catchable Python exception.
+# ``grid_size`` runs the overlay under GEOS' precision model instead, where
+# noding is exact. 1e-6 mm is far below FDM resolution.
+_GRID = 1e-6
 
 
 def _extrude(poly, height, z0=0.0):
@@ -157,22 +166,33 @@ def freewheel_clutch(rollers=6, hub_r=8.0, roller_r=3.0, pocket_deg=45.0,
     if floor_at < rc + roller_r + clearance / 2.0:
         raise ValueError("freewheel_clutch(): roller does not clear the ramp")
 
-    void = sg.Point(0.0, 0.0).buffer(h_lo, resolution=sections)
+    # ``resolution`` counts quarter-circle segments, so it is capped: past 64
+    # (256 segments) the extra vertices buy nothing visually and only make
+    # near-coincident boundaries more likely.
+    res = min(int(sections), 64)
+    void = sg.Point(0.0, 0.0).buffer(h_lo, resolution=res)
+    # Each pocket's return path used to run at exactly ``h_lo``, i.e. along the
+    # nominal void circle. Against the polygonal void that produced a chain of
+    # crossings ~1e-3 mm apart (the vertices sit just outside the inscribed
+    # facets) and, in older GEOS, a non-noded intersection. Closing the pocket
+    # at the inscribed radius instead puts the whole return path strictly
+    # inside the void, where the union absorbs it: same result, no grazing.
+    inner = h_lo * math.cos(math.pi / (2.0 * res))
     pockets = []
     for i in range(rollers):
         a0 = i * pitch - pocket_deg / 2.0
-        points = []
-        for s in range(9):
+        points = [_polar(inner, a0)]
+        for s in range(1, 9):
             fraction = s / 8.0
             points.append(_polar(h_lo + ramp * fraction,
                                  a0 + pocket_deg * fraction))
-        for s in range(1, 7):
+        for s in range(1, 6):
             fraction = s / 6.0
-            points.append(_polar(h_lo, a0 + pocket_deg * (1.0 - fraction)))
+            points.append(_polar(inner, a0 + pocket_deg * (1.0 - fraction)))
         pockets.append(sg.Polygon(points))
-    void = unary_union([void] + pockets).buffer(0)
-    ring_poly = sg.Point(0.0, 0.0).buffer(
-        ring_r, resolution=sections).difference(void).buffer(0)
+    void = union_all([void] + pockets, grid_size=_GRID)
+    ring_poly = sg.Point(0.0, 0.0).buffer(ring_r, resolution=res).difference(
+        void, grid_size=_GRID)
     ring = _extrude(ring_poly, height)
     ring.metadata.update({
         "rollers": rollers,

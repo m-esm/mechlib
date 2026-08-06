@@ -34,8 +34,7 @@ def assert_mesh(mesh):
     assert mesh.volume > 0
 
 
-def test_public_ratchet_api_and_version():
-    assert mechlib.__version__ == "0.6.0"
+def test_public_ratchet_api():
     names = (
         "ratchet_ring_2d", "ratchet_ring", "pip_ratchet_hub_2d",
         "pip_ratchet_hub", "spring_cartridge_ratchet_2d",

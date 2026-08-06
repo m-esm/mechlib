@@ -10,10 +10,21 @@ import math
 import numpy as np
 import shapely.affinity as affinity
 import shapely.geometry as sg
+from shapely import set_precision, union_all
 from shapely.ops import unary_union
 import trimesh
 
 from .gears import mesh_phase, spur_gear_2d
+
+
+# Fixed-precision overlay grid, in mm. GEOS' floating-point overlay throws
+# "found non-noded intersection" on near-tangent, high-vertex-count boolean
+# chains; older GEOS builds (the one bundled with Pyodide) are far less
+# tolerant, and there it surfaces as a C++ abort rather than a Python
+# exception, so it cannot be caught. Passing ``grid_size`` routes every
+# overlay through GEOS' precision model, where noding is exact by
+# construction. 1e-6 mm is four orders of magnitude below FDM resolution.
+_GRID = 1e-6
 
 
 def _polar(r, angle_deg):
@@ -44,6 +55,42 @@ def _extrude(poly, height, z0=0.0):
 # ---------------------------------------------------------------------------
 # External Geneva drive
 # ---------------------------------------------------------------------------
+
+
+def geneva_wheel_angle(slots, crank_r):
+    """Return the crank-to-wheel angle relation of an external Geneva drive.
+
+    The result is a callable ``wheel_angle(theta)`` giving the wheel's angular
+    position in degrees for crank angle ``theta`` (degrees, 0 = drive pin on
+    the line of centres, measured about the driver). It is the exact closed
+    form, not a sampled table: with crank radius ``a = crank_r`` and centre
+    distance ``c = a / sin(pi / slots)``, the pin at ``theta`` subtends
+    ``atan2(a sin(theta), a cos(theta) - c)`` at the wheel centre. Outside the
+    engagement window ``|theta| <= 90 - 180 / slots`` the pin is clear of every
+    slot and the angle is held at the window edge, which is the drive's dwell.
+    Over one crank turn the wheel therefore advances exactly one slot,
+    ``360 / slots``.
+
+    This is the same relation ``geneva_pair`` builds its parts around, exposed
+    so callers can pose or animate a pair through its cycle without rebuilding
+    the (much more expensive) full layout. Cheap: no geometry is constructed.
+    """
+    if slots < 3:
+        raise ValueError("geneva_wheel_angle(): slots must be >= 3")
+    if crank_r <= 0:
+        raise ValueError("geneva_wheel_angle(): crank_r must be positive")
+    a = crank_r
+    c = a / math.sin(math.radians(180.0 / slots))
+    theta_e = 90.0 - 180.0 / slots
+
+    def wheel_angle(theta):
+        """Wheel rotation (degrees) for crank angle ``theta`` about the driver."""
+        t = (theta + 180.0) % 360.0 - 180.0
+        clamped = min(max(t, -theta_e), theta_e)
+        return math.degrees(math.atan2(a * math.sin(math.radians(clamped)),
+                                       a * math.cos(math.radians(clamped)) - c))
+
+    return wheel_angle
 
 
 def _geneva_layout(slots, crank_r, pin_d, clearance, bore_d, pocket_margin):
@@ -96,28 +143,25 @@ def _geneva_layout(slots, crank_r, pin_d, clearance, bore_d, pocket_margin):
     disc_r = pocket_r - clearance
 
     # Wheel polygon: rim disc minus radial slots minus locking-pocket scallops.
-    wheel = sg.Point(0.0, 0.0).buffer(rim_r, resolution=128)
-    for k in range(n):
-        slot = sg.box(slot_bottom, -slot_half, rim_r + 1.5, slot_half)
-        wheel = wheel.difference(affinity.rotate(slot, k * 360.0 / n, origin=(0, 0)))
-    for k in range(n):
-        centre = _polar(c, (2 * k + 1) * beta)
-        wheel = wheel.difference(
-            sg.Point(*centre).buffer(pocket_r, resolution=96))
-    wheel = _largest_polygon(wheel.buffer(0))
+    # The pocket radius is chosen so each scallop is very nearly tangent to the
+    # rim, so the subtrahends are unioned once and subtracted once (n sequential
+    # differences compound rounding at every near-tangency) and every overlay
+    # runs on the ``_GRID`` precision model.
+    wheel = sg.Point(0.0, 0.0).buffer(rim_r, resolution=64)
+    cuts = [affinity.rotate(sg.box(slot_bottom, -slot_half, rim_r + 1.5, slot_half),
+                            k * 360.0 / n, origin=(0, 0))
+            for k in range(n)]
+    cuts += [sg.Point(*_polar(c, (2 * k + 1) * beta)).buffer(pocket_r, resolution=48)
+             for k in range(n)]
     if bore_d > 0:
-        wheel = wheel.difference(
-            sg.Point(0.0, 0.0).buffer(bore_d / 2.0, resolution=64)).buffer(0)
-        wheel = _largest_polygon(wheel)
+        cuts.append(sg.Point(0.0, 0.0).buffer(bore_d / 2.0, resolution=32))
+    wheel = _largest_polygon(
+        wheel.difference(union_all(cuts, grid_size=_GRID), grid_size=_GRID))
 
     theta_e = 90.0 - beta                      # crank half-angle of engagement
-
-    def wheel_angle(theta):
-        """Wheel rotation (degrees) for crank angle ``theta`` about the driver."""
-        t = (theta + 180.0) % 360.0 - 180.0
-        clamped = min(max(t, -theta_e), theta_e)
-        return math.degrees(math.atan2(a * math.sin(math.radians(clamped)),
-                                       a * math.cos(math.radians(clamped)) - c))
+    # One definition of the kinematics, shared with the public accessor: the
+    # crescent sweep below and any caller posing the pair must agree exactly.
+    wheel_angle = geneva_wheel_angle(slots, crank_r)
 
     # Driver wheel-plane profile: locking disc, drive pin, and the hub web
     # that joins them below the wheel plane.
@@ -125,7 +169,7 @@ def _geneva_layout(slots, crank_r, pin_d, clearance, bore_d, pocket_margin):
     web_w = min(2.4, 2.0 * hub_reach)
     web = sg.LineString([(-0.55 * disc_r, 0.0), (0.0, 0.0)]).buffer(
         web_w / 2.0, cap_style=1, join_style=1)
-    disc = sg.Point(0.0, 0.0).buffer(disc_r, resolution=128)
+    disc = sg.Point(0.0, 0.0).buffer(disc_r, resolution=64)
 
     # Crescent cutout: union over the engagement sweep of the wheel solid
     # that reaches toward the disc, computed in the driver frame. Disc
@@ -133,23 +177,31 @@ def _geneva_layout(slots, crank_r, pin_d, clearance, bore_d, pocket_margin):
     # dwell the surviving disc arc nests in the wheel's pocket (radius
     # ``pocket_r`` about the driver centre), so any nudge of the wheel jams a
     # pocket corner into the disc edge after at most a few degrees of lash.
+    # The 121 clipped poses all carry fragments of the same probe arc, so their
+    # union is a pile of near-coincident edges: the single worst noding case in
+    # this module. Clip and union on the precision grid, and keep the probe
+    # coarse (it only has to enclose ``disc_r + clearance + 0.15``, so its own
+    # facet depth never reaches the disc edge).
     swept = []
-    probe = sg.Point(0.0, 0.0).buffer(disc_r + 0.6, resolution=96)
+    probe = sg.Point(0.0, 0.0).buffer(disc_r + 0.6, resolution=32)
     for theta in np.linspace(-theta_e, theta_e, 121):
         posed = affinity.rotate(wheel, wheel_angle(theta), origin=(0, 0))
         posed = affinity.translate(posed, c, 0.0)
         posed = affinity.rotate(posed, -theta, origin=(0, 0))
-        hit = posed.intersection(probe)
+        hit = posed.intersection(probe, grid_size=_GRID)
         if not hit.is_empty:
             swept.append(hit)
     if not swept:
         raise ValueError("geneva_pair(): engagement sweep never reaches the disc")
-    sweep = unary_union(swept).buffer(0)
-    cutout = sweep.buffer(clearance + 0.15, resolution=48)
-    disc = disc.difference(cutout).buffer(0)
+    sweep = union_all(swept, grid_size=_GRID)
+    # ``buffer`` is not a precision-model op, so snap its output before it is
+    # used as a subtrahend: rounding the offset corners of a 1000-vertex sweep
+    # leaves sub-micron edges that are exactly the degenerate input to avoid.
+    cutout = set_precision(sweep.buffer(clearance + 0.15, resolution=16), _GRID)
+    disc = disc.difference(cutout, grid_size=_GRID)
     if disc.area < 0.2 * math.pi * disc_r ** 2:
         raise ValueError("geneva_pair(): crescent cutout removes the locking arc")
-    driver_plane = unary_union([disc, pin, web]).buffer(0)
+    driver_plane = union_all([disc, pin, web], grid_size=_GRID)
 
     return {
         "wheel": wheel,
@@ -176,7 +228,7 @@ def _geneva_sweep_clear(layout, step_deg=3.0, eps=1e-6):
             wheel_local, wheel_angle(theta), origin=(0, 0))
         posed_wheel = affinity.translate(posed_wheel, c, 0.0)
         posed_driver = affinity.rotate(driver, theta, origin=(0, 0))
-        if posed_wheel.intersection(posed_driver).area > eps:
+        if posed_wheel.intersection(posed_driver, grid_size=_GRID).area > eps:
             return False, theta
     return True, None
 
@@ -218,14 +270,15 @@ def geneva_pair(slots=6, crank_r=10.0, pin_d=3.0, thickness=4.0,
         arm_w / 2.0, cap_style=1, join_style=1)
     arm_mesh = _extrude(_largest_polygon(arm), arm_thickness)
     web = layout["driver_plane"].intersection(
-        sg.box(-layout["disc_r"], -2.0, 0.5, 2.0)).buffer(0)
+        sg.box(-layout["disc_r"], -2.0, 0.5, 2.0), grid_size=_GRID)
     web_mesh = _extrude(_largest_polygon(web), wheel_z0)
     disc_plane = layout["driver_plane"].difference(
-        sg.Point(a, 0.0).buffer(pin_r + 0.05, resolution=48)).difference(web)
+        sg.Point(a, 0.0).buffer(pin_r + 0.05, resolution=48), grid_size=_GRID)
+    disc_plane = disc_plane.difference(web, grid_size=_GRID)
     disc_plane = disc_plane.intersection(
-        sg.Point(0.0, 0.0).buffer(layout["disc_r"] + 0.05, resolution=128))
-    disc_mesh = _extrude(_largest_polygon(disc_plane.buffer(0)),
-                         thickness, wheel_z0)
+        sg.Point(0.0, 0.0).buffer(layout["disc_r"] + 0.05, resolution=64),
+        grid_size=_GRID)
+    disc_mesh = _extrude(_largest_polygon(disc_plane), thickness, wheel_z0)
     pin_mesh = trimesh.creation.cylinder(
         radius=pin_r, height=wheel_z0 + thickness + 0.6, sections=48)
     pin_mesh.apply_translation((a, 0.0, (wheel_z0 + thickness + 0.6) / 2.0))

@@ -73,7 +73,7 @@ from mechlib.meshutil import (
     void_cube,
 )
 from mechlib.patterns import lighten_cell_poly, lighten_grid_centres, polar_ring
-from mechlib.prim import boxc, cyl
+from mechlib.prim import boxc, cyl, frustum, hex_poly, rbox
 from mechlib.text import text_polygon
 
 
@@ -199,6 +199,48 @@ def test_press_lid_shiplap_and_dovetail():
     for mesh in (lid, lip, slot, dovetail):
         assert_mesh(mesh)
     assert slot.volume > lip.volume
+
+
+def _z_centred_extrusion(poly, h=14.0):
+    mesh = trimesh.creation.extrude_polygon(poly, h)
+    mesh.apply_translation([0, 0, -h / 2.0])
+    return mesh
+
+
+SHIPLAP_SOLIDS = {
+    "box": lambda: boxc((34.0, 28.0, 14.0)),
+    "rbox": lambda: rbox([30.0, 24.0, 14.0], (0, 0, 0), r=5.0),
+    "cylinder": lambda: cyl(12.0, 14.0),
+    "hex_prism": lambda: _z_centred_extrusion(hex_poly(24.0)),
+    "frustum": lambda: frustum(14.0, 8.0, 14.0, z0=-7.0),
+    "holed_box": lambda: sub(boxc((30.0, 24.0, 14.0)), cyl(6.0, 20.0)),
+    "l_extrusion": lambda: _z_centred_extrusion(
+        sg.Polygon([(-15, -12), (15, -12), (15, 0), (0, 0), (0, 12), (-15, 12)])),
+}
+
+
+@pytest.mark.parametrize("name", sorted(SHIPLAP_SOLIDS))
+def test_clamshell_shiplap_section_shapes(name):
+    """The lip/slot pair must mate for every cross-section topology."""
+    lip, slot = clamshell_shiplap(SHIPLAP_SOLIDS[name]())
+    assert_mesh(lip)
+    assert_mesh(slot)
+    assert slot.volume > lip.volume
+    # the slot swallows the lip on every axis, with clearance in Z
+    assert slot.bounds[0][2] < lip.bounds[0][2]
+    assert slot.bounds[1][2] > lip.bounds[1][2]
+    # and the lip solid lies wholly inside the slot solid: lip - slot is empty
+    residue = trimesh.boolean.difference([lip, slot])
+    assert residue is None or residue.is_empty or abs(residue.volume) < 1e-6 * lip.volume
+
+
+def test_clamshell_shiplap_ignores_interior_rings():
+    """An interior section ring must not become the outline (largest ring wins)."""
+    solid = boxc((30.0, 24.0, 14.0))
+    plain_lip, plain_slot = clamshell_shiplap(solid)
+    holed_lip, holed_slot = clamshell_shiplap(sub(solid, cyl(6.0, 20.0)))
+    assert holed_lip.extents == pytest.approx(plain_lip.extents)
+    assert holed_slot.extents == pytest.approx(plain_slot.extents)
 
 
 def test_snap_pair_uses_snap_spec():

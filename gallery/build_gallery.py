@@ -4,14 +4,17 @@
 import importlib.util
 import inspect
 import json
+import math
 import shutil
 import subprocess
 import sys
 import tempfile
+import time
 from pathlib import Path
 
 import numpy as np
 import trimesh
+from scipy.spatial import cKDTree
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -136,6 +139,71 @@ MANIFOLD_WHEEL = "manifold3d-3.5.2-cp312-cp312-emscripten_3_1_58_wasm32.whl"
 PYODIDE_VERSION = "0.27.7"
 
 
+# Ordered category table. The key is the mechlib module leaf name, so a model's
+# category is DERIVED from its ``module`` field rather than hand-tagged per entry.
+# ``group`` buckets categories into the three shelves the gallery renders, and the
+# order of this dict is the render order: movements first, primitives last.
+# A module leaf missing from this table fails the build (see ``_category``), so a
+# new mechlib module can never silently land in an unsorted pile.
+CATEGORY_GROUPS = (
+    ("movements", "Mechanical movements",
+     "Parts that do something: convert, index, limit, or transmit motion."),
+    ("elements", "Machine elements",
+     "Threads, fasteners, closures, and the hardware that joins parts together."),
+    ("blocks", "Building blocks",
+     "Primitives, sweeps, cutters, and patterns you compose everything else from."),
+)
+
+CATEGORIES = {
+    # movements
+    "linkages":   ("movements", "Linkages", "Bar mechanisms that trade rotation for stroke."),
+    "cams":       ("movements", "Cams & followers", "Profiles that program a follower's displacement."),
+    "indexing":   ("movements", "Indexing", "Continuous rotation in, stepped rotation out."),
+    "gears":      ("movements", "Gears", "Involute, herringbone, bevel, cycloidal, and racks."),
+    "ratchets":   ("movements", "Ratchets", "One-way pawls, pips, and compliant detents."),
+    "clutches":   ("movements", "Clutches", "Torque limiting and freewheeling."),
+    "couplings":  ("movements", "Couplings", "Shaft-to-shaft joints that tolerate misalignment."),
+    "drives":     ("movements", "Worm & planetary", "High-ratio reductions in a printable envelope."),
+    "linear":     ("movements", "Rotary to linear", "Screws, scrolls, and augers."),
+    "pulleys":    ("movements", "Pulleys & drums", "Belt, cable, and constant-torque profiles."),
+    "flexures":   ("movements", "Flexures", "Monolithic springs, pivots, and bistable beams."),
+    # machine elements
+    "mechanisms": ("elements", "Threads & shafts", "Printable threads, knurls, helices, and drive slots."),
+    "fasteners":  ("elements", "Fasteners", "Screw, nut, and washer stand-ins for fit checks."),
+    "closures":   ("elements", "Closures & joints", "Lids, snaps, dovetails, and captive hardware."),
+    "fixtures":   ("elements", "Fixtures", "Cradles and saddles that hold other objects."),
+    # building blocks
+    "prim":       ("blocks", "Primitives", "The solids and profiles everything else starts from."),
+    "sweep":      ("blocks", "Sweeps & lofts", "Profiles carried along a path."),
+    "cutters":    ("blocks", "Cutters", "Negative geometry: bores, sockets, cavities, and reliefs."),
+    "patterns":   ("blocks", "Patterns", "Repeat, ring, and lighten across a surface."),
+    "text":       ("blocks", "Text", "Embossed and engraved labels."),
+    # utility-only modules (no gallery models, but utilities are grouped by them)
+    "meshutil":   ("blocks", "Mesh utilities", "Booleans, probes, fitting, and export gates."),
+    "packing":    ("blocks", "Plate packing", "Arrange footprints across build plates."),
+    "stepio":     ("blocks", "STEP export", "Hand positioned meshes off to CAD."),
+}
+
+CATEGORY_ORDER = {key: index for index, key in enumerate(CATEGORIES)}
+GROUP_ORDER = {key: index for index, (key, _title, _blurb) in enumerate(CATEGORY_GROUPS)}
+
+
+def _category(module_field):
+    """Derive a category key from a model's ``module`` string.
+
+    Accepts the ``"mechlib.a / mechlib.b"`` form used by cross-module demos and
+    keys off the first module. Raises if the module is not in ``CATEGORIES`` so
+    that adding a mechlib module without categorising it breaks the build loudly.
+    """
+    leaf = module_field.split("/")[0].strip().split(".")[-1]
+    if leaf not in CATEGORIES:
+        raise KeyError(
+            "module %r has no CATEGORIES entry in build_gallery.py; add one so the "
+            "gallery can sort and filter it" % module_field
+        )
+    return leaf
+
+
 def signature(function):
     """Return the live function signature for gallery metadata."""
     return "%s%s" % (function.__name__, inspect.signature(function))
@@ -167,6 +235,34 @@ def _humanize(name):
     return name.replace("_", " ").strip().title()
 
 
+# Name tokens that mark a value as a pure number rather than a length. Matched
+# per underscore-separated token, so `pins` is a count while `pin_d` is a
+# diameter in millimetres.
+_UNITLESS_TOKENS = frozenset((
+    "n", "res", "resolution", "sections", "segments", "samples", "count",
+    "teeth", "slots", "turns", "waves", "pins", "planets", "rollers",
+    "layers", "starts", "lobes", "branch", "frac", "fraction", "ratio",
+))
+# Tooth counts, matched on the whole name only: `z` is a count, `split_z` is a
+# Z coordinate in millimetres.
+_UNITLESS_NAMES = frozenset(("z", "z1", "z2"))
+
+
+def _unit(pname, ptype):
+    """Infer a slider's unit from its name, following the library's own naming.
+
+    mechlib is millimetres and degrees throughout and marks angles with a
+    ``_deg`` suffix, so the unit is derivable rather than something to hand-tag
+    on 290-odd sliders. Anything that is not an angle or a count is a length.
+    """
+    low = pname.lower()
+    if low.endswith("_deg") or "deg" in low or "angle" in low:
+        return "deg"
+    if low in _UNITLESS_NAMES or _UNITLESS_TOKENS.intersection(low.split("_")):
+        return ""
+    return "mm"
+
+
 def _play_field(demo_name, demo_fn):
     """Build the index.json play field for a demo, or None if no PLAY entry."""
     if demo_name not in PLAY:
@@ -188,16 +284,472 @@ def _play_field(demo_name, demo_fn):
         else:
             ptype = "float"
             default_out = float(default)
+        out_min = pmin if ptype == "float" else int(pmin)
+        out_max = pmax if ptype == "float" else int(pmax)
+        out_step = pstep if ptype == "float" else int(pstep)
+        # A default outside the slider range silently desyncs the UI: the input
+        # clamps, the geometry regenerates at the clamped value, but the call
+        # line the user copies still shows the unreachable default.
+        if not (out_min <= default_out <= out_max):
+            raise ValueError(
+                "PLAY[%r][%r]: default %r is outside the slider range [%r, %r]; "
+                "widen the range or move the default onto it"
+                % (demo_name, pname, default_out, out_min, out_max)
+            )
+        # ... and a default off the step grid cannot be dragged back to.
+        offset = (default_out - out_min) / out_step
+        if abs(offset - round(offset)) > 1e-6:
+            raise ValueError(
+                "PLAY[%r][%r]: default %r is not on the step grid (min %r, step %r); "
+                "the slider can never return to it"
+                % (demo_name, pname, default_out, out_min, out_step)
+            )
         params.append({
             "name": pname,
             "label": _humanize(pname),
+            "unit": _unit(pname, ptype),
             "type": ptype,
             "default": default_out,
-            "min": pmin if ptype == "float" else int(pmin),
-            "max": pmax if ptype == "float" else int(pmax),
-            "step": pstep if ptype == "float" else int(pstep),
+            "min": out_min,
+            "max": out_max,
+            "step": out_step,
         })
     return {"demo": demo_name, "params": params}
+
+
+# ---------------------------------------------------------------------------
+# Baked mechanism animation
+# ---------------------------------------------------------------------------
+#
+# Mechanisms in the gallery move because this build regenerates each animatable
+# demo across a full cycle of its motion-phase parameter and RECOVERS each
+# body's rigid transform numerically. No motion law is written here: the
+# kinematics live in mechlib (four_bar_pose, cam_lift, the Geneva layout's
+# wheel_angle, tooth ratios) and the demo threads the phase into them. What
+# lands in index.json is only what the geometry itself did.
+#
+# Manifest convention: a body that never moves across the cycle is OMITTED from
+# ``animation.bodies``. Playback must therefore treat a missing body as
+# stationary rather than as an error. Grounds, frames, rails, and housings are
+# the usual absentees, and dropping them roughly halves the manifest cost.
+#
+# ``ANIMATE`` names the phase parameter, the full period, and the frame count
+# for each animatable demo. It is config, not derived data: which kwarg is "the
+# input" and how far it must travel is mechanism knowledge that exists nowhere
+# in the code. Every entry is gate-checked below against the live signature and
+# against the geometry, so a wrong cycle fails the build rather than shipping.
+#
+# The cycle must return every body's TRANSFORM to identity, not merely its
+# picture. A geared body that ends the loop one tooth on looks right in the
+# last frame and then unwinds hundreds of degrees in the single interpolation
+# step back to frame 0, which is exactly the flicker the loop is supposed to
+# avoid. So a reduction ratio sets the period: the driven member has to come
+# back round a whole number of times too, and the frame count rises with it to
+# keep the angular step under _MAX_STEP_DEG.
+ANIMATE = {
+    # Planar linkages: crank rotation is the input, one turn closes everything.
+    "demo_four_bar":         ("crank_angle_deg",  360.0,  24, False),
+    "demo_quick_return":     ("crank_angle_deg",  360.0,  24, False),
+    "demo_scotch_yoke":      ("angle_deg",        360.0,  24, False),
+    # Cams: the follower sweeps the profile through one revolution.
+    "demo_plate_cam":        ("follower_deg",     360.0,  24, False),
+    "demo_heart_cam":        ("follower_deg",     360.0,  24, False),
+    "demo_barrel_cam":       ("pin_phase_deg",    360.0,  24, False),
+    # Listed on purpose even though it is rejected every build: the snail cam's
+    # drop face is a genuine discontinuity, and the skip line is the standing,
+    # re-measured proof of that rather than a claim in a comment. If the cam
+    # ever gains a return ramp this starts animating on its own.
+    "demo_snail_cam":        ("follower_deg",     360.0,  24, False),
+    # Geneva: the wheel takes 360/slots per crank turn, so six crank turns
+    # bring the six-slot wheel back to where it started. The loop shows six
+    # index-and-dwell events. Not closed: the driver's crescent-cut locking
+    # disc has no rotational symmetry, so only a whole turn returns its
+    # picture, and the transform closes at the same place anyway.
+    "demo_geneva_pair":      ("crank_deg",       2160.0, 108, False),
+    # Equal tooth counts, so one turn closes both. 72 frames, not 24: a
+    # 24-tooth gear has a 15 degree tooth pitch, and stepping it 15 degrees a
+    # frame renders as a gear standing perfectly still.
+    "demo_herringbone_gear": ("drive_deg",        360.0,  72, False),
+    # 16:24 bevel pair -- the gear turns twice for every three of the pinion,
+    # so three pinion turns close both transforms.
+    "demo_bevel_gear_pair":  ("drive_deg",       1080.0, 144, False),
+    # Closed tracks. These are pairs whose transforms only realign after many
+    # turns (18:28 needs fourteen), but whose PICTURE comes back after a single
+    # tooth. Measured, not assumed: the driver is 18-fold symmetric to 0.064 mm
+    # and the driven 28-fold to 0.067 mm, so 20 degrees of driver puts both
+    # exactly one tooth on and nobody can tell. 13 frames is 1.7 degrees a step
+    # against a 20 degree pitch, well clear of the wagon-wheel band.
+    "demo_spur_gear_pair":   ("drive_deg",         20.0,  13, True),
+    # One gear, 20-fold symmetric to 0.065 mm, so one tooth is 18 degrees.
+    "demo_spur_gear_mesh":   ("drive_deg",         18.0,  13, True),
+}
+
+# Mechanisms deliberately left out, and why. Each was measured, not assumed.
+# The recurring reason is the period: a loop can only be seamless if every body
+# comes back, and a body's own rotational symmetry is what decides how soon.
+# Where the finest symmetry is 1-fold -- a D-flat bore, an eccentric cam, a
+# disc whose lobe count is coprime with its hole count -- nothing short of a
+# whole turn of that body will do, and the input has to turn as many times as
+# the ratio demands.
+#
+#   demo_toggle_clamp      Its base plate is sized from the pose bounding box,
+#                          so it reshapes rather than reposes (residual climbs
+#                          to 0.54 mm). Its travel is also an out-and-back,
+#                          which a single linear phase ramp cannot express.
+#   demo_worm              The demo poses worm and wheel for display, already
+#                          interpenetrating by 93 mm^3, and the pair has no
+#                          measurable conjugate contact (overlap stays 0 across
+#                          a +/-8 degree wheel band), so the drive sense cannot
+#                          be recovered from the geometry -- only asserted.
+#   demo_cycloidal_drive   The disc's 11 lobes are coprime with its 6 output
+#                          holes, so it has NO rotational symmetry at all
+#                          (measured: no angle from 360/2 to 360/60 maps it
+#                          onto itself). One lobe pitch of disc rotation is a
+#                          whole input turn and still leaves the picture 3.9 mm
+#                          out, so the assembly only repeats after 11 of them.
+#   demo_planet_stage      The sun's D-flat bore leaves it 1-fold symmetric
+#                          (measured), so the sun needs a whole turn; the
+#                          carrier runs at 2/7 sun and is 3-fold, so it needs
+#                          seven of them. Shortest repeating picture is 2520
+#                          deg of sun, and the sun's 30 deg tooth pitch then
+#                          needs 252 frames. Feasible, just not worth it.
+#   escapement,            mechlib exposes no engagement relation for these
+#   intermittent_gear_pair (unlike geneva_wheel_angle for the Geneva). Rotating
+#                          them at a continuous ratio would drive the locking
+#                          segment through the notch: an invented motion.
+#   oldham_coupling,       Their motion laws (the disc's 2-omega orbit, the
+#   universal_joint        Cardan tangent relation) are textbook but are not in
+#                          the module, so baking them would mean authoring one.
+#   jaw_coupling,          Every body turns together, so the whole model just
+#   freewheel_clutch,      rotates -- indistinguishable from moving the camera.
+#   timing_pulley
+
+# Largest rotation any body may take between consecutive frames, before a
+# slerped keyframe track stops reading as rotation at all.
+_MAX_STEP_DEG = 30.0
+
+# ... and the guard the angle cap misses. A rotationally symmetric body stepped
+# by (or near) its own tooth pitch lands back on itself: the transform moved,
+# the picture did not. Comparing the frame-to-frame point clouds catches that
+# without having to detect each body's symmetry order -- when the apparent
+# displacement collapses relative to the real one, the part is about to render
+# frozen or running backwards. Measured: the gear pairs sampled every tooth
+# pitch scored 0.01 here; every honestly-moving body scores above 0.8.
+_MIN_APPARENT_FRACTION = 0.5
+
+# A body is accepted as rigid when the recovered transform reproduces the
+# regenerated frame to within RIGID_REL of its own bounding diagonal. Demos
+# that pose finished meshes (``_spin``) hit this at machine precision.
+RIGID_REL = 1e-6
+
+# Demos that rebuild a profile at the new pose (the linkage bars) cannot reach
+# RIGID_REL: shapely re-polygonises each bore in the world frame, so the vertex
+# set is a slightly different discretisation of the same rigid part rather than
+# a permutation of it. Those pass a looser gate -- one part in five hundred of
+# the body, capped at a quarter millimetre, still well under one FDM extrusion
+# width, so the transform reproduces the real frame to within something nobody
+# can print or see.
+#
+# That threshold also separates re-facetting from a body that genuinely
+# reshapes with the pose, and the separation is measured rather than assumed.
+# Re-polygonisation noise is bounded by the facetting: across every animated
+# linkage it tops out at 0.055 mm (quick_return's slotted lever) and does not
+# care how far the phase moved. toggle_clamp's base plate is the counter-case,
+# sized from the pose bounding box, and its residual climbs monotonically --
+# 0.004, 0.013, 0.049, 0.129, 0.281, 0.541 mm as the handle swings -- crossing
+# its own 0.126 mm limit at six degrees of travel.
+REPOSE_ABS = 0.25
+REPOSE_REL = 2e-3
+
+
+def _kabsch(source, target):
+    """Rigid transform taking ``source`` points onto ``target`` points."""
+    cs, ct = source.mean(axis=0), target.mean(axis=0)
+    cov = (source - cs).T @ (target - ct)
+    u, _s, vt = np.linalg.svd(cov)
+    # Guard the reflection case: flip the least singular direction so the
+    # recovered matrix is a rotation and never a mirror.
+    flip = np.sign(np.linalg.det(vt.T @ u.T))
+    rotation = vt.T @ np.diag([1.0, 1.0, flip]) @ u.T
+    return rotation, ct - rotation @ cs
+
+
+def _principal_frame(points):
+    """Centroid plus a right-handed principal axis frame of a point set."""
+    centre = points.mean(axis=0)
+    centred = points - centre
+    _w, vectors = np.linalg.eigh(centred.T @ centred)
+    axes = vectors[:, ::-1].copy()
+    axes[:, 2] = np.cross(axes[:, 0], axes[:, 1])
+    return centre, axes
+
+
+def _rotation_gap(a, b):
+    """Angle in radians between two rotation matrices."""
+    cosine = (float(np.trace(a.T @ b)) - 1.0) / 2.0
+    return math.acos(max(-1.0, min(1.0, cosine)))
+
+
+def _recover_rigid(source, target, limit, seed):
+    """Recover the rigid transform from ``source`` to ``target`` vertices.
+
+    Tries index correspondence first, which is exact whenever the demo poses a
+    finished mesh. Falls back to a correspondence-free fit (principal-axis
+    seeds plus the previous frame's transform, each refined by nearest-neighbour
+    iterations) for demos that rebuild the profile at the new pose, where
+    shapely may reorder the boolean result ring.
+
+    A symmetric body admits several transforms that reproduce it exactly: a
+    linkage bar is a capsule with two equal bores, so flipping it end-over-end
+    and sliding it back fits just as well as the pose it actually reached.
+    Those alternatives draw the same picture but interpolate through nonsense,
+    so among the candidates that fit within ``limit`` this keeps the one
+    closest to ``seed`` -- the previous frame. Continuity, not a preferred
+    answer, breaks the tie. Returns ``(rotation, translation, residual)``, the
+    residual being the largest distance any vertex ends up from the
+    regenerated body.
+    """
+    rotation, translation = _kabsch(source, target)
+    residual = float(np.abs(source @ rotation.T + translation - target).max())
+    if residual <= RIGID_REL * float(np.linalg.norm(np.ptp(target, axis=0))):
+        return rotation, translation, residual
+
+    tree = cKDTree(target)
+    src_centre, src_axes = _principal_frame(source)
+    tgt_centre, tgt_axes = _principal_frame(target)
+    starts = [seed]
+    for sx in (1.0, -1.0):
+        for sy in (1.0, -1.0):
+            axes = src_axes @ np.diag([sx, sy, 1.0])
+            axes[:, 2] = np.cross(axes[:, 0], axes[:, 1])
+            guess = tgt_axes @ axes.T
+            starts.append((guess, tgt_centre - guess @ src_centre))
+
+    solutions = []
+    for guess, offset in starts:
+        for _step in range(40):
+            _d, index = tree.query(source @ guess.T + offset)
+            guess, offset = _kabsch(source, target[index])
+        forward, _index = tree.query(source @ guess.T + offset)
+        back, _index = cKDTree(source @ guess.T + offset).query(target)
+        solutions.append((float(max(forward.max(), back.max())), guess, offset))
+
+    within = [s for s in solutions if s[0] <= limit]
+    if not within:
+        return min(solutions, key=lambda s: s[0])[1:] + (
+            min(s[0] for s in solutions),)
+    cost, guess, offset = min(
+        within, key=lambda s: (_rotation_gap(seed[0], s[1]),
+                               float(np.linalg.norm(s[2] - seed[1]))))
+    return guess, offset, cost
+
+
+def _quaternion_xyzw(rotation):
+    """Convert a 3x3 rotation to an xyzw quaternion."""
+    matrix = np.eye(4)
+    matrix[:3, :3] = rotation
+    w, x, y, z = trimesh.transformations.quaternion_from_matrix(matrix)
+    return [float(x), float(y), float(z), float(w)]
+
+
+def _pose_gap(vertices, rotation, translation):
+    """How far one full cycle leaves the body from frame 0's POSE.
+
+    The check for a modulo-wrapped track, where the player interpolates from
+    the last frame back to frame 0: a gear that ends the loop one tooth on is
+    the same picture but a different pose, and slerping back to frame 0 from
+    there spins it most of a turn in a single frame.
+    """
+    return float(np.abs(
+        vertices @ rotation.T + translation - vertices).max())
+
+
+def _picture_gap(vertices, rotation, translation):
+    """How different one full cycle leaves the body from frame 0's PICTURE.
+
+    The check for a ``closed`` track, where the player snaps from the last
+    frame straight to frame 0 with nothing interpolated between them. Only the
+    rendered result has to match, so the poses may legitimately differ by a
+    symmetry of the part -- one tooth pitch on a spur gear. Compared as point
+    clouds, which is what "looks the same" means.
+    """
+    posed = vertices @ rotation.T + translation
+    forward, _index = cKDTree(vertices).query(posed)
+    backward, _index = cKDTree(posed).query(vertices)
+    return float(max(forward.max(), backward.max()))
+
+
+def _bake_animation(demo_name, demo_fn):
+    """Bake per-frame rigid motion for one demo, or return None if it cannot.
+
+    Regenerates the demo across the cycle, recovers every body's transform
+    against frame 0, and verifies each recovery before it is trusted. A body
+    that changes vertex count, or that no recovered transform reproduces,
+    means the demo is rebuilding geometry rather than reposing it, and the
+    whole model is skipped rather than animated with an invented pose.
+    """
+    param, cycle_deg, frames, closed = ANIMATE[demo_name]
+    # A closed track's frame list is INCLUSIVE of the cycle end: n frames span
+    # P = 0..C in n-1 steps and the player snaps from the last straight back to
+    # the first. A modulo track emits n frames covering [0, C) and the player
+    # interpolates the wrap, so the cycle end is sampled only to check it.
+    span = frames - 1 if closed else frames
+    last = span
+    signature_params = inspect.signature(demo_fn).parameters
+    if param not in signature_params:
+        raise KeyError("ANIMATE[%r] names unknown param %r" % (demo_name, param))
+    base = signature_params[param].default
+    if base is inspect.Parameter.empty:
+        raise ValueError("ANIMATE param %s.%s has no default" % (demo_name, param))
+    base = float(base)
+
+    # Frame 0 is the plain default call -- the same one that wrote the GLB --
+    # so the baked motion lines up with the geometry the page loads.
+    reference = demo_fn()
+    reference_v = {name: np.asarray(mesh.vertices, dtype=float)
+                   for name, mesh, _color in reference}
+    diagonals = {name: float(np.linalg.norm(mesh.extents))
+                 for name, mesh, _color in reference}
+
+    tracks = {name: {"t": [[0.0, 0.0, 0.0]], "q": [[0.0, 0.0, 0.0, 1.0]]}
+              for name in reference_v}
+    moved = set()
+    residuals = []
+    steps = {name: 0.0 for name in reference_v}
+    seeds = {name: (np.eye(3), np.zeros(3)) for name in reference_v}
+    poses = {name: value.copy() for name, value in reference_v.items()}
+    visible = {name: (0.0, 0.0) for name in reference_v}
+    wraps = {}
+    for index in range(1, last + 1):
+        frame = demo_fn(**{param: base + index * cycle_deg / span})
+        posed = {name: np.asarray(mesh.vertices, dtype=float)
+                 for name, mesh, _color in frame}
+        if set(posed) != set(reference_v):
+            print("  skip %s: body set changed at frame %d" % (demo_name, index))
+            return None
+        for name, target in posed.items():
+            source = reference_v[name]
+            if len(source) != len(target):
+                print("  skip %s: body %r vertex count %d -> %d at frame %d"
+                      % (demo_name, name, len(source), len(target), index))
+                return None
+            limit = max(RIGID_REL * diagonals[name],
+                        min(REPOSE_ABS, REPOSE_REL * diagonals[name]))
+            previous = seeds[name]
+            rotation, translation, residual = _recover_rigid(
+                source, target, limit, previous)
+            seeds[name] = (rotation, translation)
+            if residual > limit:
+                print("  skip %s: body %r not rigid at frame %d "
+                      "(residual %.4g mm, limit %.4g mm)"
+                      % (demo_name, name, index, residual, limit))
+                return None
+            residuals.append(residual)
+            steps[name] = max(steps[name],
+                              math.degrees(_rotation_gap(previous[0], rotation)))
+            current = source @ rotation.T + translation
+            travel = float(np.abs(current - poses[name]).max())
+            if travel > visible[name][0]:
+                forward, _index = cKDTree(poses[name]).query(current)
+                backward, _index = cKDTree(current).query(poses[name])
+                visible[name] = (travel,
+                                 float(max(forward.max(), backward.max())))
+            poses[name] = current
+            if index == last:
+                wraps[name] = (_picture_gap if closed else _pose_gap)(
+                    source, rotation, translation)
+                if not closed:
+                    continue
+            if (np.abs(translation).max() > 1e-9 or
+                    np.abs(rotation - np.eye(3)).max() > 1e-9):
+                moved.add(name)
+            tracks[name]["t"].append([float(v) for v in translation])
+            tracks[name]["q"].append(_quaternion_xyzw(rotation))
+
+    # Seamlessness: one full cycle must land back on frame 0 -- on its pose for
+    # a modulo track, on its picture for a closed one. A cam with a drop face
+    # fails this either way, which is the point: its cycle genuinely does not
+    # close.
+    for name, wrap in sorted(wraps.items()):
+        if wrap > max(REPOSE_ABS, REPOSE_REL * diagonals[name]):
+            print("  skip %s: body %r does not close the cycle "
+                  "(pose is %.4g mm off frame 0 after one full cycle)"
+                  % (demo_name, name, wrap))
+            return None
+
+    # Enough frames to read as motion rather than as a strobe.
+    coarse = max(steps.items(), key=lambda item: item[1])
+    if coarse[1] > _MAX_STEP_DEG:
+        print("  skip %s: %d frames leaves body %r turning %.1f deg per frame "
+              "(limit %.1f); raise the frame count in ANIMATE"
+              % (demo_name, frames, coarse[0], coarse[1], _MAX_STEP_DEG))
+        return None
+    apparent = 1.0
+    for name, (travel, seen) in sorted(visible.items()):
+        if travel <= 1e-9:
+            continue
+        fraction = seen / travel
+        apparent = min(apparent, fraction)
+        if fraction < _MIN_APPARENT_FRACTION:
+            print("  skip %s: %d frames aliases body %r -- it travels %.3g mm "
+                  "per frame but only looks %.3g mm different (%.0f%%); raise "
+                  "the frame count in ANIMATE"
+                  % (demo_name, frames, name, travel, seen, 100.0 * fraction))
+            return None
+
+    if not moved:
+        print("  skip %s: no body moves across the cycle" % demo_name)
+        return None
+
+    bodies = {}
+    for name in sorted(moved):
+        track = tracks[name]
+        # Keep consecutive quaternions in one hemisphere so a shortest-path
+        # interpolator never spins a body the long way round between frames.
+        quats = []
+        previous = None
+        for quat in track["q"]:
+            vector = np.asarray(quat, dtype=float)
+            if previous is not None and float(previous @ vector) < 0.0:
+                vector = -vector
+            previous = vector
+            quats.append([round(float(v), 6) for v in vector])
+        bodies[name] = {
+            "t": [[round(float(v), 6) for v in row] for row in track["t"]],
+            "q": quats,
+        }
+
+    worst = max(residuals) if residuals else 0.0
+    print("  animated %-24s %-16s cycle %6.1f deg, %3d frames%s, %d/%d bodies, "
+          "residual %8.2e mm, wrap %8.2e mm, step %5.2f deg, visible %3.0f%%"
+          % (demo_name, param, cycle_deg, frames, " closed" if closed else "      ",
+             len(bodies), len(tracks), worst, max(wraps.values()), coarse[1],
+             100.0 * apparent))
+    animation = {
+        "fps": 24,
+        "cycle_deg": float(cycle_deg),
+        "param": param,
+        "bodies": bodies,
+    }
+    if closed:
+        animation["closed"] = True
+    return animation
+
+
+def _check_node_names(filename, bodies):
+    """Fail the build if baked body names miss the GLB's node names.
+
+    Playback keys off node names; a silent mismatch animates nothing at all,
+    so this reads the exported file back rather than trusting the writer.
+    """
+    scene = trimesh.load(str(OUTPUT_DIR / filename), file_type="glb")
+    nodes = set(scene.graph.nodes_geometry)
+    missing = set(bodies) - nodes
+    if missing:
+        raise ValueError(
+            "%s: baked bodies %s are not node names in the GLB (%s)"
+            % (filename, sorted(missing), sorted(nodes)))
+    return len(nodes)
 
 
 def _build_mechlib_wheel():
@@ -1164,15 +1716,50 @@ def build():
     ]
 
     manifest_models = []
+    built_demos = []
+    animated = []
     for model in models:
         demo_name = model.pop("demo")
+        built_demos.append(demo_name)
         demo_fn = getattr(demos, demo_name)
+        started = time.perf_counter()
         meshes = demo_fn()
+        # Measured, not guessed: the playground uses this to decide which parts
+        # are too heavy to regenerate on every slider tick. Pyodide runs these
+        # roughly 10-50x slower than native, so a part costing hundreds of
+        # milliseconds here costs seconds in a browser.
+        model["build_ms"] = int(round((time.perf_counter() - started) * 1000))
         export_model(model["file"], meshes)
+        category = _category(model["module"])
+        group, _title, _blurb = CATEGORIES[category]
+        model["category"] = category
+        model["group"] = group
+        model["rank"] = CATEGORY_ORDER[category]
+        # Derived card facts: how many bodies the demo returns, how big it is in
+        # mm, and whether it is tunable. Nothing here is hand-maintained.
+        model["parts"] = len(meshes)
+        model["size_mm"] = [
+            round(float(v), 1)
+            for v in trimesh.util.concatenate([m for _n, m, _c in meshes]).extents
+        ]
         play = _play_field(demo_name, demo_fn)
         if play is not None:
             model["play"] = play
+        if demo_name in ANIMATE:
+            animation = _bake_animation(demo_name, demo_fn)
+            if animation is not None:
+                _check_node_names(model["file"], animation["bodies"])
+                model["animation"] = animation
+                animated.append(demo_name)
         manifest_models.append(model)
+
+    unbuilt = set(ANIMATE) - set(built_demos)
+    if unbuilt:
+        raise KeyError("ANIMATE names demos with no gallery model: %s"
+                       % sorted(unbuilt))
+    print("baked animation for %d of %d listed demos" % (len(animated), len(ANIMATE)))
+
+    manifest_models.sort(key=lambda m: m["rank"])
 
     utility_functions = [
         ("mechlib.meshutil", mechlib.to_manifold, "Convert trimesh geometry to manifold3d."),
@@ -1209,7 +1796,12 @@ def build():
         ("mechlib.cutters", mechlib.lobe_cavity_polys, "Build hollow lobe polygons around ribs."),
     ]
     utilities = [
-        {"module": module, "signature": signature(function), "description": description}
+        {
+            "module": module,
+            "signature": signature(function),
+            "description": description,
+            "category": _category(module),
+        }
         for module, function, description in utility_functions
     ]
 
@@ -1220,8 +1812,26 @@ def build():
 
     wheel_name = _build_mechlib_wheel()
 
+    used_categories = {m["category"] for m in manifest_models}
+    used_categories.update(u["category"] for u in utilities)
+
     manifest = {
         "version": mechlib.__version__,
+        "groups": [
+            {"key": key, "title": title, "blurb": blurb}
+            for key, title, blurb in CATEGORY_GROUPS
+        ],
+        "categories": [
+            {
+                "key": key,
+                "group": group,
+                "title": title,
+                "blurb": blurb,
+                "rank": CATEGORY_ORDER[key],
+            }
+            for key, (group, title, blurb) in CATEGORIES.items()
+            if key in used_categories
+        ],
         "playground": {
             "pyodide": PYODIDE_VERSION,
             "wheels": [

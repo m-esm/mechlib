@@ -73,6 +73,25 @@ def test_spur_gear_sector_is_a_watertight_partial_wheel():
     assert sector.extents[1] < 2 * (1.25 * 32 / 2 + 1.25)
 
 
+@pytest.mark.parametrize("sector_deg", [90.0, 95.0, 100.0, 110.0, 120.0,
+                                        125.0, 130.0, 140.0, 145.0, 150.0])
+def test_spur_gear_sector_is_a_volume_at_every_sector_angle(sector_deg):
+    # Sector half-angles that are an exact multiple of the back-disc sampling
+    # step (2 deg) used to leave a zero-length edge in the profile, so the
+    # extrusion was not a volume and the hub union raised
+    # "Not all meshes are volumes!".
+    gear = spur_gear(1.5, 36, 7.0, bore=5.0, sector_deg=sector_deg,
+                     hub_d=14.0, full_disc=False)
+    assert_mesh(gear)
+    assert gear.is_volume
+
+
+def test_spur_gear_full_disc_geometry_is_unchanged():
+    gear = spur_gear(1.5, 36, 7.0, bore=5.0, hub_d=14.0)
+    assert_mesh(gear)
+    assert gear.volume == pytest.approx(15676.392425, rel=5e-3)
+
+
 def test_ring_resampling_and_loft_make_a_watertight_solid():
     profiles = [
         (sg.Point(0, 0).buffer(5, resolution=12), 0),

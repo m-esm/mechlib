@@ -212,6 +212,7 @@ ml.export_stl(body, "bracket.stl")
 | Function | Purpose | Origin project |
 | --- | --- | --- |
 | `geneva_pair` | Build an external Geneva driver and slotted wheel posed mid-engagement. | New, mechanical-movements wave v0.6.0 |
+| `geneva_wheel_angle` | Return the exact crank-to-wheel angle relation of an external Geneva drive (dwell included). | New, mechanical-movements wave v0.6.0 |
 | `escapement` | Build an escape wheel and anchor/deadbeat pallets with one pallet engaged. | New, mechanical-movements wave v0.6.0 |
 | `intermittent_gear_pair` | Build a mutilated-gear intermittent pair with locking segments, posed meshed. | New, mechanical-movements wave v0.6.0 |
 
@@ -283,6 +284,8 @@ Current consumer: finnish-doors (Klonk). Planned migrations: finnish-windows, pa
 
 ## Gallery
 
-Explore every visual component in the [interactive 3D gallery](https://m-esm.github.io/mechlib/). Run `python3 gallery/build_gallery.py` from the repository root to regenerate `docs/models/`.
+Explore every visual component in the [interactive 3D gallery](https://m-esm.github.io/mechlib/). Parts are shelved by what they do, movements first and primitives last, and are searchable by name, module, or description. Mechanisms with a real motion law run through a full cycle in their viewport. Anything marked tunable opens a parameter playground that re-runs mechlib itself in the browser through Pyodide, so you can drag a slider, watch the geometry rebuild, then copy runnable code or download the STL.
+
+Run `python3 gallery/build_gallery.py` from the repository root to regenerate `docs/models/`. The build derives every category, badge, slider range, build cost, and animation track from the code itself and fails loudly rather than shipping stale metadata: an uncategorised module, a slider default outside its own range or off its step grid, and a body that does not move rigidly all stop the build.
 
 Licensed under the MIT License.

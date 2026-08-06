@@ -1,4 +1,4 @@
-__version__ = "0.6.0"
+__version__ = "0.7.0"
 
 from .cams import (
     DEFAULT_SEGMENTS,
@@ -75,7 +75,12 @@ from .gears import (
     spur_gear_mesh,
     worm,
 )
-from .indexing import escapement, geneva_pair, intermittent_gear_pair
+from .indexing import (
+    escapement,
+    geneva_pair,
+    geneva_wheel_angle,
+    intermittent_gear_pair,
+)
 from .linear import archimedes_screw, differential_screw, scroll_drive
 from .linkages import (
     four_bar,
@@ -315,6 +320,7 @@ __all__ = (
     "wave_spring",
     "bistable_beam",
     "geneva_pair",
+    "geneva_wheel_angle",
     "escapement",
     "intermittent_gear_pair",
 )

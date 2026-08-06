@@ -3,6 +3,7 @@ import math
 import pytest
 import trimesh
 
+from mechlib import clutches
 from mechlib.clutches import freewheel_clutch, torque_limiter
 from mechlib.couplings import jaw_coupling, oldham_coupling, universal_joint
 
@@ -140,3 +141,59 @@ def test_freewheel_clutch_roller_count_and_validation():
         freewheel_clutch(rollers=8)  # pockets overlap at this count
     with pytest.raises(ValueError):
         freewheel_clutch(pocket_deg=20.0)  # roller cannot fit the pocket
+
+
+# ---------------------------------------------------------------------------
+# GEOS-degeneracy guard
+#
+# The freewheel ring unions ramp pockets into a circular void. The pocket
+# return path used to run at exactly the void radius, so its vertices landed
+# ~1e-3 mm outside the polygonal void and the two boundaries crossed back and
+# forth along the same arc: the input that makes GEOS' floating-point overlay
+# emit "found non-noded intersection". In the browser (Pyodide's older GEOS)
+# that is a C++ abort, not a catchable Python exception. The union now runs on
+# a fixed precision grid with the return path strictly inside the void.
+# ---------------------------------------------------------------------------
+
+
+def assert_no_degenerate_edges(geometry, label, min_edge=1e-9):
+    """No consecutive duplicate vertices and no zero-length edges."""
+    rings = []
+    for part in getattr(geometry, "geoms", [geometry]):
+        rings.append(part.exterior)
+        rings.extend(part.interiors)
+    for ring in rings:
+        coords = list(ring.coords)
+        assert len(coords) >= 4, "%s: degenerate ring" % label
+        for i in range(len(coords) - 1):
+            (x0, y0), (x1, y1) = coords[i], coords[i + 1]
+            assert (x0, y0) != (x1, y1), (
+                "%s: duplicate vertex at index %d" % (label, i))
+            assert math.hypot(x1 - x0, y1 - y0) > min_edge, (
+                "%s: zero-length edge at index %d" % (label, i))
+
+
+@pytest.mark.parametrize("rollers", [4, 5, 6, 7])
+@pytest.mark.parametrize("sections", [24, 32, 48, 64, 96])
+def test_freewheel_sweep_is_sound_and_non_degenerate(
+        rollers, sections, monkeypatch):
+    captured = []
+    original = clutches._extrude
+
+    def spy(poly, height, z0=0.0):
+        captured.append(poly)
+        return original(poly, height, z0)
+
+    monkeypatch.setattr(clutches, "_extrude", spy)
+    parts = freewheel_clutch(rollers=rollers, sections=sections)
+    monkeypatch.undo()
+
+    assert captured, "ring polygon was never extruded"
+    for poly in captured:
+        assert poly.is_valid and not poly.is_empty and poly.area > 0
+        assert_no_degenerate_edges(poly, "freewheel ring polygon")
+    assert_mesh(parts["ring"])
+    assert_mesh(parts["hub"])
+    assert len(parts["rollers"]) == rollers
+    for roller in parts["rollers"]:
+        assert_mesh(roller)

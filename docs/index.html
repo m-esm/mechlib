@@ -3,8 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Interactive 3D gallery for the mechlib parametric geometry library.">
-  <title>mechlib gallery</title>
+  <meta name="description" content="84 parametric, FDM-printable mechanical components in Python: gears, cams, linkages, ratchets, couplings, flexures, cutters, and primitives. Spin every part in 3D and retune its parameters live in the browser.">
+  <title>mechlib — parametric mechanical components for Python</title>
+  <meta property="og:title" content="mechlib — parametric mechanical components for Python">
+  <meta property="og:description" content="Gears, cams, linkages, ratchets, couplings, flexures, and printable primitives. Spin every part in 3D and retune it live in the browser.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://m-esm.github.io/mechlib/">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -29,14 +34,16 @@
 
     html {
       background: var(--field);
-      overflow-x: hidden;
+      /* clip, not hidden: `overflow: hidden` makes html a scroll container and
+         silently kills `position: sticky` on the toolbar. */
+      overflow-x: clip;
     }
 
     body {
       min-width: 0;
       min-height: 100vh;
       margin: 0;
-      overflow-x: hidden;
+      overflow-x: clip;
       color: var(--ink);
       background:
         repeating-linear-gradient(0deg, rgba(148, 190, 226, 0.055) 0 1px, transparent 1px 130px),
@@ -95,6 +102,63 @@
       padding: 12px 22px;
       color: #c3d7ea;
       font-size: 0.95rem;
+    }
+
+    .quickstart {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1px;
+      margin: 0 22px 16px;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+
+    .qs-block {
+      position: relative;
+      padding: 10px 12px 11px;
+      background: rgba(6, 24, 40, 0.7);
+    }
+
+    .qs-label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .qs-block code {
+      display: block;
+      overflow-x: auto;
+      color: #d9eafa;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      line-height: 1.6;
+      white-space: pre;
+    }
+
+    .qs-copy {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      padding: 2px 7px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      background: rgba(9, 33, 54, 0.9);
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .qs-copy:hover,
+    .qs-copy:focus-visible {
+      border-color: var(--accent);
+      color: var(--accent);
+      outline: none;
     }
 
     .title-block {
@@ -159,10 +223,274 @@
       outline-offset: 2px;
     }
 
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      margin-bottom: 22px;
+      border: 1px solid var(--line-strong);
+      background: rgba(9, 33, 54, 0.94);
+      backdrop-filter: blur(9px);
+    }
+
+    .tool-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      padding: 9px 12px;
+    }
+
+    .tool-row + .tool-row {
+      border-top: 1px solid var(--line);
+    }
+
+    .search-wrap {
+      position: relative;
+      flex: 1 1 260px;
+      min-width: 0;
+    }
+
+    .search-wrap input {
+      width: 100%;
+      padding: 8px 68px 8px 11px;
+      border: 1px solid var(--line-strong);
+      color: var(--ink);
+      background: rgba(6, 24, 40, 0.75);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+    }
+
+    .search-wrap input::placeholder {
+      color: var(--muted);
+    }
+
+    .search-wrap input:focus-visible {
+      border-color: var(--accent);
+      outline: none;
+    }
+
+    .search-hint {
+      position: absolute;
+      top: 50%;
+      right: 9px;
+      transform: translateY(-50%);
+      padding: 2px 6px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      pointer-events: none;
+    }
+
+    .search-wrap input:not(:placeholder-shown) ~ .search-hint {
+      display: none;
+    }
+
+    .chip {
+      flex: 0 0 auto;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      background: transparent;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: border-color 140ms ease, color 140ms ease, background 140ms ease;
+    }
+
+    .chip:hover {
+      border-color: var(--line-strong);
+      color: var(--ink);
+    }
+
+    .chip[aria-pressed="true"] {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(255, 180, 84, 0.12);
+    }
+
+    .chip .n {
+      margin-left: 6px;
+      opacity: 0.65;
+      font-size: 0.9em;
+    }
+
+    .chip.group-chip {
+      font-family: var(--display);
+      font-size: 0.92rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .chip-scroll {
+      display: flex;
+      flex: 1 1 100%;
+      flex-wrap: wrap;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    /* Once the bar is pinned it must not eat a fifth of the viewport: the
+       category chips collapse from a wrapped block to one scrollable line. */
+    .toolbar.stuck .tool-row {
+      padding-top: 6px;
+      padding-bottom: 6px;
+    }
+
+    .toolbar.stuck .chip-scroll {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+
+    .toolbar.stuck .chip-scroll::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    .toolbar.stuck .chip-scroll::-webkit-scrollbar-thumb {
+      background: var(--line-strong);
+    }
+
+    .result-count {
+      flex: 0 0 auto;
+      margin-left: auto;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .cat-section[hidden] {
+      display: none;
+    }
+
+    .cat-head {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 12px;
+      align-items: baseline;
+      margin: 30px 0 12px;
+      padding-bottom: 7px;
+      border-bottom: 1px solid var(--line-strong);
+    }
+
+    .cat-section:first-of-type .cat-head {
+      margin-top: 4px;
+    }
+
+    .cat-head h2 {
+      margin: 0;
+      font-family: var(--display);
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .cat-head .cat-count {
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 0.66rem;
+    }
+
+    .cat-head .cat-blurb {
+      flex: 1 1 240px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
       gap: 14px;
+    }
+
+    .model-card[hidden] {
+      display: none;
+    }
+
+    /* Keep the sticky toolbar from covering whatever a permalink or a filter
+       jump scrolls to. */
+    .model-card,
+    .cat-section {
+      scroll-margin-top: 160px;
+    }
+
+    .model-card.flash {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(255, 180, 84, 0.3);
+    }
+
+    .empty-state {
+      padding: 40px 20px;
+      border: 1px dashed var(--line-strong);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      text-align: center;
+    }
+
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      padding: 0 12px 8px;
+    }
+
+    .badge {
+      padding: 2px 6px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+
+    .badge.tunable {
+      border-color: rgba(255, 180, 84, 0.5);
+      color: var(--accent);
+    }
+
+    .card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: auto;
+      padding-top: 8px;
+    }
+
+    .card-actions a,
+    .card-actions button {
+      padding: 4px 9px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      background: transparent;
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: border-color 140ms ease, color 140ms ease;
+    }
+
+    .card-actions a:hover,
+    .card-actions button:hover,
+    .card-actions a:focus-visible,
+    .card-actions button:focus-visible {
+      border-color: var(--accent);
+      color: var(--accent);
+      outline: none;
+    }
+
+    .card-actions .primary {
+      border-color: rgba(255, 180, 84, 0.5);
+      color: var(--accent);
     }
 
     .utility-section {
@@ -354,6 +682,17 @@
       -webkit-line-clamp: 3;
       color: #c3d7ea;
       font-size: 0.84rem;
+      cursor: pointer;
+    }
+
+    .description.expanded {
+      display: block;
+      overflow: visible;
+    }
+
+    .description:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
     }
 
     .origin {
@@ -538,8 +877,10 @@
 
     .pg-actions {
       display: flex;
+      flex-wrap: wrap;
       gap: 8px;
       margin-top: auto;
+      padding-top: 10px;
     }
 
     .pg-reset {
@@ -575,15 +916,35 @@
     }
 
     @media (max-width: 860px) {
+      /* The sheet, not the body, is the scroll container: otherwise the viewer
+         grows to its content height and pushes the sliders and the status line
+         permanently off a phone screen. */
+      .pg-sheet {
+        max-height: 100%;
+        overflow: hidden;
+      }
+
       .pg-body {
-        grid-template-columns: minmax(0, 1fr);
+        display: block;
+        flex: 1 1 auto;
+        min-height: 0;
         overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
       }
 
       .pg-viewer {
-        min-height: 46vh;
+        height: 42vh;
+        min-height: 0;
         border-right: 0;
         border-bottom: 1px solid var(--line);
+      }
+
+      .pg-panel {
+        overflow: visible;
+      }
+
+      .pg-status {
+        flex: 0 0 auto;
       }
     }
 
@@ -649,7 +1010,23 @@
         <h1>mechlib</h1>
         <a class="repo-link" href="https://github.com/m-esm/mechlib">Source &#8599;</a>
       </div>
-      <p class="tagline">Parametric component register: semi-primitive geometry for mechanical design and FDM printing.</p>
+      <p class="tagline">Parametric mechanical components for Python. Every part below is a function that returns a watertight, FDM-printable mesh in millimetres. Spin it, retune it live, copy the import.</p>
+      <div class="quickstart">
+        <div class="qs-block">
+          <span class="qs-label">Install</span>
+          <code id="qs-install">pip3 install git+https://github.com/m-esm/mechlib</code>
+          <button class="qs-copy" type="button" data-copy="qs-install">Copy</button>
+        </div>
+        <div class="qs-block">
+          <span class="qs-label">Use</span>
+          <code id="qs-use">import mechlib as ml
+
+body = ml.rbox((40, 24, 12), r=3)                                  # rounded block
+body = ml.sub(body, ml.teardrop(4.1, 50, axis="x", up=(0, 0, 1)))  # print-safe bore
+ml.export_stl(body, "bracket.stl")                                 # watertight gate</code>
+          <button class="qs-copy" type="button" data-copy="qs-use">Copy</button>
+        </div>
+      </div>
       <div class="title-block">
         <div class="tb-cell"><span class="tb-label">Version</span><span class="tb-value" id="version">loading</span></div>
         <div class="tb-cell"><span class="tb-label">Parts</span><span class="tb-value" id="part-count">&#8211;</span></div>
@@ -657,10 +1034,26 @@
         <div class="tb-cell"><span class="tb-label">Contract</span><span class="tb-value">explicit args only &#183; no hidden globals &#183; no project imports</span></div>
       </div>
     </header>
-    <section class="gallery-grid" id="gallery" aria-label="Interactive component models"></section>
+    <div id="toolbar-sentinel" aria-hidden="true"></div>
+    <div class="toolbar" role="search">
+      <div class="tool-row">
+        <div class="search-wrap">
+          <input id="search" type="search" autocomplete="off" spellcheck="false"
+                 placeholder="Search parts, modules, descriptions…"
+                 aria-label="Search components">
+          <span class="search-hint">press /</span>
+        </div>
+        <button class="chip" id="animated-only" type="button" aria-pressed="false">In motion</button>
+        <button class="chip" id="tunable-only" type="button" aria-pressed="false">Tunable only</button>
+        <span class="result-count" id="result-count"></span>
+      </div>
+      <div class="tool-row" id="group-row" aria-label="Shelf"></div>
+      <div class="tool-row"><div class="chip-scroll" id="category-row" aria-label="Category"></div></div>
+    </div>
+    <div id="gallery" aria-label="Interactive component models"></div>
     <section class="utility-section" aria-labelledby="utility-title">
       <h2 id="utility-title">Utility API</h2>
-      <p class="utility-intro">Non-visual CSG, probing, fitting, and selection helpers.</p>
+      <p class="utility-intro">Non-visual CSG, probing, fitting, and selection helpers. These have no geometry to show; call them on meshes you already have.</p>
       <div class="utility-list" id="utilities"></div>
     </section>
   </main>
@@ -677,6 +1070,8 @@
           <code class="pg-signature" id="pg-signature"></code>
           <div id="pg-params"></div>
           <div class="pg-actions">
+            <button class="pg-reset" id="pg-copy" type="button">Copy code</button>
+            <button class="pg-reset" id="pg-stl" type="button">Download STL</button>
             <button class="pg-reset" id="pg-reset" type="button">Reset defaults</button>
           </div>
         </div>
@@ -754,6 +1149,70 @@
       view.controls.update();
     }
 
+    // ------------------------------------------------------------------
+    // Mechanism playback. build_gallery bakes a rigid transform per body per
+    // frame straight out of each demo's own kinematics; here we just replay it,
+    // so nothing about the motion is authored twice.
+    // ------------------------------------------------------------------
+    const CYCLE_SECONDS = 4.5;
+    const animScratch = {
+      a: new THREE.Vector3(),
+      b: new THREE.Vector3(),
+      qa: new THREE.Quaternion(),
+      qb: new THREE.Quaternion(),
+      one: new THREE.Vector3(1, 1, 1),
+      matrix: new THREE.Matrix4()
+    };
+
+    function setupAnimation(view, root) {
+      const spec = view.model.animation;
+      if (!spec || !spec.bodies) return;
+      const tracks = [];
+      for (const [name, data] of Object.entries(spec.bodies)) {
+        const node = root.getObjectByName(name);
+        if (!node || !data.t || !data.t.length) continue;
+        node.matrixAutoUpdate = false;
+        tracks.push({ node, base: node.matrix.clone(), t: data.t, q: data.q });
+      }
+      if (!tracks.length) return;
+      // `closed` means the last frame repeats the cycle-end pose, which for a
+      // rotationally symmetric part (a gear advanced exactly one tooth pitch)
+      // looks identical to frame 0. Interpolating over n-1 intervals and then
+      // snapping back is smooth and seamless; plain modulo would unwind the
+      // whole cycle backwards in a single frame.
+      const closed = spec.closed === true;
+      view.animation = {
+        tracks,
+        frames: tracks[0].t.length,
+        intervals: closed ? tracks[0].t.length - 1 : tracks[0].t.length,
+        closed
+      };
+    }
+
+    function stepAnimation(view, seconds) {
+      const anim = view.animation;
+      if (!anim) return;
+      const n = anim.intervals;
+      // Reduced-motion users get the mechanism parked at frame 0, not jittering.
+      const position = prefersReducedMotion.matches
+        ? 0
+        : ((seconds / CYCLE_SECONDS) * n) % n;
+      const i0 = Math.floor(position);
+      const i1 = anim.closed ? i0 + 1 : (i0 + 1) % n;
+      const blend = position - i0;
+      for (const track of anim.tracks) {
+        animScratch.a.fromArray(track.t[i0]);
+        animScratch.b.fromArray(track.t[i1]);
+        animScratch.a.lerp(animScratch.b, blend);
+        animScratch.qa.fromArray(track.q[i0]);
+        animScratch.qb.fromArray(track.q[i1]);
+        animScratch.qa.slerp(animScratch.qb, blend);
+        animScratch.matrix.compose(animScratch.a, animScratch.qa, animScratch.one);
+        track.node.matrix.multiplyMatrices(animScratch.matrix, track.base);
+        track.node.matrixWorldNeedsUpdate = true;
+      }
+    }
+
     function loadView(view) {
       if (view.started) return;
       view.started = true;
@@ -763,6 +1222,7 @@
         (gltf) => {
           prepareMaterials(gltf.scene);
           view.scene.add(gltf.scene);
+          setupAnimation(view, gltf.scene);
           frameModel(view, gltf.scene);
           view.loaded = true;
           view.status.classList.add("hidden");
@@ -784,9 +1244,22 @@
       return `${key}·${String(index).padStart(2, "0")}`;
     }
 
-    function createCard(model) {
+    const SOURCE_BASE = "https://github.com/m-esm/mechlib/blob/main/mechlib";
+
+    function importSnippet(model) {
+      const names = model.name.split(/[^A-Za-z0-9_]+/).filter(Boolean);
+      const modules = model.module.split("/").map((m) => m.trim()).filter(Boolean);
+      const from = modules.length === 1 ? modules[0] : "mechlib";
+      return `from ${from} import ${names.join(", ")}`;
+    }
+
+    function createCard(model, host) {
       const card = document.createElement("article");
       card.className = "model-card";
+      // Keyed on the GLB filename, not the display name: two cards can legitimately
+      // demo the same function (grooved_drum is both a winch drum and a fusee), and
+      // duplicate ids would break deep-links and produce invalid HTML.
+      card.id = `part-${model.file.replace(/_demo\.glb$/, "").replace(/[^A-Za-z0-9_]+/g, "-")}`;
 
       const heading = document.createElement("div");
       heading.className = "card-heading";
@@ -817,15 +1290,84 @@
         viewport.append(tune);
       }
 
+      const badges = document.createElement("div");
+      badges.className = "badges";
+      if (model.play) {
+        badges.append(makeTextElement("span", "badge tunable", `${model.play.params.length} live params`));
+      } else {
+        const staticBadge = makeTextElement("span", "badge", "static demo");
+        staticBadge.title = "This demo takes no parameters, so there is nothing to tune. The function itself is still parametric — see the signature.";
+        badges.append(staticBadge);
+      }
+      badges.append(makeTextElement("span", "badge", model.parts > 1 ? `${model.parts} bodies` : "1 body"));
+      if (Array.isArray(model.size_mm)) {
+        badges.append(makeTextElement("span", "badge", `${model.size_mm.join(" × ")} mm`));
+      }
+      if (model.animation) {
+        const motion = makeTextElement("span", "badge tunable", "animated");
+        motion.title = "This mechanism runs through a full cycle in its viewport.";
+        badges.append(motion);
+      }
+      if ((model.build_ms || 0) > HEAVY_MS) {
+        const heavyBadge = makeTextElement("span", "badge", "heavy");
+        heavyBadge.title = `Costs ${model.build_ms} ms to build natively, so it takes several seconds to retune in the browser. Sliders regenerate on release.`;
+        badges.append(heavyBadge);
+      }
+
       const copy = document.createElement("div");
       copy.className = "card-copy";
+
+      const actions = document.createElement("div");
+      actions.className = "card-actions";
+      const copyBtn = makeTextElement("button", "primary", "Copy import");
+      copyBtn.type = "button";
+      copyBtn.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(importSnippet(model));
+          copyBtn.textContent = "Copied ✓";
+        } catch (_) {
+          copyBtn.textContent = importSnippet(model);
+        }
+        window.setTimeout(() => { copyBtn.textContent = "Copy import"; }, 1600);
+      });
+      const glb = document.createElement("a");
+      glb.className = "";
+      glb.href = `./models/${model.file}`;
+      glb.download = model.file;
+      glb.textContent = "GLB ↓";
+      const src = document.createElement("a");
+      src.href = `${SOURCE_BASE}/${model.module.split("/")[0].trim().split(".").pop()}.py`;
+      src.target = "_blank";
+      src.rel = "noopener";
+      src.textContent = "Source ↗";
+      const permalink = document.createElement("a");
+      permalink.href = `#${card.id.replace(/^part-/, "")}`;
+      permalink.textContent = "Link ⚓";
+      permalink.title = "Permalink to this part";
+      actions.append(copyBtn, glb, src, permalink);
+
+      // Long descriptions clamp to three lines; the cut sentence is often the
+      // useful one, so let the card expand in place.
+      const description = makeTextElement("p", "description", model.description);
+      description.tabIndex = 0;
+      description.title = "Click to expand";
+      const toggle = () => description.classList.toggle("expanded");
+      description.addEventListener("click", toggle);
+      description.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          toggle();
+        }
+      });
+
       copy.append(
         makeTextElement("code", "signature", model.signature),
-        makeTextElement("p", "description", model.description),
-        makeTextElement("p", "origin", model.origin)
+        description,
+        makeTextElement("p", "origin", model.origin),
+        actions
       );
-      card.append(heading, title, viewport, copy);
-      gallery.append(card);
+      card.append(heading, title, badges, viewport, copy);
+      host.append(card);
 
       const scene = new THREE.Scene();
       scene.background = new THREE.Color(0x092136);
@@ -841,6 +1383,11 @@
 
       const view = {
         model,
+        card,
+        haystack: [
+          model.name, model.module, model.category, model.description,
+          model.signature, model.origin
+        ].join(" ").toLowerCase(),
         viewport,
         status,
         scene,
@@ -877,6 +1424,31 @@
       return view;
     }
 
+    const toolbarEl = document.querySelector(".toolbar");
+    new IntersectionObserver(
+      ([entry]) => toolbarEl.classList.toggle("stuck", !entry.isIntersecting),
+      { threshold: 0 }
+    ).observe(document.querySelector("#toolbar-sentinel"));
+
+    for (const button of document.querySelectorAll(".qs-copy")) {
+      button.addEventListener("click", async () => {
+        const source = document.querySelector(`#${button.dataset.copy}`);
+        try {
+          await navigator.clipboard.writeText(source.textContent);
+          button.textContent = "Copied";
+          window.setTimeout(() => { button.textContent = "Copy"; }, 1600);
+        } catch (_) {
+          const range = document.createRange();
+          range.selectNodeContents(source);
+          const selection = window.getSelection();
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
+      });
+    }
+
+    const utilityItems = [];
+
     function createUtility(item) {
       const card = document.createElement("article");
       card.className = "utility-item";
@@ -886,12 +1458,201 @@
         makeTextElement("p", "", item.description)
       );
       utilities.append(card);
+      utilityItems.push({
+        card,
+        haystack: [item.module, item.signature, item.description].join(" ").toLowerCase()
+      });
+    }
+
+    // ------------------------------------------------------------------
+    // Filtering: free text + category + tunable-only, reflected in the hash
+    // ------------------------------------------------------------------
+    const filters = { q: "", group: "", category: "", tunable: false, animated: false };
+    const sections = new Map();
+    const searchInput = document.querySelector("#search");
+    const groupRow = document.querySelector("#group-row");
+    const categoryRow = document.querySelector("#category-row");
+    const resultCount = document.querySelector("#result-count");
+    const tunableToggle = document.querySelector("#tunable-only");
+    const animatedToggle = document.querySelector("#animated-only");
+    let emptyState = null;
+
+    function matches(view) {
+      const model = view.model;
+      if (filters.tunable && !model.play) return false;
+      if (filters.animated && !model.animation) return false;
+      if (filters.category && model.category !== filters.category) return false;
+      if (filters.group && model.group !== filters.group) return false;
+      if (filters.q && !view.haystack.includes(filters.q)) return false;
+      return true;
+    }
+
+    function applyFilters() {
+      let shown = 0;
+      const perCategory = new Map();
+      for (const view of views) {
+        const ok = matches(view);
+        view.card.hidden = !ok;
+        if (ok) {
+          shown += 1;
+          perCategory.set(view.model.category, (perCategory.get(view.model.category) || 0) + 1);
+        }
+      }
+      for (const [key, section] of sections) {
+        const count = perCategory.get(key) || 0;
+        section.element.hidden = count === 0;
+        section.countLabel.textContent = `${count} ${count === 1 ? "part" : "parts"}`;
+      }
+      for (const chip of categoryRow.querySelectorAll(".chip")) {
+        const key = chip.dataset.category;
+        const inGroup = !filters.group || chip.dataset.group === filters.group || key === "";
+        chip.hidden = !inGroup;
+        chip.setAttribute("aria-pressed", String(filters.category === key));
+        const n = chip.querySelector(".n");
+        if (n && key) n.textContent = perCategory.get(key) || 0;
+      }
+      for (const chip of groupRow.querySelectorAll(".chip")) {
+        chip.setAttribute("aria-pressed", String(filters.group === chip.dataset.group));
+      }
+      tunableToggle.setAttribute("aria-pressed", String(filters.tunable));
+      animatedToggle.setAttribute("aria-pressed", String(filters.animated));
+
+      let utilShown = 0;
+      const utilitiesRelevant =
+        !filters.tunable && !filters.animated && !filters.category && !filters.group;
+      for (const item of utilityItems) {
+        const ok = utilitiesRelevant && (!filters.q || item.haystack.includes(filters.q));
+        item.card.hidden = !ok;
+        if (ok) utilShown += 1;
+      }
+      document.querySelector(".utility-section").hidden = utilShown === 0;
+
+      if (!emptyState) {
+        emptyState = makeTextElement("p", "empty-state", "");
+        gallery.append(emptyState);
+      }
+      emptyState.hidden = shown > 0;
+      emptyState.textContent = filters.q
+        ? `Nothing matches “${filters.q}”. Try a module name like gears, or a term like ratchet.`
+        : "Nothing matches the current filters.";
+      resultCount.textContent = `${shown} of ${views.length} parts`;
+      writeHash();
+    }
+
+    let suppressHash = false;
+
+    function writeHash() {
+      if (suppressHash) return;
+      const parts = [];
+      if (filters.q) parts.push(`q=${encodeURIComponent(filters.q)}`);
+      if (filters.group) parts.push(`group=${filters.group}`);
+      if (filters.category) parts.push(`cat=${filters.category}`);
+      if (filters.tunable) parts.push("tunable=1");
+      if (filters.animated) parts.push("animated=1");
+      const next = parts.length ? `#${parts.join("&")}` : " ";
+      history.replaceState(null, "", next === " " ? location.pathname + location.search : next);
+    }
+
+    function readHash() {
+      const raw = location.hash.replace(/^#/, "");
+      if (!raw) return null;
+      if (!raw.includes("=")) return { part: raw };
+      const out = {};
+      for (const pair of raw.split("&")) {
+        const [key, value = ""] = pair.split("=");
+        out[key] = decodeURIComponent(value);
+      }
+      return out;
+    }
+
+    function makeChip(label, count) {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "chip";
+      chip.setAttribute("aria-pressed", "false");
+      chip.append(document.createTextNode(label));
+      if (count !== undefined) {
+        const n = makeTextElement("span", "n", String(count));
+        chip.append(n);
+      }
+      return chip;
+    }
+
+    function buildToolbar(manifest, counts) {
+      const allGroups = makeChip("All");
+      allGroups.classList.add("group-chip");
+      allGroups.dataset.group = "";
+      allGroups.addEventListener("click", () => {
+        filters.group = "";
+        filters.category = "";
+        applyFilters();
+      });
+      groupRow.append(allGroups);
+      for (const group of manifest.groups || []) {
+        const chip = makeChip(group.title);
+        chip.classList.add("group-chip");
+        chip.dataset.group = group.key;
+        chip.title = group.blurb;
+        chip.addEventListener("click", () => {
+          filters.group = filters.group === group.key ? "" : group.key;
+          filters.category = "";
+          applyFilters();
+        });
+        groupRow.append(chip);
+      }
+
+      const allCats = makeChip("All categories");
+      allCats.dataset.category = "";
+      allCats.dataset.group = "";
+      allCats.addEventListener("click", () => {
+        filters.category = "";
+        applyFilters();
+      });
+      categoryRow.append(allCats);
+      for (const category of manifest.categories || []) {
+        if (!counts.has(category.key)) continue;
+        const chip = makeChip(category.title, counts.get(category.key));
+        chip.dataset.category = category.key;
+        chip.dataset.group = category.group;
+        chip.title = category.blurb;
+        chip.addEventListener("click", () => {
+          filters.category = filters.category === category.key ? "" : category.key;
+          if (filters.category) filters.group = category.group;
+          applyFilters();
+        });
+        categoryRow.append(chip);
+      }
+
+      searchInput.addEventListener("input", () => {
+        filters.q = searchInput.value.trim().toLowerCase();
+        applyFilters();
+      });
+      tunableToggle.addEventListener("click", () => {
+        filters.tunable = !filters.tunable;
+        applyFilters();
+      });
+      animatedToggle.addEventListener("click", () => {
+        filters.animated = !filters.animated;
+        applyFilters();
+      });
+      window.addEventListener("keydown", (event) => {
+        if (event.key === "/" && document.activeElement !== searchInput && !pg.modal.classList.contains("open")) {
+          event.preventDefault();
+          searchInput.focus();
+          searchInput.select();
+        } else if (event.key === "Escape" && document.activeElement === searchInput) {
+          searchInput.value = "";
+          filters.q = "";
+          applyFilters();
+        }
+      });
     }
 
     // ------------------------------------------------------------------
     // Parameter playground: Pyodide worker + modal viewer
     // ------------------------------------------------------------------
     let manifestPlayground = null;
+    let manifestVersion = "0";
     const pg = {
       modal: document.querySelector("#playground"),
       title: document.querySelector("#pg-title"),
@@ -915,17 +1676,57 @@
       framed: false,
       rafId: 0,
       lastFocus: null,
-      debounceId: 0
+      debounceId: 0,
+      tickerId: 0,
+      blockedDemos: new Set()
     };
 
+    // Native build time above this is "heavy": in Pyodide it lands in seconds.
+    const HEAVY_MS = 120;
+
     function pgStatus(text, isError) {
+      window.clearInterval(pg.tickerId);
       pg.statusLine.textContent = text;
       pg.statusLine.classList.toggle("error", Boolean(isError));
     }
 
+    // A multi-second regeneration with a frozen "generating…" reads as a hang.
+    function startTicker() {
+      window.clearInterval(pg.tickerId);
+      const started = performance.now();
+      const hint = (pg.model && (pg.model.build_ms || 0) > HEAVY_MS)
+        ? " (heavy part — this one takes a while in the browser)"
+        : "";
+      pg.statusLine.classList.remove("error");
+      pg.statusLine.textContent = `generating…${hint}`;
+      pg.tickerId = window.setInterval(() => {
+        const seconds = (performance.now() - started) / 1000;
+        pg.statusLine.textContent = `generating… ${seconds.toFixed(1)} s${hint}`;
+      }, 100);
+    }
+
+    // A GEOS/C++ abort inside Pyodide is unrecoverable in-process: the
+    // interpreter is dead and every later part would fail with an opaque proxy
+    // error. Throw the worker away and boot a fresh one instead of leaving the
+    // playground silently bricked until the user reloads.
+    function respawnWorker(reason) {
+      // Remember what killed it, so the fresh runtime does not immediately
+      // re-run the same demo and die again in a loop.
+      if (pg.model && pg.model.play) pg.blockedDemos.add(pg.model.play.demo);
+      pgStatus(`${reason} — restarting the runtime…`, true);
+      if (pg.worker) pg.worker.terminate();
+      pg.worker = null;
+      pg.ready = false;
+      pg.busy = false;
+      pg.pendingParams = null;
+      ensureWorker();
+    }
+
     function ensureWorker() {
       if (pg.worker) return;
-      pg.worker = new Worker("./playground/worker.js");
+      // Version-busted: browsers cache worker scripts aggressively, and a stale
+      // worker silently keeps running old runtime code after a release.
+      pg.worker = new Worker(`./playground/worker.js?v=${manifestVersion}`);
       pg.worker.onmessage = (event) => {
         const data = event.data;
         if (data.type === "status") {
@@ -946,7 +1747,11 @@
           }
         } else if (data.type === "error") {
           pg.busy = false;
-          pgStatus(data.message, true);
+          if (data.fatal) {
+            respawnWorker(data.message);
+          } else {
+            pgStatus(data.message, true);
+          }
         }
       };
       pg.worker.postMessage({
@@ -1041,13 +1846,17 @@
 
     function requestGenerate() {
       if (!pg.ready || !pg.model) return;
+      if (pg.blockedDemos.has(pg.model.play.demo)) {
+        pgStatus("this part crashed the runtime earlier; reload the page to retry it", true);
+        return;
+      }
       if (pg.busy) {
         pg.pendingParams = true;
         return;
       }
       pg.busy = true;
       pg.requestId += 1;
-      pgStatus("generating…");
+      startTicker();
       pg.worker.postMessage({
         type: "generate",
         id: pg.requestId,
@@ -1071,8 +1880,9 @@
         const label = document.createElement("label");
         label.textContent = param.label || param.name;
         label.setAttribute("for", `pg-in-${param.name}`);
+        const unit = param.unit ? ` ${param.unit}` : "";
         const readout = document.createElement("output");
-        readout.textContent = String(pg.values[param.name]);
+        readout.textContent = `${pg.values[param.name]}${unit}`;
         head.append(label, readout);
         const input = document.createElement("input");
         input.type = "range";
@@ -1081,13 +1891,18 @@
         input.max = param.max;
         input.step = param.step;
         input.value = pg.values[param.name];
+        // Heavy parts regenerate on release, not on every tick: dragging a
+        // slider that costs seconds in Pyodide otherwise queues a stampede the
+        // user cannot cancel.
+        const heavy = (pg.model.build_ms || 0) > HEAVY_MS;
         input.addEventListener("input", () => {
           const value = param.type === "int" ? parseInt(input.value, 10) : parseFloat(input.value);
           pg.values[param.name] = value;
-          readout.textContent = String(value);
+          readout.textContent = `${value}${unit}`;
           updateSignature();
-          scheduleGenerate();
+          if (!heavy) scheduleGenerate();
         });
+        if (heavy) input.addEventListener("change", scheduleGenerate);
         row.append(head, input);
         pg.paramsHost.append(row);
       }
@@ -1118,6 +1933,102 @@
       cancelAnimationFrame(pg.rafId);
       if (pg.lastFocus) pg.lastFocus.focus();
     }
+
+    // ---- Copy runnable code -------------------------------------------------
+    // The panel shows a call line, but a call line alone is not runnable. Lift
+    // the real demo body out of the same demos.py the worker executes, so what
+    // the user pastes is exactly what produced the geometry on screen.
+    let demosSource = null;
+
+    async function runnableSnippet() {
+      if (demosSource === null) {
+        const response = await fetch(`./${manifestPlayground.demos}`, { cache: "no-store" });
+        demosSource = await response.text();
+      }
+      const demoName = pg.model.play.demo;
+      const header = demosSource.slice(0, demosSource.indexOf("\nPALETTE = ")).trimEnd();
+      const start = demosSource.indexOf(`\ndef ${demoName}(`);
+      let body = "";
+      if (start !== -1) {
+        const rest = demosSource.slice(start + 1);
+        const next = rest.indexOf("\ndef ");
+        body = (next === -1 ? rest : rest.slice(0, next)).trimEnd();
+      }
+      const args = pg.model.play.params.map((p) => `${p.name}=${pg.values[p.name]}`).join(", ");
+      return [
+        `# ${pg.model.name} — mechlib v${manifestVersion}`,
+        `# pip3 install git+https://github.com/m-esm/mechlib`,
+        "",
+        header,
+        "",
+        body,
+        "",
+        "",
+        `for name, mesh, _color in ${demoName}(${args}):`,
+        `    mechlib.export_stl(mesh, f"{name}.stl")`,
+        ""
+      ].join("\n");
+    }
+
+    document.querySelector("#pg-copy").addEventListener("click", async () => {
+      const button = document.querySelector("#pg-copy");
+      if (!pg.model) return;
+      try {
+        await navigator.clipboard.writeText(await runnableSnippet());
+        button.textContent = "Copied ✓";
+      } catch (error) {
+        button.textContent = "Copy failed";
+      }
+      window.setTimeout(() => { button.textContent = "Copy code"; }, 1800);
+    });
+
+    // ---- Download the tuned part as binary STL ------------------------------
+    function binaryStl(group) {
+      const triangles = [];
+      group.traverse((object) => {
+        if (!object.isMesh) return;
+        const position = object.geometry.getAttribute("position");
+        const index = object.geometry.getIndex();
+        const count = index ? index.count : position.count;
+        for (let i = 0; i < count; i += 3) {
+          const tri = [];
+          for (let k = 0; k < 3; k += 1) {
+            const v = index ? index.getX(i + k) : i + k;
+            tri.push([position.getX(v), position.getY(v), position.getZ(v)]);
+          }
+          triangles.push(tri);
+        }
+      });
+      const buffer = new ArrayBuffer(84 + triangles.length * 50);
+      const view = new DataView(buffer);
+      view.setUint32(80, triangles.length, true);
+      let offset = 84;
+      for (const [a, b, c] of triangles) {
+        const u = [b[0] - a[0], b[1] - a[1], b[2] - a[2]];
+        const v = [c[0] - a[0], c[1] - a[1], c[2] - a[2]];
+        const n = [u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]];
+        const length = Math.hypot(n[0], n[1], n[2]) || 1;
+        for (let k = 0; k < 3; k += 1) view.setFloat32(offset + k * 4, n[k] / length, true);
+        offset += 12;
+        for (const point of [a, b, c]) {
+          for (let k = 0; k < 3; k += 1) view.setFloat32(offset + k * 4, point[k], true);
+          offset += 12;
+        }
+        view.setUint16(offset, 0, true);
+        offset += 2;
+      }
+      return new Blob([buffer], { type: "model/stl" });
+    }
+
+    document.querySelector("#pg-stl").addEventListener("click", () => {
+      if (!pg.group || !pg.model) return;
+      const url = URL.createObjectURL(binaryStl(pg.group));
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${pg.model.name.replace(/[^A-Za-z0-9_]+/g, "_")}.stl`;
+      link.click();
+      window.setTimeout(() => URL.revokeObjectURL(url), 4000);
+    });
 
     document.querySelector("#pg-close").addEventListener("click", closePlayground);
     document.querySelector("#pg-reset").addEventListener("click", () => {
@@ -1179,8 +2090,12 @@
 
         view.camera.aspect = rect.width / rect.height;
         view.camera.updateProjectionMatrix();
+        stepAnimation(view, time / 1000);
+        // An orbiting camera on top of a running mechanism is unreadable, so
+        // moving parts hold the camera still and let the motion do the work.
         const idle = time - view.lastInteraction > 3500;
-        view.controls.autoRotate = !prefersReducedMotion.matches && !view.interacting && idle;
+        view.controls.autoRotate =
+          !view.animation && !prefersReducedMotion.matches && !view.interacting && idle;
         view.controls.update(delta);
 
         renderer.setScissor(left, viewportBottom, width, height);
@@ -1202,14 +2117,65 @@
         if (!response.ok) throw new Error(`manifest request returned ${response.status}`);
         const manifest = await response.json();
         versionLabel.textContent = `v${manifest.version}`;
+        manifestVersion = manifest.version;
         document.querySelector("#part-count").textContent =
-          String(manifest.models.length + (manifest.utilities || []).length);
+          `${manifest.models.length} + ${(manifest.utilities || []).length} utils`;
         manifestPlayground = manifest.playground || null;
+
+        const counts = new Map();
         for (const model of manifest.models) {
-          const view = createCard(model);
+          counts.set(model.category, (counts.get(model.category) || 0) + 1);
+        }
+
+        // One section per category, emitted in the manifest's rank order so the
+        // shelves read movements first and primitives last.
+        for (const category of manifest.categories || []) {
+          if (!counts.has(category.key)) continue;
+          const section = document.createElement("section");
+          section.className = "cat-section";
+          const head = document.createElement("div");
+          head.className = "cat-head";
+          const countLabel = makeTextElement("span", "cat-count", "");
+          head.append(
+            makeTextElement("h2", "", category.title),
+            countLabel,
+            makeTextElement("p", "cat-blurb", category.blurb)
+          );
+          const grid = document.createElement("div");
+          grid.className = "gallery-grid";
+          section.append(head, grid);
+          gallery.append(section);
+          sections.set(category.key, { element: section, grid, countLabel });
+        }
+
+        for (const model of manifest.models) {
+          const host = sections.get(model.category);
+          const view = createCard(model, host ? host.grid : gallery);
           observer.observe(view.viewport);
         }
         for (const item of manifest.utilities || []) createUtility(item);
+
+        buildToolbar(manifest, counts);
+
+        const initial = readHash();
+        suppressHash = true;
+        if (initial) {
+          if (initial.q) { filters.q = initial.q.toLowerCase(); searchInput.value = initial.q; }
+          if (initial.group) filters.group = initial.group;
+          if (initial.cat) filters.category = initial.cat;
+          if (initial.tunable) filters.tunable = true;
+          if (initial.animated) filters.animated = true;
+        }
+        applyFilters();
+        suppressHash = false;
+        if (initial && initial.part) {
+          const target = document.querySelector(`#part-${CSS.escape(initial.part)}`);
+          if (target) {
+            target.scrollIntoView({ block: "center" });
+            target.classList.add("flash");
+            window.setTimeout(() => target.classList.remove("flash"), 2400);
+          }
+        }
       } catch (error) {
         versionLabel.textContent = "unavailable";
         gallery.append(makeTextElement("p", "fatal-error", `Gallery data could not be loaded: ${error.message}`));

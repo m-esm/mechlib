@@ -6,6 +6,7 @@ import numpy as np
 import shapely.geometry as sg
 import trimesh
 import trimesh.transformations as tf
+from shapely.ops import polygonize, unary_union
 
 from .meshutil import orient, sub, uni
 from .prim import boxc, cyl, extrude_down, rbox
@@ -28,16 +29,39 @@ def press_lid(ox, oy, cav_x, cav_y, c, plate_t=2.4, plug_h=5.0,
     return trimesh.boolean.union([plate, trimesh.boolean.difference([plug_o, plug_i])])
 
 
+_SECTION_SNAP = 9
+
+
+def _section_outline(solid, z=0.0, snap=_SECTION_SNAP):
+    """Return the largest-area closed outline of ``solid`` cut at height ``z``.
+
+    Uses raw plane/mesh line segments and shapely polygonization instead of
+    ``Trimesh.section``: the ``Path3D`` round-trip pulls in trimesh's
+    networkx-backed path subsystem, whose hardcoded 64-bit index dtypes fail
+    under 32-bit numpy builds (Pyodide/wasm). Interior rings are discarded, so
+    the result is a simple polygon carrying the outer perimeter only.
+    """
+    segs = trimesh.intersections.mesh_plane(
+        solid, plane_normal=np.array([0.0, 0.0, 1.0], dtype=np.float64),
+        plane_origin=np.array([0.0, 0.0, float(z)], dtype=np.float64))
+    segs = np.round(np.asarray(segs, dtype=np.float64).reshape((-1, 2, 3))[:, :, :2], snap)
+    keep = np.any(segs[:, 0, :] != segs[:, 1, :], axis=1)   # drop coplanar-touch degenerates
+    lines = [sg.LineString(s) for s in segs[keep]]
+    if not lines:
+        raise ValueError("_section_outline(): plane at z=%r misses the solid" % (z,))
+    rings = [sg.Polygon(p.exterior) for p in polygonize(unary_union(lines))]
+    if not rings:
+        raise ValueError("_section_outline(): section at z=%r has no closed ring" % (z,))
+    return max(rings, key=lambda p: p.area)
+
+
 def clamshell_shiplap(outer_solid, clear=0.05):
     """Build the base lip and matching lid slot for a clamshell perimeter.
 
     ``clear=0.05`` is Klonk's ``PEG_CLEAR`` per-side source default.
     origin: finnish-doors src/projects/klonk/housings.py:283
     """
-    sec = outer_solid.section(plane_origin=[0, 0, 0], plane_normal=[0, 0, 1])
-    loops = [np.asarray(d)[:, :2] for d in sec.discrete]
-    area = lambda L: 0.5*abs(np.dot(L[:, 0], np.roll(L[:, 1], 1)) - np.dot(L[:, 1], np.roll(L[:, 0], 1)))
-    ext = sg.Polygon(max(loops, key=area))
+    ext = _section_outline(outer_solid, 0.0)
     t_in, t_w, t_h = 0.6, 1.2, 4.0
     lip2d    = ext.buffer(-t_in).difference(ext.buffer(-(t_in + t_w)))
     slot2d   = ext.buffer(-(t_in - clear)).difference(ext.buffer(-(t_in + t_w + clear)))

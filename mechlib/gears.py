@@ -197,6 +197,45 @@ def _involute_points(rb, r_start, r_end, n=14):
     return np.array(pts)
 
 
+def _drop_degenerate_vertices(poly, tol=1e-7):
+    """Strip consecutive coincident ring vertices from a shapely polygon.
+
+    A boolean between a sampled circle and a radial cut edge emits an
+    intersection vertex that can land exactly on an existing sample point (it
+    happens whenever the sector half-angle is a multiple of the disc sampling
+    step). The polygon stays ``is_valid`` and keeps its area, but the
+    zero-length edge triangulates into a non-manifold wall, so
+    ``extrude_polygon`` returns a mesh that is not a volume and the following
+    boolean dies with "Not all meshes are volumes!". Dropping the duplicate
+    vertices is exact, it removes no area, and it is deterministic.
+    """
+    from shapely.geometry import Polygon
+
+    def clean(coords):
+        pts = [tuple(p) for p in coords]
+        if len(pts) > 1 and pts[0] == pts[-1]:
+            pts = pts[:-1]
+        out = []
+        for p in pts:
+            if not out or math.hypot(p[0] - out[-1][0], p[1] - out[-1][1]) > tol:
+                out.append(p)
+        while len(out) > 1 and math.hypot(out[0][0] - out[-1][0],
+                                          out[0][1] - out[-1][1]) <= tol:
+            out.pop()
+        return out
+
+    shell = clean(poly.exterior.coords)
+    if len(shell) < 3:
+        raise ValueError("_drop_degenerate_vertices(): profile collapsed")
+    holes = [h for h in (clean(i.coords) for i in poly.interiors) if len(h) >= 3]
+    cleaned = Polygon(shell, holes)
+    if not cleaned.is_valid:
+        cleaned = cleaned.buffer(0)
+    if cleaned.geom_type != "Polygon":
+        cleaned = max(cleaned.geoms, key=lambda g: g.area)
+    return cleaned
+
+
 def spur_gear(module, teeth, width, bore=0.0, pressure_angle=20.0,
               sector_deg=360.0, backlash=0.06, hub_d=0.0, full_disc=True,
               helix_deg=0.0):
@@ -268,6 +307,7 @@ def spur_gear(module, teeth, width, bore=0.0, pressure_angle=20.0,
         prof = unary_union([prof, disc]).buffer(0)
     if not isinstance(prof, Polygon):
         prof = max(prof.geoms, key=lambda g: g.area)
+    prof = _drop_degenerate_vertices(prof)
 
     mesh = trimesh.creation.extrude_polygon(prof, height=width)
     mesh.apply_translation([0, 0, -width / 2.0])

@@ -20,8 +20,7 @@ def assert_mesh(mesh):
     assert mesh.volume > 0
 
 
-def test_public_drive_api_and_version():
-    assert mechlib.__version__ == "0.6.0"
+def test_public_drive_api():
     names = (
         "printed_worm", "flat_worm", "worm_wheel_band",
         "worm_coupon", "planet_stage",

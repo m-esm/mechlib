@@ -74,7 +74,12 @@ from mechlib.gears import (
     spur_gear_mesh,
     worm,
 )
-from mechlib.indexing import escapement, geneva_pair, intermittent_gear_pair
+from mechlib.indexing import (
+    escapement,
+    geneva_pair,
+    geneva_wheel_angle,
+    intermittent_gear_pair,
+)
 from mechlib.linear import (
     archimedes_screw,
     differential_screw,
@@ -130,15 +135,33 @@ Color = Tuple[int, int, int, int]
 MeshEntry = Tuple[str, trimesh.Trimesh, Color]
 MeshList = List[MeshEntry]
 
+
+def _spin(mesh, deg, axis=(0.0, 0.0, 1.0), center=(0.0, 0.0, 0.0)):
+    """Rotate a copy of ``mesh`` by ``deg`` about ``axis`` through ``center``.
+
+    Motion-phase parameters pose already-built meshes with this rather than
+    regenerating geometry at the new pose. That keeps the motion a bit-exact
+    rigid transform (which is what ``build_gallery.py`` bakes into the gallery
+    animation) and leaves the default GLB untouched at zero phase.
+    """
+    posed = mesh.copy()
+    if deg:
+        posed.apply_transform(trimesh.transformations.rotation_matrix(
+            math.radians(deg), axis, center))
+    return posed
+
 # PLAY maps demo function name -> {kwarg: (min, max, step)} for slider UI.
-# Segment/sections ranges max out at 64 with step 8 (e.g. (24, 64, 8)) even when
-# the demo default is 96 for GLB fidelity; defaults stay high, slider ranges stay
-# cheap for interactive Pyodide regeneration (~1s per single-param change).
+# Invariant enforced for every entry: min <= default <= max, and
+# (default - min) is an exact multiple of step (within 1e-9), so the slider
+# can always be dragged back to the demo's own default. Segment/sections
+# ranges are otherwise kept as cheap as the ~400ms native / ~2s Pyodide
+# regen budget allows; a few (e.g. demo_printed_worm) lower the demo's own
+# default tessellation to fit that budget -- see the per-demo comments.
 PLAY: dict = {
     "demo_cyl": {
         "r": (2, 20, 1),
         "h": (4, 40, 1),
-        "sections": (24, 64, 8),
+        "sections": (24, 96, 8),
     },
     "demo_boxc": {
         "w": (8, 40, 1),
@@ -155,7 +178,7 @@ PLAY: dict = {
         "r0": (2, 14, 1),
         "r1": (2, 16, 1),
         "h": (6, 30, 1),
-        "sections": (24, 64, 8),
+        "sections": (24, 96, 8),
     },
     "demo_sector2d": {
         "a0_deg": (-90.0, 0.0, 5.0),
@@ -173,17 +196,18 @@ PLAY: dict = {
         "lobe_amp": (0.5, 4.0, 0.25),
         "height": (15.0, 40.0, 1.0),
         "turns_deg": (180.0, 720.0, 30.0),
-        "count": (24, 64, 8),
-        "z_samples": (21, 61, 10),
+        "count": (24, 96, 8),
+        "z_samples": (21, 81, 10),
     },
     "demo_swept_keyed_bore": {
         "radius": (4.0, 12.0, 0.5),
-        "flat_x": (2.0, 8.0, 0.5),
+        "flat_x": (1.7, 8.0, 0.5),
         "free_angle": (20.0, 90.0, 5.0),
         "extrude_h": (2.0, 8.0, 0.5),
         "spacing": (16.0, 30.0, 1.0),
     },
     "demo_spur_gear_pair": {
+        "drive_deg": (0.0, 360.0, 5.0),
         "n_driver": (12, 24, 1),
         "n_driven": (18, 36, 1),
         "module": (1.0, 2.5, 0.25),
@@ -212,7 +236,7 @@ PLAY: dict = {
     },
     "demo_dbore": {
         "shaft_d": (3.5, 8.0, 0.5),
-        "flat": (2.5, 6.0, 0.25),
+        "flat": (2.45, 6.0, 0.25),
         "hub_r": (5.0, 12.0, 0.5),
         "hub_h": (6.0, 16.0, 1.0),
         "clear": (0.05, 0.3, 0.05),
@@ -220,7 +244,7 @@ PLAY: dict = {
     "demo_counterbore": {
         "through_d": (2.0, 6.0, 0.2),
         "cb_d": (4.0, 12.0, 0.5),
-        "cb_h": (1.5, 6.0, 0.5),
+        "cb_h": (1.2, 6.0, 0.5),
         "length": (10.0, 24.0, 1.0),
     },
     "demo_crush_ribs": {
@@ -229,7 +253,7 @@ PLAY: dict = {
         "comp_h": (8.0, 24.0, 1.0),
         "rib_t": (0.4, 1.2, 0.1),
         "count": (2, 5, 1),
-        "interference": (0.05, 0.25, 0.05),
+        "interference": (0.02, 0.25, 0.05),
     },
     "demo_press_lid": {
         "box_w": (24.0, 48.0, 2.0),
@@ -260,7 +284,7 @@ PLAY: dict = {
         "length": (10.0, 24.0, 1.0),
         "nib": (0, 1, 1),
         "nut_af": (4.0, 8.0, 0.5),
-        "nut_h": (1.5, 4.0, 0.25),
+        "nut_h": (1.35, 4.0, 0.25),
     },
     "demo_pins_and_posts": {
         "post_h": (6, 16, 1),
@@ -270,6 +294,7 @@ PLAY: dict = {
         "socket_depth": (3, 8, 1),
     },
     "demo_spur_gear_mesh": {
+        "drive_deg": (0.0, 360.0, 5.0),
         "teeth": (12, 36, 1),
         "module": (1.0, 2.5, 0.25),
         "thickness": (3.0, 12.0, 0.5),
@@ -303,7 +328,7 @@ PLAY: dict = {
     },
     "demo_text_polygon": {
         "size": (8.0, 18.0, 1.0),
-        "extrude_h": (0.8, 3.0, 0.2),
+        "extrude_h": (0.7, 3.0, 0.2),
         "plaque_w": (36.0, 70.0, 2.0),
         "plaque_d": (12.0, 28.0, 1.0),
         "plaque_r": (1.0, 6.0, 0.5),
@@ -311,7 +336,7 @@ PLAY: dict = {
     "demo_worm": {
         "module": (1.0, 2.5, 0.25),
         "worm_length": (14.0, 36.0, 2.0),
-        "pitch_d": (10.0, 20.0, 0.5),
+        "pitch_d": (9.8, 20.0, 0.5),
         "wheel_teeth": (24, 48, 2),
         "wheel_thickness": (4.0, 14.0, 1.0),
         "backlash": (0.15, 0.6, 0.05),
@@ -321,7 +346,7 @@ PLAY: dict = {
         "teeth": (24, 48, 2),
         "thickness": (4.0, 12.0, 1.0),
         "bore": (2.0, 8.0, 0.5),
-        "sector_deg": (90.0, 150.0, 10.0),
+        "sector_deg": (90.0, 150.0, 5.0),
         "hub_d": (10.0, 20.0, 1.0),
     },
     "demo_loft": {
@@ -345,7 +370,7 @@ PLAY: dict = {
     },
     "demo_threaded_rod": {
         "d": (5.0, 12.0, 0.5),
-        "pitch": (0.8, 2.0, 0.1),
+        "pitch": (0.75, 2.0, 0.1),
         "length": (12.0, 36.0, 2.0),
     },
     "demo_setscrew": {
@@ -380,18 +405,18 @@ PLAY: dict = {
         "bore_r": (3.0, 10.0, 0.5),
         "cavity_r0": (5.0, 14.0, 0.5),
         "cavity_r1": (12.0, 24.0, 1.0),
-        "sections": (24, 64, 8),
+        "sections": (24, 96, 8),
     },
     "demo_directed_holes": {
         "radius": (10.0, 22.0, 1.0),
         "n_holes": (4, 12, 1),
-        "hole_r": (1.0, 3.5, 0.25),
+        "hole_r": (0.95, 3.5, 0.25),
         "hole_len": (14.0, 32.0, 2.0),
         "subdivisions": (2, 4, 1),
     },
     "demo_saddle": {
         "rib_t": (2.0, 8.0, 0.5),
-        "shell": (1.0, 4.0, 0.5),
+        "shell": (0.9, 4.0, 0.5),
         "cyl_r": (4.0, 14.0, 0.5),
         "span": (8.0, 18.0, 1.0),
     },
@@ -409,17 +434,22 @@ PLAY: dict = {
         "z1": (8.0, 28.0, 1.0),
     },
     "demo_printed_worm": {
-        "sections": (24, 64, 8),
+        # Range capped at 40 (native ~283ms at the default/max) rather than the
+        # mechlib default of 160: sections=64 already runs ~448ms native and
+        # sections=72 (the old demo default) ~512ms, well past the ~400ms
+        # slider budget. The demo's own default was lowered from 72 to 40 to
+        # match -- see demo_printed_worm() below.
+        "sections": (24, 40, 8),
     },
     "demo_flat_worm_pair": {
-        "gap": (0.0, 2.0, 0.1),
+        "gap": (0.05, 2.0, 0.1),
     },
     "demo_compliant_clutch": {
         "lock_face_frac": (0.2, 0.48, 0.02),
     },
     "demo_helix_tube": {
         "radius": (4.0, 12.0, 0.5),
-        "wire_r": (0.6, 2.0, 0.1),
+        "wire_r": (0.55, 2.0, 0.1),
         "turns": (2.0, 8.0, 0.5),
         "z0": (-10.0, -2.0, 0.5),
         "z1": (2.0, 12.0, 0.5),
@@ -438,7 +468,7 @@ PLAY: dict = {
     },
     "demo_four_bar": {
         "crank_angle_deg": (0.0, 360.0, 5.0),
-        "l_crank": (6.0, 18.0, 1.0),
+        "l_crank": (5.5, 18.0, 1.0),
     },
     "demo_toggle_clamp": {
         "overcenter_deg": (0.0, 12.0, 1.0),
@@ -459,7 +489,7 @@ PLAY: dict = {
         "lift": (4.0, 12.0, 1.0),
         "rise_deg": (280.0, 350.0, 10.0),
         "thickness": (3.0, 8.0, 0.5),
-        "follower_deg": (0.0, 330.0, 30.0),
+        "follower_deg": (10.0, 330.0, 30.0),
     },
     "demo_heart_cam": {
         "lift": (3.0, 9.0, 1.0),
@@ -467,10 +497,11 @@ PLAY: dict = {
         "follower_deg": (0.0, 330.0, 30.0),
     },
     "demo_barrel_cam": {
-        "pin_phase_deg": (0.0, 330.0, 30.0),
+        "pin_phase_deg": (10.0, 330.0, 30.0),
         "groove_d": (1.5, 4.0, 0.5),
     },
     "demo_geneva_pair": {
+        "crank_deg": (0.0, 360.0, 5.0),
         "slots": (3, 12, 1),
         "clearance": (0.1, 0.5, 0.05),
     },
@@ -483,7 +514,12 @@ PLAY: dict = {
         "clearance": (0.1, 0.5, 0.05),
     },
     "demo_herringbone_gear": {
-        "z": (12, 36, 2),
+        "drive_deg": (0.0, 360.0, 5.0),
+        # z capped at 32 (not 36): z=36 at helix_deg=35 runs ~420-430ms
+        # native (herringbone_gear() has no exposed tessellation knob to
+        # cheapen), over the ~400ms slider budget. z=32 at helix_deg=35
+        # measures ~370-380ms.
+        "z": (12, 32, 2),
         "helix_deg": (10, 35, 5),
     },
     "demo_cycloidal_drive": {
@@ -491,8 +527,17 @@ PLAY: dict = {
         "explode": (0, 10, 1),
     },
     "demo_bevel_gear_pair": {
-        "z1": (10, 24, 2),
-        "z2": (16, 40, 4),
+        "drive_deg": (0.0, 360.0, 5.0),
+        # Old range (z1 10-24, z2 16-40) hit 2405ms native at its own max
+        # with the mechlib default layers=10 -- a 7-12s Pyodide freeze. The
+        # demo now passes layers=2 explicitly (see demo_bevel_gear_pair()):
+        # bevel_gear_pair()'s loft rings scale linearly in radius, so two
+        # rings already reproduce the exact ruled surface (volume differs
+        # from layers=10 by <1e-8 relative, i.e. no visual change) at a
+        # fraction of the cost. z1/z2 are also narrowed so the worst
+        # reachable corner (z1=20, z2=32) stays ~370-400ms native.
+        "z1": (10, 20, 2),
+        "z2": (16, 32, 4),
     },
     "demo_scroll_drive": {
         "spiral_pitch": (4.75, 5.25, 0.25),
@@ -541,7 +586,7 @@ PLAY: dict = {
         "cable_d": (2.0, 4.0, 0.5),
     },
     "demo_fusee": {
-        "turns": (4, 12, 2),
+        "turns": (3, 12, 2),
         "radius_rise": (4.0, 12.0, 1.0),
     },
     "demo_cross_flexure": {
@@ -551,11 +596,42 @@ PLAY: dict = {
     "demo_wave_spring": {
         "waves": (2, 6, 1),
         "turns": (1, 4, 1),
-        "sections": (24, 64, 8),
+        "sections": (24, 96, 8),
     },
     "demo_bistable_beam": {
         "apex": (1.5, 3.5, 0.5),
         "beam_t": (0.6, 1.6, 0.2),
+    },
+    "demo_arc_ratchet": {
+        "extrude_h": (1.5, 6.0, 0.5),
+    },
+    "demo_fastener_trio": {
+        "size": (2.0, 5.0, 0.5),
+        "length": (8.0, 20.0, 2.0),
+        "spacing": (10.0, 20.0, 2.0),
+        "washer_od": (6.0, 12.0, 1.0),
+    },
+    "demo_pip_ratchet": {
+        "teeth": (5, 13, 2),
+        "clearance": (0.1, 0.3, 0.05),
+        "undercut_deg": (3.0, 11.0, 2.0),
+    },
+    "demo_planet_stage": {
+        "sun_teeth": (9, 21, 3),
+        "planet_teeth": (6, 12, 3),
+        "module": (0.8, 1.4, 0.2),
+        "face_width": (3.0, 8.0, 1.0),
+    },
+    "demo_spring_cartridge_ratchet": {
+        "teeth": (8, 16, 2),
+        "hook_deg": (3.0, 11.0, 2.0),
+        "pawl_clear": (0.1, 0.3, 0.05),
+        "ring_height": (2.0, 4.8, 0.4),
+    },
+    "demo_torsion_spring": {
+        "mean_r": (4.8, 9.8, 1.0),
+        "wire": (0.8, 2.0, 0.2),
+        "turns": (3.0, 8.0, 1.0),
     },
 }
 
@@ -666,6 +742,7 @@ def demo_spur_gear_pair(
     thickness: float = 5.0,
     backlash: float = 0.35,
     pa: float = 20.0,
+    drive_deg: float = 0.0,
 ) -> MeshList:
     driver_poly = spur_gear_2d(N=n_driver, m=module, pa=pa, bl=backlash)
     driven_poly = spur_gear_2d(N=n_driven, m=module, pa=pa, bl=backlash)
@@ -676,6 +753,13 @@ def demo_spur_gear_pair(
 
     driver = trimesh.creation.extrude_polygon(driver_poly, thickness)
     driven = trimesh.creation.extrude_polygon(driven_poly, thickness)
+    # Conjugate motion: the driven gear counter-rotates at the exact tooth
+    # ratio about its own centre, so the mesh phase established above holds at
+    # every drive angle. The assertion below is the standing proof of that --
+    # flip the sign here and the gears interpenetrate by tens of mm^3.
+    driver = _spin(driver, drive_deg)
+    driven = _spin(driven, -drive_deg * n_driver / float(n_driven),
+                   center=(center_distance, 0.0, 0.0))
     overlap = trimesh.boolean.intersection([driver, driven], engine="manifold")
     overlap_volume = (
         0.0 if overlap is None or len(overlap.faces) == 0 else abs(float(overlap.volume))
@@ -938,9 +1022,10 @@ def demo_spur_gear_mesh(
     module: float = 1.5,
     thickness: float = 6.0,
     bore_d: float = 5.0,
+    drive_deg: float = 0.0,
 ) -> MeshList:
     gear = spur_gear_mesh(teeth, module, thickness, bore_d=bore_d)
-    return [("20_tooth_gear", gear, PALETTE[9])]
+    return [("20_tooth_gear", _spin(gear, drive_deg), PALETTE[9])]
 
 
 def demo_roller_sprocket(
@@ -1006,8 +1091,10 @@ def demo_knurl(r: float = 8.0, h: float = 7.0, n: int = 20) -> MeshList:
     return [("knurled_knob", knob, PALETTE[6])]
 
 
-def demo_torsion_spring() -> MeshList:
-    spring = torsion_spring_mesh()
+def demo_torsion_spring(
+    mean_r: float = 6.8, wire: float = 1.2, turns: float = 5.0
+) -> MeshList:
+    spring = torsion_spring_mesh(mean_r=mean_r, wire=wire, turns=turns)
     return [("torsion_spring", spring, PALETTE[12])]
 
 
@@ -1352,7 +1439,10 @@ def demo_seg_cylinder(
 # ---------------------------------------------------------------------------
 
 
-def demo_printed_worm(sections: int = 72) -> MeshList:
+def demo_printed_worm(sections: int = 40) -> MeshList:
+    # Default lowered from 72 (native ~512ms) to 40 (~283ms) to fit the
+    # slider budget; see the PLAY["demo_printed_worm"] comment. This does
+    # change the committed gallery GLB's thread smoothness slightly.
     return [("journalled_worm", printed_worm(sections=sections), PALETTE[0])]
 
 
@@ -1382,8 +1472,32 @@ def demo_worm_coupon() -> MeshList:
     ]
 
 
-def demo_planet_stage() -> MeshList:
-    planetary = planet_stage()
+def demo_planet_stage(
+    sun_teeth: int = 12,
+    planet_teeth: int = 9,
+    module: float = 1.0,
+    face_width: float = 5.0,
+) -> MeshList:
+    # ring_teeth, ring_outer_d, ring_face_width, and carrier_radius are all
+    # derived (not independent PLAY params) so every slider combination
+    # satisfies planet_stage()'s validated relations: ring_teeth must equal
+    # sun_teeth + 2*planet_teeth, and the fixed ring needs enough rim past
+    # the ring gear's addendum circle. The formulas reproduce the function's
+    # own defaults exactly at sun_teeth=12, planet_teeth=9, module=1.0,
+    # face_width=5.0 (ring_outer_d=34.5, ring_face_width=5.725,
+    # carrier_radius=13.5), so the default GLB is unchanged.
+    ring_teeth = sun_teeth + 2 * planet_teeth
+    ring_clearance = 0.25
+    ring_outer_d = module * (ring_teeth + 2) + 2 * ring_clearance + 2.0
+    ring_face_width = face_width + 0.725
+    center_distance = (sun_teeth + planet_teeth) * module / 2.0
+    carrier_radius = center_distance + 3.0
+    planetary = planet_stage(
+        module=module, sun_teeth=sun_teeth, planet_teeth=planet_teeth,
+        ring_teeth=ring_teeth, face_width=face_width,
+        ring_outer_d=ring_outer_d, ring_face_width=ring_face_width,
+        carrier_radius=carrier_radius,
+    )
     meshes: MeshList = [
         ("sun", planetary["sun"], PALETTE[5]),
         ("ring", planetary["ring"], PALETTE[0]),
@@ -1394,15 +1508,27 @@ def demo_planet_stage() -> MeshList:
     return meshes
 
 
-def demo_pip_ratchet() -> MeshList:
+def demo_pip_ratchet(
+    teeth: int = 9, clearance: float = 0.15, undercut_deg: float = 7.0
+) -> MeshList:
     return [
-        ("undercut_ring", ratchet_ring(), PALETTE[2]),
-        ("accordion_hub", pip_ratchet_hub(), PALETTE[3]),
+        ("undercut_ring", ratchet_ring(
+            teeth=teeth, clearance=clearance, undercut_deg=undercut_deg), PALETTE[2]),
+        ("accordion_hub", pip_ratchet_hub(
+            teeth=teeth, clearance=clearance, undercut_deg=undercut_deg), PALETTE[3]),
     ]
 
 
-def demo_spring_cartridge_ratchet() -> MeshList:
-    cartridge_ring, cartridge_hub, cartridge_pawls = spring_cartridge_ratchet()
+def demo_spring_cartridge_ratchet(
+    teeth: int = 12,
+    hook_deg: float = 7.0,
+    pawl_clear: float = 0.15,
+    ring_height: float = 3.2,
+) -> MeshList:
+    cartridge_ring, cartridge_hub, cartridge_pawls = spring_cartridge_ratchet(
+        teeth=teeth, hook_deg=hook_deg, pawl_clear=pawl_clear,
+        ring_height=ring_height,
+    )
     meshes: MeshList = [
         ("cartridge_ring", cartridge_ring, PALETTE[2]),
         ("cartridge_hub", cartridge_hub, PALETTE[7]),
@@ -1437,7 +1563,11 @@ def demo_helix_tube(
     z0: float = -5.0,
     z1: float = 5.0,
 ) -> MeshList:
-    coil = helix_tube(radius, wire_r, turns, z0, z1)
+    # N=150 (mechlib default 420): helix_tube()'s face-list construction is
+    # a pure-Python double loop over N*M points, ~450ms native at N=420
+    # regardless of radius/wire_r/turns. N=150 cuts that to ~150-170ms with
+    # only a ~0.7% volume change (slightly more faceted coil, same shape).
+    coil = helix_tube(radius, wire_r, turns, z0, z1, N=150)
     return [("helical_tube", coil, PALETTE[12])]
 
 
@@ -1618,15 +1748,38 @@ def demo_barrel_cam(pin_phase_deg: float = 40.0, groove_d: float = 3.0,
 # ---------------------------------------------------------------------------
 
 
-def demo_geneva_pair(slots: int = 6, clearance: float = 0.25) -> MeshList:
+def demo_geneva_pair(slots: int = 6, clearance: float = 0.25,
+                     crank_deg: float = 0.0) -> MeshList:
     # Deep-slot counts need a long crank so the slot bottoms clear the hub;
     # high counts keep crank 10 so the rim stays clear of the driver web even
     # at the loosest clearance.
     crank_r = {3: 28.0, 4: 19.0}.get(slots, 10.0)
     pair = geneva_pair(slots=slots, crank_r=crank_r, clearance=clearance)
+    driver, wheel = pair["driver"], pair["wheel"]
+    if crank_deg:
+        # mechlib's own crank-to-wheel relation, the same one geneva_pair
+        # builds the crescent cutout around. The travel across one engagement
+        # gives the index step including its sign, so nothing about the
+        # direction or the 360/slots pitch is restated here.
+        raw = geneva_wheel_angle(slots, crank_r)
+        zero = raw(0.0)
+
+        def travel(theta):
+            return ((raw(theta) - zero + 180.0) % 360.0) - 180.0
+
+        theta_e = wheel.metadata["engagement_angle_deg"] / 2.0
+        index_step = travel(theta_e) - travel(-theta_e)
+        # Split the crank angle into completed indexes plus the position
+        # inside the current engagement window; the wheel dwells whenever the
+        # pin is out of a slot, which is what makes this part worth printing.
+        local = ((crank_deg + 180.0) % 360.0) - 180.0
+        turns = round((crank_deg - local) / 360.0)
+        centre = (float(wheel.metadata["center_distance"]), 0.0, 0.0)
+        wheel = _spin(wheel, turns * index_step + travel(local), center=centre)
+        driver = _spin(driver, crank_deg)
     return [
-        ("pin_driver", pair["driver"], PALETTE[1]),
-        ("slotted_wheel", pair["wheel"], PALETTE[0]),
+        ("pin_driver", driver, PALETTE[1]),
+        ("slotted_wheel", wheel, PALETTE[0]),
     ]
 
 
@@ -1653,7 +1806,7 @@ def demo_intermittent_gear_pair(module: float = 1.5,
 
 
 def demo_herringbone_gear(m: float = 1.5, z: int = 24, helix_deg: float = 25.0,
-                          h: float = 10.0) -> MeshList:
+                          h: float = 10.0, drive_deg: float = 0.0) -> MeshList:
     """Meshed herringbone pair: mirrored chevrons, phased with mesh_phase.
 
     The mid-plane is the untwisted meshing plane, so spur phasing applies;
@@ -1666,9 +1819,11 @@ def demo_herringbone_gear(m: float = 1.5, z: int = 24, helix_deg: float = 25.0,
     driven.apply_transform(trimesh.transformations.rotation_matrix(
         math.radians(mesh_phase(z, z, 0.0)), (0.0, 0.0, 1.0)))
     driven.apply_translation((m * z, 0.0, 0.0))
+    # Equal tooth counts, so the driven gear counter-rotates 1:1.
     return [
-        ("herringbone_driver", driver, PALETTE[0]),
-        ("herringbone_driven", driven, PALETTE[1]),
+        ("herringbone_driver", _spin(driver, drive_deg), PALETTE[0]),
+        ("herringbone_driven", _spin(driven, -drive_deg,
+                                     center=(m * z, 0.0, 0.0)), PALETTE[1]),
     ]
 
 
@@ -1686,13 +1841,28 @@ def demo_cycloidal_drive(pins: int = 12, explode: float = 5.0) -> MeshList:
     ]
 
 
-def demo_bevel_gear_pair(m: float = 1.5, z1: int = 16,
-                         z2: int = 24) -> MeshList:
-    """Straight bevel pair posed meshed on perpendicular axes."""
-    pair = bevel_gear_pair(m=m, z1=z1, z2=z2, bore1_d=4.0, bore2_d=5.0)
+def demo_bevel_gear_pair(m: float = 1.5, z1: int = 16, z2: int = 24,
+                         drive_deg: float = 0.0) -> MeshList:
+    """Straight bevel pair posed meshed on perpendicular axes.
+
+    layers=2 is passed explicitly (mechlib default is 10): the Tredgold
+    loft's rings scale linearly in radius between the two cone-distance
+    endpoints, so the ruled surface is already exact with only two rings --
+    more layers add colinear vertices with no shape change (volume differs
+    by <1e-8 relative) but cost roughly linearly more compute. This alone
+    cuts native render time from ~930ms to ~250ms at the default z1/z2 with
+    no visual difference.
+    """
+    pair = bevel_gear_pair(m=m, z1=z1, z2=z2, bore1_d=4.0, bore2_d=5.0, layers=2)
+    # Pinion axis is +Z and gear axis +Y (bevel_gear_pair poses them so); the
+    # gear turns at the inverse tooth ratio in the opposite sense. The sense
+    # is not a guess: the opposite sign drives the teeth 14 mm^3 into each
+    # other, this one keeps the worst-case overlap at 0.09 mm^3 (the residue
+    # of the Tredgold approximation itself).
     return [
-        ("bevel_pinion", pair["pinion"], PALETTE[0]),
-        ("bevel_gear", pair["gear"], PALETTE[9]),
+        ("bevel_pinion", _spin(pair["pinion"], drive_deg), PALETTE[0]),
+        ("bevel_gear", _spin(pair["gear"], -drive_deg * z1 / float(z2),
+                             axis=(0.0, 1.0, 0.0)), PALETTE[9]),
     ]
 
 
@@ -1792,9 +1962,11 @@ def demo_torque_limiter(
     driven = parts["driven"]
     driven.apply_translation((0.0, 0.0, explode))
     cavity = parts["driven"].metadata
+    # N=150: see the comment in demo_helix_tube(). Without it this demo's
+    # preload spring alone cost ~450ms native regardless of detents/sections.
     spring = helix_tube(
         cavity["cavity_r"] - 1.4, 0.7, 4.0,
-        cavity["cavity_z0"] + explode, cavity["cavity_z1"] + explode)
+        cavity["cavity_z0"] + explode, cavity["cavity_z1"] + explode, N=150)
     return [
         ("detent_driver", parts["driver"], PALETTE[9]),
         ("pocket_driven", driven, PALETTE[11]),
@@ -1876,7 +2048,9 @@ def demo_winch_drum(turns: float = 8.0, cable_d: float = 3.0) -> MeshList:
                         core_r=10.0)
     pitch = drum.metadata["groove_pitch"]
     wound = min(2.0, turns - 1.0)
-    cable = helix_tube(10.0, cable_d / 2.0, wound, pitch, (1.0 + wound) * pitch)
+    # N=150: see the comment in demo_helix_tube(). At the mechlib default
+    # (N=420) this demo's cable alone cost ~450ms native regardless of turns.
+    cable = helix_tube(10.0, cable_d / 2.0, wound, pitch, (1.0 + wound) * pitch, N=150)
     return [
         ("grooved_drum", drum, PALETTE[1]),
         ("cable", cable, PALETTE[7]),

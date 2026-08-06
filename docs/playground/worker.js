@@ -22,8 +22,13 @@ async function init(config) {
       indexURL: `https://cdn.jsdelivr.net/pyodide/v${config.pyodideVersion}/full/`
     });
 
-    status("loading numpy + shapely");
-    await pyodide.loadPackage(["numpy", "shapely", "micropip"]);
+    // scipy is not optional: mechlib.meshutil imports scipy.spatial.cKDTree, so
+    // without it roughly a fifth of the catalogue (including the `frustum`
+    // primitive) fails on ModuleNotFoundError. matplotlib is loaded lazily
+    // instead, because it is only needed by the two text parts and costs
+    // several seconds.
+    status("loading numpy + scipy + shapely");
+    await pyodide.loadPackage(["numpy", "scipy", "networkx", "shapely", "micropip"]);
 
     status("installing mechlib wheels");
     const micropip = pyodide.pyimport("micropip");
@@ -34,22 +39,34 @@ async function init(config) {
     pyodide.globals.set("DEMOS_SOURCE", demosSource);
     pyodide.runPython(`
 import json
+import traceback
 import numpy as np
 
 NS = {}
 exec(DEMOS_SOURCE, NS)
 
 def run_demo(name, kwargs_json):
-    parts = NS[name](**json.loads(kwargs_json))
-    out = []
-    for part_name, mesh, color in parts:
-        out.append((
-            part_name,
-            np.ascontiguousarray(mesh.vertices, dtype=np.float32).tobytes(),
-            np.ascontiguousarray(mesh.faces, dtype=np.uint32).tobytes(),
-            [int(c) for c in color],
-        ))
-    return out
+    """Return (error_text, parts). Never raises.
+
+    A Python exception thrown across the PyProxy boundary leaves the proxy
+    unusable, so one bad parameter combination used to break every later
+    regeneration until the page was reloaded. Catching here keeps the runtime
+    alive: a failing demo reports its error and the next one still works.
+    """
+    try:
+        parts = NS[name](**json.loads(kwargs_json))
+        out = []
+        for part_name, mesh, color in parts:
+            out.append((
+                part_name,
+                np.ascontiguousarray(mesh.vertices, dtype=np.float32).tobytes(),
+                np.ascontiguousarray(mesh.faces, dtype=np.uint32).tobytes(),
+                [int(c) for c in color],
+            ))
+        return (None, out)
+    except Exception as exc:
+        traceback.print_exc()
+        return ("%s: %s" % (type(exc).__name__, exc), None)
 `);
     runDemo = pyodide.globals.get("run_demo");
     self.postMessage({ type: "ready" });
@@ -58,7 +75,9 @@ def run_demo(name, kwargs_json):
   }
 }
 
-function generate(request) {
+const MISSING_MODULE = /No module named '([A-Za-z0-9_.]+)'/;
+
+async function generate(request, retried) {
   if (!runDemo) {
     self.postMessage({ type: "error", id: request.id, message: "runtime not ready" });
     return;
@@ -66,8 +85,46 @@ function generate(request) {
   try {
     const started = performance.now();
     const proxy = runDemo(request.demo, JSON.stringify(request.params));
-    const parts = proxy.toJs();
+    if (!proxy || typeof proxy.toJs !== "function") {
+      throw new Error("python runtime returned no result; reload the page");
+    }
+    const [pyError, pyParts] = proxy.toJs();
     proxy.destroy();
+    if (pyError) {
+      // A demo may reach a module Pyodide has not loaded yet (matplotlib for
+      // the text parts). Load it once and retry rather than failing the part.
+      const missing = MISSING_MODULE.exec(pyError);
+      if (missing && !retried) {
+        const packageName = missing[1].split(".")[0];
+        status(`loading ${packageName}`);
+        let loaded = false;
+        try {
+          await pyodide.loadPackage(packageName);
+          loaded = true;
+        } catch (loadError) {
+          try {
+            // Pure-Python packages outside the Pyodide distribution only come
+            // through micropip.
+            await pyodide.pyimport("micropip").install(packageName);
+            loaded = true;
+          } catch (pipError) {
+            loaded = false;
+          }
+        }
+        if (!loaded) {
+          self.postMessage({
+            type: "error",
+            id: request.id,
+            message: `${pyError} (could not install ${packageName} in the browser runtime)`
+          });
+          return;
+        }
+        return generate(request, true);
+      }
+      self.postMessage({ type: "error", id: request.id, message: pyError });
+      return;
+    }
+    const parts = pyParts;
 
     const meshes = [];
     const transfers = [];
@@ -86,8 +143,13 @@ function generate(request) {
       transfers
     );
   } catch (error) {
-    const message = String(error.message || error).split("\n").slice(-3).join(" ").trim();
-    self.postMessage({ type: "error", id: request.id, message });
+    const raw = String(error.message || error);
+    // A GEOS/C++ abort is not catchable in Python and leaves the interpreter
+    // dead: every later request would fail with an opaque proxy error. Tell the
+    // page so it can throw this worker away and boot a fresh one.
+    const fatal = /fatal error|NoGilError|returned no result|Attempted to use PyProxy|CppException|TopologyException|geos::/i.test(raw);
+    const message = raw.split("\n").slice(-3).join(" ").trim();
+    self.postMessage({ type: "error", id: request.id, message, fatal });
   }
 }
 
