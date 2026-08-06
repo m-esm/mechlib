@@ -117,6 +117,17 @@ def test_toggle_clamp_excessive_overcenter_raises():
         toggle_clamp(overcenter_deg=80.0)
 
 
+def test_toggle_clamp_base_is_pose_invariant():
+    # The base plate covers the full handle swing, so animating overcenter
+    # only reposes the moving bars — required for gallery rigid-track bake.
+    open_pose = toggle_clamp(overcenter_deg=-20.0)
+    locked = toggle_clamp(overcenter_deg=4.0)
+    assert open_pose["base"].bounds == pytest.approx(locked["base"].bounds, abs=1e-9)
+    assert abs(open_pose["base"].volume - locked["base"].volume) < 1e-9
+    # Moving parts actually move.
+    assert dist(open_pose["joints"]["K"], locked["joints"]["K"]) > 1.0
+
+
 def test_scotch_yoke_kinematics_and_clearance():
     angle = 35.0
     parts = scotch_yoke(angle_deg=angle)

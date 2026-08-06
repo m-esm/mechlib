@@ -412,6 +412,9 @@ ANIMATE = {
     "demo_four_bar":         ("crank_angle_deg",  360.0,  24, False),
     "demo_quick_return":     ("crank_angle_deg",  360.0,  24, False),
     "demo_scotch_yoke":      ("angle_deg",        360.0,  24, False),
+    # Toggle clamp: base is pose-invariant (full-swing envelope); drive_deg
+    # maps through a sine onto the open↔lock arc so one linear ramp is enough.
+    "demo_toggle_clamp":     ("drive_deg",        360.0,  24, False),
     # Cams: the follower sweeps the profile through one revolution.
     "demo_plate_cam":        ("follower_deg",     360.0,  24, False),
     "demo_heart_cam":        ("follower_deg",     360.0,  24, False),
@@ -507,10 +510,6 @@ ANIMATE = {
 # whole turn of that body will do, and the input has to turn as many times as
 # the ratio demands.
 #
-#   demo_toggle_clamp      Its base plate is sized from the pose bounding box,
-#                          so it reshapes rather than reposes (residual climbs
-#                          to 0.54 mm). Its travel is also an out-and-back,
-#                          which a single linear phase ramp cannot express.
 #   demo_worm              The demo poses worm and wheel for display, already
 #                          interpenetrating by 93 mm^3, and the pair has no
 #                          measurable conjugate contact (overlap stays 0 across
@@ -583,11 +582,9 @@ RIGID_REL = 1e-6
 # That threshold also separates re-facetting from a body that genuinely
 # reshapes with the pose, and the separation is measured rather than assumed.
 # Re-polygonisation noise is bounded by the facetting: across every animated
-# linkage it tops out at 0.055 mm (quick_return's slotted lever) and does not
-# care how far the phase moved. toggle_clamp's base plate is the counter-case,
-# sized from the pose bounding box, and its residual climbs monotonically --
-# 0.004, 0.013, 0.049, 0.129, 0.281, 0.541 mm as the handle swings -- crossing
-# its own 0.126 mm limit at six degrees of travel.
+# linkage it tops out around 0.03 mm and does not climb with phase. A body that
+# truly reshapes with the pose (old toggle_clamp base, sized from the current
+# pose bbox) climbs monotonically past REPOSE_ABS and is rejected by the bake.
 REPOSE_ABS = 0.25
 REPOSE_REL = 2e-3
 

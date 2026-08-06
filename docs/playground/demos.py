@@ -530,6 +530,9 @@ PLAY: dict = {
         "l_crank": (5.5, 18.0, 1.0),
     },
     "demo_toggle_clamp": {
+        # drive_deg is the motion phase (out-and-back through open ↔ lock);
+        # overcenter_deg is how far past dead-center the locked pose sits.
+        "drive_deg": (0.0, 360.0, 15.0),
         "overcenter_deg": (0.0, 12.0, 1.0),
     },
     "demo_scotch_yoke": {
@@ -1889,8 +1892,19 @@ def demo_four_bar(crank_angle_deg: float = 60.0, l_crank: float = 12.5):
     return entries
 
 
-def demo_toggle_clamp(overcenter_deg: float = 4.0):
-    parts = toggle_clamp(overcenter_deg=overcenter_deg)
+# Handle travel for the gallery cycle: open (~-20 deg) through dead center to
+# the design overcenter (positive). A sine of drive_deg maps one full turn onto
+# that out-and-back swing — same pattern as peaucellier/watt/lazy_tongs.
+TOGGLE_OPEN_DEG = -20.0
+
+
+def demo_toggle_clamp(drive_deg: float = 0.0, overcenter_deg: float = 4.0):
+    # Cosine of drive_deg: 0 deg = fully open, 180 deg = locked overcenter,
+    # 360 deg = open again. Default drive_deg=0 keeps the GLB at the open pose.
+    mid = 0.5 * (TOGGLE_OPEN_DEG + overcenter_deg)
+    swing = 0.5 * (overcenter_deg - TOGGLE_OPEN_DEG)
+    oc = mid - swing * math.cos(math.radians(drive_deg))
+    parts = toggle_clamp(overcenter_deg=oc)
     return [
         ("base", parts["base"], PALETTE[7]),
         ("clamp_arm", parts["arm"], PALETTE[1]),

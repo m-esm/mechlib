@@ -245,7 +245,7 @@
       "signature": "four_bar(l_ground=25.0, l_crank=12.5, l_coupler=25.0, l_rocker=25.0, crank_angle_deg=60.0, branch=1, coupler_ext=0.0, width=6.0, thickness=4.0, bore_d=3.0, clearance=0.25, pin_extra=2.0)",
       "description": "A flat-printable four-bar linkage kit with printed pivot pins, assembled by circle-circle position kinematics; the defaults are Hoecken straight-line proportions with an extended coupler tracer point. The canonical leg drive for hobby walking robots.",
       "origin": "Mechanical-movements wave v0.6.0; classic ref: Hoecken straight-line linkage (1926), cognate of the Chebyshev linkage",
-      "build_ms": 15,
+      "build_ms": 13,
       "category": "linkages",
       "group": "movements",
       "rank": 0,
@@ -1915,7 +1915,7 @@
       "signature": "toggle_clamp(arm_len=34.0, link_c=14.0, handle_len=22.0, link_k=10.0, pivot_angle_deg=-105.0, overcenter_deg=4.0, width=6.0, thickness=4.0, base_h=4.0, bore_d=3.0, clearance=0.25, base_pad=6.0, pin_extra=2.0)",
       "description": "An over-center knee toggle clamp \u2014 base, clamp arm, connecting link, and handle posed just past dead center where the mechanism self-locks. The ubiquitous hold-down clamp of workshop jigs and welding fixtures.",
       "origin": "Mechanical-movements wave v0.6.0; classic ref: 507 Mechanical Movements No. 175 / toggle (knee) joint",
-      "build_ms": 17,
+      "build_ms": 12,
       "category": "linkages",
       "group": "movements",
       "rank": 0,
@@ -1929,6 +1929,16 @@
         "demo": "demo_toggle_clamp",
         "params": [
           {
+            "name": "drive_deg",
+            "label": "Drive Deg",
+            "unit": "deg",
+            "type": "float",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 360.0,
+            "step": 15.0
+          },
+          {
             "name": "overcenter_deg",
             "label": "Overcenter Deg",
             "unit": "deg",
@@ -1939,6 +1949,1363 @@
             "step": 1.0
           }
         ]
+      },
+      "animation": {
+        "fps": 24,
+        "cycle_deg": 360.0,
+        "param": "drive_deg",
+        "bodies": {
+          "clamp_arm": {
+            "t": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.000429,
+                0.001429,
+                0.0
+              ],
+              [
+                -0.0003,
+                -0.001163,
+                0.0
+              ],
+              [
+                0.000172,
+                0.00085,
+                0.0
+              ],
+              [
+                -2e-06,
+                -1.5e-05,
+                0.0
+              ],
+              [
+                -0.000119,
+                -0.001316,
+                0.0
+              ],
+              [
+                -1.4e-05,
+                -0.000302,
+                0.0
+              ],
+              [
+                -1.2e-05,
+                -0.000652,
+                0.0
+              ],
+              [
+                3e-06,
+                0.000881,
+                0.0
+              ],
+              [
+                0.0,
+                0.001179,
+                0.0
+              ],
+              [
+                3e-06,
+                0.000723,
+                0.0
+              ],
+              [
+                1e-06,
+                0.000114,
+                0.0
+              ],
+              [
+                -2e-06,
+                -0.000153,
+                0.0
+              ],
+              [
+                1e-06,
+                0.000114,
+                0.0
+              ],
+              [
+                3e-06,
+                0.000723,
+                0.0
+              ],
+              [
+                0.0,
+                0.001179,
+                0.0
+              ],
+              [
+                3e-06,
+                0.000881,
+                0.0
+              ],
+              [
+                -1.2e-05,
+                -0.000652,
+                0.0
+              ],
+              [
+                -1.4e-05,
+                -0.000302,
+                0.0
+              ],
+              [
+                -0.000119,
+                -0.001316,
+                0.0
+              ],
+              [
+                -2e-06,
+                -1.5e-05,
+                0.0
+              ],
+              [
+                0.000172,
+                0.00085,
+                0.0
+              ],
+              [
+                -0.0003,
+                -0.001163,
+                0.0
+              ],
+              [
+                -0.004551,
+                -0.012247,
+                0.0
+              ]
+            ],
+            "q": [
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                0.0,
+                -0.0,
+                0.007246,
+                0.999974
+              ],
+              [
+                0.0,
+                -0.0,
+                0.026891,
+                0.999638
+              ],
+              [
+                0.0,
+                -0.0,
+                0.053271,
+                0.99858
+              ],
+              [
+                0.0,
+                0.0,
+                0.08165,
+                0.996661
+              ],
+              [
+                0.0,
+                0.0,
+                0.107912,
+                0.99416
+              ],
+              [
+                0.0,
+                -0.0,
+                0.129068,
+                0.991636
+              ],
+              [
+                -0.0,
+                0.0,
+                0.143595,
+                0.989636
+              ],
+              [
+                -0.0,
+                -0.0,
+                0.15096,
+                0.98854
+              ],
+              [
+                -0.0,
+                0.0,
+                0.15239,
+                0.988321
+              ],
+              [
+                -0.0,
+                -0.0,
+                0.150203,
+                0.988655
+              ],
+              [
+                0.0,
+                0.0,
+                0.147279,
+                0.989095
+              ],
+              [
+                0.0,
+                0.0,
+                0.145997,
+                0.989285
+              ],
+              [
+                0.0,
+                0.0,
+                0.147279,
+                0.989095
+              ],
+              [
+                -0.0,
+                -0.0,
+                0.150203,
+                0.988655
+              ],
+              [
+                -0.0,
+                0.0,
+                0.15239,
+                0.988321
+              ],
+              [
+                -0.0,
+                -0.0,
+                0.15096,
+                0.98854
+              ],
+              [
+                -0.0,
+                0.0,
+                0.143595,
+                0.989636
+              ],
+              [
+                -0.0,
+                -0.0,
+                0.129068,
+                0.991636
+              ],
+              [
+                0.0,
+                0.0,
+                0.107912,
+                0.99416
+              ],
+              [
+                0.0,
+                0.0,
+                0.08165,
+                0.996661
+              ],
+              [
+                0.0,
+                0.0,
+                0.053271,
+                0.99858
+              ],
+              [
+                0.0,
+                -0.0,
+                0.026891,
+                0.999638
+              ],
+              [
+                0.0,
+                -0.0,
+                0.007419,
+                0.999972
+              ]
+            ]
+          },
+          "connecting_link": {
+            "t": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.159861,
+                0.492882,
+                0.0
+              ],
+              [
+                0.577158,
+                1.764781,
+                0.0
+              ],
+              [
+                1.254116,
+                3.593008,
+                0.0
+              ],
+              [
+                2.091399,
+                5.595952,
+                0.0
+              ],
+              [
+                3.056139,
+                7.550183,
+                0.0
+              ],
+              [
+                4.186596,
+                9.335972,
+                0.0
+              ],
+              [
+                5.372615,
+                10.776161,
+                0.0
+              ],
+              [
+                6.617449,
+                11.849549,
+                0.0
+              ],
+              [
+                7.759454,
+                12.520272,
+                0.0
+              ],
+              [
+                8.722801,
+                12.901158,
+                0.0
+              ],
+              [
+                9.342239,
+                13.055666,
+                0.0
+              ],
+              [
+                9.577608,
+                13.097068,
+                0.0
+              ],
+              [
+                9.342239,
+                13.055666,
+                0.0
+              ],
+              [
+                8.722801,
+                12.901158,
+                0.0
+              ],
+              [
+                7.78911,
+                12.538393,
+                0.0
+              ],
+              [
+                6.617449,
+                11.849549,
+                0.0
+              ],
+              [
+                5.372615,
+                10.776161,
+                0.0
+              ],
+              [
+                4.186596,
+                9.335972,
+                0.0
+              ],
+              [
+                3.077631,
+                7.580803,
+                0.0
+              ],
+              [
+                2.091399,
+                5.595952,
+                0.0
+              ],
+              [
+                1.254116,
+                3.593008,
+                0.0
+              ],
+              [
+                0.588074,
+                1.798895,
+                0.0
+              ],
+              [
+                0.159861,
+                0.492882,
+                0.0
+              ]
+            ],
+            "q": [
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -0.0,
+                -0.011119,
+                0.999938
+              ],
+              [
+                0.0,
+                -0.0,
+                -0.03971,
+                0.999211
+              ],
+              [
+                0.0,
+                -0.0,
+                -0.082917,
+                0.996556
+              ],
+              [
+                -0.0,
+                -0.0,
+                -0.132901,
+                0.991129
+              ],
+              [
+                0.0,
+                0.0,
+                -0.186173,
+                0.982517
+              ],
+              [
+                -0.0,
+                0.0,
+                -0.242227,
+                0.97022
+              ],
+              [
+                0.0,
+                0.0,
+                -0.296021,
+                0.955182
+              ],
+              [
+                0.0,
+                0.0,
+                -0.347049,
+                0.937847
+              ],
+              [
+                0.0,
+                0.0,
+                -0.39068,
+                0.920526
+              ],
+              [
+                0.0,
+                -0.0,
+                -0.425006,
+                0.90519
+              ],
+              [
+                0.0,
+                0.0,
+                -0.446449,
+                0.894809
+              ],
+              [
+                -0.0,
+                -0.0,
+                -0.454278,
+                0.89086
+              ],
+              [
+                0.0,
+                0.0,
+                -0.446449,
+                0.894809
+              ],
+              [
+                0.0,
+                -0.0,
+                -0.425006,
+                0.90519
+              ],
+              [
+                0.0,
+                -0.0,
+                -0.391386,
+                0.920227
+              ],
+              [
+                -0.0,
+                -0.0,
+                -0.347049,
+                0.937847
+              ],
+              [
+                0.0,
+                -0.0,
+                -0.296021,
+                0.955182
+              ],
+              [
+                0.0,
+                -0.0,
+                -0.242227,
+                0.97022
+              ],
+              [
+                -0.0,
+                -0.0,
+                -0.186998,
+                0.98236
+              ],
+              [
+                -0.0,
+                -0.0,
+                -0.132901,
+                0.991129
+              ],
+              [
+                -0.0,
+                -0.0,
+                -0.082917,
+                0.996556
+              ],
+              [
+                0.0,
+                0.0,
+                -0.040501,
+                0.999179
+              ],
+              [
+                -0.0,
+                -0.0,
+                -0.011119,
+                0.999938
+              ]
+            ]
+          },
+          "handle": {
+            "t": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                -0.218484,
+                -0.0405,
+                -0.0
+              ],
+              [
+                -0.866209,
+                -0.173325,
+                0.0
+              ],
+              [
+                -1.885247,
+                -0.409355,
+                0.0
+              ],
+              [
+                -3.197927,
+                -0.765827,
+                -0.0
+              ],
+              [
+                -4.712264,
+                -1.257305,
+                0.0
+              ],
+              [
+                -6.289265,
+                -1.858661,
+                0.0
+              ],
+              [
+                -7.857143,
+                -2.557718,
+                0.0
+              ],
+              [
+                -9.259011,
+                -3.265967,
+                -0.0
+              ],
+              [
+                -10.45626,
+                -3.956275,
+                0.0
+              ],
+              [
+                -11.344137,
+                -4.509302,
+                0.0
+              ],
+              [
+                -11.879945,
+                -4.855841,
+                0.0
+              ],
+              [
+                -12.078991,
+                -4.999547,
+                0.0
+              ],
+              [
+                -11.904576,
+                -4.880256,
+                0.0
+              ],
+              [
+                -11.344137,
+                -4.509302,
+                0.0
+              ],
+              [
+                -10.45626,
+                -3.956275,
+                0.0
+              ],
+              [
+                -9.283349,
+                -3.286532,
+                0.0
+              ],
+              [
+                -7.857143,
+                -2.557718,
+                0.0
+              ],
+              [
+                -6.315364,
+                -1.875995,
+                0.0
+              ],
+              [
+                -4.712264,
+                -1.257305,
+                0.0
+              ],
+              [
+                -3.197927,
+                -0.765827,
+                -0.0
+              ],
+              [
+                -1.885247,
+                -0.409355,
+                0.0
+              ],
+              [
+                -0.866209,
+                -0.173325,
+                0.0
+              ],
+              [
+                -0.218484,
+                -0.0405,
+                -0.0
+              ]
+            ],
+            "q": [
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -0.0,
+                0.003523,
+                0.999994
+              ],
+              [
+                -0.0,
+                0.0,
+                0.014059,
+                0.999901
+              ],
+              [
+                -0.0,
+                0.0,
+                0.030693,
+                0.999529
+              ],
+              [
+                -0.0,
+                -0.0,
+                0.052295,
+                0.998632
+              ],
+              [
+                0.0,
+                0.0,
+                0.077591,
+                0.996985
+              ],
+              [
+                0.0,
+                -0.0,
+                0.104309,
+                0.994545
+              ],
+              [
+                0.0,
+                0.0,
+                0.13143,
+                0.991325
+              ],
+              [
+                -0.0,
+                -0.0,
+                0.15607,
+                0.987746
+              ],
+              [
+                0.0,
+                -0.0,
+                0.177832,
+                0.984061
+              ],
+              [
+                0.0,
+                0.0,
+                0.19418,
+                0.980966
+              ],
+              [
+                -0.0,
+                0.0,
+                0.204018,
+                0.978967
+              ],
+              [
+                -0.0,
+                -0.0,
+                0.207952,
+                0.978139
+              ],
+              [
+                0.0,
+                0.0,
+                0.204658,
+                0.978833
+              ],
+              [
+                0.0,
+                0.0,
+                0.19418,
+                0.980966
+              ],
+              [
+                -0.0,
+                -0.0,
+                0.177832,
+                0.984061
+              ],
+              [
+                -0.0,
+                0.0,
+                0.156652,
+                0.987654
+              ],
+              [
+                -0.0,
+                -0.0,
+                0.13143,
+                0.991325
+              ],
+              [
+                0.0,
+                -0.0,
+                0.104894,
+                0.994483
+              ],
+              [
+                0.0,
+                0.0,
+                0.077591,
+                0.996985
+              ],
+              [
+                -0.0,
+                -0.0,
+                0.052295,
+                0.998632
+              ],
+              [
+                -0.0,
+                0.0,
+                0.030693,
+                0.999529
+              ],
+              [
+                -0.0,
+                -0.0,
+                0.014059,
+                0.999901
+              ],
+              [
+                -0.0,
+                -0.0,
+                0.003523,
+                0.999994
+              ]
+            ]
+          },
+          "pin_joint": {
+            "t": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.060345,
+                0.195803,
+                0.0
+              ],
+              [
+                0.207226,
+                0.722182,
+                0.0
+              ],
+              [
+                0.373558,
+                1.445264,
+                0.0
+              ],
+              [
+                0.509019,
+                2.228789,
+                -0.0
+              ],
+              [
+                0.594646,
+                2.960628,
+                0.0
+              ],
+              [
+                0.635751,
+                3.557143,
+                0.0
+              ],
+              [
+                0.649198,
+                3.967026,
+                0.0
+              ],
+              [
+                0.651436,
+                4.177567,
+                0.0
+              ],
+              [
+                0.651504,
+                4.218469,
+                0.0
+              ],
+              [
+                0.651352,
+                4.155931,
+                0.0
+              ],
+              [
+                0.650713,
+                4.072312,
+                0.0
+              ],
+              [
+                0.650276,
+                4.035664,
+                0.0
+              ],
+              [
+                0.650713,
+                4.072312,
+                0.0
+              ],
+              [
+                0.651352,
+                4.155931,
+                0.0
+              ],
+              [
+                0.651504,
+                4.218469,
+                0.0
+              ],
+              [
+                0.651436,
+                4.177567,
+                0.0
+              ],
+              [
+                0.649198,
+                3.967026,
+                0.0
+              ],
+              [
+                0.635751,
+                3.557143,
+                0.0
+              ],
+              [
+                0.594646,
+                2.960628,
+                0.0
+              ],
+              [
+                0.509019,
+                2.228789,
+                -0.0
+              ],
+              [
+                0.373558,
+                1.445264,
+                0.0
+              ],
+              [
+                0.207226,
+                0.722182,
+                0.0
+              ],
+              [
+                0.060345,
+                0.195803,
+                0.0
+              ]
+            ],
+            "q": [
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                0.0,
+                -0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                0.0,
+                -0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -0.0,
+                -0.0,
+                1.0
+              ]
+            ]
+          },
+          "pin_knee": {
+            "t": [
+              [
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                -0.128929,
+                0.089593,
+                0.0
+              ],
+              [
+                -0.510572,
+                0.346934,
+                0.0
+              ],
+              [
+                -1.128532,
+                0.739691,
+                0.0
+              ],
+              [
+                -1.95287,
+                1.220289,
+                0.0
+              ],
+              [
+                -2.93801,
+                1.734277,
+                0.0
+              ],
+              [
+                -4.022597,
+                2.229762,
+                0.0
+              ],
+              [
+                -5.132436,
+                2.665755,
+                0.0
+              ],
+              [
+                -6.186504,
+                3.01736,
+                0.0
+              ],
+              [
+                -7.10485,
+                3.276487,
+                0.0
+              ],
+              [
+                -7.816647,
+                3.448179,
+                0.0
+              ],
+              [
+                -8.266874,
+                3.543946,
+                0.0
+              ],
+              [
+                -8.420884,
+                3.574453,
+                0.0
+              ],
+              [
+                -8.266874,
+                3.543946,
+                0.0
+              ],
+              [
+                -7.816647,
+                3.448179,
+                0.0
+              ],
+              [
+                -7.10485,
+                3.276487,
+                0.0
+              ],
+              [
+                -6.186504,
+                3.01736,
+                0.0
+              ],
+              [
+                -5.132436,
+                2.665755,
+                0.0
+              ],
+              [
+                -4.022597,
+                2.229762,
+                0.0
+              ],
+              [
+                -2.93801,
+                1.734277,
+                0.0
+              ],
+              [
+                -1.95287,
+                1.220289,
+                0.0
+              ],
+              [
+                -1.128532,
+                0.739691,
+                0.0
+              ],
+              [
+                -0.510572,
+                0.346934,
+                0.0
+              ],
+              [
+                -0.128929,
+                0.089593,
+                0.0
+              ]
+            ],
+            "q": [
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                0.0,
+                0.0,
+                -0.0,
+                1.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
+        }
       }
     },
     {
@@ -2528,7 +3895,7 @@
       "signature": "quick_return(crank_r=14.0, pivot_dist=34.0, lever_len=60.0, crank_angle_deg=40.0, disc_r=18.0, pin_d=6.0, lever_w=10.0, thickness=5.0, base_h=4.0, pivot_bore_d=6.0, crank_bore_d=5.0, clearance=0.25, base_pad=4.0, pin_extra=2.0)",
       "description": "A crank and slotted-lever quick-return whose pivot offset sweeps toward the Whitworth configuration; the working:return time ratio is exposed as mechanism metadata. The classic ram drive of metal shaping machines.",
       "origin": "Mechanical-movements wave v0.6.0; classic ref: 507 Mechanical Movements Nos. 98-100 / crank and slotted lever, Whitworth quick return",
-      "build_ms": 6,
+      "build_ms": 5,
       "category": "linkages",
       "group": "movements",
       "rank": 0,
@@ -3108,7 +4475,7 @@
       "signature": "peaucellier_linkage(long_len=30.0, rhomb_len=15.0, crank_len=10.0, crank_angle_deg=0.0, branch=1, width=6.0, thickness=3.0, bore_d=3.0, clearance=0.25, pin_extra=2.0)",
       "description": "Seven bars that draw a mathematically exact straight line: two anchor links and a rhombus form an inversor about the fixed pivot, and a crank holds the input point on a circle through that pivot, so the tracer runs a perfect line. The first exact straight-line linkage, and still the reference case for guiding motion without a slideway.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: Peaucellier (1864) and Lipkin (1871) inversor cell",
-      "build_ms": 29,
+      "build_ms": 24,
       "category": "linkages",
       "group": "movements",
       "rank": 0,
@@ -6128,7 +7495,7 @@
       "signature": "watt_linkage(lever_a_len=30.0, lever_b_len=30.0, coupler_len=24.0, lever_angle_deg=0.0, stroke_deg=25.0, branch=1, width=6.0, thickness=3.0, bore_d=3.0, clearance=0.25, pin_extra=2.0, samples=41)",
       "description": "Two rocking levers joined by a coupler, whose tracer point holds an approximate straight line over its working stroke; the departure from the line is measured across the stroke and returned as mechanism metadata. Watt guided a beam-engine piston rod with it, and it still locates the axle of a solid-axle rear suspension.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: James Watt parallel motion (1784)",
-      "build_ms": 15,
+      "build_ms": 13,
       "category": "linkages",
       "group": "movements",
       "rank": 0,
@@ -7798,7 +9165,7 @@
       "signature": "sarrus_linkage(bar_len=20.0, fold_deg=40.0, plate=28.0, plate_t=3.0, ear_h=8.0, bar_w=6.0, bar_t=3.0, bore_d=3.0, clearance=0.25, pin_extra=2.0)",
       "description": "Two hinge chains folding in orthogonal planes constrain the top plate to pure vertical translation: no rotation, no X or Y travel, and no sliding pair anywhere. Platform height is 2*bar_len*sin(fold). The spatial answer to the straight-line problem, and the one that suits FDM best because nothing slides against a layer line.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: Sarrus (1853) parallel-motion linkage",
-      "build_ms": 29,
+      "build_ms": 24,
       "category": "linkages",
       "group": "movements",
       "rank": 0,
@@ -10278,7 +11645,7 @@
       "signature": "pantograph_linkage(arm_a=18.0, arm_b=24.0, ratio=2.0, p_x=32.0, p_y=0.0, branch=1, width=6.0, thickness=3.0, bore_d=3.0, clearance=0.25, pad_r=9.0, pin_extra=2.0)",
       "description": "A parallelogram chain anchored at one fixed pivot: trace a shape with the stylus pin and the output pin draws the same shape scaled about the pivot. The ratio comes from the parallelogram closure, so it is exact at every position, and the achieved value is measured back off the posed geometry.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: 507 Mechanical Movements No. 246 / pantograph",
-      "build_ms": 18,
+      "build_ms": 17,
       "category": "linkages",
       "group": "movements",
       "rank": 0,
@@ -12758,7 +14125,7 @@
       "signature": "lazy_tongs(rhombs=3, bar_len=30.0, angle_deg=35.0, slot_lo_deg=20.0, slot_hi_deg=55.0, width=6.0, thickness=3.0, yoke_w=9.0, foot_len=10.0, bore_d=3.0, clearance=0.25, pin_extra=2.0)",
       "description": "Nuremberg scissors: bars pinned at their centres and ends form a row of rhombs, so squeezing the frame end shoots the output yoke out along a straight line at the rhomb count times the stroke. Guide slots at both ends keep the travel on axis. The extension of a lazy-tongs riveter and of a folding gate.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: 507 Mechanical Movements No. 122 / lazy tongs, Nuremberg scissors",
-      "build_ms": 34,
+      "build_ms": 31,
       "category": "linkages",
       "group": "movements",
       "rank": 0,
@@ -17398,7 +18765,7 @@
       "signature": "iris_diaphragm(blades=6, aperture_max=24.0, aperture_min=6.0, blade_t=1.0, gap=0.25, control_deg=0.0, pivot_r=26.0, drive_arm=13.0, post_d=5.0, pin_d=4.0, clearance=0.3, base_h=2.4, ring_t=2.4, cap_t=2.0, rim=5.0, overlap_deg=12.0, sections=64)",
       "description": "A print-in-place iris: leaves on their own pivot posts, each on its own Z layer, swung together by a drive ring whose radial slots pick up a pin on every leaf. Each leaf's inner edge is a circular arc struck about a point that walks off the axis as the leaf turns, so the opening stays round and shrinks from 24 mm to 6 mm over 6.6 degrees of ring travel.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: Joseph Petzval's lens diaphragm, 1840s, in the stacked-plane form FDM needs",
-      "build_ms": 61,
+      "build_ms": 54,
       "category": "grippers",
       "group": "movements",
       "rank": 1,
@@ -17451,7 +18818,7 @@
       "signature": "collet_chuck(bore_d=6.0, slots=4, taper_deg=8.0, collet_len=24.0, nut=True, wall=3.5, slot_w=0.8, thread_pitch=2.0, nut_len=14.0, nose_len=16.0, clearance=0.3, flutes=20, sections=64, seg=64)",
       "description": "An ER-style split collet with its taper nut and spindle nose. Slots cut alternately from each end turn the sleeve into a ring of fingers, and drawing its 8 degree cone into the matching cone in the nose squeezes them onto whatever is in the bore. Grips on axis, and closes as far as the slots can shut.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: ER collet system, Rego-Fix, 1973",
-      "build_ms": 328,
+      "build_ms": 292,
       "category": "grippers",
       "group": "movements",
       "rank": 1,
@@ -17504,7 +18871,7 @@
       "signature": "eccentric_cam_clamp(cam_r=14.0, ecc=4.0, handle_len=42.0, bore_d=5.0, handle_deg=0.0, overcentre_deg=8.0, width=8.0, handle_w=7.0, handle_h=6.0, follower_t=6.0, margin=5.0, base_h=3.0, gap=0.3, clearance=0.3, plate_w=34.0, sections=64)",
       "description": "A rotary cam lock: a disc turning about a pivot offset from its centre, so the lift under the follower plate is the cam radius plus the eccentricity times the cosine of the handle angle. It is set to clamp a few degrees past top dead centre, where the clamped part's spring-back drives the handle into its stop instead of backing it out.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: eccentric quick-clamp, Brown 1868 US patent 79,000 lineage",
-      "build_ms": 12,
+      "build_ms": 11,
       "category": "grippers",
       "group": "movements",
       "rank": 1,
@@ -18104,7 +19471,7 @@
       "signature": "plate_cam(base_r=10.0, segments=(('shm', 6.0, 90.0), ('dwell', 0.0, 90.0), ('cycloidal', -6.0, 120.0), ('dwell', 0.0, 60.0)), thickness=5.0, roller_r=0.0, hub_d=0.0, hub_h=0.0, bore_d=0.0, flat=None, keyway_w=0.0, keyway_d=0.0, clearance=0.25, n=96); follower lift from cam_lift(segments, angle_deg)",
       "description": "A radial plate cam synthesized from dwell, linear, SHM, and cycloidal motion-law segments, roller-compensated and extruded with a hub and D-flat bore. Programs the valve timing of a model engine or an automaton's motion.",
       "origin": "Mechanical-movements wave v0.6.0; classic ref: 507 Mechanical Movements No. 380 / plate cam",
-      "build_ms": 21,
+      "build_ms": 19,
       "category": "cams",
       "group": "movements",
       "rank": 2,
@@ -19377,7 +20744,7 @@
       "signature": "barrel_cam(radius=11.0, length=28.0, groove_w=4.25, groove_d=3.0, segments=(('cycloidal', 10.0, 180.0), ('cycloidal', -10.0, 180.0)), pin_d=4.0, pin_len=10.0, pin_phase_deg=0.0, bore_d=0.0, flat=None, clearance=0.25, n=96)",
       "description": "A barrel cam whose closed groove follows a motion-law z(theta) program around the drum, with a mating follower pin and guide. Winds the level line of a fishing reel or drives a toolchanger drum.",
       "origin": "Mechanical-movements wave v0.6.0; classic ref: 507 Mechanical Movements No. 389 / barrel cam",
-      "build_ms": 16,
+      "build_ms": 15,
       "category": "cams",
       "group": "movements",
       "rank": 2,
@@ -19967,7 +21334,7 @@
       "signature": "geneva_pair(slots=6, crank_r=10.0, pin_d=3.0, thickness=4.0, clearance=0.25, bore_d=2.0, arm_thickness=2.4, pocket_margin=0.3)",
       "description": "An external Geneva (Maltese cross) pair posed mid-engagement: the driver's crank pin indexes the slotted wheel one slot per revolution while its crescent-cut locking disc holds the wheel during dwell. The film-advance indexer of movie projectors and automated assembly turrets.",
       "origin": "Mechanical-movements wave v0.6.0; classic ref: 507 Mechanical Movements No. 214 region / Geneva drive",
-      "build_ms": 144,
+      "build_ms": 132,
       "category": "indexing",
       "group": "movements",
       "rank": 3,
@@ -22415,7 +23782,7 @@
       "signature": "escapement(teeth=30, style='anchor', wheel_r=22.0, tooth_depth=3.2, pallet_span=7.5, thickness=4.0, clearance=0.25, bore_d=3.0, recoil_deg=12.0)",
       "description": "A clock escapement: a forward-raked escape wheel and a pivoted anchor, flat parts posed with one pallet resting on a tooth tip; the style parameter selects recoil anchor or Graham deadbeat pallet faces. The visible tick of longcase and printed clock builds.",
       "origin": "Mechanical-movements wave v0.6.0; classic ref: anchor escapement (Hooke, c. 1657) / Graham deadbeat",
-      "build_ms": 8,
+      "build_ms": 5,
       "category": "indexing",
       "group": "movements",
       "rank": 3,
@@ -22458,7 +23825,7 @@
       "signature": "intermittent_gear_pair(module=1.5, z1=18, z2=18, groups=3, thickness=4.0, clearance=0.25, lock_drop=0.5, margin_deg=12.0, bore_d=0.0)",
       "description": "A mutilated-gear intermittent pair posed meshed: the driver keeps involute teeth on one arc with a plain locking segment, advancing the notch-locked driven gear one tooth group per revolution. The digit-advance scheme of mechanical counters and washing-machine timers.",
       "origin": "Mechanical-movements wave v0.6.0; classic ref: 507 Mechanical Movements intermittent-gearing plates",
-      "build_ms": 23,
+      "build_ms": 19,
       "category": "indexing",
       "group": "movements",
       "rank": 3,
@@ -22501,7 +23868,7 @@
       "signature": "spur_gear_2d(N, m, sector=None, relief=2.5, center_at=-90.0, entry_drop=0.0, entry_end=-1, bl=None, t_relief=None, pa=20.0); phased with mesh_phase(N_drv, N_drn, phi_deg)",
       "description": "An 18-tooth driver and 28-tooth driven gear in collision-free mesh.",
       "origin": "Originally extracted from gears2d.py in finnish-doors.",
-      "build_ms": 59,
+      "build_ms": 53,
       "category": "gears",
       "group": "movements",
       "rank": 4,
@@ -22890,7 +24257,7 @@
       "signature": "spur_gear_mesh(N, m, width, bore_d=0.0, pa=20.0, bl=0.35, t_relief=0.1, sections=96)",
       "description": "A printable involute spur gear with a measured round bore.",
       "origin": "Unified from finnish-windows and parviz gear builders.",
-      "build_ms": 27,
+      "build_ms": 24,
       "category": "gears",
       "group": "movements",
       "rank": 4,
@@ -23120,7 +24487,7 @@
       "signature": "roller_sprocket_2d(n_teeth, pitch, pin_d, clear=0.0, outer_d=None); polar_ring(n, r, center=(0.0, 0.0), phase=0.0)",
       "description": "A conjugate 14-tooth sprocket surrounded by track-pin references.",
       "origin": "Generalized from tracks.py in parviz.",
-      "build_ms": 25,
+      "build_ms": 22,
       "category": "gears",
       "group": "movements",
       "rank": 4,
@@ -23183,7 +24550,7 @@
       "signature": "worm(module, length, pitch_d, starts=1, pressure_angle=20.0, bore=0.0); spur_gear(module, teeth, width, bore=0.0, pressure_angle=20.0, sector_deg=360.0, backlash=0.06, hub_d=0.0, full_disc=True, helix_deg=0.0)",
       "description": "A true helical worm beside its lead-angle-matched wheel.",
       "origin": "Extracted from gears.py in dual-axis-turntable.",
-      "build_ms": 123,
+      "build_ms": 103,
       "category": "gears",
       "group": "movements",
       "rank": 4,
@@ -23266,7 +24633,7 @@
       "signature": "spur_gear(module, teeth, width, bore=0.0, pressure_angle=20.0, sector_deg=360.0, backlash=0.06, hub_d=0.0, full_disc=True, helix_deg=0.0)",
       "description": "A full-featured involute sector with a central hub and bore.",
       "origin": "Extracted from gears.py in dual-axis-turntable.",
-      "build_ms": 21,
+      "build_ms": 19,
       "category": "gears",
       "group": "movements",
       "rank": 4,
@@ -23402,7 +24769,7 @@
       "signature": "herringbone_gear(m=1.5, z=24, h=10.0, helix_deg=25.0, bore_d=0.0, pa=20.0, bl=0.35, t_relief=0.1, hand=1); phased with mesh_phase(N_drv, N_drn, phi_deg)",
       "description": "A double-helical involute gear whose mirrored tooth halves cancel axial thrust and self-center in mesh. The standard drive gear of printed extruders and quiet printed gearboxes.",
       "origin": "Mechanical-movements wave v0.6.0; classic ref: Citroen double-helical (herringbone) gear",
-      "build_ms": 346,
+      "build_ms": 230,
       "category": "gears",
       "group": "movements",
       "rank": 4,
@@ -25058,7 +26425,7 @@
       "signature": "cycloidal_drive(pins=12, pin_d=4.0, pin_circle_r=22.0, ecc=1.5, disc_thickness=6.0, out_pins=6, out_pin_d=4.0, out_circle_r=10.0, cam_d=8.0, shaft_d=5.0, housing_t=4.0, rim_w=4.0, clearance=0.25, shaft_tail=6.0, samples=None)",
       "description": "A single-stage cycloidal reducer: an eccentric input precesses a shortened-epitrochoid disc against a ring of housing pins, with output taken through oversized pin holes. The robot-joint reducer of Nabtesco RV and DIY actuators.",
       "origin": "Mechanical-movements wave v0.6.0; classic ref: cycloidal speed reducer",
-      "build_ms": 61,
+      "build_ms": 50,
       "category": "gears",
       "group": "movements",
       "rank": 4,
@@ -25101,7 +26468,7 @@
       "signature": "bevel_gear_pair(m=1.5, z1=16, z2=24, face_w=None, pa=20.0, bl=0.35, bore1_d=0.0, bore2_d=0.0, layers=10)",
       "description": "A straight bevel pair on 90-degree axes, the involute profile lofted toward the pitch apex in the Tredgold approximation. Right-angle drives of hand drills, angle grinders, and differentials.",
       "origin": "Mechanical-movements wave v0.6.0; classic ref: straight bevel / miter gear pair",
-      "build_ms": 266,
+      "build_ms": 239,
       "category": "gears",
       "group": "movements",
       "rank": 4,
@@ -28341,7 +29708,7 @@
       "signature": "ring_gear(z=40, m=1.5, width=8.0, pa_deg=20.0, rim=3.0, bl=0.35, z_pinion=None, add=None, ded=None, steps=18)",
       "description": "An internal (annular) involute gear: the teeth are cut inward from a rim, so the tip circle is inside the pitch circle and the root circle outside it. The fixed ring of a planetary gearbox, a strain-wave drive's circular spline, and an involute spline socket are all this part.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: annular/internal involute gear, AGMA 917 internal-gear proportions",
-      "build_ms": 146,
+      "build_ms": 137,
       "category": "gears",
       "group": "movements",
       "rank": 4,
@@ -28359,7 +29726,7 @@
       "signature": "ring_gear_mesh(z=40, z_pinion=20, m=1.5, width=8.0, pa_deg=20.0, rim=3.0, bl=0.35, bore_d=5.0, phi_deg=0.0, steps=18)",
       "description": "A pinion posed in mesh inside an internal ring gear. The ring flanks are generated, not drawn: the mating pinion is rolled through the conjugate internal motion and the swept region is subtracted from the blank. Internal pairs turn the same way and sit at a centre distance equal to the DIFFERENCE of the pitch radii, which is why they pack a high ratio into a small envelope.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: internal spur gearing, shaper (Fellows) generation",
-      "build_ms": 134,
+      "build_ms": 122,
       "category": "gears",
       "group": "movements",
       "rank": 4,
@@ -30543,7 +31910,7 @@
       "signature": "ratchet_ring_2d(teeth=9, tip_r=15.0, root_r=17.0, outer_r=18.4, undercut_deg=7.0, clearance=0.15, flip=False, phase_deg=None, pawl_az=(90.0, 210.0, 330.0), pawl_width=5.6, nose_r=16.7, spring_x0=5.7, spring_t=0.8, spring_gap=0.9, spring_folds=4); ratchet_ring(height=3.62, teeth=9, tip_r=15.0, root_r=17.0, outer_r=18.4, undercut_deg=7.0, clearance=0.15, flip=False, phase_deg=None, pawl_az=(90.0, 210.0, 330.0), pawl_width=5.6, nose_r=16.7, spring_x0=5.7, spring_t=0.8, spring_gap=0.9, spring_folds=4); pip_ratchet_hub_2d(teeth=9, tip_r=15.0, root_r=17.0, outer_r=18.4, undercut_deg=7.0, clearance=0.15, flip=False, phase_deg=None, pawl_az=(90.0, 210.0, 330.0), hub_radius=14.5, spoke_outer_r=13.5, pawl_width=5.6, nose_r=16.7, travel=1.9, sliding_clearance=0.45, boss_width=1.7, spoke_inner_r=2.0, spring_x0=5.7, spring_t=0.8, spring_gap=0.9, spring_folds=4, spring_clearance=0.45); pip_ratchet_hub(height=3.15, bore_w=7.2, bore_t=2.0, bore_clearance=0.3, teeth=9, tip_r=15.0, root_r=17.0, outer_r=18.4, undercut_deg=7.0, clearance=0.15, flip=False, phase_deg=None, pawl_az=(90.0, 210.0, 330.0), hub_radius=14.5, spoke_outer_r=13.5, pawl_width=5.6, nose_r=16.7, travel=1.9, sliding_clearance=0.45, boss_width=1.7, spoke_inner_r=2.0, spring_x0=5.7, spring_t=0.8, spring_gap=0.9, spring_folds=4, spring_clearance=0.45)",
       "description": "Three captive rigid pawls, each reseated by a printed accordion spring, inside a matching undercut ring.",
       "origin": "Extracted from the Klonk print-in-place follower ratchet.",
-      "build_ms": 61,
+      "build_ms": 56,
       "category": "ratchets",
       "group": "movements",
       "rank": 5,
@@ -30596,7 +31963,7 @@
       "signature": "spring_cartridge_ratchet_2d(teeth=12, tip_r=13.2, root_r=15.2, outer_r=17.8, hook_deg=7.0, drive_ccw=True, phase_deg=None, hub_r=12.7, pawl_az=(90.0, 210.0, 330.0), pawl_clear=0.15, slot_w_wide=7.7, slot_w_mouth=5.4, slot_x_in=5.0, slot_x_step=12.15, slot_x_out=12.75, tail_w=7.3, tail_x0=7.2, tail_x1=12.05, fork_w=4.6, fork_x1=11.0, body_w=5.0, nose_x1=15.35, boss_sq=2.2, boss_len=1.2); spring_cartridge_ratchet(ring_height=3.2, hub_height=2.75, pawl_height=2.6, hub_z0=0.15, pawl_z0=0.15, bore_w=7.2, bore_t=2.0, bore_clearance=0.3, teeth=12, tip_r=13.2, root_r=15.2, outer_r=17.8, hook_deg=7.0, drive_ccw=True, phase_deg=None, hub_r=12.7, pawl_az=(90.0, 210.0, 330.0), pawl_clear=0.15, slot_w_wide=7.7, slot_w_mouth=5.4, slot_x_in=5.0, slot_x_step=12.15, slot_x_out=12.75, tail_w=7.3, tail_x0=7.2, tail_x1=12.05, fork_w=4.6, fork_x1=11.0, body_w=5.0, nose_x1=15.35, boss_sq=2.2, boss_len=1.2); validator check_ratchet_sense_and_sweep(ring_2d, pawls_2d, pawl_az=(90.0, 210.0, 330.0), teeth=12, travel=1.9, drive_ccw=True, drive_probe_deg=2.0, area_epsilon=0.005)",
       "description": "A slotted hub and three separately printable rigid pawls inside a self-energising ring.",
       "origin": "Adapted from experiments/spring_ratchet_fable/design.py.",
-      "build_ms": 21,
+      "build_ms": 20,
       "category": "ratchets",
       "group": "movements",
       "rank": 5,
@@ -30659,7 +32026,7 @@
       "signature": "compliant_clutch_2d(teeth=18, pawls=3, race_outer_r=24.5, race_tip_r=14.0, tooth_depth=2.6, hub_r=8.0, flexure_w=1.4, flexure_arc_deg=150.0, flexure_clearance=0.45, preload=0.6, flip=False, lock_face_frac=0.4); compliant_clutch(height=3.0, teeth=18, pawls=3, race_outer_r=24.5, race_tip_r=14.0, tooth_depth=2.6, hub_r=8.0, flexure_w=1.4, flexure_arc_deg=150.0, flexure_clearance=0.45, preload=0.6, flip=False, lock_face_frac=0.4)",
       "description": "Integral spiral flexures engaging an internal sawtooth race, shown with the torque-limit face fraction.",
       "origin": "Extracted from Klonk gen_compliant_2d with the torque-limit experiment delta.",
-      "build_ms": 5,
+      "build_ms": 6,
       "category": "ratchets",
       "group": "movements",
       "rank": 5,
@@ -30725,7 +32092,7 @@
       "signature": "torque_limiter(d=30.0, bore_d=8.0, detents=6, detent_r=10.0, bump_r=2.5, driver_t=4.0, driven_t=4.0, hub_r=9.0, hub_len=6.0, cavity_r=6.0, cavity_depth=4.5, face_gap=0.2, clearance=0.25, sections=96); preload spring helix_tube(R, rw, turns, z0, z1, M=16, N=420)",
       "description": "Spring-seated radiused detent bumps engage matching pockets between two faces; above the trip torque set by the detent geometry they cam out and ratchet past, protecting the drivetrain. The slip clutch inside every cordless drill clutch collar.",
       "origin": "Mechanical-movements wave v0.6.0; classic ref: spring-detent safety (overload) clutch",
-      "build_ms": 189,
+      "build_ms": 168,
       "category": "clutches",
       "group": "movements",
       "rank": 6,
@@ -30778,7 +32145,7 @@
       "signature": "freewheel_clutch(rollers=6, hub_r=8.0, roller_r=3.0, pocket_deg=45.0, wedge=0.15, ramp=1.5, wall=3.0, bore_d=5.0, height=8.0, clearance=0.25, sections=96)",
       "description": "Cylindrical rollers between a smooth inner hub and ramped outer-ring pockets wedge instantly in one direction and release in the other, a silent one-way clutch with no tooth steps. Used in starter-motor bendix drives and conveyor backstops.",
       "origin": "Mechanical-movements wave v0.6.0; classic ref: roller-ramp overrunning (sprag-less one-way) clutch",
-      "build_ms": 8,
+      "build_ms": 7,
       "category": "clutches",
       "group": "movements",
       "rank": 6,
@@ -30821,7 +32188,7 @@
       "signature": "oldham_coupling(d=30.0, bore_d=8.0, tongue_w=8.0, tongue_h=4.0, hub_len=12.0, face_gap=0.4, web=1.6, clearance=0.25, sections=96)",
       "description": "Two hubs with perpendicular diametral tongues drive a floating cross-slotted disc, transmitting constant-velocity rotation between parallel shafts with lateral offset. The anti-rotation coupling of scroll compressors and the stepper-to-leadscrew coupler of 3D printers.",
       "origin": "Mechanical-movements wave v0.6.0; classic ref: Oldham double-slider coupling (507 Mechanical Movements, shaft couplings)",
-      "build_ms": 8,
+      "build_ms": 7,
       "category": "couplings",
       "group": "movements",
       "rank": 7,
@@ -30884,7 +32251,7 @@
       "signature": "universal_joint(shaft_d=10.0, pin_d=5.0, fork_gap=18.0, tine_t=4.0, yoke_w=12.0, fork_len=15.0, web_t=2.0, shaft_len=12.0, bend_deg=20.0, boss_r=5.0, clearance=0.3, sections=64)",
       "description": "Two forked yokes joined by a four-trunnion cross spider transmit rotation between shafts intersecting at an angle, with the classic sinusoidal speed fluctuation twice per revolution. The joint of automotive driveshafts and socket-wrench extensions.",
       "origin": "Mechanical-movements wave v0.6.0; classic ref: Cardan/Hooke's universal joint (507 Mechanical Movements)",
-      "build_ms": 16,
+      "build_ms": 15,
       "category": "couplings",
       "group": "movements",
       "rank": 7,
@@ -31000,7 +32367,7 @@
       "signature": "tripod_cv_joint(shaft_d=8.0, trunnions=3, trunnion_d=5.0, housing_d=40.0, angle_deg=15.0, phase_deg=0.0, plunge=0.0, swing_deg=25.0, plunge_travel=4.0, roller_wall=1.6, roller_len=6.0, crown=0.4, hub_t=6.0, wall=2.4, floor_t=4.0, flare_h=6.0, pin_d=3.0, shaft_len=30.0, clear=0.3, sections=48)",
       "description": "Three crowned barrels on a tripod spider ride in three straddling tracks of an outer tulip, transmitting genuinely constant angular velocity across a shaft angle and plunging freely along the housing axis. Unlike the Cardan joint there is no speed fluctuation at all; unlike a Rzeppa ball joint it needs no hardened balls or ground raceways, so it prints. The inboard joint of most front-wheel-drive halfshafts.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: Glaenzer Spicer tripode joint (1960s), the plunging half of the modern front-drive halfshaft",
-      "build_ms": 47,
+      "build_ms": 40,
       "category": "couplings",
       "group": "movements",
       "rank": 7,
@@ -32678,7 +34045,7 @@
       "signature": "double_cardan_joint(shaft_d=10.0, bend_deg=15.0, inter_len=46.0, pin_d=5.0, fork_gap=18.0, tine_t=4.0, yoke_w=12.0, fork_len=15.0, web_t=2.0, shaft_len=12.0, boss_r=5.0, clearance=0.3, sections=48)",
       "description": "Two Hooke joints in series with their intermediate yokes 90 degrees apart, so the second joint's speed error is the exact inverse of the first's and the output runs at constant velocity. The intermediate shaft between them still swings by the full single-joint fluctuation, which is the price this fix pays and the tripod does not. The centred double Cardan of truck driveshafts and steering columns.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: double Cardan (Spicer 10-series) constant-velocity driveshaft joint",
-      "build_ms": 29,
+      "build_ms": 27,
       "category": "couplings",
       "group": "movements",
       "rank": 7,
@@ -32741,7 +34108,7 @@
       "signature": "ball_socket_joint(ball_d=10.0, stem_d=5.0, capture_deg=20.0, clear=0.3, neck_deg=40.0, wall=2.5, fingers=4, slot_w=1.2, slot_over=3.0, lip_h=1.6, lead_deg=45.0, stem_len=10.0, base_d=12.0, base_h=2.5, shank_d=8.0, shank_len=6.0, pose_deg=0.0, sections=64)",
       "description": "A ball on a stem snaps into a split-finger socket whose mouth is pinched narrower than the ball, so the lip wraps past the equator and holds it: three rotational degrees of freedom inside a cone limited by the stem hitting the mouth rim. The tie-rod end and camera-mount joint, printed as two parts that click together.",
       "origin": "Gap-analysis wave v0.8.0",
-      "build_ms": 35,
+      "build_ms": 31,
       "category": "joints",
       "group": "movements",
       "rank": 8,
@@ -32804,7 +34171,7 @@
       "signature": "knuckle_hinge(leaf_w=36.0, leaf_len=16.0, leaf_t=3.0, knuckles=5, pin_d=3.0, barrel_d=7.0, gap=0.3, stop_deg=90.0, open_deg=110.0, stop_h=2.0, friction=0.0, sections=64)",
       "description": "Interleaved barrels around one captive printed pin give a butt hinge that prints flat in a single piece and breaks free on the first swing. A full-width collar on each leaf ends in a radial flank through the pin axis, and the two flanks meet face to face to arrest the leaf at exactly stop_deg.",
       "origin": "Gap-analysis wave v0.8.0",
-      "build_ms": 24,
+      "build_ms": 20,
       "category": "joints",
       "group": "movements",
       "rank": 8,
@@ -32867,7 +34234,7 @@
       "signature": "gimbal_rings(rings=3, outer_d=44.0, ring_w=5.0, ring_t=6.5, gap=0.3, pin_d=2.5, pin_len=3.0, tilt_deg=0.0, sections=64)",
       "description": "Nested rings hang from integral trunnion pins on alternating orthogonal axes and print flat as one piece: two rings are a Cardan suspension, three a full gimbal that keeps the centre level however the frame moves. Each ring radius is derived so its outer corners stay one clearance off the parent bore through the whole swing.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: Cardan suspension, gimbal-mounted compass",
-      "build_ms": 40,
+      "build_ms": 36,
       "category": "joints",
       "group": "movements",
       "rank": 8,
@@ -33741,7 +35108,7 @@
       "signature": "printed_worm(handsign=1, motor_tail=None, module=1.2, pressure_angle=20.0, starts=1, length=50.0, bore_d=5.5, shaft_flat=3.7, clearance=0.25, lead_angle=5.0, journal_d=8.0, journal_len=9.0, engage_teeth=6, wheel_width=6.55, backlash=0.35, collar_d=10.5, collar_len=2.0, bearing_width=7.0, set_screw_d=2.6, set_screw_z=6.0, sections=160)",
       "description": "A journalled printed worm with runout threads, keyed bore, thrust collars, and radial set-screw hole.",
       "origin": "Extracted from the Klonk build_worm generator.",
-      "build_ms": 286,
+      "build_ms": 262,
       "category": "drives",
       "group": "movements",
       "rank": 9,
@@ -33774,7 +35141,7 @@
       "signature": "flat_worm(starts=3, module=1.5, pitch_d=9.0, pressure_angle=20.0, worm_backlash=0.8, tip_trim=0.25, hand=1, thread_len=16.0, runout=2.2, use_695=True, journal_d=4.95, seat_len=4.4, spacer_d=6.8, bearing_spacer_len=5.442135623730952, collar_d=6.8, collar_len=0.5, length=36.6842712474619, shaft_d=3.0, shaft_flat=2.33, clearance=0.25, bore_depth=8.7, assembly_spin=95.0, flute_count=2, flute_d=0.8, flute_z0=5.5, flute_z1=8.55, sections=144); worm_wheel_band(width=3.5, z0=0.0, wheel_teeth=26, module=1.5, pressure_angle=20.0, backlash=0.35, tip_relief=0.03, tip_trim=0.55, hand=1, starts=3, pitch_d=9.0, read_face=2.4, read_r0=17.0, layers=12)",
       "description": "The bench-proven three-start input worm and lead-angle-matched wheel band at crossed axes.",
       "origin": "Extracted from the Klonk flat-drive generators.",
-      "build_ms": 405,
+      "build_ms": 335,
       "category": "drives",
       "group": "movements",
       "rank": 9,
@@ -33807,7 +35174,7 @@
       "signature": "worm_coupon(starts=3, module=1.5, pitch_d=9.0, pressure_angle=20.0, worm_backlash=0.8, worm_tip_trim=0.25, hand=1, thread_len=16.0, runout=2.2, use_695=True, journal_d=4.95, seat_len=4.4, spacer_d=6.8, bearing_spacer_len=5.442135623730952, collar_d=6.8, collar_len=0.5, length=36.6842712474619, shaft_d=3.0, shaft_flat=2.33, clearance=0.25, bore_depth=8.7, assembly_spin=95.0, flute_count=2, flute_d=0.8, flute_z0=5.5, flute_z1=8.55, worm_sections=144, wheel_teeth=26, band_width=3.5, band_backlash=0.35, band_tip_relief=0.03, band_tip_trim=0.55, band_read_face=2.4, band_read_r0=17.0, band_layers=12)",
       "description": "The inexpensive print-frame worm and short wheel-band pieces used to test mesh quality before a full drive.",
       "origin": "Project-neutral form of the Klonk flat-drive mesh coupon.",
-      "build_ms": 270,
+      "build_ms": 243,
       "category": "drives",
       "group": "movements",
       "rank": 9,
@@ -33825,7 +35192,7 @@
       "signature": "planet_stage(module=1.0, sun_teeth=12, planet_teeth=9, ring_teeth=30, n_planets=3, pressure_angle=20.0, backlash=0.1, ring_clearance=0.25, tip_relief=0.03, face_width=5.0, ring_outer_d=34.5, ring_face_width=5.725, carrier_radius=13.5, carrier_height=3.0, gear_gap=0.3, planet_pin_d=3.4, planet_bore_clearance=0.4, pin_extra=0.6, hex_af=7.0, hex_length=6.4, shaft_relief_d=6.4, shaft_relief_depth=2.8, sun_hub_d=9.0, sun_hub_height=0.8, shaft_d=3.0, shaft_flat=2.33, clearance=0.25, bore_leadin=1.2)",
       "description": "An assembled 12:9:30 top-loading planetary stage with three planets and a downward hex-output carrier.",
       "origin": "Project-neutral form of the Klonk printed planetary stage.",
-      "build_ms": 116,
+      "build_ms": 105,
       "category": "drives",
       "group": "movements",
       "rank": 9,
@@ -33888,7 +35255,7 @@
       "signature": "gerotor_pump(lobes=6, lobe_circle_r=16.0, ecc=1.6, tooth_d=None, rotor_h=8.0, clear=0.3, rim_w=4.0, wall=3.0, base_t=4.0, cap_t=4.0, shaft_d=6.0, shaft_flat=0.0, ports=True, port_land_deg=12.0, port_seal=0.6, phase_deg=0.0, profile_samples=None, phase_samples=12)",
       "description": "An internal-gear pump: a six-lobe trochoidal inner rotor running inside a seven-lobe outer rotor at an offset axis. The crescent chambers between the two open from zero on one side of the offset and close again on the other, carrying fluid from the inlet kidney port to the outlet. Displacement is measured off the real swept chamber polygons and lands in the metadata.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: Hill, gerotor patent US1682563 (1928)",
-      "build_ms": 43,
+      "build_ms": 36,
       "category": "fluid",
       "group": "movements",
       "rank": 10,
@@ -34257,7 +35624,7 @@
       "signature": "hose_barb(tube_id=6.0, barbs=3, interference=0.6, root_relief=0.8, ramp_deg=25.0, barb_gap=1.0, bore_d=None, boss_d=None, boss_h=4.0, foot='flange', foot_d=None, foot_t=3.0, thread_d=None, thread_pitch=None, lead_in=0.8, sections=64)",
       "description": "A hose tail: a stack of sawtooth rings on a stop boss and a mounting flange. Each ring steps straight out to a crest wider than the tube bore and then tapers back, so the tube walks on over the taper and jams against the square shoulder coming off. The foot can also be an external printed thread.",
       "origin": "Gap-analysis wave v0.8.0",
-      "build_ms": 24,
+      "build_ms": 19,
       "category": "fluid",
       "group": "movements",
       "rank": 10,
@@ -34320,7 +35687,7 @@
       "signature": "rotary_spool_valve(ports=3, body_d=34.0, plug_d=16.0, port_d=5.0, passage_d=4.5, passages=((0.0, 120.0),), port_angles_deg=None, plug_deg=0.0, seat_h=None, floor_t=2.4, clear=0.3, detents=True, detent_d=2.4, detent_lift=0.5, oring_groove=False, oring_cs=1.8, collar_t=3.0, collar_d=None, stem_d=9.0, stem_h=10.0, socket_af=5.5, socket_depth=6.0, handle_free_deg=4.0, cap_t=3.0, sections=64)",
       "description": "A rotary plug valve: a cross-drilled cylinder in a ported body. Each detent turns the plug so one L-shaped passage bridges a chosen pair of body ports and blocks the rest; the detent angles and the port pairs they join are derived from the port and passage angles rather than tabulated. Printed plug on printed bore leaks, so it routes rather than seals.",
       "origin": "Gap-analysis wave v0.8.0",
-      "build_ms": 37,
+      "build_ms": 31,
       "category": "fluid",
       "group": "movements",
       "rank": 10,
@@ -34660,7 +36027,7 @@
       "signature": "peristaltic_pump_head(rollers=3, tube_od=6.0, tube_wall=1.5, occlusion=0.9, race_r=18.0, roller_d=8.0, wrap_deg=240.0, rotor_h=None, wall=4.0, floor_t=3.0, cap_t=3.0, shaft_d=5.0, clear=0.3, sections=96)",
       "description": "A peristaltic pump head: three posts on a rotor pinch a silicone tube against a circular race, so each post drags a sealed slug of fluid round the wrap. The two tube slots leave the race tangentially, which is what stops a post shearing the tube where it peels off the wall. The tubing is a bought consumable, not a printed part.",
       "origin": "Gap-analysis wave v0.8.0",
-      "build_ms": 15,
+      "build_ms": 32,
       "category": "fluid",
       "group": "movements",
       "rank": 10,
@@ -34723,7 +36090,7 @@
       "signature": "scroll_drive(plate_r=30.0, plate_t=4.0, spiral_r0=6.0, spiral_pitch=5.0, turns=4.0, rib_w=3.0, rib_h=4.0, jaw_span_deg=20.0, jaw_h=9.0, face_r=10.0, bore_d=6.0, clearance=0.25, spiral_pts=240)",
       "description": "A lathe-chuck scroll plate whose raised Archimedean spiral rib drives three arc-toothed jaws in sync on a common gripping circle. The self-centering heart of every 3-jaw lathe chuck.",
       "origin": "Mechanical-movements wave v0.6.0; classic ref: 3-jaw scroll chuck",
-      "build_ms": 33,
+      "build_ms": 28,
       "category": "linear",
       "group": "movements",
       "rank": 11,
@@ -34766,7 +36133,7 @@
       "signature": "differential_screw(d=12.0, p1=2.0, p2=1.75, len1=14.0, len2=14.0, nut_w=20.0, nut_h=10.0, knob_d=16.0, knob_h=4.0, clearance=0.3)",
       "description": "One shaft with two same-hand thread sections of slightly different pitch; travel per revolution is the pitch difference, giving micrometer-fine motion from coarse printed threads. Micrometer heads and optical fine-focus stages.",
       "origin": "Mechanical-movements wave v0.6.0; classic ref: 507 Mechanical Movements differential screw plates",
-      "build_ms": 309,
+      "build_ms": 259,
       "category": "linear",
       "group": "movements",
       "rank": 11,
@@ -34809,7 +36176,7 @@
       "signature": "archimedes_screw(shaft_r=4.0, flight_r=12.0, lead=14.0, turns=4.0, flight_t=1.6, trough_wall=2.0, clearance=0.3, incline_deg=30.0, seg=64)",
       "description": "A helical flight on a shaft inside a half-pipe trough, posed inclined; each turn carries one pocket of material uphill. Grain augers, snowblowers, and wastewater lift screws.",
       "origin": "Mechanical-movements wave v0.6.0; classic ref: Archimedes water screw",
-      "build_ms": 17,
+      "build_ms": 16,
       "category": "linear",
       "group": "movements",
       "rank": 11,
@@ -34852,7 +36219,7 @@
       "signature": "linear_way(profile='dovetail', length=70.0, section_w=26.0, section_h=6.0, angle_deg=55.0, clear=0.25, gib=True, gib_t=2.0, gib_taper=0.8, wall=4.5, roof=3.0, carriage_len=28.0, base_t=3.0, base_ext=6.0, stop_h=3.0, relief_r=0.6, head_frac=0.4, mount_d=3.4, mount_pitch=25.0, gib_screw=False, gib_screw_d=3.0, gib_tab_t=5.0)",
       "description": "A prismatic guideway that constrains a body to one axis: a dovetail, vee, or T-slot section swept along the travel direction, a carriage opened out by the running clearance, and a tapered gib whose axial position sets the preload. 45-degree ramps at both ends stop the travel and every inside corner carries a chip-relief groove.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: machine-tool slideways, Whitworth/Maudslay lineage, standard in Machinery's Handbook",
-      "build_ms": 27,
+      "build_ms": 40,
       "category": "guides",
       "group": "movements",
       "rank": 12,
@@ -34978,7 +36345,7 @@
       "signature": "timing_pulley(teeth=20, pitch=2.0, belt_w=6.0, bore_d=5.0, hub_d=12.0, hub_len=7.0, flanges=True, flange_t=1.2, flange_extra=1.5, setscrew_boss=False, setscrew_d=3.0, clearance=0.25, sections=96)",
       "description": "A GT2-style toothed belt pulley with flanges, hub and setscrew boss, its tooth spaces cut as circular arcs per the GT2 approximation, shown meshing a toothed belt segment. A printed drop-in for 3D-printer and benchtop CNC belt axes.",
       "origin": "Mechanical-movements wave v0.6.0; classic ref: GT2 synchronous belt drive (507 Mechanical Movements belt-drive series)",
-      "build_ms": 61,
+      "build_ms": 46,
       "category": "pulleys",
       "group": "movements",
       "rank": 13,
@@ -35021,7 +36388,7 @@
       "signature": "grooved_drum(radius_law='cylinder', turns=8.0, cable_d=3.0, core_r=10.0, radius_rise=6.0, groove_factor=1.25, flange_extra=1.5, flange_t=1.6, bore_d=6.0, clearance=0.25, sections=64); wound cable helix_tube(R, rw, turns, z0, z1, M=16, N=420)",
       "description": "A cylindrical winch drum with a helical groove pitched to the cable so the rope spools in a single controlled layer, shown with its first wound turns. Used on crane hoists and 4x4 recovery winches.",
       "origin": "Mechanical-movements wave v0.6.0; classic ref: 507 Mechanical Movements winch/windlass entries (LeBus grooved drum)",
-      "build_ms": 243,
+      "build_ms": 209,
       "category": "pulleys",
       "group": "movements",
       "rank": 13,
@@ -35064,7 +36431,7 @@
       "signature": "grooved_drum(radius_law='cylinder', turns=8.0, cable_d=3.0, core_r=10.0, radius_rise=6.0, groove_factor=1.25, flange_extra=1.5, flange_t=1.6, bore_d=6.0, clearance=0.25, sections=64)",
       "description": "A conical spirally grooved fusee whose hyperbolic winding radius compensates a weakening mainspring to hold drive torque constant. The classic constant-torque heart of marine chronometers and English pocket watches.",
       "origin": "Mechanical-movements wave v0.6.0; classic ref: 507 Mechanical Movements No. 46 / fusee chain and spring-box",
-      "build_ms": 70,
+      "build_ms": 68,
       "category": "pulleys",
       "group": "movements",
       "rank": 13,
@@ -35107,7 +36474,7 @@
       "signature": "idler_pulley(od=16.0, width=8.0, bore_d=5.0, crown=0.15, flanges=True, flange_t=1.2, flange_extra=1.5, belt_clearance=0.3, toothed=False, teeth=20, pitch=2.0, bearing=None, bearing_fit='press', clearance=0.25, sections=64)",
       "description": "A crowned idler wheel shown facing a GT2 timing pulley: the running surface bulges a fraction of a millimetre from edge to mid-width so a flat belt walks itself back to centre under tension, no flange required. The same function also builds a toothed idler by reusing the timing_pulley tooth profile, and can swap the plain bore for a 608/695/MR105 bearing pocket.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: crowned flat-belt idler pulley",
-      "build_ms": 46,
+      "build_ms": 39,
       "category": "pulleys",
       "group": "movements",
       "rank": 13,
@@ -35150,7 +36517,7 @@
       "signature": "eccentric_idler_mount(eccentricity=1.5, bushing_od=14.0, post_d=5.0, height=10.0, rotation_deg=0.0, drive_af=6.0, setscrew_d=3.0, clearance=0.25, idler_od=16.0, idler_width=8.0, sections=64)",
       "description": "An eccentric take-up bushing carrying an idler pulley on its offset bore: turning the bushing with a hex key sweeps the idler through a circle equal to twice the eccentricity, setting belt tension, and a radial setscrew boss locks it in place. The same eccentric-bushing take-up used on printer belt idlers and chain tensioner sprockets.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: eccentric take-up bushing / belt idler tensioner",
-      "build_ms": 23,
+      "build_ms": 20,
       "category": "pulleys",
       "group": "movements",
       "rank": 13,
@@ -35193,7 +36560,7 @@
       "signature": "belt_tensioner(arm_len=30.0, sweep_deg=50.0, beam_t=1.4, beam_w=6.0, preload_mm=2.5, mount_w=14.0, mount_d=8.0, idler_bore_d=5.0, boss_d=11.0, clearance=0.25, max_strain=0.015, sections=48)",
       "description": "A curved cantilever spring arm printed as one part: its tip is pushed back a set preload distance when mounted against the belt, so it keeps the idler loaded against the belt line with no metal spring and re-deflects as the belt stretches. Peak bending strain is checked against a PLA/PETG limit at build time.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: compliant cantilever belt/chain tensioner",
-      "build_ms": 18,
+      "build_ms": 17,
       "category": "pulleys",
       "group": "movements",
       "rank": 13,
@@ -35236,7 +36603,7 @@
       "signature": "drag_chain_link(pitch=20.0, width=9.0, height=8.0, bend_deg=30.0, pin_d=2.4, clear=0.3, wall=1.6, tab_hw_deg=4.0, stop_clear_deg=2.5, roof_overhang=1.0, roof_h=1.2, lid=True, lid_t=1.4, sections=48)",
       "description": "One link of a print-in-place cable-carrier (energy chain): a male pivot boss nests into the next link's female socket on a vertical (self-bridging) bore, with a keyway tab/groove pair that lets the joint articulate freely up to bend_deg but jams solid the other way, so a run of these curls one direction and stays rigid the other. An optional press-fit lid caps the cable trough.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: e.g. igus E-chain, 1970s",
-      "build_ms": 38,
+      "build_ms": 34,
       "category": "chains",
       "group": "movements",
       "rank": 14,
@@ -35279,7 +36646,7 @@
       "signature": "drag_chain(links=8, bend_deg=30.0, straight_links=3, pitch=20.0, width=9.0, height=8.0, pin_d=2.4, clear=0.3, wall=1.6, lid=True)",
       "description": "An eight-link run of drag_chain_link posed with a straight section and a bend that curls the tail to its designed minimum bend radius, the classic U-turn a cable carrier makes guiding a wire or hose along a moving axis. Shows the link's stop actually working in an assembled run, not just in isolation.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: e.g. igus E-chain, 1970s",
-      "build_ms": 40,
+      "build_ms": 38,
       "category": "chains",
       "group": "movements",
       "rank": 14,
@@ -35322,7 +36689,7 @@
       "signature": "roller_chain_link(pitch=12.7, roller_d=7.75, plate_t=1.6, plate_w=None, pin_d=3.0, bushing_wall=0.8, roller_wall=1.1, clear=0.3, gap=0.3, roller_len=None, sections=48)",
       "description": "One pitch segment of a bush roller chain: inner and outer link plates, a bushing pressed between the inner plates, a roller that spins free around the bushing, and the pin that runs through it all. Sized to seat directly in a sprocket built by gears.roller_sprocket_2d at the same pitch and roller diameter.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: Hans Renold bush roller chain, 1880",
-      "build_ms": 10,
+      "build_ms": 9,
       "category": "chains",
       "group": "movements",
       "rank": 14,
@@ -35365,7 +36732,7 @@
       "signature": "roller_chain(n_teeth=14, pitch=9.525, roller_d=6.0, clear=0.3, wrap_deg=200.0, sprocket_width=6.0, outer_d=None)",
       "description": "A sprocket built by gears.roller_sprocket_2d with a run of bare rollers wrapped around 200 degrees of its pitch circle, each seated in its tooth gap with running clearance by construction: the geometric proof that roller_chain_link's roller diameter and pitch actually mate with the sprocket function.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: Hans Renold bush roller chain, 1880",
-      "build_ms": 35,
+      "build_ms": 33,
       "category": "chains",
       "group": "movements",
       "rank": 14,
@@ -35547,7 +36914,7 @@
       "signature": "belleville_washer(outer_d=20.0, inner_d=10.2, thickness=1.0, free_h=1.6, stack=1, arrangement='series', stack_gap=0.4, sections=96)",
       "description": "A coned annular disc spring, shown as a three-disc series stack with the cone direction alternating. Disc springs give the most force per unit volume of any printable spring, and above a free-cone-height to thickness ratio of sqrt(2) they snap through instead of resisting smoothly; the flag is derived from the geometry and stored in metadata.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: Julien Belleville disc spring 1867, DIN 2093 proportions",
-      "build_ms": 13,
+      "build_ms": 12,
       "category": "flexures",
       "group": "movements",
       "rank": 15,
@@ -35653,7 +37020,7 @@
       "signature": "spiral_power_spring(barrel_d=60.0, arbor_d=16.0, strip_t=1.0, gap=0.5, turns=6.0, height=6.0, wall=4.0, bore_d=6.0, clearance=0.3, max_fill=0.5, sections=720)",
       "description": "A flat Archimedean spiral strip anchored to an arbor at its inner end and to the barrel wall at its outer end: a clock mainspring. Winding the arbor stores the turns reported in metadata, and because its torque falls as it unwinds it is the part that pairs with grooved_drum(radius_law='fusee'), which exists to compensate exactly this.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: barrel and fusee clock mainspring, 507 Mechanical Movements No. 46",
-      "build_ms": 16,
+      "build_ms": 15,
       "category": "flexures",
       "group": "movements",
       "rank": 15,
@@ -35812,7 +37179,7 @@
       "signature": "thread_solid(d_nom, length, pitch=None, internal=False, clear=0.25, starts=1, seg=96); tap(mesh, d_nom, at, length, pitch=None, clear=0.25, axis='z')",
       "description": "An M8 threaded bolt beside a cut-away tapped hex nut.",
       "origin": "Extracted from threads.py in parviz.",
-      "build_ms": 208,
+      "build_ms": 172,
       "category": "mechanisms",
       "group": "elements",
       "rank": 16,
@@ -35938,7 +37305,7 @@
       "signature": "torsion_spring_mesh(mean_r=6.8, wire=1.2, turns=5.0, z=(0.5, 7.5), leg_r=1.4, anchor_at=(9.5, -60.0), moving_leg_z=10.5)",
       "description": "A five-turn torsion spring preview with moving and ground legs.",
       "origin": "Extracted from shaft.py in finnish-doors.",
-      "build_ms": 46,
+      "build_ms": 43,
       "category": "mechanisms",
       "group": "elements",
       "rank": 16,
@@ -35991,7 +37358,7 @@
       "signature": "threaded_rod(major_d, pitch, length, minor_d=None, n_theta=64, steps_per_pitch=6)",
       "description": "A fast radial-grid M8 display and light-duty external thread.",
       "origin": "Extracted from lib.py in wall-shelf-clamp.",
-      "build_ms": 35,
+      "build_ms": 30,
       "category": "mechanisms",
       "group": "elements",
       "rank": 16,
@@ -36044,7 +37411,7 @@
       "signature": "helix_tube(R, rw, turns, z0, z1, M=16, N=420)",
       "description": "A capped solid wire swept through five turns with a radial-inward moving frame.",
       "origin": "Extracted from the finnish-doors wrap-spring demonstration.",
-      "build_ms": 161,
+      "build_ms": 153,
       "category": "mechanisms",
       "group": "elements",
       "rank": 16,
@@ -36117,7 +37484,7 @@
       "signature": "dog_slot_coupling(r_in=6.0, r_out=12.0, dog_deg=30.0, free_deg=50.0, boss_h=7.0, collar_h=5.0, slot_a_clear=1.0, slot_z_clear=0.6, bore_r=4.5, boss_wall=1.5, collar_overhang=2.5, sections=64)",
       "description": "A downward collar dog riding in a boss arc slot to provide controlled angular lost motion.",
       "origin": "Generalized from finnish-doors coupling variant A.",
-      "build_ms": 10,
+      "build_ms": 9,
       "category": "mechanisms",
       "group": "elements",
       "rank": 16,
@@ -36150,7 +37517,7 @@
       "signature": "fastener_mesh(d, L, style='pan', axis='z', at=(0.0, 0.0, 0.0), sections=32); hex_nut_mesh(af, h, bore_d); washer_mesh(od, id_, h)",
       "description": "Pan, socket, and countersunk screws with nut and washer stand-ins.",
       "origin": "Unified from all three source projects.",
-      "build_ms": 11,
+      "build_ms": 10,
       "category": "fasteners",
       "group": "elements",
       "rank": 17,
@@ -36213,7 +37580,7 @@
       "signature": "plain_bushing(bore_d=8.0, wall=2.0, length=12.0, clear=0.25, flange=True, flange_d=None, flange_t=1.6, relief_grooves=4, groove_style='axial', groove_w=1.2, groove_depth=0.6, lead_in=0.5, sections=96)",
       "description": "A flanged plain bushing: a plastic sleeve that a steel shaft turns directly inside, with the running fit set explicitly by printing the bore at bore_d plus clear. Axial relief grooves hold grease and give swarf somewhere to go; the flange takes the light axial load a journal bearing can carry. The low-precision, high-reliability choice wherever a rolling bearing is overkill.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: sintered bronze flange bushing (Oilite, 1930s)",
-      "build_ms": 39,
+      "build_ms": 34,
       "category": "bearings",
       "group": "elements",
       "rank": 18,
@@ -36266,7 +37633,7 @@
       "signature": "thrust_washer(bore_d=8.0, outer_d=24.0, thickness=2.4, clear=0.3, face='pockets', pockets=6, pocket_d=None, relief=0.6, pad_gap_deg=14.0, pair=False, balls=6, ball_d=3.0, groove_depth=None, cage_wall=1.0, sections=96)",
       "description": "An axial thrust bearing built as a pair of washers with toroidal raceways facing each other and a printed cage spacing bought steel balls between them. Set pair=False for a single flat thrust washer whose face is relieved with grease pockets or raised pads, which drops the contact area and with it the PV product.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: 51100-series single-direction thrust ball bearing",
-      "build_ms": 68,
+      "build_ms": 62,
       "category": "bearings",
       "group": "elements",
       "rank": 18,
@@ -36319,7 +37686,7 @@
       "signature": "printed_ball_bearing(bore_d=8.0, outer_d=32.0, width=10.0, balls=6, ball_d=7.0, clear=0.3, race_wall=2.0, floor_t=1.2, cage=True, cage_wall=1.2, min_ball_d=6.0, sections=96)",
       "description": "A radial ball bearing that prints in one piece, already assembled: inner race, spacer cage, balls, outer race. Each raceway is a ball-radius groove truncated at 45 degrees of latitude so no race wall ever overhangs past the FDM limit and nothing bridges over the balls, and each ball has its bottom cap cut off at 45 degrees so its first layer is a flat disc. The shoulders left by that truncation are narrower than the ball, which is what keeps it captured.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: Conrad deep-groove ball bearing (1903), adapted to FDM limits",
-      "build_ms": 104,
+      "build_ms": 100,
       "category": "bearings",
       "group": "elements",
       "rank": 18,
@@ -36372,7 +37739,7 @@
       "signature": "press_lid(ox, oy, cav_x, cav_y, c, plate_t=2.4, plug_h=5.0, plug_wall=1.8, edge_r=5.5, clear=0.1)",
       "description": "A hollow box and its friction-plug lid in an exploded pose.",
       "origin": "Extracted from system_layout.py in finnish-doors.",
-      "build_ms": 4,
+      "build_ms": 5,
       "category": "closures",
       "group": "elements",
       "rank": 19,
@@ -36697,7 +38064,7 @@
       "signature": "screw_post(pos, normal, depth, boss_r=4.3); fix_pin(r, length, direction, face_pt, bury=1.0); blind_socket(r, deep, out_dir, face_pt, overshoot=1.0)",
       "description": "A bored screw boss beside a locating pin and blind socket block.",
       "origin": "Extracted from geo.py in parviz.",
-      "build_ms": 6,
+      "build_ms": 5,
       "category": "closures",
       "group": "elements",
       "rank": 19,
@@ -36866,7 +38233,7 @@
       "signature": "board_cradle(rect, fl, standoff=4.0, clr=0.4, wlen=9.0, wt=1.6, cap_over=2.0)",
       "description": "Four PCB corner standoffs and capture walls around a 40 x 30 mm board.",
       "origin": "Originally extracted from system_layout.py in finnish-doors.",
-      "build_ms": 5,
+      "build_ms": 4,
       "category": "fixtures",
       "group": "elements",
       "rank": 20,
@@ -36939,7 +38306,7 @@
       "signature": "saddle(axis0, axis1, r, yi, rib_t, interior, rise=0.0)",
       "description": "A shell-trimmed rib cradling a skew cylindrical reference part.",
       "origin": "Extracted from pickle_build.py in mini-powerbank.",
-      "build_ms": 2,
+      "build_ms": 3,
       "category": "fixtures",
       "group": "elements",
       "rank": 20,
@@ -37002,7 +38369,7 @@
       "signature": "kinematic_coupling(kind='maxwell', pcd=40.0, ball_d=6.0, plate_d=None, plate_t=6.0, groove_depth=None, groove_len=None, ball='hardware', socket_depth=None, socket_clear=0.15, phase_deg=90.0, ball_subdiv=3)",
       "description": "An exactly constrained two-plate mount: three balls on the top plate drop into three seats on the base and touch at exactly six points, one per degree of freedom, so the top plate has one resting pose and returns to it every time. Maxwell cuts three vee grooves; Kelvin cuts a trihedral pit, a vee, and a flat. Shown book-flipped so both mating faces are visible.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: Maxwell 1871 and Kelvin's three-point clamp, still the standard optical-mount kinematic seat",
-      "build_ms": 19,
+      "build_ms": 17,
       "category": "fixtures",
       "group": "elements",
       "rank": 20,
@@ -37065,7 +38432,7 @@
       "signature": "repeatable_dock(kind='maxwell', pcd=40.0, ball_d=6.0, plate_d=None, plate_t=6.0, ball='hardware', preload='magnet', magnet_d=10.0, magnet_t=3.0, magnet_gap=0.3, screw_d=5.0, screw_len=None, bolt_d=3.4, bolt_pcd=None, n_bolt=3, groove_depth=None, phase_deg=90.0, ball_subdiv=3)",
       "description": "A kinematic coupling plus the preload that keeps it closed, since a bare coupling resists nothing in the lift-off direction and falls apart when tipped. A disc magnet on a central boss or a central cap screw pulls along the coupling axis only, so the preload never becomes a seventh contact, and a bolt circle phased between the seats mounts both halves.",
       "origin": "Gap-analysis wave v0.8.0; the standard tool-changer and probe-mount arrangement (magnetic kinematic mounts, Renishaw-style probe docks)",
-      "build_ms": 58,
+      "build_ms": 52,
       "category": "fixtures",
       "group": "elements",
       "rank": 20,
@@ -37128,7 +38495,7 @@
       "signature": "three_point_leveller(kind='kelvin', plate_d=None, table_d=None, plate_t=6.0, base_t=6.0, screw_pcd=44.0, screw_d=6.0, screw_len=18.0, tip_ratio=0.7, knob_d=16.0, knob_t=5.0, lift=6.0, thread_clear=0.3, phase_deg=90.0, ball_subdiv=3)",
       "description": "Three screws thread through a table plate and rest their ball tips in kinematic seats on a base plate, holding the table on exactly six contacts while leaving height, tip, and tilt adjustable. One turn of one screw raises its corner by one thread pitch; mm_per_turn and tilt_per_turn_deg are in the metadata. This is how optical mounts and printer beds level without fighting an over-constrained bolt pattern.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: the kinematic three-screw levelling mount used on optical tables and surface plates",
-      "build_ms": 438,
+      "build_ms": 414,
       "category": "fixtures",
       "group": "elements",
       "rank": 20,
@@ -37539,7 +38906,7 @@
       "signature": "chamfer_prism(w, d, h, r, cham)",
       "description": "A rounded enclosure prism with a clean hull-chamfered top.",
       "origin": "Extracted from build.py in dual-axis-turntable.",
-      "build_ms": 5,
+      "build_ms": 4,
       "category": "prim",
       "group": "blocks",
       "rank": 21,
@@ -37675,7 +39042,7 @@
       "signature": "extrude_twist(base_outer, base_inner, zlist, phi_of, prof=None, base_ang=None)",
       "description": "A three-lobed profile swept through one full turn over 30 mm.",
       "origin": "Originally extracted from geom_util.py in finnish-doors.",
-      "build_ms": 40,
+      "build_ms": 35,
       "category": "sweep",
       "group": "blocks",
       "rank": 22,
@@ -37758,7 +39125,7 @@
       "signature": "swept_keyed_bore(bore_poly, free_angle, steps=28)",
       "description": "A D-shaped keyed bore beside its 50 degree free-rotation envelope.",
       "origin": "Originally extracted from shaft.py in finnish-doors.",
-      "build_ms": 277,
+      "build_ms": 245,
       "category": "sweep",
       "group": "blocks",
       "rank": 22,
@@ -37831,7 +39198,7 @@
       "signature": "loft(rings)",
       "description": "An organic solid joined through five equal-count point rings.",
       "origin": "Extracted from build.py in dual-axis-turntable.",
-      "build_ms": 8,
+      "build_ms": 7,
       "category": "sweep",
       "group": "blocks",
       "rank": 22,
@@ -37914,7 +39281,7 @@
       "signature": "teardrop(r, length, axis='x', up=(0, -1, 0))",
       "description": "A support-free teardrop bore shown through a cut block.",
       "origin": "Extracted from head.py in parviz.",
-      "build_ms": 4,
+      "build_ms": 3,
       "category": "cutters",
       "group": "blocks",
       "rank": 23,
@@ -37987,7 +39354,7 @@
       "signature": "ss_bore(R, Robj, length, center, axis='x', split_z=0.0)",
       "description": "A round lower cradle and support-light chamfered upper bore.",
       "origin": "Extracted from geom_util.py in finnish-doors.",
-      "build_ms": 2,
+      "build_ms": 1,
       "category": "cutters",
       "group": "blocks",
       "rank": 23,
@@ -38050,7 +39417,7 @@
       "signature": "dbore(shaft_d, flat, length, axis='z', clear=0.0, round_clear=0.0, flat_clear=0.0); dbore_hub(outer_r, length, axis='z', shaft_d=4.93, flat=3.0, clear=0.12, round_clear=0.0, flat_clear=0.0)",
       "description": "A double-D socket blank beside a ready-made keyed hub.",
       "origin": "Unified from parviz and finnish-windows.",
-      "build_ms": 9,
+      "build_ms": 7,
       "category": "cutters",
       "group": "blocks",
       "rank": 23,
@@ -38123,7 +39490,7 @@
       "signature": "counterbore(d_hole, d_head, head_depth, length, axis='z', head_end='top')",
       "description": "A through-hole with a cylindrical recessed-head pocket.",
       "origin": "New abstraction inspired by finnish-doors fastener seats.",
-      "build_ms": 7,
+      "build_ms": 6,
       "category": "cutters",
       "group": "blocks",
       "rank": 23,
@@ -38186,7 +39553,7 @@
       "signature": "bearing_seat(kind, fit='press', open_column=True, extra_depth=0.0)",
       "description": "A cut-away retained 608 seat with a bearing reference ring.",
       "origin": "New abstraction from the Klonk 22.25 mm 608 pocket practice.",
-      "build_ms": 13,
+      "build_ms": 11,
       "category": "cutters",
       "group": "blocks",
       "rank": 23,
@@ -38312,7 +39679,7 @@
       "signature": "slot_cutter(w, t, z0, z1, cx=0.0, cy=0.0, foot_z=0.0, dogbone_r=0.6, foot_relief=0.3, eps=0.5)",
       "description": "An FDM blade slot with visible square-corner dog-bone relief.",
       "origin": "Extracted from build.py in torque-lever.",
-      "build_ms": 12,
+      "build_ms": 11,
       "category": "cutters",
       "group": "blocks",
       "rank": 23,
@@ -38385,7 +39752,7 @@
       "signature": "tapered_cavity(g, zlo, height, taper_h=11.0, taper_step=0.6)",
       "description": "A cut-away hollow whose stepped roof closes without bridging.",
       "origin": "Extracted from lighten_legs.py in tripod.",
-      "build_ms": 34,
+      "build_ms": 31,
       "category": "cutters",
       "group": "blocks",
       "rank": 23,
@@ -38458,7 +39825,7 @@
       "signature": "u_channel_between(p0, p1, channel_w, z_floor, body_h)",
       "description": "Joined arbitrary-angle open U segments forming an S-shaped run.",
       "origin": "Extracted from build.py in jumper-wire-sockets.",
-      "build_ms": 24,
+      "build_ms": 22,
       "category": "cutters",
       "group": "blocks",
       "rank": 23,
@@ -38531,7 +39898,7 @@
       "signature": "revolved_gable_cavity(r_in, r_out, z0, h, roof_angle=45.0, sections=128)",
       "description": "A cut-away annular chamber beneath a 45 degree gable roof.",
       "origin": "Generalized from build.py in massage-shower-head.",
-      "build_ms": 8,
+      "build_ms": 7,
       "category": "cutters",
       "group": "blocks",
       "rank": 23,
@@ -38614,7 +39981,7 @@
       "signature": "oring_groove(bore_d=None, face_pcd=None, cs=2.62, squeeze=0.2, fill=0.78, mode='face', width=None, depth=None, z0=0.0, sections=128)",
       "description": "An O-ring gland cut into a flat face at a given pitch diameter. Groove width and depth are derived from the O-ring cross-section, target squeeze, and target gland fill rather than hardcoded, and the fill fraction is validated into the 70-85% band that keeps the ring from either leaking (too loose) or hydrolocking and extruding out of the joint (too tight).",
       "origin": "Gap-analysis wave v0.8.0; classic ref: Parker O-Ring Handbook gland design, AS568/ISO 3601.",
-      "build_ms": 5,
+      "build_ms": 4,
       "category": "cutters",
       "group": "blocks",
       "rank": 23,
@@ -38677,7 +40044,7 @@
       "signature": "labyrinth_seal(shaft_d=8.0, teeth=4, tooth_t=1.2, gap=0.3, pitch=None, fin_h=2.0, hub_wall=1.6, stator_wall=1.6, end_margin=None, sections=96)",
       "description": "A rotor comb and stator comb whose fins interleave around a shaft without ever touching, throttling flow across 2*teeth-1 stages through radial and axial clearance alone. Needs no elastomer and has no wear surface, so it is the seal to reach for on a printed rotating joint that only needs to keep out dust or splash.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: turbine labyrinth seal, early 20th c.",
-      "build_ms": 36,
+      "build_ms": 35,
       "category": "cutters",
       "group": "blocks",
       "rank": 23,
@@ -38740,7 +40107,7 @@
       "signature": "gasket_channel(path=None, width=3.0, depth=1.5, z0=0.0, join_style=1)",
       "description": "A cord-stock gasket groove that follows an arbitrary closed 2D path, here a rounded-rectangle lid, rather than only a circular pitch diameter, for enclosures and kidney-shaped lids an O-ring can't seal.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: O-ring cord stock gasket practice.",
-      "build_ms": 4,
+      "build_ms": 3,
       "category": "cutters",
       "group": "blocks",
       "rank": 23,
@@ -38803,7 +40170,7 @@
       "signature": "lighten_grid_centres(minx, miny, maxx, maxy, cell, web, pattern); lighten_cell_poly(cx, cy, cell, pattern)",
       "description": "A structural panel opened by a staggered hexagonal lattice.",
       "origin": "Extracted from housings.py in finnish-doors.",
-      "build_ms": 10,
+      "build_ms": 8,
       "category": "patterns",
       "group": "blocks",
       "rank": 24,
@@ -38876,7 +40243,7 @@
       "signature": "directed_holes(points, vectors, d, length)",
       "description": "Eight vector-directed bores cut through a hemispherical dome.",
       "origin": "Generalized from build.py in massage-shower-head.",
-      "build_ms": 30,
+      "build_ms": 26,
       "category": "patterns",
       "group": "blocks",
       "rank": 24,
@@ -39002,7 +40369,7 @@
       "signature": "kerf_bend_cutter(mode='lattice', width=60.0, height=40.0, thickness=3.0, kerf=0.5, pitch=6.0, bridge=1.0, angle_deg=45.0, helix_shear=1.5, margin=4.0, nozzle=0.4)",
       "description": "A cutter that turns a rigid flat slab into a bendable, twistable, or rollable one by slitting it with a staggered kerf pattern, the same trick as laser-kerfed plywood. Three slit layouts (straight lattice for single-axis bending or a living hinge, diagonal for torsion, spiral for a helical cylindrical wrap) all validate kerf width and bridge width against real FDM printability floors before cutting.",
       "origin": "Gap-analysis wave v0.8.0; classic ref: kerf bending (laser-cut plywood furniture)",
-      "build_ms": 12,
+      "build_ms": 13,
       "category": "lattices",
       "group": "blocks",
       "rank": 25,
@@ -39128,7 +40495,7 @@
       "signature": "text_block(lines, cx, cy, h, gap=1.2)",
       "description": "Two centered lines of raised polygon text stacked on a plaque.",
       "origin": "Extracted from build.py in torque-lever.",
-      "build_ms": 5,
+      "build_ms": 4,
       "category": "text",
       "group": "blocks",
       "rank": 26,

@@ -153,31 +153,13 @@ def four_bar(l_ground=25.0, l_crank=12.5, l_coupler=25.0, l_rocker=25.0,
     return parts
 
 
-def toggle_clamp(arm_len=34.0, link_c=14.0, handle_len=22.0, link_k=10.0,
-                 pivot_angle_deg=-105.0, overcenter_deg=4.0, width=6.0,
-                 thickness=4.0, base_h=4.0, bore_d=3.0, clearance=0.25,
-                 base_pad=6.0, pin_extra=2.0):
-    """Build an over-center knee (toggle) clamp posed in its clamping plane.
+def _toggle_clamp_joints(arm_len, link_c, handle_len, link_k,
+                         pivot_angle_deg, overcenter_deg):
+    """Solve the five planar joints of a toggle clamp at one handle angle.
 
-    The clamp arm pivots at ``P0 = (0, 0)`` with the knee joint at ``link_c``
-    and the toe at ``arm_len`` (mm) along it. The handle pivot ``P1`` sits at
-    ``handle_len + link_k`` from the dead-center knee position, at
-    ``pivot_angle_deg`` (degrees). At ``overcenter_deg = 0`` handle, knee, and
-    arm joint are exactly collinear (dead center); a positive
-    ``overcenter_deg`` rotates the handle past dead center onto the press side,
-    where clamping reaction drives the knee further into its stop — the
-    self-locking state. The arm joint ``C`` is re-solved by circle-circle
-    intersection; unreachable over-center travel raises ``ValueError``.
-
-    Returns ``{"base", "arm", "link", "handle", "pins", "joints"}`` with the
-    flat base bored at the two fixed pivots and the links stacked one
-    thickness apart (arm, connecting link, handle) above it.
+    Returns ``(P0, P1, K, C, T)`` as 2-vectors. Raises ``ValueError`` when the
+    over-center travel is unreachable for the given link lengths.
     """
-    if (arm_len <= 0 or not 0 < link_c < arm_len or handle_len <= 0 or
-            link_k <= 0 or width < 2.4 or thickness < 1.2 or base_h < 1.2 or
-            bore_d <= 0 or clearance < 0 or bore_d + clearance >= width or
-            base_pad < 0 or pin_extra < 0):
-        raise ValueError("toggle_clamp(): invalid clamp dimensions")
     P0 = np.array([0.0, 0.0])
     C0 = np.array([link_c, 0.0])
     dist_pc = handle_len + link_k
@@ -194,16 +176,73 @@ def toggle_clamp(arm_len=34.0, link_c=14.0, handle_len=22.0, link_k=10.0,
     C = min(candidates, key=lambda c: float(np.hypot(*(c - C0))))
     th_arm = math.atan2(C[1], C[0])
     T = arm_len * np.array([math.cos(th_arm), math.sin(th_arm)])
+    return P0, P1, K, C, T
+
+
+def _toggle_clamp_base_bounds(arm_len, link_c, handle_len, link_k,
+                              pivot_angle_deg, base_pad,
+                              oc_lo=-24.0, oc_hi=30.0, samples=25):
+    """Axis-aligned plate that covers every reachable joint across a full swing.
+
+    The base is sized from the pose envelope, not the current pose, so a handle
+    animation reposes the moving bars without reshaping the ground plate.
+    """
+    points = []
+    for i in range(samples):
+        oc = oc_lo + (oc_hi - oc_lo) * i / float(samples - 1)
+        try:
+            P0, P1, K, C, T = _toggle_clamp_joints(
+                arm_len, link_c, handle_len, link_k, pivot_angle_deg, oc)
+        except ValueError:
+            continue
+        points.extend((P0, P1, K, C, T))
+    if not points:
+        raise ValueError("toggle_clamp(): no reachable pose in the base envelope")
+    corners = np.asarray(points, dtype=float)
+    lo = corners.min(axis=0) - base_pad
+    hi = corners.max(axis=0) + base_pad
+    return lo, hi
+
+
+def toggle_clamp(arm_len=34.0, link_c=14.0, handle_len=22.0, link_k=10.0,
+                 pivot_angle_deg=-105.0, overcenter_deg=4.0, width=6.0,
+                 thickness=4.0, base_h=4.0, bore_d=3.0, clearance=0.25,
+                 base_pad=6.0, pin_extra=2.0):
+    """Build an over-center knee (toggle) clamp posed in its clamping plane.
+
+    The clamp arm pivots at ``P0 = (0, 0)`` with the knee joint at ``link_c``
+    and the toe at ``arm_len`` (mm) along it. The handle pivot ``P1`` sits at
+    ``handle_len + link_k`` from the dead-center knee position, at
+    ``pivot_angle_deg`` (degrees). At ``overcenter_deg = 0`` handle, knee, and
+    arm joint are exactly collinear (dead center); a positive
+    ``overcenter_deg`` rotates the handle past dead center onto the press side,
+    where clamping reaction drives the knee further into its stop — the
+    self-locking state. The arm joint ``C`` is re-solved by circle-circle
+    intersection; unreachable over-center travel raises ``ValueError``.
+
+    The base plate is sized for the full reachable handle swing so it does not
+    change shape with ``overcenter_deg``; only the moving bars repose.
+
+    Returns ``{"base", "arm", "link", "handle", "pins", "joints"}`` with the
+    flat base bored at the two fixed pivots and the links stacked one
+    thickness apart (arm, connecting link, handle) above it.
+    """
+    if (arm_len <= 0 or not 0 < link_c < arm_len or handle_len <= 0 or
+            link_k <= 0 or width < 2.4 or thickness < 1.2 or base_h < 1.2 or
+            bore_d <= 0 or clearance < 0 or bore_d + clearance >= width or
+            base_pad < 0 or pin_extra < 0):
+        raise ValueError("toggle_clamp(): invalid clamp dimensions")
+    P0, P1, K, C, T = _toggle_clamp_joints(
+        arm_len, link_c, handle_len, link_k, pivot_angle_deg, overcenter_deg)
 
     hole_d = bore_d + clearance
     t = thickness
     z_arm = base_h
     z_link = base_h + t
     z_handle = base_h + 2.0 * t
-    corners = np.array([P0, P1, K, C, T])
-    lo = corners.min(axis=0) - base_pad
-    hi = corners.max(axis=0) + base_pad
-    plate = sg.box(lo[0], lo[1], hi[0], hi[1])
+    lo, hi = _toggle_clamp_base_bounds(
+        arm_len, link_c, handle_len, link_k, pivot_angle_deg, base_pad)
+    plate = sg.box(float(lo[0]), float(lo[1]), float(hi[0]), float(hi[1]))
     for pivot in (P0, P1):
         plate = plate.difference(
             sg.Point(float(pivot[0]), float(pivot[1])).buffer(

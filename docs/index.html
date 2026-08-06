@@ -895,6 +895,16 @@
       cursor: pointer;
     }
 
+    .pg-reset[hidden] {
+      display: none;
+    }
+
+    .pg-reset.playing {
+      border-color: var(--accent);
+      color: var(--bg);
+      background: var(--accent);
+    }
+
     .pg-reset:hover,
     .pg-reset:focus-visible {
       border-color: var(--accent);
@@ -1070,6 +1080,7 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
           <code class="pg-signature" id="pg-signature"></code>
           <div id="pg-params"></div>
           <div class="pg-actions">
+            <button class="pg-reset" id="pg-play" type="button" hidden>Play ▶</button>
             <button class="pg-reset" id="pg-copy" type="button">Copy code</button>
             <button class="pg-reset" id="pg-stl" type="button">Download STL</button>
             <button class="pg-reset" id="pg-reset" type="button">Reset defaults</button>
@@ -1678,7 +1689,11 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
       lastFocus: null,
       debounceId: 0,
       tickerId: 0,
-      blockedDemos: new Set()
+      blockedDemos: new Set(),
+      playing: false,
+      playStartedAt: 0,
+      playButton: document.querySelector("#pg-play"),
+      animation: null
     };
 
     // Native build time above this is "heavy": in Pyodide it lands in seconds.
@@ -1791,8 +1806,96 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
       pg.camera.aspect = width / height;
       pg.camera.updateProjectionMatrix();
       pg.controls.update();
+      // Baked mechanism playback in the tune dialog: same tracks as the card
+      // viewports, applied to named meshes from the worker.
+      if (pg.playing && pg.animation && !prefersReducedMotion.matches) {
+        const seconds = (performance.now() - pg.playStartedAt) / 1000;
+        const n = pg.animation.intervals;
+        const position = ((seconds / CYCLE_SECONDS) * n) % n;
+        const i0 = Math.floor(position);
+        const i1 = pg.animation.closed ? i0 + 1 : (i0 + 1) % n;
+        const blend = position - i0;
+        for (const track of pg.animation.tracks) {
+          animScratch.a.fromArray(track.t[i0]);
+          animScratch.b.fromArray(track.t[i1]);
+          animScratch.a.lerp(animScratch.b, blend);
+          animScratch.qa.fromArray(track.q[i0]);
+          animScratch.qb.fromArray(track.q[i1]);
+          animScratch.qa.slerp(animScratch.qb, blend);
+          animScratch.matrix.compose(animScratch.a, animScratch.qa, animScratch.one);
+          track.node.matrix.multiplyMatrices(animScratch.matrix, track.base);
+          track.node.matrixWorldNeedsUpdate = true;
+        }
+      }
       pg.renderer.render(pg.scene, pg.camera);
       pg.rafId = requestAnimationFrame(pgRenderLoop);
+    }
+
+    function phaseParamName(model) {
+      if (model && model.animation && model.animation.param) return model.animation.param;
+      if (!model || !model.play) return null;
+      const names = model.play.params.map((p) => p.name);
+      const prefer = [
+        "drive_deg", "crank_angle_deg", "crank_deg", "angle_deg", "phase_deg",
+        "handle_deg", "follower_deg", "pin_phase_deg", "rotor_deg", "plug_deg",
+        "tilt_deg"
+      ];
+      for (const name of prefer) {
+        if (names.includes(name)) return name;
+      }
+      return null;
+    }
+
+    function designParamsAtDefaults() {
+      if (!pg.model || !pg.model.play) return false;
+      const phase = phaseParamName(pg.model);
+      for (const param of pg.model.play.params) {
+        if (param.name === phase) continue;
+        if (pg.values[param.name] !== param.default) return false;
+      }
+      return true;
+    }
+
+    function setupPlaygroundAnimation(group) {
+      pg.animation = null;
+      const spec = pg.model && pg.model.animation;
+      if (!spec || !spec.bodies || !group) return false;
+      const tracks = [];
+      for (const [name, data] of Object.entries(spec.bodies)) {
+        const node = group.getObjectByName(name);
+        if (!node || !data.t || !data.t.length) continue;
+        node.matrixAutoUpdate = false;
+        // Capture the generated pose as the base so baked deltas compose correctly.
+        node.updateMatrix();
+        tracks.push({ node, base: node.matrix.clone(), t: data.t, q: data.q });
+      }
+      if (!tracks.length) return false;
+      const closed = spec.closed === true;
+      pg.animation = {
+        tracks,
+        frames: tracks[0].t.length,
+        intervals: closed ? tracks[0].t.length - 1 : tracks[0].t.length,
+        closed
+      };
+      return true;
+    }
+
+    function setPlaying(on) {
+      pg.playing = Boolean(on);
+      if (!pg.playButton) return;
+      pg.playButton.classList.toggle("playing", pg.playing);
+      pg.playButton.textContent = pg.playing ? "Stop ■" : "Play ▶";
+      pg.playButton.setAttribute("aria-pressed", pg.playing ? "true" : "false");
+      if (pg.playing) pg.playStartedAt = performance.now();
+    }
+
+    function updatePlayButton() {
+      if (!pg.playButton) return;
+      const hasAnim = Boolean(pg.model && pg.model.animation && pg.model.animation.bodies);
+      const hasPhase = Boolean(phaseParamName(pg.model));
+      const show = Boolean(pg.model && (hasAnim || hasPhase) && !prefersReducedMotion.matches);
+      pg.playButton.hidden = !show;
+      if (!show) setPlaying(false);
     }
 
     function showMeshes(meshes) {
@@ -1816,9 +1919,19 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
           metalness: 0.1,
           roughness: 0.8
         });
-        pg.group.add(new THREE.Mesh(geometry, material));
+        const mesh = new THREE.Mesh(geometry, material);
+        if (part.name) mesh.name = part.name;
+        pg.group.add(mesh);
       }
       pg.scene.add(pg.group);
+      // Rebuild baked tracks against the fresh meshes when the user is in play
+      // mode with design params at defaults; otherwise clear so a retuned part
+      // does not keep moving with stale transforms.
+      if (pg.playing && designParamsAtDefaults()) {
+        if (!setupPlaygroundAnimation(pg.group)) setPlaying(false);
+      } else {
+        pg.animation = null;
+      }
       if (!pg.framed) {
         const bounds = new THREE.Box3().setFromObject(pg.group);
         const sphere = bounds.getBoundingSphere(new THREE.Sphere());
@@ -1900,6 +2013,10 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
           pg.values[param.name] = value;
           readout.textContent = `${value}${unit}`;
           updateSignature();
+          // A manual retune leaves baked playback; the geometry no longer
+          // matches the default-pose tracks.
+          if (pg.playing) setPlaying(false);
+          pg.animation = null;
           if (!heavy) scheduleGenerate();
         });
         if (heavy) input.addEventListener("change", scheduleGenerate);
@@ -1915,8 +2032,11 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
       for (const param of model.play.params) pg.values[param.name] = param.default;
       pg.title.textContent = model.name;
       pg.framed = false;
+      pg.animation = null;
+      setPlaying(false);
       buildParamControls();
       updateSignature();
+      updatePlayButton();
       pg.modal.classList.add("open");
       ensureViewer();
       ensureWorker();
@@ -1928,6 +2048,8 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
     }
 
     function closePlayground() {
+      setPlaying(false);
+      pg.animation = null;
       pg.modal.classList.remove("open");
       pg.model = null;
       cancelAnimationFrame(pg.rafId);
@@ -2033,10 +2155,69 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
     document.querySelector("#pg-close").addEventListener("click", closePlayground);
     document.querySelector("#pg-reset").addEventListener("click", () => {
       if (!pg.model) return;
+      setPlaying(false);
+      pg.animation = null;
       for (const param of pg.model.play.params) pg.values[param.name] = param.default;
       buildParamControls();
       updateSignature();
       requestGenerate();
+    });
+    document.querySelector("#pg-play").addEventListener("click", () => {
+      if (!pg.model) return;
+      if (pg.playing) {
+        setPlaying(false);
+        pgStatus("playback stopped");
+        return;
+      }
+      // Prefer baked rigid tracks (same as the card) when design params are
+      // at defaults. Otherwise fall back to sweeping the phase slider through
+      // the worker — slower, but correct for retuned geometry.
+      if (pg.model.animation && designParamsAtDefaults()) {
+        // Force a clean default pose generate, then attach tracks.
+        const phase = phaseParamName(pg.model);
+        if (phase) {
+          const param = pg.model.play.params.find((p) => p.name === phase);
+          if (param) pg.values[phase] = param.default;
+        }
+        buildParamControls();
+        updateSignature();
+        setPlaying(true);
+        pgStatus("playing mechanism cycle…");
+        // Ensure meshes exist; showMeshes re-attaches tracks when playing.
+        requestGenerate();
+        return;
+      }
+      const phase = phaseParamName(pg.model);
+      if (!phase) {
+        pgStatus("this part has no motion phase to play", true);
+        return;
+      }
+      const param = pg.model.play.params.find((p) => p.name === phase);
+      if (!param) return;
+      setPlaying(true);
+      pgStatus(`playing ${phase}…`);
+      // Step the phase slider through its range via the worker.
+      const steps = Math.max(12, Math.round((param.max - param.min) / (param.step || 1)));
+      let index = 0;
+      const tick = () => {
+        if (!pg.playing || !pg.model) return;
+        const t = index / steps;
+        const value = param.type === "int"
+          ? Math.round(param.min + t * (param.max - param.min))
+          : param.min + t * (param.max - param.min);
+        pg.values[phase] = value;
+        const input = document.querySelector(`#pg-in-${phase}`);
+        if (input) {
+          input.value = value;
+          const readout = input.parentElement && input.parentElement.querySelector("output");
+          if (readout) readout.textContent = `${value}${param.unit ? ` ${param.unit}` : ""}`;
+        }
+        updateSignature();
+        requestGenerate();
+        index = (index + 1) % (steps + 1);
+        window.setTimeout(tick, Math.max(180, (pg.model.build_ms || 80) * 1.2));
+      };
+      tick();
     });
     pg.modal.addEventListener("click", (event) => {
       if (event.target === pg.modal) closePlayground();
