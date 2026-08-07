@@ -35,4 +35,9 @@ Semi-primitive building blocks only (gears, cams, linkages, ratchets,
 couplings, flexures, cutters, fasteners). Explicit arguments, no project
 config. MIT licensed.
 
+**For AI agents / part selection:** each API has a real-machinery use case in
+[`mechlib/usecases.py`](mechlib/usecases.py) (`search_use_cases("robot joint")`,
+`use_case("four_bar")`). Same text appears as **Used in** on every gallery
+card. See [`AGENTS.md`](AGENTS.md).
+
 **[m-esm.github.io/mechlib](https://m-esm.github.io/mechlib/)**
