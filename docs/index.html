@@ -703,6 +703,56 @@
       outline-offset: 2px;
     }
 
+    .usage-block {
+      margin: 0;
+      border: 1px solid var(--line);
+      background: rgba(6, 24, 40, 0.72);
+    }
+
+    .usage-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 5px 8px;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .usage-copy {
+      margin: 0;
+      padding: 2px 6px;
+      border: 1px solid var(--line);
+      border-radius: 2px;
+      color: var(--accent);
+      background: transparent;
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      cursor: pointer;
+    }
+
+    .usage-copy:hover,
+    .usage-copy:focus-visible {
+      border-color: var(--accent);
+      outline: none;
+    }
+
+    .usage {
+      display: block;
+      margin: 0;
+      padding: 8px 9px;
+      overflow-x: auto;
+      color: #d9eafa;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      line-height: 1.45;
+      white-space: pre;
+    }
+
     .description,
     .origin {
       margin: 0;
@@ -1515,8 +1565,33 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
           }
         });
       }
+
+      // Usage example is derived at gallery build from the live API signature.
+      const usageBlock = document.createElement("div");
+      usageBlock.className = "usage-block";
+      const usageHead = document.createElement("div");
+      usageHead.className = "usage-head";
+      usageHead.append(document.createTextNode("Usage"));
+      const usageCopy = makeTextElement("button", "usage-copy", "Copy");
+      usageCopy.type = "button";
+      const usageText = model.usage || importSnippet(model);
+      usageCopy.addEventListener("click", async (event) => {
+        event.stopPropagation();
+        try {
+          await navigator.clipboard.writeText(usageText);
+          usageCopy.textContent = "Copied ✓";
+        } catch (_) {
+          usageCopy.textContent = "Select & copy";
+        }
+        window.setTimeout(() => { usageCopy.textContent = "Copy"; }, 1600);
+      });
+      usageHead.append(usageCopy);
+      const usage = makeTextElement("code", "usage", usageText);
+      usageBlock.append(usageHead, usage);
+
       copy.append(
         signature,
+        usageBlock,
         description,
         makeTextElement("p", "origin", model.origin),
         actions
@@ -1541,7 +1616,7 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
         card,
         haystack: [
           model.name, model.module, model.category, model.description,
-          model.signature, model.origin
+          model.signature, model.origin, model.usage || ""
         ].join(" ").toLowerCase(),
         viewport,
         status,
@@ -1626,13 +1701,24 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
       card.className = "utility-item";
       card.append(
         makeTextElement("span", "module", item.module),
-        makeTextElement("code", "", item.signature),
-        makeTextElement("p", "", item.description)
+        makeTextElement("code", "", item.signature)
       );
+      if (item.usage) {
+        const usage = makeTextElement("code", "usage", item.usage);
+        usage.style.display = "block";
+        usage.style.margin = "6px 0";
+        usage.style.padding = "7px 9px";
+        usage.style.border = "1px solid var(--line)";
+        usage.style.background = "rgba(6, 24, 40, 0.65)";
+        usage.style.whiteSpace = "pre-wrap";
+        usage.style.fontSize = "0.68rem";
+        card.append(usage);
+      }
+      card.append(makeTextElement("p", "", item.description));
       utilities.append(card);
       utilityItems.push({
         card,
-        haystack: [item.module, item.signature, item.description].join(" ").toLowerCase()
+        haystack: [item.module, item.signature, item.description, item.usage || ""].join(" ").toLowerCase()
       });
     }
 

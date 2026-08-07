@@ -5,6 +5,7 @@ import importlib.util
 import inspect
 import json
 import math
+import re
 import shutil
 import subprocess
 import sys
@@ -279,6 +280,141 @@ def _category(module_field):
 def signature(function):
     """Return the live function signature for gallery metadata."""
     return "%s%s" % (function.__name__, inspect.signature(function))
+
+
+def _repr_default(value):
+    """Pretty-print a default for a usage snippet (keep it short)."""
+    if isinstance(value, bool):
+        return "True" if value else "False"
+    if isinstance(value, (int, float)) and not isinstance(value, bool):
+        return repr(value)
+    if isinstance(value, str):
+        if len(value) > 40:
+            return None
+        return repr(value)
+    if value is None:
+        return "None"
+    if isinstance(value, (tuple, list)):
+        text = repr(value)
+        if len(text) > 48:
+            return None
+        return text
+    text = repr(value)
+    if len(text) > 48:
+        return None
+    return text
+
+
+def _placeholder_arg(pname):
+    """A short, name-driven stand-in for a required parameter."""
+    low = pname.lower()
+    tokens = set(low.split("_"))
+    if low.endswith("_deg") or "angle" in low or low.endswith("deg"):
+        return "0.0"
+    # Counts / pure numbers (mirrors _UNITLESS_TOKENS / _UNITLESS_NAMES below).
+    if low in ("z", "z1", "z2") or tokens & {
+            "n", "res", "resolution", "sections", "segments", "samples",
+            "count", "teeth", "slots", "turns", "waves", "pins", "planets",
+            "rollers", "layers", "starts", "lobes", "branch", "frac",
+            "fraction", "ratio"}:
+        return "12"
+    if low in ("path", "file", "filename"):
+        return '"part.stl"'
+    if low in ("mesh", "a", "b", "body", "solid"):
+        return "mesh"
+    if low in ("pts", "points", "poly", "poly2d"):
+        return pname
+    # Lengths / sizes in millimetres.
+    return "10.0"
+
+
+def usage_example(function, module_field):
+    """Derive a short copy-paste usage block from the live signature.
+
+    Never hand-maintained per part: required args get name-driven stand-ins,
+    optional args are left at library defaults, and an export / keys hint is
+    added when a no-arg call is safe.
+    """
+    module = module_field.split("/")[0].strip()
+    name = function.__name__
+    sig = inspect.signature(function)
+    call_args = []
+    can_call = True
+    for pname, param in sig.parameters.items():
+        if param.kind in (param.VAR_POSITIONAL, param.VAR_KEYWORD):
+            continue
+        if param.default is inspect.Parameter.empty:
+            can_call = False
+            call_args.append("%s=%s" % (pname, _placeholder_arg(pname)))
+            continue
+        # Optional parameters use library defaults (omitted from the call).
+    if can_call:
+        call = "%s()" % name
+    elif call_args:
+        call = "%s(%s)" % (name, ", ".join(call_args))
+    else:
+        call = "%s(...)" % name
+
+    # Side-effect-only helpers (export, packing): show as a bare call.
+    is_exporter = name.startswith("export_") or name in (
+        "shelf_pack", "pack_by_category")
+    if is_exporter and not can_call:
+        return "from %s import %s\n\n%s" % (module, name, call)
+
+    lines = [
+        "from %s import %s" % (module, name),
+        "",
+        "result = %s" % call,
+    ]
+
+    if can_call:
+        try:
+            result = function()
+        except Exception:
+            result = None
+        if isinstance(result, dict):
+            keys = [k for k in result.keys()
+                    if k not in ("joints", "metadata", "stroke")]
+            mesh_keys = [k for k in keys
+                         if hasattr(result[k], "vertices")
+                         or (isinstance(result[k], (list, tuple))
+                             and result[k]
+                             and hasattr(result[k][0], "vertices"))]
+            if keys:
+                lines[-1] += "  # keys: %s" % ", ".join(keys[:8])
+            if mesh_keys:
+                key = mesh_keys[0]
+                lines.append("from mechlib import export_stl")
+                if isinstance(result[key], (list, tuple)):
+                    lines.append(
+                        'export_stl(result["%s"][0], "%s.stl")  # first of %s'
+                        % (key, name, key))
+                else:
+                    lines.append(
+                        'export_stl(result["%s"], "%s.stl")' % (key, name))
+        elif result is not None and hasattr(result, "vertices"):
+            lines[-1] += "  # watertight Trimesh"
+            lines.append("from mechlib import export_stl")
+            lines.append('export_stl(result, "%s.stl")' % name)
+        elif result is not None and hasattr(result, "geom_type"):
+            lines[-1] += "  # Shapely %s" % result.geom_type
+    elif name not in ("export_stl", "export_assembly"):
+        lines.append("# adjust the required args above as needed")
+
+    return "\n".join(lines)
+
+
+def usage_example_from_signature(signature_str, module_field):
+    """Resolve the first callable named in a signature string and build usage."""
+    match = re.match(r"\s*([A-Za-z_][A-Za-z0-9_]*)\s*\(", signature_str or "")
+    if not match:
+        return "import mechlib as ml\n# see signature below"
+    fname = match.group(1)
+    function = getattr(mechlib, fname, None)
+    if function is None or not callable(function):
+        module = module_field.split("/")[0].strip()
+        return "from %s import %s\n\nresult = %s(...)" % (module, fname, fname)
+    return usage_example(function, module_field)
 
 
 def color_mesh(mesh, color, name):
@@ -2814,6 +2950,9 @@ def build():
                 _check_node_names(model["file"], animation["bodies"])
                 model["animation"] = animation
                 animated.append(demo_name)
+        # Usage snippet is derived from the live public API, not hand-written.
+        model["usage"] = usage_example_from_signature(
+            model["signature"], model["module"])
         manifest_models.append(model)
 
     unbuilt = set(ANIMATE) - set(built_demos)
@@ -2864,6 +3003,7 @@ def build():
             "signature": signature(function),
             "description": description,
             "category": _category(module),
+            "usage": usage_example(function, module),
         }
         for module, function, description in utility_functions
     ]
