@@ -306,6 +306,62 @@ def geneva_pair(slots=6, crank_r=10.0, pin_d=3.0, thickness=4.0,
 # ---------------------------------------------------------------------------
 
 
+def escapement_pose(phase_deg, teeth=30, swing_deg=8.0, impulse_frac=0.14):
+    """Return escape-wheel and anchor angles for one pendulum period.
+
+    ``phase_deg`` runs a full tick-tock: one sinusoidal swing of the anchor
+    through ``±swing_deg`` about its rest pose, and two stepped advances of
+    the escape wheel (one tooth per beat, two teeth per period). Each advance
+    is a smoothstep impulse of width ``impulse_frac * 360`` deg of phase,
+    centred on the two anchor zero-crossings at 90 deg and 270 deg; between
+    impulses the wheel dwells. That is the engagement relation the gallery
+    animation bakes against — the same role ``geneva_wheel_angle`` plays for
+    the Geneva drive.
+
+    Returns ``{"wheel_deg", "anchor_deg", "pitch_deg", "teeth_per_cycle"}``.
+    ``phase_deg = 0`` and ``phase_deg = 360`` are the same picture (anchor at
+    rest, wheel advanced by a whole number of teeth), so a closed animation
+    track over one period is seamless. Units degrees.
+    """
+    if teeth < 12:
+        raise ValueError("escapement_pose(): teeth must be >= 12")
+    if swing_deg < 0 or swing_deg > 25.0:
+        raise ValueError("escapement_pose(): swing_deg out of range")
+    if not 0.04 <= impulse_frac <= 0.4:
+        raise ValueError("escapement_pose(): impulse_frac out of range")
+    pitch = 360.0 / float(teeth)
+    # Clamp into the closed-cycle span; 360 is "cycle complete".
+    p = float(phase_deg)
+    if p < 0.0:
+        p = 0.0
+    # Anchor: one harmonic period per cycle (pendulum approximation).
+    anchor = float(swing_deg) * math.sin(math.radians(p))
+    # Wheel: two unit impulses. At p == 360 both are complete.
+    width = 360.0 * float(impulse_frac)
+
+    def _impulse(phase, centre):
+        if phase >= 360.0 - 1e-12:
+            return 1.0
+        a = centre - 0.5 * width
+        b = centre + 0.5 * width
+        if phase <= a:
+            return 0.0
+        if phase >= b:
+            return 1.0
+        t = (phase - a) / width
+        return t * t * (3.0 - 2.0 * t)
+
+    advanced = _impulse(p, 90.0) + _impulse(p, 270.0)
+    if p >= 360.0 - 1e-12:
+        advanced = 2.0
+    return {
+        "wheel_deg": advanced * pitch,
+        "anchor_deg": anchor,
+        "pitch_deg": pitch,
+        "teeth_per_cycle": 2.0,
+    }
+
+
 def _escapement_profiles(teeth, style, wheel_r, tooth_depth, pallet_span,
                          clearance, recoil_deg):
     """Return ``(wheel_poly, anchor_poly, pivot)`` posed with one pallet on a tooth."""
@@ -402,17 +458,24 @@ def _escapement_profiles(teeth, style, wheel_r, tooth_depth, pallet_span,
 
 def escapement(teeth=30, style="anchor", wheel_r=22.0, tooth_depth=3.2,
                pallet_span=7.5, thickness=4.0, clearance=0.25, bore_d=3.0,
-               recoil_deg=12.0):
+               recoil_deg=12.0, phase_deg=0.0, swing_deg=8.0):
     """Build a clock escapement: escape wheel plus anchor, posed engaged.
 
     Returns ``{"wheel": mesh, "anchor": mesh}`` as flat coplanar parts with
-    the entry pallet resting on one tooth tip (``clearance`` gap). ``style``
-    selects the classic recoil anchor (flat tilted pallet faces) or the
-    Graham deadbeat (locking faces are arcs centred on the anchor pivot, so
-    the wheel stands dead while locked). ``pallet_span`` counts tooth pitches
-    embraced by the anchor and must be a half-integer. Units mm and degrees.
+    the entry pallet resting on one tooth tip (``clearance`` gap) at
+    ``phase_deg = 0``. ``style`` selects the classic recoil anchor (flat
+    tilted pallet faces) or the Graham deadbeat (locking faces are arcs
+    centred on the anchor pivot, so the wheel stands dead while locked).
+    ``pallet_span`` counts tooth pitches embraced by the anchor and must be
+    a half-integer.
+
+    ``phase_deg`` advances the pair through one pendulum period via
+    ``escapement_pose``: the anchor swings ``±swing_deg`` and the wheel
+    steps two teeth (one per beat). Both parts are built once at the rest
+    pose and rigidly reposed, so a phase sweep is pure rigid motion.
 
     classic ref: anchor escapement (Hooke, c. 1657) / Graham deadbeat (1715).
+    Units mm and degrees.
     """
     if thickness <= 0 or bore_d < 0 or clearance < 0:
         raise ValueError("escapement(): invalid thickness, bore, or clearance")
@@ -425,15 +488,30 @@ def escapement(teeth=30, style="anchor", wheel_r=22.0, tooth_depth=3.2,
             sg.Point(*pivot).buffer(bore_d / 2.0, resolution=64)).buffer(0))
     wheel = _extrude(wheel_poly, thickness)
     anchor = _extrude(anchor_poly, thickness)
+    pose = escapement_pose(phase_deg, teeth=teeth, swing_deg=swing_deg)
+    if abs(pose["wheel_deg"]) > 1e-12:
+        wheel.apply_transform(trimesh.transformations.rotation_matrix(
+            math.radians(pose["wheel_deg"]), (0.0, 0.0, 1.0)))
+    if abs(pose["anchor_deg"]) > 1e-12:
+        # Rotate about the anchor pivot in the wheel plane.
+        pivot_pt = (float(pivot[0]), float(pivot[1]), 0.0)
+        anchor.apply_transform(trimesh.transformations.rotation_matrix(
+            math.radians(pose["anchor_deg"]), (0.0, 0.0, 1.0),
+            point=pivot_pt))
     metadata = {
         "teeth": teeth,
         "style": style,
         "pallet_span": pallet_span,
         "pivot_distance": pivot[1],
+        "phase_deg": float(phase_deg),
+        "swing_deg": float(swing_deg),
+        "wheel_deg": pose["wheel_deg"],
+        "anchor_deg": pose["anchor_deg"],
     }
     wheel.metadata.update(metadata)
     anchor.metadata.update(metadata)
-    return {"wheel": wheel, "anchor": anchor}
+    return {"wheel": wheel, "anchor": anchor, "joints": pose,
+            "pivot": (float(pivot[0]), float(pivot[1]))}
 
 
 # ---------------------------------------------------------------------------
@@ -538,6 +616,8 @@ def intermittent_gear_pair(module=1.5, z1=18, z2=18, groups=3, thickness=4.0,
 
 __all__ = (
     "geneva_pair",
+    "geneva_wheel_angle",
     "escapement",
+    "escapement_pose",
     "intermittent_gear_pair",
 )

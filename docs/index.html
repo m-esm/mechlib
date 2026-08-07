@@ -226,11 +226,25 @@
     .toolbar {
       position: sticky;
       top: 0;
+      /* Above the full-page WebGL canvas (z-index 10). Own compositing layer
+         so the sticky bar does not fight the canvas for pixels while at rest. */
       z-index: 20;
       margin-bottom: 22px;
       border: 1px solid var(--line-strong);
-      background: rgba(9, 33, 54, 0.94);
-      backdrop-filter: blur(9px);
+      /* Solid fill: translucent + backdrop-filter over a live WebGL surface
+         is a common source of toolbar flicker until a scroll promotes layers. */
+      background: var(--panel-deep);
+      transform: translateZ(0);
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+
+    #toolbar-sentinel {
+      height: 1px;
+      margin: 0;
+      padding: 0;
+      pointer-events: none;
+      visibility: hidden;
     }
 
     .tool-row {
@@ -324,33 +338,31 @@
       text-transform: uppercase;
     }
 
+    /* Always one horizontal chip line. Wrapping only when unstuck used to
+       change the toolbar height as `.stuck` toggled, which shoved the
+       sentinel back into view and flipped `.stuck` again — heavy flicker
+       until the user scrolled far enough that the loop broke. */
     .chip-scroll {
       display: flex;
       flex: 1 1 100%;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       gap: 6px;
       min-width: 0;
-    }
-
-    /* Once the bar is pinned it must not eat a fifth of the viewport: the
-       category chips collapse from a wrapped block to one scrollable line. */
-    .toolbar.stuck .tool-row {
-      padding-top: 6px;
-      padding-bottom: 6px;
-    }
-
-    .toolbar.stuck .chip-scroll {
-      flex-wrap: nowrap;
       overflow-x: auto;
       scrollbar-width: thin;
     }
 
-    .toolbar.stuck .chip-scroll::-webkit-scrollbar {
+    .chip-scroll::-webkit-scrollbar {
       height: 4px;
     }
 
-    .toolbar.stuck .chip-scroll::-webkit-scrollbar-thumb {
+    .chip-scroll::-webkit-scrollbar-thumb {
       background: var(--line-strong);
+    }
+
+    .toolbar.stuck .tool-row {
+      padding-top: 6px;
+      padding-bottom: 6px;
     }
 
     .result-count {
@@ -667,7 +679,28 @@
       background: rgba(6, 24, 40, 0.65);
       font-family: var(--mono);
       font-size: 0.68rem;
-      line-height: 1.55;
+      line-height: 1.45;
+    }
+
+    /* Long kwarg lists (ratchets, worm coupons, …) used to stretch cards to
+       half a screen. Clamp by default; click/Enter expands in place. */
+    .signature.clamped {
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      cursor: pointer;
+    }
+
+    .signature.clamped.expanded {
+      display: block;
+      overflow: visible;
+      -webkit-line-clamp: unset;
+    }
+
+    .signature.clamped:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
     }
 
     .description,
@@ -791,13 +824,13 @@
     .pg-body {
       display: grid;
       flex: 1 1 auto;
-      grid-template-columns: minmax(0, 1.5fr) minmax(260px, 1fr);
+      grid-template-columns: minmax(0, 1.55fr) minmax(280px, 0.95fr);
       min-height: 0;
     }
 
     .pg-viewer {
       position: relative;
-      min-height: 340px;
+      min-height: 360px;
       border-right: 1px solid var(--line);
       background: var(--panel-deep);
       cursor: grab;
@@ -814,47 +847,120 @@
       height: 100%;
     }
 
+    /* Panel chrome stays put; only the param list scrolls. Keeps Play/Reset
+       reachable when a part has a long arg list. */
     .pg-panel {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 0;
       min-height: 0;
-      padding: 14px 16px;
-      overflow-y: auto;
+      padding: 0;
+      overflow: hidden;
     }
 
     .pg-signature {
-      margin: 0;
-      padding: 7px 9px;
+      flex: 0 0 auto;
+      margin: 12px 14px 0;
+      padding: 6px 8px;
+      overflow: hidden;
       overflow-wrap: anywhere;
       border: 1px solid var(--line);
       border-left: 2px solid var(--accent);
       color: #d9eafa;
       background: rgba(6, 24, 40, 0.65);
       font-family: var(--mono);
-      font-size: 0.68rem;
-      line-height: 1.55;
+      font-size: 0.64rem;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      max-height: 2.9em;
+    }
+
+    .pg-signature.expanded {
+      display: block;
+      max-height: none;
+      -webkit-line-clamp: unset;
+      overflow: auto;
+      max-height: 6.5em;
+      cursor: pointer;
+    }
+
+    .pg-signature.clamped {
+      cursor: pointer;
+    }
+
+    .pg-signature.clamped:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .pg-params-scroll {
+      display: grid;
+      flex: 1 1 auto;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      min-height: 0;
+      margin: 10px 0 0;
+      padding: 0 14px 8px;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Dense two-column knob grid once a part has enough sliders that a
+       single column crowds the viewer. */
+    .pg-params-scroll.many {
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 12px;
     }
 
     .pg-param {
       display: grid;
-      gap: 4px;
+      gap: 3px;
+      min-width: 0;
+    }
+
+    .pg-param.is-phase {
+      grid-column: 1 / -1;
+      padding: 6px 8px 8px;
+      border: 1px solid rgba(255, 180, 84, 0.28);
+      background: rgba(255, 180, 84, 0.05);
     }
 
     .pg-param-head {
       display: flex;
+      gap: 8px;
+      align-items: baseline;
       justify-content: space-between;
       font-family: var(--mono);
-      font-size: 0.68rem;
+      font-size: 0.62rem;
+      letter-spacing: 0.02em;
+    }
+
+    .pg-param-head label {
+      min-width: 0;
+      overflow: hidden;
+      color: var(--muted);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .pg-param.is-phase .pg-param-head label {
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
     .pg-param-head output {
+      flex: 0 0 auto;
       color: var(--accent);
+      font-variant-numeric: tabular-nums;
     }
 
     .pg-param input[type="range"] {
       width: 100%;
-      height: 4px;
+      height: 3px;
       appearance: none;
       background: var(--line);
       accent-color: var(--accent);
@@ -862,8 +968,8 @@
     }
 
     .pg-param input[type="range"]::-webkit-slider-thumb {
-      width: 14px;
-      height: 14px;
+      width: 12px;
+      height: 12px;
       appearance: none;
       border: 1px solid var(--field);
       border-radius: 0;
@@ -872,15 +978,18 @@
 
     .pg-param input[type="range"]:focus-visible {
       outline: 2px solid var(--accent);
-      outline-offset: 4px;
+      outline-offset: 3px;
     }
 
     .pg-actions {
       display: flex;
+      flex: 0 0 auto;
       flex-wrap: wrap;
-      gap: 8px;
-      margin-top: auto;
-      padding-top: 10px;
+      gap: 6px;
+      margin-top: 0;
+      padding: 10px 14px 12px;
+      border-top: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(9, 33, 54, 0.2), transparent 8px), var(--field);
     }
 
     .pg-reset {
@@ -951,6 +1060,20 @@
 
       .pg-panel {
         overflow: visible;
+      }
+
+      .pg-params-scroll {
+        overflow: visible;
+        flex: 0 0 auto;
+      }
+
+      .pg-params-scroll.many {
+        grid-template-columns: 1fr;
+      }
+
+      .pg-actions {
+        position: sticky;
+        bottom: 0;
       }
 
       .pg-status {
@@ -1077,8 +1200,8 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
       <div class="pg-body">
         <div class="pg-viewer" id="pg-viewer"><canvas id="pg-canvas"></canvas></div>
         <div class="pg-panel">
-          <code class="pg-signature" id="pg-signature"></code>
-          <div id="pg-params"></div>
+          <code class="pg-signature" id="pg-signature" title="Click to expand"></code>
+          <div class="pg-params-scroll" id="pg-params"></div>
           <div class="pg-actions">
             <button class="pg-reset" id="pg-play" type="button" hidden>Play ▶</button>
             <button class="pg-reset" id="pg-copy" type="button">Copy code</button>
@@ -1371,8 +1494,29 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
         }
       });
 
+      const signature = makeTextElement("code", "signature", model.signature);
+      // Ratchets and similar parts ship with long kwarg lists that used to
+      // dominate the card. Clamp long signatures; short ones stay full-height.
+      if ((model.signature || "").length > 140) {
+        signature.classList.add("clamped");
+        signature.tabIndex = 0;
+        signature.title = "Click to expand full signature";
+        const toggleSig = () => {
+          signature.classList.toggle("expanded");
+          signature.title = signature.classList.contains("expanded")
+            ? "Click to collapse"
+            : "Click to expand full signature";
+        };
+        signature.addEventListener("click", toggleSig);
+        signature.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            toggleSig();
+          }
+        });
+      }
       copy.append(
-        makeTextElement("code", "signature", model.signature),
+        signature,
         description,
         makeTextElement("p", "origin", model.origin),
         actions
@@ -1436,9 +1580,26 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
     }
 
     const toolbarEl = document.querySelector(".toolbar");
+    // Hysteresis on stick/unstick: a zero-threshold toggle on a 1px sentinel
+    // chatters when the bar's own padding change shifts layout by a few px.
+    let toolbarStuck = false;
     new IntersectionObserver(
-      ([entry]) => toolbarEl.classList.toggle("stuck", !entry.isIntersecting),
-      { threshold: 0 }
+      ([entry]) => {
+        if (!entry.isIntersecting) {
+          if (!toolbarStuck) {
+            toolbarStuck = true;
+            toolbarEl.classList.add("stuck");
+          }
+          return;
+        }
+        // Only release once the sentinel is clearly back on-screen at the top
+        // of the page (user scrolled up into the hero), not on a 1px bounce.
+        if (toolbarStuck && entry.intersectionRatio > 0 && entry.boundingClientRect.top >= 0) {
+          toolbarStuck = false;
+          toolbarEl.classList.remove("stuck");
+        }
+      },
+      { threshold: [0, 1] }
     ).observe(document.querySelector("#toolbar-sentinel"));
 
     for (const button of document.querySelectorAll(".qs-copy")) {
@@ -1679,6 +1840,8 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
       requestId: 0,
       busy: false,
       pendingParams: null,
+      // id → {resolve, reject} for promise-based generate (cycle cache)
+      waiters: new Map(),
       renderer: null,
       scene: null,
       camera: null,
@@ -1693,7 +1856,13 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
       playing: false,
       playStartedAt: 0,
       playButton: document.querySelector("#pg-play"),
-      animation: null
+      animation: null,
+      // Live cycle cache: one full phase sweep of mesh frames, keyed on design
+      // params. Built once on Play when baked tracks cannot be used; replayed
+      // smoothly without re-entering Pyodide.
+      cycleCache: null,
+      cyclePlayback: null,
+      caching: false
     };
 
     // Native build time above this is "heavy": in Pyodide it lands in seconds.
@@ -1734,6 +1903,11 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
       pg.ready = false;
       pg.busy = false;
       pg.pendingParams = null;
+      pg.caching = false;
+      for (const { reject } of pg.waiters.values()) {
+        reject(new Error(reason));
+      }
+      pg.waiters.clear();
       ensureWorker();
     }
 
@@ -1745,23 +1919,41 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
       pg.worker.onmessage = (event) => {
         const data = event.data;
         if (data.type === "status") {
-          pgStatus(`${data.stage}… (first open only)`);
+          // Don't clobber the cycle-cache progress line with boot chatter
+          // once the user is already generating frames.
+          if (!pg.caching) pgStatus(`${data.stage}… (first open only)`);
         } else if (data.type === "ready") {
           pg.ready = true;
           pgStatus("runtime ready");
-          if (pg.model) requestGenerate();
+          if (pg.model && !pg.caching) requestGenerate();
         } else if (data.type === "result") {
           pg.busy = false;
-          if (data.id === pg.requestId) {
+          const waiter = pg.waiters.get(data.id);
+          if (waiter) {
+            pg.waiters.delete(data.id);
+            waiter.resolve(data);
+          } else if (data.id === pg.requestId && !pg.caching) {
             showMeshes(data.meshes);
             pgStatus(`regenerated in ${Math.round(data.ms)} ms`);
           }
-          if (pg.pendingParams) {
+          if (pg.pendingParams && !pg.caching) {
             pg.pendingParams = null;
             requestGenerate();
           }
         } else if (data.type === "error") {
           pg.busy = false;
+          const waiter = pg.waiters.get(data.id);
+          if (waiter) {
+            pg.waiters.delete(data.id);
+            if (data.fatal) {
+              waiter.reject(new Error(data.message));
+              respawnWorker(data.message);
+            } else {
+              waiter.reject(new Error(data.message));
+              pgStatus(data.message, true);
+            }
+            return;
+          }
           if (data.fatal) {
             respawnWorker(data.message);
           } else {
@@ -1806,25 +1998,35 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
       pg.camera.aspect = width / height;
       pg.camera.updateProjectionMatrix();
       pg.controls.update();
-      // Baked mechanism playback in the tune dialog: same tracks as the card
-      // viewports, applied to named meshes from the worker.
-      if (pg.playing && pg.animation && !prefersReducedMotion.matches) {
+      if (pg.playing && !prefersReducedMotion.matches) {
         const seconds = (performance.now() - pg.playStartedAt) / 1000;
-        const n = pg.animation.intervals;
-        const position = ((seconds / CYCLE_SECONDS) * n) % n;
-        const i0 = Math.floor(position);
-        const i1 = pg.animation.closed ? i0 + 1 : (i0 + 1) % n;
-        const blend = position - i0;
-        for (const track of pg.animation.tracks) {
-          animScratch.a.fromArray(track.t[i0]);
-          animScratch.b.fromArray(track.t[i1]);
-          animScratch.a.lerp(animScratch.b, blend);
-          animScratch.qa.fromArray(track.q[i0]);
-          animScratch.qb.fromArray(track.q[i1]);
-          animScratch.qa.slerp(animScratch.qb, blend);
-          animScratch.matrix.compose(animScratch.a, animScratch.qa, animScratch.one);
-          track.node.matrix.multiplyMatrices(animScratch.matrix, track.base);
-          track.node.matrixWorldNeedsUpdate = true;
+        // Prefer rigid baked tracks (card-viewport quality). Fall back to the
+        // live mesh-frame cache built for retuned / unbaked demos.
+        if (pg.animation) {
+          const n = pg.animation.intervals;
+          const position = ((seconds / CYCLE_SECONDS) * n) % n;
+          const i0 = Math.floor(position);
+          const i1 = pg.animation.closed ? i0 + 1 : (i0 + 1) % n;
+          const blend = position - i0;
+          for (const track of pg.animation.tracks) {
+            animScratch.a.fromArray(track.t[i0]);
+            animScratch.b.fromArray(track.t[i1]);
+            animScratch.a.lerp(animScratch.b, blend);
+            animScratch.qa.fromArray(track.q[i0]);
+            animScratch.qb.fromArray(track.q[i1]);
+            animScratch.qa.slerp(animScratch.qb, blend);
+            animScratch.matrix.compose(animScratch.a, animScratch.qa, animScratch.one);
+            track.node.matrix.multiplyMatrices(animScratch.matrix, track.base);
+            track.node.matrixWorldNeedsUpdate = true;
+          }
+        } else if (pg.cyclePlayback) {
+          const n = pg.cyclePlayback.intervals;
+          const index = Math.floor(((seconds / CYCLE_SECONDS) * n) % n);
+          if (index !== pg.cyclePlayback.index) {
+            pg.cyclePlayback.index = index;
+            const frame = pg.cyclePlayback.frames[index];
+            if (frame) showMeshes(frame, { fromCache: true });
+          }
         }
       }
       pg.renderer.render(pg.scene, pg.camera);
@@ -1854,6 +2056,69 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
         if (pg.values[param.name] !== param.default) return false;
       }
       return true;
+    }
+
+    function designStateKey() {
+      if (!pg.model || !pg.model.play) return "";
+      const phase = phaseParamName(pg.model);
+      const parts = [pg.model.play.demo];
+      for (const param of pg.model.play.params) {
+        if (param.name === phase) continue;
+        parts.push(`${param.name}=${pg.values[param.name]}`);
+      }
+      return parts.join("|");
+    }
+
+    function cloneMeshes(meshes) {
+      return meshes.map((part) => ({
+        name: part.name,
+        color: part.color,
+        positions: new Float32Array(part.positions),
+        indices: new Uint32Array(part.indices)
+      }));
+    }
+
+    function cycleSpec() {
+      // How to sample one full mechanism period for the live cache. Prefer
+      // the baked ANIMATE cycle (same phase param + period) so retuned
+      // playback covers the same loop as the card; fall back to the phase
+      // slider's PLAY range.
+      const phase = phaseParamName(pg.model);
+      if (!phase) return null;
+      const param = pg.model.play.params.find((p) => p.name === phase);
+      if (!param) return null;
+      const spec = pg.model.animation;
+      if (spec && spec.param === phase && spec.bodies) {
+        const bakedN = Object.values(spec.bodies)[0].t.length;
+        // Cap live samples: defaults already have rigid tracks; retune just
+        // needs a readable cycle without multi-minute Pyodide sweeps.
+        const frames = Math.min(Math.max(bakedN, 12), 48);
+        const closed = spec.closed === true;
+        return {
+          phase,
+          param,
+          frames,
+          closed,
+          cycle: Number(spec.cycle_deg),
+          base: Number(param.default)
+        };
+      }
+      const span = Number(param.max) - Number(param.min);
+      const step = Number(param.step) || span / 24;
+      const frames = Math.min(48, Math.max(16, Math.round(span / step) + 1));
+      return {
+        phase,
+        param,
+        frames,
+        closed: false,
+        cycle: span,
+        base: Number(param.min)
+      };
+    }
+
+    function invalidateCycleCache() {
+      pg.cycleCache = null;
+      pg.cyclePlayback = null;
     }
 
     function setupPlaygroundAnimation(group) {
@@ -1887,6 +2152,103 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
       pg.playButton.textContent = pg.playing ? "Stop ■" : "Play ▶";
       pg.playButton.setAttribute("aria-pressed", pg.playing ? "true" : "false");
       if (pg.playing) pg.playStartedAt = performance.now();
+      if (!pg.playing) {
+        pg.cyclePlayback = null;
+        pg.caching = false;
+      }
+    }
+
+    function generateOnce(params) {
+      return new Promise((resolve, reject) => {
+        if (!pg.ready || !pg.worker) {
+          reject(new Error("runtime not ready"));
+          return;
+        }
+        if (pg.blockedDemos.has(pg.model.play.demo)) {
+          reject(new Error("this part crashed the runtime earlier"));
+          return;
+        }
+        pg.requestId += 1;
+        const id = pg.requestId;
+        pg.waiters.set(id, { resolve, reject });
+        pg.busy = true;
+        pg.worker.postMessage({
+          type: "generate",
+          id,
+          demo: pg.model.play.demo,
+          params: { ...params }
+        });
+      });
+    }
+
+    async function buildCycleCache() {
+      const spec = cycleSpec();
+      if (!spec) throw new Error("no motion phase to cache");
+      const key = designStateKey();
+      if (pg.cycleCache && pg.cycleCache.key === key) return pg.cycleCache;
+
+      const span = spec.closed ? spec.frames - 1 : spec.frames;
+      const phases = [];
+      for (let i = 0; i < spec.frames; i += 1) {
+        let value = spec.base + (i * spec.cycle) / span;
+        if (spec.param.type === "int") value = Math.round(value);
+        phases.push(value);
+      }
+
+      pg.caching = true;
+      pg.pendingParams = null;
+      const frames = [];
+      const started = performance.now();
+      try {
+        for (let i = 0; i < phases.length; i += 1) {
+          if (!pg.playing || !pg.model) throw new Error("playback cancelled");
+          const params = { ...pg.values, [spec.phase]: phases[i] };
+          pg.values[spec.phase] = phases[i];
+          const input = document.querySelector(`#pg-in-${spec.phase}`);
+          if (input) {
+            input.value = phases[i];
+            const readout = input.parentElement && input.parentElement.querySelector("output");
+            const unit = spec.param.unit ? ` ${spec.param.unit}` : "";
+            if (readout) readout.textContent = `${phases[i]}${unit}`;
+          }
+          updateSignature();
+          pgStatus(`caching cycle ${i + 1}/${phases.length}…`);
+          const result = await generateOnce(params);
+          const cloned = cloneMeshes(result.meshes);
+          frames.push(cloned);
+          // Preview the latest frame so the user sees progress, not a freeze.
+          showMeshes(cloned, { fromCache: true });
+        }
+      } finally {
+        pg.caching = false;
+      }
+
+      pg.cycleCache = {
+        key,
+        frames,
+        // Mesh frames step by index with plain modulo (no slerp). Use the
+        // full list so a closed sample set's last frame (≈ frame 0) is shown
+        // rather than skipped as an interpolant-only end pose.
+        intervals: frames.length,
+        ms: performance.now() - started
+      };
+      return pg.cycleCache;
+    }
+
+    function startCyclePlayback(cache) {
+      pg.animation = null;
+      pg.cyclePlayback = {
+        frames: cache.frames,
+        intervals: cache.intervals,
+        index: -1
+      };
+      // Park at frame 0 immediately so the first paint is correct.
+      if (cache.frames[0]) showMeshes(cache.frames[0], { fromCache: true });
+      pg.cyclePlayback.index = 0;
+      setPlaying(true);
+      pg.playStartedAt = performance.now();
+      const secs = (cache.ms / 1000).toFixed(1);
+      pgStatus(`playing cached cycle (${cache.frames.length} frames, built in ${secs}s)`);
     }
 
     function updatePlayButton() {
@@ -1898,7 +2260,8 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
       if (!show) setPlaying(false);
     }
 
-    function showMeshes(meshes) {
+    function showMeshes(meshes, options) {
+      const fromCache = options && options.fromCache;
       if (pg.group) {
         pg.scene.remove(pg.group);
         pg.group.traverse((obj) => {
@@ -1911,8 +2274,12 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
       pg.group = new THREE.Group();
       for (const part of meshes) {
         const geometry = new THREE.BufferGeometry();
-        geometry.setAttribute("position", new THREE.BufferAttribute(part.positions, 3));
-        geometry.setIndex(new THREE.BufferAttribute(part.indices, 1));
+        // Always copy into the BufferAttribute so geometry.dispose() cannot
+        // poison a cache frame that we will show again next loop.
+        const positions = new Float32Array(part.positions);
+        const indices = new Uint32Array(part.indices);
+        geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+        geometry.setIndex(new THREE.BufferAttribute(indices, 1));
         geometry.computeVertexNormals();
         const material = new THREE.MeshStandardMaterial({
           color: new THREE.Color(part.color[0] / 255, part.color[1] / 255, part.color[2] / 255),
@@ -1925,9 +2292,11 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
       }
       pg.scene.add(pg.group);
       // Rebuild baked tracks against the fresh meshes when the user is in play
-      // mode with design params at defaults; otherwise clear so a retuned part
-      // does not keep moving with stale transforms.
-      if (pg.playing && designParamsAtDefaults()) {
+      // mode with design params at defaults. Cache playback owns its own path
+      // and must not attach the default-pose tracks on top of retuned frames.
+      if (fromCache || pg.cyclePlayback) {
+        pg.animation = null;
+      } else if (pg.playing && designParamsAtDefaults()) {
         if (!setupPlaygroundAnimation(pg.group)) setPlaying(false);
       } else {
         pg.animation = null;
@@ -1954,11 +2323,18 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
       const args = pg.model.play.params
         .map((p) => `${p.name}=${pg.values[p.name]}`)
         .join(", ");
-      pg.signature.textContent = `${pg.model.play.demo.replace(/^demo_/, "")}(${args})`;
+      const text = `${pg.model.play.demo.replace(/^demo_/, "")}(${args})`;
+      pg.signature.textContent = text;
+      // Live call lines stay short for most demos; clamp only when they wrap
+      // past two lines of content so the panel keeps its vertical budget.
+      const long = text.length > 72 || pg.model.play.params.length >= 5;
+      pg.signature.classList.toggle("clamped", long);
+      if (!long) pg.signature.classList.remove("expanded");
+      pg.signature.tabIndex = long ? 0 : -1;
     }
 
     function requestGenerate() {
-      if (!pg.ready || !pg.model) return;
+      if (!pg.ready || !pg.model || pg.caching) return;
       if (pg.blockedDemos.has(pg.model.play.demo)) {
         pgStatus("this part crashed the runtime earlier; reload the page to retry it", true);
         return;
@@ -1967,15 +2343,16 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
         pg.pendingParams = true;
         return;
       }
-      pg.busy = true;
-      pg.requestId += 1;
       startTicker();
-      pg.worker.postMessage({
-        type: "generate",
-        id: pg.requestId,
-        demo: pg.model.play.demo,
-        params: { ...pg.values }
-      });
+      generateOnce({ ...pg.values })
+        .then((data) => {
+          if (!pg.model || pg.caching) return;
+          showMeshes(data.meshes);
+          pgStatus(`regenerated in ${Math.round(data.ms)} ms`);
+        })
+        .catch((error) => {
+          if (!pg.caching) pgStatus(String(error.message || error), true);
+        });
     }
 
     function scheduleGenerate() {
@@ -1985,14 +2362,30 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
 
     function buildParamControls() {
       pg.paramsHost.textContent = "";
-      for (const param of pg.model.play.params) {
+      const phase = phaseParamName(pg.model);
+      const params = pg.model.play.params.slice();
+      // Motion phase first when present — it is the knob people reach for
+      // when they open Tune on an animated mechanism.
+      if (phase) {
+        params.sort((a, b) => {
+          if (a.name === phase) return -1;
+          if (b.name === phase) return 1;
+          return 0;
+        });
+      }
+      // Two-column denser grid once the list would otherwise stack tall.
+      pg.paramsHost.classList.toggle("many", params.length >= 4);
+      for (const param of params) {
         const row = document.createElement("div");
-        row.className = "pg-param";
+        row.className = "pg-param" + (param.name === phase ? " is-phase" : "");
         const head = document.createElement("div");
         head.className = "pg-param-head";
         const label = document.createElement("label");
-        label.textContent = param.label || param.name;
+        label.textContent = param.name === phase
+          ? (param.label || param.name) + " · motion"
+          : (param.label || param.name);
         label.setAttribute("for", `pg-in-${param.name}`);
+        label.title = param.name;
         const unit = param.unit ? ` ${param.unit}` : "";
         const readout = document.createElement("output");
         readout.textContent = `${pg.values[param.name]}${unit}`;
@@ -2013,10 +2406,11 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
           pg.values[param.name] = value;
           readout.textContent = `${value}${unit}`;
           updateSignature();
-          // A manual retune leaves baked playback; the geometry no longer
-          // matches the default-pose tracks.
+          // A manual retune leaves baked playback and any live cycle cache;
+          // the geometry no longer matches the stored tracks/frames.
           if (pg.playing) setPlaying(false);
           pg.animation = null;
+          if (param.name !== phase) invalidateCycleCache();
           if (!heavy) scheduleGenerate();
         });
         if (heavy) input.addEventListener("change", scheduleGenerate);
@@ -2033,6 +2427,7 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
       pg.title.textContent = model.name;
       pg.framed = false;
       pg.animation = null;
+      invalidateCycleCache();
       setPlaying(false);
       buildParamControls();
       updateSignature();
@@ -2050,6 +2445,8 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
     function closePlayground() {
       setPlaying(false);
       pg.animation = null;
+      pg.caching = false;
+      invalidateCycleCache();
       pg.modal.classList.remove("open");
       pg.model = null;
       cancelAnimationFrame(pg.rafId);
@@ -2153,27 +2550,40 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
     });
 
     document.querySelector("#pg-close").addEventListener("click", closePlayground);
+    document.querySelector("#pg-signature").addEventListener("click", () => {
+      if (!pg.signature.classList.contains("clamped")) return;
+      pg.signature.classList.toggle("expanded");
+    });
+    document.querySelector("#pg-signature").addEventListener("keydown", (event) => {
+      if (!pg.signature.classList.contains("clamped")) return;
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        pg.signature.classList.toggle("expanded");
+      }
+    });
     document.querySelector("#pg-reset").addEventListener("click", () => {
       if (!pg.model) return;
       setPlaying(false);
       pg.animation = null;
+      invalidateCycleCache();
       for (const param of pg.model.play.params) pg.values[param.name] = param.default;
       buildParamControls();
       updateSignature();
       requestGenerate();
     });
-    document.querySelector("#pg-play").addEventListener("click", () => {
+    document.querySelector("#pg-play").addEventListener("click", async () => {
       if (!pg.model) return;
-      if (pg.playing) {
+      if (pg.playing || pg.caching) {
         setPlaying(false);
+        pg.caching = false;
         pgStatus("playback stopped");
         return;
       }
       // Prefer baked rigid tracks (same as the card) when design params are
-      // at defaults. Otherwise fall back to sweeping the phase slider through
-      // the worker — slower, but correct for retuned geometry.
+      // at defaults — free and already smooth. Otherwise build a one-shot
+      // mesh-frame cache for the full phase cycle, then replay it without
+      // re-entering Pyodide every tick.
       if (pg.model.animation && designParamsAtDefaults()) {
-        // Force a clean default pose generate, then attach tracks.
         const phase = phaseParamName(pg.model);
         if (phase) {
           const param = pg.model.play.params.find((p) => p.name === phase);
@@ -2181,43 +2591,30 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
         }
         buildParamControls();
         updateSignature();
+        pg.cyclePlayback = null;
         setPlaying(true);
         pgStatus("playing mechanism cycle…");
-        // Ensure meshes exist; showMeshes re-attaches tracks when playing.
         requestGenerate();
         return;
       }
-      const phase = phaseParamName(pg.model);
-      if (!phase) {
+      if (!phaseParamName(pg.model)) {
         pgStatus("this part has no motion phase to play", true);
         return;
       }
-      const param = pg.model.play.params.find((p) => p.name === phase);
-      if (!param) return;
+      if (!pg.ready) {
+        pgStatus("runtime still booting…", true);
+        return;
+      }
       setPlaying(true);
-      pgStatus(`playing ${phase}…`);
-      // Step the phase slider through its range via the worker.
-      const steps = Math.max(12, Math.round((param.max - param.min) / (param.step || 1)));
-      let index = 0;
-      const tick = () => {
+      try {
+        const cache = await buildCycleCache();
         if (!pg.playing || !pg.model) return;
-        const t = index / steps;
-        const value = param.type === "int"
-          ? Math.round(param.min + t * (param.max - param.min))
-          : param.min + t * (param.max - param.min);
-        pg.values[phase] = value;
-        const input = document.querySelector(`#pg-in-${phase}`);
-        if (input) {
-          input.value = value;
-          const readout = input.parentElement && input.parentElement.querySelector("output");
-          if (readout) readout.textContent = `${value}${param.unit ? ` ${param.unit}` : ""}`;
-        }
-        updateSignature();
-        requestGenerate();
-        index = (index + 1) % (steps + 1);
-        window.setTimeout(tick, Math.max(180, (pg.model.build_ms || 80) * 1.2));
-      };
-      tick();
+        startCyclePlayback(cache);
+      } catch (error) {
+        setPlaying(false);
+        pg.caching = false;
+        pgStatus(String(error.message || error), true);
+      }
     });
     pg.modal.addEventListener("click", (event) => {
       if (event.target === pg.modal) closePlayground();

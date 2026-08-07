@@ -310,6 +310,115 @@ def barrel_cam(radius=11.0, length=28.0, groove_w=4.25, groove_d=3.0,
     return {"barrel": barrel, "pin": pin}
 
 
+def face_cam(radius=18.0, base_h=6.0, lift=6.0,
+             segments=None, pin_d=4.0, pin_len=10.0,
+             pin_phase_deg=0.0, bore_d=6.0, flat=None,
+             clearance=0.25, n=96):
+    """Build a face (axial) cam with a roller follower on the end face.
+
+    The top face of a disc of ``radius`` / ``base_h`` (mm) carries a raised
+    annular track whose local height follows the motion-law ``segments``
+    (same format as ``cam_profile_2d``; default is a cycloidal rise-return of
+    ``lift`` mm). A follower pin of diameter ``pin_d`` sits on the track at
+    ``pin_phase_deg``, axially free. Unlike a plate cam (radial lift) or a
+    barrel cam (axial groove on the drum wall), a face cam converts rotation
+    into pure axial stroke on the disc face — the classic automotive valve
+    and textile-machine form.
+
+    Returns ``{"cam": mesh, "pin": mesh, "lift_at_phase": mm}``. Prints
+    standing on the flat back face. Units mm / degrees.
+    """
+    if segments is None:
+        segments = (("cycloidal", lift, 180.0), ("cycloidal", -lift, 180.0))
+    if (radius <= 0 or base_h < 1.2 or lift < 0 or pin_d <= 0 or
+            pin_len <= 0 or bore_d < 0 or clearance < 0 or n < 24):
+        raise ValueError("face_cam(): invalid face cam dimensions")
+    if flat is not None and (bore_d <= 0 or not 0.0 <= flat < bore_d / 2.0):
+        raise ValueError("face_cam(): flat must lie inside the bore radius")
+    _validate_segments(segments, require_closed=True)
+
+    angles = np.linspace(0.0, 2.0 * math.pi, n, endpoint=False)
+    lifts = np.array([cam_lift(segments, math.degrees(a)) for a in angles])
+    # Shift so the minimum face height is base_h (solid disc body).
+    z0 = float(lifts.min())
+    zs = base_h + (lifts - z0)
+    z_max = float(zs.max())
+    if z_max < base_h + 0.4:
+        raise ValueError("face_cam(): segments produce no usable lift")
+
+    # Loft a closed solid: bottom ring at z=0, outer wall up to the face
+    # height, top face following zs, inner bore wall if needed.
+    r_out = radius
+    r_in = max((bore_d + clearance) / 2.0, 0.0) if bore_d > 0 else 0.0
+    verts = []
+    # Bottom outer, bottom inner, top outer, top inner per station.
+    for angle, z in zip(angles, zs):
+        ca, sa = math.cos(angle), math.sin(angle)
+        verts.append((r_out * ca, r_out * sa, 0.0))
+        verts.append((r_out * ca, r_out * sa, z))
+        if r_in > 0:
+            verts.append((r_in * ca, r_in * sa, z))
+            verts.append((r_in * ca, r_in * sa, 0.0))
+    verts = np.asarray(verts, dtype=float)
+    faces = []
+    stride = 4 if r_in > 0 else 2
+    for i in range(n):
+        j = (i + 1) % n
+        a0, a1 = i * stride, j * stride
+        if r_in > 0:
+            # outer wall
+            faces.append((a0, a1, a1 + 1))
+            faces.append((a0, a1 + 1, a0 + 1))
+            # top face (outer -> inner)
+            faces.append((a0 + 1, a1 + 1, a1 + 2))
+            faces.append((a0 + 1, a1 + 2, a0 + 2))
+            # inner wall
+            faces.append((a0 + 2, a1 + 2, a1 + 3))
+            faces.append((a0 + 2, a1 + 3, a0 + 3))
+            # bottom face (inner -> outer)
+            faces.append((a0 + 3, a1 + 3, a1))
+            faces.append((a0 + 3, a1, a0))
+        else:
+            # solid disc: outer wall + pie-slice top and bottom via a centre
+            # vertex added after the loop.
+            faces.append((a0, a1, a1 + 1))
+            faces.append((a0, a1 + 1, a0 + 1))
+    if r_in <= 0:
+        c_bot = len(verts)
+        c_top = c_bot + 1
+        verts = np.vstack([verts, [(0.0, 0.0, 0.0), (0.0, 0.0, float(zs.mean()))]])
+        # Rebuild top/bottom with centre vertices; average top height is fine
+        # for a solid fill under a varying face.
+        verts[c_top] = (0.0, 0.0, z_max)
+        faces = []
+        for i in range(n):
+            j = (i + 1) % n
+            a0, a1 = i * 2, j * 2
+            faces.append((a0, a1, a1 + 1))
+            faces.append((a0, a1 + 1, a0 + 1))
+            faces.append((a0 + 1, a1 + 1, c_top))
+            faces.append((a0, c_bot, a1))
+    cam = trimesh.Trimesh(vertices=verts, faces=np.array(faces), process=True)
+    if cam.volume < 0:
+        cam.invert()
+    if not cam.is_watertight:
+        from .meshutil import from_manifold, to_manifold
+        cam = from_manifold(to_manifold(cam))
+    if bore_d > 0 and flat is not None:
+        cam = sub(cam, _extrude(_bore_2d(bore_d, flat, 0.0, 0.0, clearance),
+                                z_max + 1.0, z0=-0.5))
+
+    # Follower pin stands on the face at pin_phase_deg, radially at 0.7*radius.
+    z_phase = base_h + (cam_lift(segments, pin_phase_deg) - z0)
+    pin_r_pos = 0.7 * radius
+    pin = trimesh.creation.cylinder(radius=pin_d / 2.0, height=pin_len,
+                                    sections=48)
+    pin.apply_translation((pin_r_pos, 0.0, z_phase + pin_len / 2.0))
+    pin.apply_transform(tf.rotation_matrix(
+        math.radians(pin_phase_deg), [0, 0, 1]))
+    return {"cam": cam, "pin": pin, "lift_at_phase": float(z_phase - base_h)}
+
+
 __all__ = (
     "MOTION_LAWS",
     "DEFAULT_SEGMENTS",
@@ -319,4 +428,5 @@ __all__ = (
     "snail_cam",
     "heart_cam",
     "barrel_cam",
+    "face_cam",
 )

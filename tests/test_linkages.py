@@ -88,6 +88,24 @@ def test_four_bar_hoecken_defaults_fully_rotate():
             pytest.approx(25.0, abs=1e-9)
 
 
+def test_four_bar_pins_clear_links_through_full_cycle():
+    # Regression: a full-stack pin at O1 stabbed the coupler whenever the
+    # Hoecken coupler swung over the ground pivot (~240 deg). Pins must stay
+    # clear of every link at every crank angle, not only at the rest pose.
+    for angle in range(0, 360, 15):
+        parts = four_bar(crank_angle_deg=float(angle), coupler_ext=25.0)
+        links = [parts[n] for n in ("ground", "rocker", "coupler", "crank")]
+        for i in range(len(links)):
+            for j in range(i + 1, len(links)):
+                assert overlap_volume(links[i], links[j]) < 1e-3, angle
+        for pin in parts["pins"]:
+            for link in links:
+                assert overlap_volume(pin, link) < 1e-3, (
+                    "pin vs link at crank_angle_deg=%s" % angle)
+        if "trace" in parts:
+            assert overlap_volume(parts["trace"], parts["coupler"]) < 1e-3, angle
+
+
 def test_toggle_clamp_dead_center_and_overcenter():
     dead = toggle_clamp(overcenter_deg=0.0)
     joints = dead["joints"]

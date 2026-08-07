@@ -264,6 +264,82 @@ __all__ = (
 _CV_JOINTS = ("hooke", "tripod", "double_cardan", "double_cardan_intermediate")
 
 
+def hirth_coupling(d=36.0, bore_d=8.0, teeth=12, tooth_h=3.0,
+                   hub_len=10.0, face_gap=0.2, clearance=0.2,
+                   sections=96):
+    """Build a Hirth (face-tooth) coupling as two mating hubs.
+
+    Each face carries ``teeth`` radial V-teeth of height ``tooth_h`` (mm)
+    that seat into the mating face's valleys. The tooth flanks meet at the
+    mid-radius, so the pair is self-centring and transmits pure torsion with
+    zero backlash once preloaded axially. ``face_gap`` (mm) is the residual
+    axial clearance at the tooth tips; ``clearance`` thins each tooth flank
+    for print fit. Returns ``{"hub_a", "hub_b"}`` along +Z. Units mm.
+    """
+    if (d <= 0 or bore_d < 0 or teeth < 6 or tooth_h < 1.2 or
+            hub_len < 1.2 or face_gap < 0 or clearance < 0 or
+            sections < 24):
+        raise ValueError("hirth_coupling(): invalid coupling dimensions")
+    if bore_d > 0 and (bore_d + clearance) / 2.0 + 1.5 >= d / 2.0:
+        raise ValueError("hirth_coupling(): bore leaves no hub wall")
+    pitch = 360.0 / teeth
+    # Flank shrink by clearance / mid-radius in angle so printed flanks seat.
+    flank_shrink = math.degrees(clearance / max(d / 4.0, 1.0))
+    r_out = d / 2.0
+    r_in = (bore_d + clearance) / 2.0 + 1.2 if bore_d > 0 else d / 8.0
+
+    def face_teeth(z_face, pointing_up, phase_deg=0.0):
+        teeth_meshes = []
+        for i in range(teeth):
+            a_peak = phase_deg + i * pitch
+            a_v0 = a_peak - pitch / 2.0 + flank_shrink
+            a_v1 = a_peak + pitch / 2.0 - flank_shrink
+            pts_out = []
+            for a in (a_v0, a_peak, a_v1):
+                ar = math.radians(a)
+                pts_out.append((r_out * math.cos(ar), r_out * math.sin(ar)))
+            pts_in = []
+            for a in (a_v1, a_peak, a_v0):
+                ar = math.radians(a)
+                pts_in.append((r_in * math.cos(ar), r_in * math.sin(ar)))
+            poly = sg.Polygon(pts_out + pts_in)
+            if not poly.is_valid or poly.is_empty or poly.area < 1e-6:
+                continue
+            poly = poly.buffer(0)
+            if pointing_up:
+                teeth_meshes.append(_extrude(poly, tooth_h, z_face))
+            else:
+                teeth_meshes.append(_extrude(poly, tooth_h,
+                                             z_face - tooth_h))
+        return teeth_meshes
+
+    hub_a_body = cyl(d / 2.0, hub_len, (0.0, 0.0, hub_len / 2.0),
+                     sections=sections)
+    hub_b_z0 = hub_len + face_gap
+    hub_b_body = cyl(d / 2.0, hub_len,
+                     (0.0, 0.0, hub_b_z0 + hub_len / 2.0),
+                     sections=sections)
+    if bore_d > 0:
+        bore_r = (bore_d + clearance) / 2.0
+        hub_a_body = sub(hub_a_body,
+                         cyl(bore_r, hub_len + 2.0,
+                             (0.0, 0.0, hub_len / 2.0), sections=sections))
+        hub_b_body = sub(hub_b_body,
+                         cyl(bore_r, hub_len + 2.0,
+                             (0.0, 0.0, hub_b_z0 + hub_len / 2.0),
+                             sections=sections))
+    teeth_a = face_teeth(hub_len, pointing_up=True, phase_deg=0.0)
+    # Mating face: valleys of A receive peaks of B, so B is phased by half
+    # a pitch and points down.
+    teeth_b = face_teeth(hub_b_z0, pointing_up=False, phase_deg=pitch / 2.0)
+    hub_a = uni([hub_a_body] + teeth_a)
+    hub_b = uni([hub_b_body] + teeth_b)
+    metadata = {"teeth": teeth, "tooth_h": tooth_h, "d": d}
+    hub_a.metadata.update(metadata)
+    hub_b.metadata.update(metadata)
+    return {"hub_a": hub_a, "hub_b": hub_b}
+
+
 def cv_velocity_ratio(angle_deg=15.0, phase_deg=0.0, joint="hooke"):
     """Return the instantaneous output/input angular velocity ratio.
 
@@ -691,6 +767,7 @@ def double_cardan_joint(shaft_d=10.0, bend_deg=15.0, inter_len=46.0,
 
 
 __all__ += (
+    "hirth_coupling",
     "cv_velocity_ratio",
     "cv_velocity_fluctuation",
     "tripod_pose",

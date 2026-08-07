@@ -96,14 +96,43 @@ def test_cycloidal_disc_profile_is_tangent_to_all_rollers():
 
 def test_cycloidal_drive_parts_watertight_clear_and_ratio():
     drive = cycloidal_drive()
-    for mesh in drive.values():
+    bodies = {k: drive[k] for k in ("housing", "disc", "input", "output")}
+    for mesh in bodies.values():
         assert_mesh(mesh)
         assert mesh.metadata["ratio"] == 11.0
         assert mesh.metadata["hole_d"] == pytest.approx(4.0 + 2 * 1.5 + 0.25)
-    names = list(drive)
+    names = list(bodies)
     for i in range(len(names)):
         for j in range(i + 1, len(names)):
-            assert overlap_volume(drive[names[i]], drive[names[j]]) < 1e-6
+            assert overlap_volume(bodies[names[i]], bodies[names[j]]) < 1e-6
+
+
+def test_cycloidal_pose_orbit_and_ratio():
+    from mechlib.gears import cycloidal_pose
+    ecc = 1.5
+    pins = 12
+    rest = cycloidal_pose(0.0, pins=pins, ecc=ecc)
+    assert rest["disc_center"] == pytest.approx((ecc, 0.0))
+    assert rest["disc_rot_deg"] == pytest.approx(0.0)
+    assert rest["output_deg"] == pytest.approx(0.0)
+    # One input turn: disc centre back on +X after full orbit, disc/output
+    # advanced by exactly one lobe pitch reverse.
+    turn = cycloidal_pose(360.0, pins=pins, ecc=ecc)
+    assert turn["disc_center"][0] == pytest.approx(ecc, abs=1e-12)
+    assert turn["disc_center"][1] == pytest.approx(0.0, abs=1e-12)
+    assert turn["disc_rot_deg"] == pytest.approx(-360.0 / 11.0)
+    assert turn["output_deg"] == pytest.approx(-360.0 / 11.0)
+    # Full pose-close: (pins-1) input turns returns every body to identity.
+    closed = cycloidal_pose(360.0 * 11, pins=pins, ecc=ecc)
+    assert closed["disc_rot_deg"] == pytest.approx(-360.0)
+    assert closed["input_deg"] == pytest.approx(3960.0)
+    # Phase is a pure rigid repose of the rest assembly.
+    a = cycloidal_drive(phase_deg=0.0)
+    b = cycloidal_drive(phase_deg=45.0)
+    assert len(a["disc"].vertices) == len(b["disc"].vertices)
+    assert len(a["input"].vertices) == len(b["input"].vertices)
+    cx, cy = b["joints"]["disc_center"]
+    assert math.hypot(cx, cy) == pytest.approx(ecc, abs=1e-9)
 
 
 def test_cycloidal_drive_validation():
