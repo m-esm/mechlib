@@ -32590,7 +32590,7 @@
         },
         "closed": true
       },
-      "applications": "General spur gearing: gearboxes, robot joints, and FDM-printed power transmission where you need a single involute gear blank."
+      "applications": "Gearboxes, robot joints, and FDM-printed power transmission where you need a single involute gear blank."
     },
     {
       "file": "roller_sprocket_demo.glb",
