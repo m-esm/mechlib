@@ -6,7 +6,7 @@ import numpy as np
 import trimesh
 
 from .meshutil import sub, uni
-from .prim import cyl
+from .prim import boxc, cyl, frustum
 
 
 COARSE_PITCH = {3.0: 0.8, 4.0: 1.0, 5.0: 0.8, 6.0: 1.0, 8.0: 1.25}
@@ -309,3 +309,246 @@ def threaded_rod(major_d, pitch, length, minor_d=None, n_theta=64,
     m = trimesh.Trimesh(verts, np.array(faces), process=True)
     m.fix_normals()
     return m
+
+
+_SCREW_CLEAR = {"M3": 3.4, "M4": 4.5, "M5": 5.5, "M6": 6.6}
+
+
+def _metric_d(name):
+    """Parse 'M4' style thread designations to a nominal diameter."""
+    try:
+        d = float(str(name).upper().lstrip("M"))
+    except ValueError:
+        raise ValueError("thread designation must look like 'M4'")
+    if d <= 0:
+        raise ValueError("thread designation must look like 'M4'")
+    return d
+
+
+def shaft_collar(bore_d=8.0, od=None, width=10.0, style="split",
+                 screw="M4", slit_w=1.2, clear=0.2, sections=96):
+    """Build a shaft collar for axially locating bearings, gears and sprockets.
+
+    Two stock styles: ``style='split'`` is a clamping collar -- one radial
+    slit of ``slit_w`` opens the ring and a tangential ``screw`` clearance
+    hole (``'M3'``..``'M6'``) through a lug astride the slit pinches the bore
+    closed on the shaft, which clamps surprisingly well in PETG/PLA;
+    ``style='setscrew'`` is a one-piece ring with a radial
+    ``closures.setscrew`` boss at mid-width. ``od`` defaults to
+    ``bore_d + 8``. The bore is printed at ``bore_d + clear`` for an easy
+    slip fit that the clamp then closes. Prints upright with the slit
+    horizontal, no support. Units are mm.
+    """
+    if bore_d <= 0 or width <= 0 or clear < 0:
+        raise ValueError("shaft_collar(): bore_d and width must be positive")
+    if od is None:
+        od = bore_d + 8.0
+    bore_r = (bore_d + clear) / 2.0
+    if od / 2.0 - bore_r < 2.4:
+        raise ValueError("shaft_collar(): wall below 2.4 mm around the bore")
+    if style not in ("split", "setscrew"):
+        raise ValueError("shaft_collar(): style must be 'split' or "
+                         "'setscrew'")
+    if slit_w < 0.6:
+        raise ValueError("shaft_collar(): slit_w must be at least 0.6 mm")
+    hole_d = _SCREW_CLEAR.get(str(screw).upper())
+    if hole_d is None:
+        raise ValueError("shaft_collar(): screw must be one of %s"
+                         % (sorted(_SCREW_CLEAR),))
+
+    ring = trimesh.creation.annulus(bore_r, od / 2.0, width,
+                                    sections=int(sections))
+    ring.apply_translation((0.0, 0.0, width / 2.0))
+
+    if style == "split":
+        slit = boxc((od / 2.0 - bore_r + 1.5, slit_w, width + 2.0),
+                    center=((bore_r + od / 2.0) / 2.0 + 0.25, 0.0,
+                            width / 2.0))
+        lug_r = hole_d + 4.0
+        lug_w = hole_d + 6.0
+        lug = boxc((lug_r, lug_w, width),
+                   center=(od / 2.0 + lug_r / 2.0 - 1.5, 0.0, width / 2.0))
+        body = uni([ring, lug])
+        body = sub(body, slit)
+        screw_hole = cyl(hole_d / 2.0, lug_w + 4.0, axis="y",
+                         center=(od / 2.0 + 0.5, 0.0, width / 2.0),
+                         sections=32)
+        body = sub(body, screw_hole)
+    else:
+        from .closures import setscrew
+        point = np.array([od / 2.0, 0.0, width / 2.0])
+        direction = np.array([-1.0, 0.0, 0.0])
+        boss, hole = setscrew(point, direction, into=od / 2.0,
+                              hole_d=hole_d, boss_d=hole_d + 5.0,
+                              boss_h=3.0, sections=32)
+        body = sub(uni([ring, boss]), hole)
+
+    body.metadata.update({
+        "bore_d": float(bore_d + clear),
+        "od": float(od),
+        "width": float(width),
+        "style": style,
+        "screw": str(screw).upper(),
+    })
+    return body
+
+
+def star_knob(lobes=5, d=32.0, h=18.0, thread="M6", through=False,
+              boss_d=14.0, sections=96):
+    """Build a DIN 6336 style lobed clamping knob with a threaded core.
+
+    The standard operating element of jigs, fixtures and machine adjustment:
+    ``lobes`` rounded gripping lobes around a central boss, with an internal
+    ISO thread (printed via ``tap``) of designation ``thread`` (``'M4'``..
+    ``'M8'``). ``through=False`` cuts a blind thread from the bottom face
+    leaving a 2 mm crown, ``through=True`` threads the full height for a
+    stud. Print upright on the flat bottom face, no support. Units are mm.
+    """
+    import shapely.geometry as sg
+    from shapely.ops import unary_union
+
+    lobes = int(round(lobes))
+    if lobes < 3:
+        raise ValueError("star_knob(): need at least 3 lobes")
+    if d <= 0 or h <= 0:
+        raise ValueError("star_knob(): d and h must be positive")
+    d_thread = _metric_d(thread)
+    if not 3.0 <= d_thread <= 8.0:
+        raise ValueError("star_knob(): thread must be M3..M8")
+    if boss_d < d_thread + 4.0:
+        raise ValueError("star_knob(): boss_d leaves under 2 mm around the "
+                         "thread")
+    if boss_d >= d - 2.0:
+        raise ValueError("star_knob(): boss_d must be smaller than d")
+    if h < 0.6 * d_thread + 2.0:
+        raise ValueError("star_knob(): h too short for the thread")
+
+    r_out = d / 2.0
+    sinp = math.sin(math.pi / lobes)
+    r_lobe = r_out * sinp / (1.0 + sinp)
+    r_centre = r_out - r_lobe
+    r_core = max(boss_d / 2.0, r_centre - 0.3 * r_lobe)
+    polys = [sg.Point(0.0, 0.0).buffer(r_core, resolution=int(sections) // 4)]
+    for k in range(lobes):
+        a = 2.0 * math.pi * k / lobes
+        polys.append(sg.Point(r_centre * math.cos(a),
+                              r_centre * math.sin(a)).buffer(
+                                  r_lobe, resolution=int(sections) // 8))
+    body = trimesh.creation.extrude_polygon(unary_union(polys).buffer(0), h)
+
+    tap_len = h if through else h - 2.0
+    body = tap(body, d_thread, (0.0, 0.0, 0.0), tap_len, axis="z")
+
+    body.metadata.update({
+        "lobes": int(lobes),
+        "d": float(d),
+        "h": float(h),
+        "thread": str(thread).upper(),
+        "through": bool(through),
+    })
+    return body
+
+
+def handwheel(d=100.0, spokes=3, rim_w=12.0, rim_t=None, bore_d=8.0,
+              clear=0.2, crank=False, grip_d=14.0, grip_len=40.0,
+              pin_d=6.0, sections=96):
+    """Build a spoked handwheel (DIN 950 style) for leadscrews and valves.
+
+    The manual input wheel of screw jacks, valve stems and indexing tables;
+    mates naturally with ``linear.screw_jack`` and ``fluid.rotary_spool_valve``.
+    A rim of axial width ``rim_w`` and radial thickness ``rim_t`` (default
+    8% of ``d``) is joined to the hub by ``spokes``; the bore is printed at
+    ``bore_d + clear``. With ``crank=True`` a pin of ``pin_d`` rises from the
+    rim and a separate free-spinning grip (``grip_d`` x ``grip_len``, bored
+    at a 0.3 mm running clearance) is returned posed on it: the pin ends in
+    a 45 degree snap head and the grip mouth is chamfered to flex over it, so
+    the grip is captured but spins freely. Returns the wheel mesh alone, or
+    ``{'wheel', 'grip'}`` when ``crank=True``. Print the wheel face-down and
+    the grip open-end down, no support. Units are mm.
+    """
+    import shapely.geometry as sg
+
+    if d <= 0 or rim_w <= 0 or bore_d <= 0 or clear < 0:
+        raise ValueError("handwheel(): d, rim_w and bore_d must be positive")
+    spokes = int(round(spokes))
+    if spokes < 2:
+        raise ValueError("handwheel(): need at least 2 spokes")
+    if rim_t is None:
+        rim_t = max(6.0, 0.08 * d)
+    bore_r = (bore_d + clear) / 2.0
+    hub_d = bore_d + clear + 8.0
+    rim_in_r = d / 2.0 - rim_t
+    if rim_t < 4.0:
+        raise ValueError("handwheel(): rim_t must be at least 4.0 mm")
+    if rim_in_r - hub_d / 2.0 < 2.0:
+        raise ValueError("handwheel(): no room for spokes between hub and "
+                         "rim")
+    spoke_w = max(4.0, 0.5 * rim_w)
+    rim_gap = (2.0 * math.pi * rim_in_r / spokes) - spoke_w
+    if rim_gap < 1.0:
+        raise ValueError("handwheel(): %d spokes leave no opening at the rim"
+                         % spokes)
+
+    rim = trimesh.creation.annulus(rim_in_r, d / 2.0, rim_w,
+                                   sections=int(sections))
+    rim.apply_translation((0.0, 0.0, rim_w / 2.0))
+    hub = cyl(hub_d / 2.0, rim_w, center=(0, 0, rim_w / 2.0),
+              sections=int(sections))
+    parts = [rim, hub]
+    span = rim_in_r - hub_d / 2.0
+    import trimesh.transformations as tf
+    for k in range(spokes):
+        sp = boxc((span + 2.0, spoke_w, rim_w),
+                  center=(hub_d / 2.0 + span / 2.0, 0.0, rim_w / 2.0))
+        sp.apply_transform(tf.rotation_matrix(
+            2.0 * math.pi * k / spokes, (0, 0, 1)))
+        parts.append(sp)
+    wheel = uni(parts)
+
+    meta = {
+        "d": float(d),
+        "spokes": int(spokes),
+        "rim_w": float(rim_w),
+        "bore_d": float(bore_d + clear),
+        "crank": bool(crank),
+    }
+
+    if not crank:
+        wheel = sub(wheel, cyl(bore_r, rim_w + 4.0,
+                               center=(0, 0, rim_w / 2.0),
+                               sections=int(sections)))
+        wheel.metadata.update(meta)
+        return wheel
+
+    if pin_d <= 0 or grip_d < pin_d + 4.0 or grip_len < pin_d * 3.0:
+        raise ValueError("handwheel(): bad crank grip dimensions")
+    grip_clear = 0.3
+    pin_len = grip_len * 0.7
+    head_r = pin_d / 2.0 + 1.0
+    head_h = head_r - pin_d / 2.0  # 45 degree snap head
+    r_pin = d / 2.0 - rim_t / 2.0
+    pin = cyl(pin_d / 2.0, pin_len,
+              center=(r_pin, 0.0, rim_w + pin_len / 2.0), sections=48)
+    head = frustum(pin_d / 2.0, head_r, head_h,
+                   z0=rim_w + pin_len, sections=48)
+    head.apply_translation((r_pin, 0.0, 0.0))
+    wheel = uni([wheel, pin, head])
+    wheel = sub(wheel, cyl(bore_r, rim_w + 4.0,
+                           center=(0, 0, rim_w / 2.0),
+                           sections=int(sections)))
+
+    # Grip: closed-end tube snapped over the pin head, posed in place.
+    bore_gr = pin_d / 2.0 + grip_clear / 2.0
+    cavity_d = pin_len + head_h + 0.5
+    grip = cyl(grip_d / 2.0, grip_len, center=(0, 0, grip_len / 2.0),
+               sections=int(sections))
+    mouth = frustum(bore_gr + 0.6, bore_gr, 0.6, z0=0.0, sections=48)
+    bore = cyl(bore_gr, cavity_d, center=(0, 0, cavity_d / 2.0),
+               sections=48)
+    socket = frustum(bore_gr, head_r + 0.15, head_h,
+                     z0=cavity_d - head_h, sections=48)
+    grip = sub(grip, uni([mouth, bore, socket]))
+    grip.apply_translation((r_pin, 0.0, rim_w))
+    wheel.metadata.update(meta)
+    grip.metadata.update(meta)
+    return {"wheel": wheel, "grip": grip}

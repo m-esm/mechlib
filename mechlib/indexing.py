@@ -11,10 +11,14 @@ import numpy as np
 import shapely.affinity as affinity
 import shapely.geometry as sg
 from shapely import set_precision, union_all
+from shapely.geometry.polygon import orient
 from shapely.ops import unary_union
 import trimesh
+import trimesh.transformations as tf
 
 from .gears import mesh_phase, spur_gear_2d
+from .meshutil import sub, uni
+from .prim import boxc, cyl
 
 
 # Fixed-precision overlay grid, in mm. GEOS' floating-point overlay throws
@@ -621,3 +625,206 @@ __all__ = (
     "escapement_pose",
     "intermittent_gear_pair",
 )
+
+
+
+def detent_pair(wheel_r=18.0, thickness=6.0, detents=12, notch="vee",
+                bore_d=8.0, plunger_d=6.0, notch_depth=None, clear=0.25,
+                housing=True, sections=96):
+    """Build a spring-loaded detent positioner: notched wheel plus plunger.
+
+    The click-into-position indexer of pan-tilt heads, adjustable arm
+    joints, rotary selectors and folding-leg locks: a disc with ``detents``
+    evenly spaced rim notches (``notch='vee'`` for a crisp 60 degree click,
+    ``'radiused'`` for a soft one) and a guided plunger whose matching nose
+    is pressed into the notches by a ``flexures.coil_spring`` seated behind
+    it. ``notch_depth`` defaults to 20% of ``wheel_r`` (capped at 4 mm).
+    With ``housing=True`` a third part guides the plunger: a block whose
+    blind bore (``plunger_d + clear``) aims the plunger radially at the
+    wheel rim with notch #0 on the +X axis, with a 4.4 mm spring pocket
+    behind the bore and two mounting ears with 4.5 mm holes. Returns
+    ``{'wheel', 'plunger'}`` plus ``'housing'`` when requested, posed in
+    assembly with the wheel on z=0. Wheel and plunger print flat; the
+    housing prints on its flat base (its horizontal bore is small enough
+    to bridge). Units are mm and degrees.
+    """
+    if wheel_r <= 0 or thickness <= 0 or bore_d <= 0 or plunger_d <= 0:
+        raise ValueError("detent_pair(): wheel_r, thickness, bore_d and "
+                         "plunger_d must be positive")
+    detents = int(round(detents))
+    if detents < 3:
+        raise ValueError("detent_pair(): need at least 3 detents")
+    if notch not in ("vee", "radiused"):
+        raise ValueError("detent_pair(): notch must be 'vee' or 'radiused'")
+    if clear < 0.15:
+        raise ValueError("detent_pair(): clear below 0.15 mm fuses the "
+                         "plunger bore")
+    if notch_depth is None:
+        notch_depth = min(4.0, 0.2 * wheel_r)
+    bore_r = (bore_d + clear) / 2.0
+    if wheel_r - notch_depth - bore_r < 2.0:
+        raise ValueError("detent_pair(): notches break through to the bore")
+    if plunger_d < 3.0:
+        raise ValueError("detent_pair(): plunger_d under 3.0 mm will not "
+                         "print cleanly")
+
+    quad = max(4, int(sections) // 4)
+    disc = sg.Point(0.0, 0.0).buffer(wheel_r, resolution=int(sections) // 4)
+    cuts = []
+    for k in range(detents):
+        a = 2.0 * math.pi * k / detents
+        if notch == "vee":
+            half_w = notch_depth * math.tan(math.radians(30.0))
+            tri = sg.Polygon([
+                (wheel_r - notch_depth, 0.0),
+                (wheel_r + 1.0, -half_w - 1.0),
+                (wheel_r + 1.0, half_w + 1.0),
+            ])
+        else:
+            tri = sg.Point(wheel_r - notch_depth / 2.0, 0.0).buffer(
+                notch_depth / 2.0 + 0.05, resolution=quad)
+        cuts.append(affinity.rotate(tri, math.degrees(a), origin=(0, 0)))
+    wheel_poly = disc.difference(unary_union(cuts)).difference(
+        sg.Point(0.0, 0.0).buffer(bore_r, resolution=quad)).buffer(0)
+    wheel = _extrude(_largest_polygon(wheel_poly), thickness)
+
+    # Plunger along +X with its nose seated in notch #0 (apex at tip_x).
+    plunger_len = 4.0 * plunger_d
+    nose_h = (plunger_d / 2.0) * math.tan(math.radians(60.0))
+    if notch == "radiused":
+        nose_h = notch_depth / 2.0
+    tip_x = wheel_r - notch_depth + 0.2
+    shank = cyl(plunger_d / 2.0, plunger_len, axis="x",
+                center=(tip_x + plunger_len / 2.0 - 0.5, 0.0,
+                        thickness / 2.0), sections=int(sections))
+    nose = trimesh.creation.cone(plunger_d / 2.0, nose_h,
+                                 sections=int(sections))
+    nose.apply_transform(tf.rotation_matrix(math.pi / 2.0, (0, 1, 0)))
+    nose.apply_transform(tf.rotation_matrix(math.pi, (0, 0, 1)))
+    nose.apply_translation((tip_x + nose_h / 2.0, 0.0, thickness / 2.0))
+    plunger = uni([shank, nose])
+    pocket_r = 0.3 * plunger_d
+    plunger = sub(plunger, cyl(pocket_r, 6.0, axis="x",
+                               center=(tip_x + plunger_len + 2.0, 0.0,
+                                       thickness / 2.0), sections=24))
+
+    meta = {
+        "wheel_r": float(wheel_r),
+        "detents": int(detents),
+        "detent_angle_deg": float(360.0 / detents),
+        "notch": notch,
+        "notch_depth": float(notch_depth),
+        "plunger_d": float(plunger_d),
+        "thickness": float(thickness),
+    }
+    parts = {"wheel": wheel, "plunger": plunger}
+
+    if housing:
+        wall = 3.0
+        half_y = plunger_d / 2.0 + wall
+        x0 = wheel_r + 2.0
+        x1 = tip_x + plunger_len + 10.0
+        block = boxc((x1 - x0, 2.0 * half_y, thickness),
+                     center=((x0 + x1) / 2.0, 0.0, thickness / 2.0))
+        bore_end = x1 - 8.0
+        bore_cut = cyl(plunger_d / 2.0 + clear / 2.0, bore_end - x0 + 2.0,
+                       axis="x",
+                       center=((x0 + bore_end) / 2.0 - 1.0, 0.0,
+                               thickness / 2.0), sections=int(sections))
+        spring_cut = cyl(2.2, x1 - bore_end - 1.5, axis="x",
+                         center=((bore_end + x1 - 1.5) / 2.0, 0.0,
+                                 thickness / 2.0), sections=24)
+        body = sub(block, uni([bore_cut, spring_cut]))
+        ears = []
+        ear_holes = []
+        for s in (-1.0, 1.0):
+            ears.append(boxc((x1 - x0, 6.0, 3.0),
+                             center=((x0 + x1) / 2.0,
+                                     s * (half_y + 3.0), 1.5)))
+            for fx in (x0 + 4.0, x1 - 4.0):
+                ear_holes.append(cyl(2.25, 5.0,
+                                     center=(fx, s * (half_y + 3.0), 1.5),
+                                     sections=24))
+        body = sub(uni([body] + ears), uni(ear_holes))
+        parts["housing"] = body
+
+    for part in parts.values():
+        part.metadata.update(meta)
+    return parts
+
+
+def star_wheel(pockets=6, pocket_d=22.0, wheel_r=None, thickness=8.0,
+               bore_d=8.0, clear=0.3, entry_chamfer=1.0, through=True,
+               sections=96):
+    """Build a packaging-machine star wheel for metering cylindrical objects.
+
+    The continuously rotating disc of filling, capping and sorting
+    machines: ``pockets`` concave round pockets of ``pocket_d`` around the
+    rim pick up bottles, cans or bearings at a fixed pitch and carry them
+    through the machine. ``wheel_r`` defaults to the smallest radius that
+    keeps a 3 mm web between adjacent pockets; each pocket is cut at
+    ``pocket_d + clear`` and blended open at the rim, with a 45 degree
+    ``entry_chamfer`` on the top edge so objects drop in cleanly. The
+    pockets are through-cut (``through=True``) or given a 2 mm floor, and
+    the centre bore is printed at ``bore_d + clear``. The pocket pitch
+    (centre-to-centre chord) is stored in the metadata. Prints flat on
+    z=0, no support. Units are mm.
+    """
+    if pocket_d <= 0 or thickness <= 0 or bore_d <= 0 or clear < 0:
+        raise ValueError("star_wheel(): pocket_d, thickness and bore_d must "
+                         "be positive, clear non-negative")
+    pockets = int(round(pockets))
+    if pockets < 3:
+        raise ValueError("star_wheel(): need at least 3 pockets")
+    pocket_r = pocket_d / 2.0 + clear
+    r_min = (pocket_d + 3.0) / (2.0 * math.sin(math.pi / pockets))
+    if wheel_r is None:
+        wheel_r = r_min + 0.35 * pocket_d
+    r_pocket = wheel_r - 0.35 * pocket_d
+    if r_pocket < r_min - 1e-9:
+        raise ValueError("star_wheel(): wheel_r %.2f mm leaves under 3 mm "
+                         "between pockets; need at least %.2f mm"
+                         % (wheel_r, r_min + 0.35 * pocket_d))
+    bore_r = (bore_d + clear) / 2.0
+    if r_pocket - pocket_r - bore_r < 2.0:
+        raise ValueError("star_wheel(): pockets break through to the bore")
+    if entry_chamfer < 0 or entry_chamfer >= thickness / 2.0:
+        raise ValueError("star_wheel(): entry_chamfer must fit in half the "
+                         "thickness")
+
+    quad = max(4, int(sections) // 4)
+    disc = sg.Point(0.0, 0.0).buffer(wheel_r, resolution=int(sections) // 4)
+    wheel_poly = disc.difference(
+        sg.Point(0.0, 0.0).buffer(bore_r, resolution=quad)).buffer(0)
+    wheel = _extrude(_largest_polygon(wheel_poly), thickness)
+
+    cuts = []
+    pocket_h = thickness if through else thickness - 2.0
+    for k in range(pockets):
+        a = 2.0 * math.pi * k / pockets
+        px, py = r_pocket * math.cos(a), r_pocket * math.sin(a)
+        cuts.append(cyl(pocket_r, pocket_h,
+                        center=(px, py, thickness - pocket_h / 2.0),
+                        sections=int(sections)))
+        if entry_chamfer > 0:
+            from .prim import frustum
+            cuts.append(frustum(pocket_r, pocket_r + entry_chamfer,
+                                entry_chamfer,
+                                z0=thickness - entry_chamfer,
+                                sections=32))
+            cuts[-1].apply_translation((px, py, 0.0))
+    wheel = sub(wheel, uni(cuts))
+
+    pitch = 2.0 * r_pocket * math.sin(math.pi / pockets)
+    wheel.metadata.update({
+        "pockets": int(pockets),
+        "pocket_d": float(pocket_d + clear),
+        "wheel_r": float(wheel_r),
+        "pitch_mm": float(pitch),
+        "thickness": float(thickness),
+        "through": bool(through),
+    })
+    return wheel
+
+
+__all__ += ("detent_pair", "star_wheel")

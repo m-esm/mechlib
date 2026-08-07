@@ -8,9 +8,20 @@ import shapely.geometry as sg
 import trimesh
 import trimesh.transformations as tf
 
+from shapely.ops import unary_union
+
 from .meshutil import from_manifold, sub, to_manifold, uni
+from .prim import cyl, frustum
 
 MOTION_LAWS = ("dwell", "linear", "shm", "cycloidal")
+
+# bore_d, outer_d, width (mm) of small bearings used as follower rollers.
+_ROLLER_BEARINGS = {
+    "MR105": (5.0, 10.0, 4.0),
+    "695": (5.0, 13.0, 4.0),
+    "625": (5.0, 16.0, 5.0),
+    "608": (8.0, 22.0, 7.0),
+}
 
 DEFAULT_SEGMENTS = (
     ("shm", 6.0, 90.0),
@@ -419,6 +430,180 @@ def face_cam(radius=18.0, base_h=6.0, lift=6.0,
     return {"cam": cam, "pin": pin, "lift_at_phase": float(z_phase - base_h)}
 
 
+def roller_follower(arm_len=36.0, roller_d=12.0, roller_w=6.0, pivot_d=5.0,
+                    roller="plain", bearing=None, clear=0.25,
+                    spring_tab=False, pose_deg=0.0, sections=96):
+    """Build a pivoted roller-follower lever for plate, heart, and snail cams.
+
+    The other half of every radial cam: a flat lever that pivots on a frame
+    shaft at one end and carries a small roller at the other, held against
+    the cam profile by a return spring. Valve lifters, pump diaphragm
+    drives, music-box and automata mechanisms all use this pair. Generate
+    the mating cam with ``roller_r=roller_d/2`` (see ``cam_profile_2d``) so
+    the profile is compensated for the roller radius.
+
+    ``arm_len`` is the pivot-centre to roller-centre distance (mm). The arm
+    is a planar plate of derived thickness ``arm_t = max(4.0, roller_w - 2)``
+    with a pivot bore of ``pivot_d + clear`` at the origin and a press-fit
+    hole for the roller pin at ``(arm_len, 0)``; both ends are round bosses
+    joined by a tangent web. ``roller_d``/``roller_w`` are the roller
+    diameter and width (mm). With ``roller='plain'`` the roller is a printed
+    cylinder bored ``pin_d + clear``; with ``roller='bearing'`` (or simply
+    ``bearing='625'`` etc.) the roller instead gets a press pocket
+    (bearing OD + 0.25 mm, matching ``cutters.bearing_seat`` practice) sunk
+    from its top face, so a bought 625/608/695/MR105 bearing becomes the
+    roller — the pin then sizes itself to the bearing bore minus 0.15 mm.
+    For a plain roller the pin shank is ``pivot_d`` so one dowel size serves
+    both the frame pivot and the roller axle. The pin carries a captured
+    head (``pin_d + 2.4`` diameter) 0.4 mm above the roller face so the
+    roller cannot walk off, and a 2 mm stub below the arm for peening or
+    glue. ``clear`` is the running clearance on every bore (mm, >= 0.15 so
+    nothing fuses). ``spring_tab=True`` extends a tab past the pivot boss
+    with a 2.6 mm anchor hole for the return spring. ``pose_deg`` rotates
+    the whole assembly about the pivot axis for display against a cam.
+
+    Returns ``{"arm", "roller", "pin"}`` posed in assembly with the arm
+    bottom face on z=0. Print the arm exactly as posed (flat, no supports);
+    drop the roller to z=0 and print it flat the same way (the bearing
+    pocket opens upward); print the pin flipped head-down on the plate —
+    every surface is then vertical or at/above 45 degrees, no supports.
+    Units are mm and degrees.
+    """
+    if arm_len <= 0 or roller_d <= 0 or roller_w <= 0 or pivot_d <= 0:
+        raise ValueError("roller_follower(): arm_len, roller_d, roller_w and "
+                         "pivot_d must be positive")
+    if roller not in ("plain", "bearing"):
+        raise ValueError("roller_follower(): roller must be 'plain' or "
+                         "'bearing'")
+    if bearing is not None and bearing not in _ROLLER_BEARINGS:
+        raise ValueError("roller_follower(): unknown bearing %r; expected one "
+                         "of %s" % (bearing, sorted(_ROLLER_BEARINGS)))
+    if roller == "bearing" and bearing is None:
+        raise ValueError("roller_follower(): roller='bearing' needs a bearing "
+                         "size, e.g. bearing='625'")
+    if clear < 0.15:
+        raise ValueError("roller_follower(): clear below 0.15 mm fuses the "
+                         "running fits")
+    if roller_w < 3.0:
+        raise ValueError("roller_follower(): roller_w must be at least 3.0 mm")
+    if int(sections) < 24:
+        raise ValueError("roller_follower(): sections must be at least 24")
+
+    style = "bearing" if bearing is not None else "plain"
+    pocket_d = 0.0
+    pocket_depth = 0.0
+    if style == "bearing":
+        brg_bore, brg_od, brg_w = _ROLLER_BEARINGS[bearing]
+        pin_d = brg_bore - 0.15
+        pocket_d = brg_od + 0.25
+        pocket_depth = brg_w + 0.3
+        if (roller_d - pocket_d) / 2.0 < 0.8:
+            raise ValueError("roller_follower(): a %s pocket of %.2f mm leaves "
+                             "under 0.8 mm of roller wall; raise roller_d"
+                             % (bearing, pocket_d))
+        if roller_w - pocket_depth < 0.8:
+            raise ValueError("roller_follower(): a %s is %.1f mm wide and "
+                             "leaves under 0.8 mm of pocket floor; raise "
+                             "roller_w" % (bearing, brg_w))
+    else:
+        if pivot_d < 2.0:
+            raise ValueError("roller_follower(): pivot_d under 2.0 mm makes "
+                             "an unprintable roller pin")
+        pin_d = pivot_d
+    if (roller_d - (pin_d + clear)) / 2.0 < 1.2:
+        raise ValueError("roller_follower(): roller_d %.2f mm leaves under "
+                         "1.2 mm of wall around the pin bore; raise roller_d"
+                         % roller_d)
+
+    arm_t = max(4.0, roller_w - 2.0)
+    pivot_bore_r = (pivot_d + clear) / 2.0
+    boss_p = pivot_bore_r + 2.4
+    boss_e = pin_d / 2.0 + 2.4
+    if arm_len < pivot_bore_r + pin_d / 2.0 + 2.4:
+        raise ValueError("roller_follower(): arm_len %.2f mm is too short; "
+                         "the pivot bore and pin hole would meet"
+                         % arm_len)
+
+    quad = max(4, int(sections) // 4)
+    arm_poly = unary_union([
+        sg.Point(0.0, 0.0).buffer(boss_p, resolution=quad),
+        sg.Point(arm_len, 0.0).buffer(boss_e, resolution=quad),
+    ]).convex_hull
+    tab_len, tab_w, tab_hole_r = 8.0, 6.0, 1.3
+    if spring_tab:
+        arm_poly = unary_union([arm_poly, sg.box(
+            -boss_p - tab_len, -tab_w / 2.0, 0.0, tab_w / 2.0)])
+    holes = [
+        sg.Point(0.0, 0.0).buffer(pivot_bore_r, resolution=quad),
+        # Press fit: the pin hole is 0.1 mm under the pin shank.
+        sg.Point(arm_len, 0.0).buffer((pin_d - 0.1) / 2.0, resolution=quad),
+    ]
+    if spring_tab:
+        holes.append(sg.Point(-boss_p - tab_len / 2.0, 0.0).buffer(
+            tab_hole_r, resolution=quad))
+    arm_poly = arm_poly.difference(unary_union(holes)).buffer(0)
+    arm = _extrude(_largest_polygon(arm_poly), arm_t)
+
+    roller_z0 = arm_t
+    roller_mesh = cyl(roller_d / 2.0, roller_w,
+                      center=(arm_len, 0.0, roller_z0 + roller_w / 2.0),
+                      sections=int(sections))
+    cutters = [cyl((pin_d + clear) / 2.0, roller_w + 4.0,
+                   center=(arm_len, 0.0, roller_z0 + roller_w / 2.0),
+                   sections=int(sections))]
+    if style == "bearing":
+        cutters.append(cyl(
+            pocket_d / 2.0, pocket_depth + 2.0,
+            center=(arm_len, 0.0,
+                    roller_z0 + roller_w - pocket_depth / 2.0 + 1.0),
+            sections=int(sections)))
+    roller_mesh = sub(roller_mesh, uni(cutters))
+
+    head_t = 1.6
+    head_r = pin_d / 2.0 + 1.2
+    head_z0 = roller_z0 + roller_w + 0.4
+    tip_z = -2.0
+    cham = min(0.8, pin_d / 2.0 - 0.2)
+    tip = frustum(pin_d / 2.0 - cham, pin_d / 2.0, cham, z0=tip_z,
+                  sections=int(sections))
+    tip.apply_translation((arm_len, 0.0, 0.0))
+    pin = uni([
+        tip,
+        cyl(pin_d / 2.0, head_z0 - tip_z,
+            center=(arm_len, 0.0, (head_z0 + tip_z) / 2.0),
+            sections=int(sections)),
+        cyl(head_r, head_t,
+            center=(arm_len, 0.0, head_z0 + head_t / 2.0),
+            sections=int(sections)),
+    ])
+
+    if pose_deg:
+        rot = tf.rotation_matrix(math.radians(pose_deg), (0, 0, 1))
+        for part in (arm, roller_mesh, pin):
+            part.apply_transform(rot)
+
+    meta = {
+        "arm_len": float(arm_len),
+        "roller_d": float(roller_d),
+        "roller_w": float(roller_w),
+        "pivot_d": float(pivot_d),
+        "roller": style,
+        "clear": float(clear),
+        "pin_d": float(pin_d),
+        "arm_t": float(arm_t),
+        "bearing": bearing,
+        "bearing_pocket_d": float(pocket_d),
+        "bearing_pocket_depth": float(pocket_depth),
+        "head_d": float(2.0 * head_r),
+        "spring_tab": bool(spring_tab),
+        "pose_deg": float(pose_deg),
+    }
+    parts = {"arm": arm, "roller": roller_mesh, "pin": pin}
+    for part in parts.values():
+        part.metadata.update(meta)
+    return parts
+
+
 __all__ = (
     "MOTION_LAWS",
     "DEFAULT_SEGMENTS",
@@ -429,4 +614,5 @@ __all__ = (
     "heart_cam",
     "barrel_cam",
     "face_cam",
+    "roller_follower",
 )

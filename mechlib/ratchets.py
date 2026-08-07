@@ -590,3 +590,125 @@ __all__ = (
     "compliant_clutch",
     "arc_ratchet_2d",
 )
+
+
+def ratchet_wheel_pawl(teeth=14, tip_r=20.0, tooth_h=4.0, thickness=6.0,
+                       bore_d=8.0, pawl_len=24.0, pivot_d=4.0,
+                       spring="leaf", clear=0.25, flat=False, sections=96):
+    """Build the canonical external ratchet: sawtooth wheel plus pivoted pawl.
+
+    The serviceable high-torque form used on winch drums, come-alongs,
+    windlasses and webbing tensioners -- unlike the print-in-place hubs and
+    rings elsewhere in this module, wheel and pawl are separate bolt-on
+    parts. The wheel carries ``teeth`` radial sawteeth of height
+    ``tooth_h`` on a ``tip_r`` tip circle (drive face nearly radial, slip
+    face shallow; looking from +Z the wheel drives the pawl when rotating
+    CCW), bored ``bore_d + clear`` with an optional D-flat (``flat=True``)
+    for a set screw. The pawl pivots on a frame shaft of ``pivot_d`` at
+    ``pawl_len`` from its tip and is posed engaged with the wheel. With
+    ``spring='leaf'`` a third part -- a curved printed leaf spring with an
+    anchor block -- preloads the pawl into the teeth; ``spring='coil'``
+    instead seats a blind 4.2 mm pocket on the pawl's back for a
+    ``flexures.coil_spring`` and returns no spring part. Returns
+    ``{'wheel', 'pawl'}`` plus ``'spring'`` for the leaf variant. All parts
+    print flat on z=0, no support. Units are mm and degrees.
+    """
+    from .meshutil import sub, uni
+    from .prim import boxc, cyl
+
+    if tip_r <= 0 or tooth_h <= 0 or thickness <= 0 or bore_d <= 0:
+        raise ValueError("ratchet_wheel_pawl(): tip_r, tooth_h, thickness "
+                         "and bore_d must be positive")
+    teeth = int(round(teeth))
+    if teeth < 6:
+        raise ValueError("ratchet_wheel_pawl(): need at least 6 teeth")
+    if pawl_len <= 0 or pivot_d <= 0 or clear < 0.15:
+        raise ValueError("ratchet_wheel_pawl(): pawl_len and pivot_d must "
+                         "be positive, clear at least 0.15 mm")
+    if spring not in ("leaf", "coil"):
+        raise ValueError("ratchet_wheel_pawl(): spring must be 'leaf' or "
+                         "'coil'")
+    root_r = tip_r - tooth_h
+    bore_r = (bore_d + clear) / 2.0
+    if root_r - bore_r < 2.0:
+        raise ValueError("ratchet_wheel_pawl(): tooth roots break through "
+                         "to the bore")
+    if tooth_h > 0.35 * tip_r:
+        raise ValueError("ratchet_wheel_pawl(): tooth_h too tall for the "
+                         "tip radius")
+
+    step = 2.0 * math.pi / teeth
+    pts = []
+    for k in range(teeth):
+        a0 = k * step
+        pts.append(_polar(root_r, a0))
+        pts.append(_polar(tip_r, a0 + 0.2 * step))
+    wheel_poly = sg.Polygon(pts).difference(
+        sg.Point(0.0, 0.0).buffer(bore_r, resolution=int(sections) // 4))
+    if flat:
+        wheel_poly = wheel_poly.difference(box := sg.box(
+            bore_r - 1.0, -bore_r - 1.0, bore_r + 2.0, -bore_r + 0.8))
+    wheel = _extrude(_largest_polygon(wheel_poly.buffer(0)), thickness)
+
+    # Pawl: pivot boss + tip boss joined by a web, posed seated in the tooth
+    # valley just off the drive face (mid-valley at the root circle).
+    tip = np.array(_polar(root_r + 2.6 + 0.3, 0.55 * step))
+    ang = math.radians(120.0)
+    pivot = tip + pawl_len * np.array([math.cos(ang), math.sin(ang)])
+    quad = max(4, int(sections) // 4)
+    boss_p = pivot_d / 2.0 + clear / 2.0 + 2.4
+    boss_t = 2.6
+    pawl_poly = unary_union([
+        sg.Point(*pivot).buffer(boss_p, resolution=quad),
+        sg.Point(*tip).buffer(boss_t, resolution=quad),
+    ]).convex_hull
+    pawl_poly = pawl_poly.difference(
+        sg.Point(*pivot).buffer(pivot_d / 2.0 + clear / 2.0,
+                                resolution=quad)).buffer(0)
+    pawl = _extrude(_largest_polygon(pawl_poly), thickness)
+
+    meta = {
+        "teeth": int(teeth),
+        "tip_r": float(tip_r),
+        "tooth_h": float(tooth_h),
+        "thickness": float(thickness),
+        "circular_pitch": float(2.0 * math.pi * tip_r / teeth),
+        "bore_d": float(bore_d + clear),
+        "pawl_len": float(pawl_len),
+        "pivot_d": float(pivot_d),
+        "spring": spring,
+        "drive_sense": "ccw",
+    }
+    parts = {"wheel": wheel, "pawl": pawl}
+
+    if spring == "coil":
+        back = pivot + 0.65 * (tip - pivot)
+        pocket = cyl(2.1, 5.0,
+                     center=(back[0], back[1], thickness + 1.0),
+                     sections=24)
+        parts["pawl"] = sub(pawl, pocket)
+    else:
+        # Leaf spring: arc beam from an anchor block onto the pawl's back.
+        d_pt = tip - pivot
+        d_pt = d_pt / np.linalg.norm(d_pt)
+        n = np.array([-d_pt[1], d_pt[0]])
+        contact = pivot + 0.6 * (tip - pivot)
+        if np.dot(n, contact) < 0:
+            n = -n
+        anchor = contact + n * 14.0
+        mid = (anchor + contact) / 2.0 + n * 2.5
+        beam = sg.LineString([tuple(anchor), tuple(mid),
+                              tuple(contact + d_pt * 1.0)]).buffer(
+                                  0.7, cap_style=2, join_style=1)
+        block = sg.box(anchor[0] - 4.0, anchor[1] - 4.0,
+                       anchor[0] + 4.0, anchor[1] + 4.0)
+        hole = sg.Point(*anchor).buffer(1.7, resolution=quad)
+        spring_poly = unary_union([beam, block]).difference(hole).buffer(0)
+        parts["spring"] = _extrude(_largest_polygon(spring_poly), 3.0)
+
+    for part in parts.values():
+        part.metadata.update(meta)
+    return parts
+
+
+__all__ += ("ratchet_wheel_pawl",)

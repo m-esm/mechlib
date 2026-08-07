@@ -774,3 +774,112 @@ __all__ += (
     "tripod_cv_joint",
     "double_cardan_joint",
 )
+
+
+def beam_coupling(d=20.0, length=25.0, bore_a=5.0, bore_b=8.0, clear=0.15,
+                  helix_starts=1, slit_w=0.8, slit_pitch=None, clamp=True,
+                  screw="M3", sections=96):
+    """Build a helical-slit flexible beam coupling (axis along +Z).
+
+    The standard printed misalignment coupling of 3D-printer Z axes and CNC
+    builds: a single body bored ``bore_a + clear`` from the z=0 end and
+    ``bore_b + clear`` from the far end, with a continuous helical slit of
+    width ``slit_w`` cut through the wall over the mid-section so the two
+    shaft ends stay torsionally stiff but flex under angular, parallel and
+    axial misalignment. ``helix_starts`` > 1 cuts additional interleaved
+    helices (more flexibility, same length); ``slit_pitch`` is the helix
+    lead and defaults to about four turns across the slit zone. With
+    ``clamp=True`` each end gets an axial slit and a tangential ``screw``
+    clearance hole (``'M3'``/``'M4'``) that pinches the bore closed;
+    ``clamp=False`` cuts plain radial setscrew holes instead. Prints
+    standing on either end, no support. Units are mm.
+    """
+    from .mechanisms import helix_solid
+
+    if d <= 0 or length <= 0 or bore_a <= 0 or bore_b <= 0 or clear < 0:
+        raise ValueError("beam_coupling(): d, length and bores must be "
+                         "positive, clear non-negative")
+    helix_starts = int(round(helix_starts))
+    if helix_starts < 1:
+        raise ValueError("beam_coupling(): helix_starts must be at least 1")
+    if not 0.4 <= slit_w <= 2.0:
+        raise ValueError("beam_coupling(): slit_w must be 0.4..2.0 mm")
+    hole_d = {"M3": 3.4, "M4": 4.5}.get(str(screw).upper())
+    if hole_d is None:
+        raise ValueError("beam_coupling(): screw must be 'M3' or 'M4'")
+    ra = (bore_a + clear) / 2.0
+    rb = (bore_b + clear) / 2.0
+    r_out = d / 2.0
+    if r_out - max(ra, rb) < 2.0:
+        raise ValueError("beam_coupling(): wall below 2.0 mm around the "
+                         "larger bore")
+    end_len = max(6.0, hole_d + 3.0)
+    zone = length - 2.0 * end_len
+    if zone < 3.0 * slit_w + 2.0:
+        raise ValueError("beam_coupling(): length leaves no helical slit "
+                         "zone between the clamp ends")
+    if slit_pitch is None:
+        turns = max(2, round(zone / 5.0))
+        slit_pitch = zone / turns
+    if slit_pitch <= slit_w * helix_starts:
+        raise ValueError("beam_coupling(): slit_pitch too fine for slit_w "
+                         "and helix_starts")
+
+    body = cyl(r_out, length, center=(0, 0, length / 2.0),
+               sections=int(sections))
+    cuts = [
+        cyl(ra, length / 2.0 + 1.0, center=(0, 0, length / 4.0 - 0.5),
+            sections=int(sections)),
+        cyl(rb, length / 2.0 + 1.0,
+            center=(0, 0, 3.0 * length / 4.0 + 0.5), sections=int(sections)),
+    ]
+
+    # Helical slit cutters, clipped to the mid zone.
+    r_in = min(ra, rb)
+    prof = np.array([
+        (r_in - 0.5, -slit_w / 2.0),
+        (r_out + 1.0, -slit_w / 2.0),
+        (r_out + 1.0, slit_w / 2.0),
+        (r_in - 0.5, slit_w / 2.0),
+    ])
+    span_turns = zone / slit_pitch + 2.0
+    slab = boxc((3.0 * d, 3.0 * d, zone),
+                center=(0, 0, end_len + zone / 2.0))
+    helices = []
+    for s in range(helix_starts):
+        hx = helix_solid(prof, slit_pitch, span_turns,
+                         max(48, int(sections)))
+        hx.apply_transform(tf.rotation_matrix(
+            2.0 * math.pi * s / helix_starts, (0, 0, 1)))
+        hx.apply_translation((0, 0, end_len - slit_pitch))
+        helices.append(hx)
+    cuts.append(inter(uni(helices), slab))
+
+    if clamp:
+        for z0 in (0.0, length - end_len):
+            cuts.append(boxc((r_out + 1.0, slit_w, end_len),
+                             center=((r_out + 1.0) / 2.0, 0.0,
+                                     z0 + end_len / 2.0)))
+            cuts.append(cyl(hole_d / 2.0, d + 4.0, axis="y",
+                            center=((r_in + r_out) / 2.0, 0.0,
+                                    z0 + end_len / 2.0), sections=24))
+    else:
+        for zc in (end_len / 2.0, length - end_len / 2.0):
+            cuts.append(cyl(hole_d / 2.0, d + 4.0, axis="x",
+                            center=(0, 0, zc), sections=24))
+
+    body = sub(body, uni(cuts))
+    body.metadata.update({
+        "d": float(d),
+        "length": float(length),
+        "bore_a": float(bore_a + clear),
+        "bore_b": float(bore_b + clear),
+        "helix_starts": int(helix_starts),
+        "slit_w": float(slit_w),
+        "slit_pitch": float(slit_pitch),
+        "clamp": bool(clamp),
+    })
+    return body
+
+
+__all__ += ("beam_coupling",)

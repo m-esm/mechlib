@@ -3334,3 +3334,160 @@ def demo_harmonic_drive(phase_deg: float = 0.0) -> MeshList:
         ("flex_spline", parts["flex_spline"], PALETTE[4]),
         ("wave_generator", parts["wave_generator"], PALETTE[10]),
     ]
+
+
+# --- gap-analysis wave v0.10.0 ----------------------------------------------
+from mechlib.closures import annular_snap
+from mechlib.couplings import beam_coupling
+from mechlib.drives import flywheel
+from mechlib.fasteners import shaft_key, thread_insert, tslot_nut
+from mechlib.fluid import check_valve
+from mechlib.grippers import bellows_suction_cup
+from mechlib.indexing import detent_pair, star_wheel
+from mechlib.linear import lead_screw
+from mechlib.mechanisms import handwheel, shaft_collar, star_knob
+from mechlib.pulleys import v_belt_pulley
+from mechlib.ratchets import ratchet_wheel_pawl
+from mechlib.cams import roller_follower
+from mechlib.meshutil import sub as _sub5, uni as _uni5
+from mechlib.prim import cyl as _cyl5
+
+
+def demo_v_belt_pulley(grooves: int = 1) -> MeshList:
+    mesh = v_belt_pulley(grooves=int(grooves))
+    return [("v_belt_pulley", mesh, PALETTE[7])]
+
+
+def demo_flywheel(spokes: int = 4) -> MeshList:
+    mesh = flywheel(spokes=int(spokes))
+    return [("flywheel", mesh, PALETTE[1])]
+
+
+def demo_shaft_collar(style: str = "split") -> MeshList:
+    mesh = shaft_collar(style=style)
+    return [("shaft_collar", mesh, PALETTE[6])]
+
+
+def demo_star_knob(lobes: int = 5) -> MeshList:
+    mesh = star_knob(lobes=int(lobes))
+    return [("star_knob", mesh, PALETTE[9])]
+
+
+def demo_handwheel() -> MeshList:
+    parts = handwheel(crank=True)
+    return [
+        ("wheel", parts["wheel"], PALETTE[4]),
+        ("grip", parts["grip"], PALETTE[11]),
+    ]
+
+
+def demo_beam_coupling(helix_starts: int = 1) -> MeshList:
+    mesh = beam_coupling(helix_starts=int(helix_starts))
+    return [("beam_coupling", mesh, PALETTE[3])]
+
+
+def demo_lead_screw() -> MeshList:
+    parts = lead_screw()
+    nut = parts["nut"].copy()
+    # Threaded running fit: the nut meshes at a 120 degree clocking.
+    nut.apply_transform(
+        trimesh.transformations.rotation_matrix(math.radians(120.0),
+                                                (0, 0, 1)))
+    nut.apply_translation((0.0, 0.0, 60.0 / 2.0 - 16.0 / 2.0))
+    return [
+        ("screw", parts["screw"], PALETTE[4]),
+        ("nut", nut, PALETTE[2]),
+    ]
+
+
+def demo_roller_follower(pose_deg: float = 20.0) -> MeshList:
+    parts = roller_follower(pose_deg=pose_deg)
+    return [
+        ("arm", parts["arm"], PALETTE[4]),
+        ("roller", parts["roller"], PALETTE[2]),
+        ("pin", parts["pin"], PALETTE[11]),
+    ]
+
+
+def demo_detent_pair() -> MeshList:
+    parts = detent_pair()
+    return [
+        ("wheel", parts["wheel"], PALETTE[4]),
+        ("plunger", parts["plunger"], PALETTE[2]),
+        ("housing", parts["housing"], PALETTE[7]),
+    ]
+
+
+def demo_star_wheel(pockets: int = 6) -> MeshList:
+    mesh = star_wheel(pockets=int(pockets))
+    return [("star_wheel", mesh, PALETTE[5])]
+
+
+def demo_ratchet_wheel_pawl() -> MeshList:
+    parts = ratchet_wheel_pawl()
+    return [
+        ("wheel", parts["wheel"], PALETTE[4]),
+        ("pawl", parts["pawl"], PALETTE[2]),
+        ("spring", parts["spring"], PALETTE[11]),
+    ]
+
+
+def demo_thread_insert() -> MeshList:
+    parts = thread_insert()
+    boss = _sub5(parts["boss"], parts["cavity"])
+    insert = parts["insert"].copy()
+    insert.apply_translation((0.0, 0.0, 2.0))
+    return [
+        ("boss", boss, PALETTE[7]),
+        ("insert", insert, PALETTE[1]),
+    ]
+
+
+def demo_tslot_nut(profile: str = "2020") -> MeshList:
+    mesh = tslot_nut(profile=profile)
+    return [("tslot_nut", mesh, PALETTE[6])]
+
+
+def demo_shaft_key() -> MeshList:
+    parts = shaft_key()
+    shaft = _sub5(_cyl5(6.0, 30.0, center=(0, 0, 0), sections=64),
+                  parts["shaft_keyway"])
+    hub_ring = trimesh.creation.annulus(6.0, 11.0, 14.0, sections=64)
+    hub = _sub5(hub_ring, parts["hub_keyway"])
+    return [
+        ("shaft", shaft, PALETTE[7]),
+        ("key", parts["key"], PALETTE[1]),
+        ("hub", hub, PALETTE[4]),
+    ]
+
+
+def demo_annular_snap() -> MeshList:
+    parts = annular_snap()
+    ridge = parts["ridge"].copy()
+    ridge.apply_translation((0.0, 0.0, 6.0))
+    inner = _uni5([
+        trimesh.creation.annulus(18.0, 20.0, 12.0, sections=96),
+        ridge,
+    ])
+    groove = parts["groove"].copy()
+    groove.apply_translation((0.0, 0.0, 6.0))
+    outer = _sub5(trimesh.creation.annulus(18.15, 22.0, 12.0, sections=96),
+                  groove)
+    outer.apply_translation((0.0, 0.0, 20.0))
+    return [
+        ("inner", inner, PALETTE[4]),
+        ("outer", outer, PALETTE[2]),
+    ]
+
+
+def demo_check_valve() -> MeshList:
+    parts = check_valve()
+    return [
+        ("body", parts["body"], PALETTE[7]),
+        ("cap", parts["cap"], PALETTE[2]),
+    ]
+
+
+def demo_bellows_suction_cup(folds: int = 2) -> MeshList:
+    mesh = bellows_suction_cup(folds=int(folds))
+    return [("bellows_suction_cup", mesh, PALETTE[8])]

@@ -10,7 +10,7 @@ import trimesh.transformations as tf
 
 from .gears import internal_gear_2d, mesh_phase, spur_gear_2d
 from .meshutil import sub, uni
-from .prim import cyl, frustum, hex_poly
+from .prim import boxc, cyl, frustum, hex_poly
 from .sweep import extrude_twist
 
 
@@ -665,6 +665,113 @@ def harmonic_drive(cs_teeth=50, fs_teeth=48, module=0.8, width=6.0,
             "wave_generator": wave, "ratio": ratio}
 
 
+def flywheel(rim_od=80.0, rim_w=16.0, rim_t=None, bore_d=8.0, clear=0.2,
+             style="spoked", spokes=4, spoke_w=None, web_t=2.4, hub_d=None,
+             density=1.24, ref_rpm=1000.0, keyway=False, sections=96):
+    """Build an energy-storage flywheel (axis along +Z), rim-heavy by design.
+
+    The speed-smoothing wheel of punch presses, engines, foot-powered
+    machinery and spin-casters: a thick rim carries most of the mass, a hub
+    takes the shaft, and the two are joined either by ``spokes`` (the FDM
+    friendly ``style='spoked'`` default, fully self-supporting) or by a
+    solid web of ``web_t`` centred on the rim's mid-plane (``style='web'``,
+    the classic flat belt-age flywheel). ``rim_t`` is the rim's radial
+    thickness (default 15% of ``rim_od``); ``hub_d`` defaults to
+    ``bore_d + clear + 6``. The bore is printed at ``bore_d + clear``;
+    ``keyway`` broaches a 3 mm keyway along it. ``density`` is the filament
+    density in g/cm3 (1.24 for PLA) and only affects the metadata, which is
+    the real payload: ``mass_g``, ``inertia_kg_mm2`` about the axis
+    (integrated from the actual mesh), and ``stored_energy_J`` at
+    ``ref_rpm``. Prints flat on z=0, no support. Units are mm.
+    """
+    if rim_od <= 0 or rim_w <= 0 or bore_d <= 0 or clear < 0:
+        raise ValueError("flywheel(): rim_od, rim_w and bore_d must be "
+                         "positive, clear non-negative")
+    if style not in ("spoked", "web"):
+        raise ValueError("flywheel(): style must be 'spoked' or 'web'")
+    if density <= 0 or ref_rpm <= 0:
+        raise ValueError("flywheel(): density and ref_rpm must be positive")
+    if rim_t is None:
+        rim_t = 0.15 * rim_od
+    if hub_d is None:
+        hub_d = bore_d + clear + 6.0
+    bore_r = (bore_d + clear) / 2.0
+    rim_in_r = rim_od / 2.0 - rim_t
+    if rim_t < 3.0:
+        raise ValueError("flywheel(): rim_t must be at least 3.0 mm")
+    if hub_d / 2.0 - bore_r < 1.2:
+        raise ValueError("flywheel(): hub wall below 1.2 mm around the bore")
+    if rim_in_r - hub_d / 2.0 < 2.0:
+        raise ValueError("flywheel(): no room for spokes or web between hub "
+                         "and rim")
+    if keyway and rim_in_r - (bore_r + 1.5) < 1.2:
+        raise ValueError("flywheel(): keyway breaks through the hub")
+    spokes = int(round(spokes))
+    if spoke_w is None:
+        spoke_w = max(3.0, 0.5 * rim_w)
+    if style == "spoked":
+        if spokes < 3:
+            raise ValueError("flywheel(): need at least 3 spokes")
+        rim_gap = (2.0 * math.pi * rim_in_r / spokes) - spoke_w
+        if rim_gap < 1.0:
+            raise ValueError("flywheel(): %d spokes of %.1f mm leave no "
+                             "opening at the rim" % (spokes, spoke_w))
+    else:
+        if web_t < 1.2 or web_t >= rim_w:
+            raise ValueError("flywheel(): web_t must be at least 1.2 mm and "
+                             "thinner than rim_w")
+
+    rim = trimesh.creation.extrude_polygon(
+        sg.Point(0, 0).buffer(rim_od / 2.0, resolution=int(sections) // 4)
+        .difference(sg.Point(0, 0).buffer(rim_in_r,
+                                          resolution=int(sections) // 4)),
+        rim_w)
+    hub = cyl(hub_d / 2.0, rim_w, center=(0, 0, rim_w / 2.0),
+              sections=int(sections))
+    parts = [rim, hub]
+    if style == "spoked":
+        span = rim_in_r - hub_d / 2.0
+        for k in range(spokes):
+            sp = boxc((span + 2.0, spoke_w, rim_w),
+                      center=(hub_d / 2.0 + span / 2.0, 0.0, rim_w / 2.0))
+            sp.apply_transform(tf.rotation_matrix(
+                2.0 * math.pi * k / spokes, (0, 0, 1)))
+            parts.append(sp)
+    else:
+        web_ring = sg.Point(0, 0).buffer(
+            rim_in_r + 0.5, resolution=int(sections) // 4)
+        parts.append(trimesh.creation.extrude_polygon(
+            web_ring, web_t))
+        parts[-1].apply_translation((0.0, 0.0, (rim_w - web_t) / 2.0))
+    body = uni(parts)
+
+    cuts = [cyl(bore_r, rim_w + 4.0, center=(0, 0, rim_w / 2.0),
+                sections=int(sections))]
+    if keyway:
+        cuts.append(boxc((3.0, 3.0, rim_w + 4.0),
+                         center=(bore_r + 0.5, 0.0, rim_w / 2.0)))
+    body = sub(body, uni(cuts))
+
+    mass_g = body.volume * density / 1000.0
+    i_zz = float(body.moment_inertia[2][2])  # mm^5 volume integral
+    inertia_kg_mm2 = i_zz * density * 1e-6
+    omega = ref_rpm * 2.0 * math.pi / 60.0
+    energy_j = 0.5 * inertia_kg_mm2 * 1e-6 * omega ** 2
+    body.metadata.update({
+        "rim_od": float(rim_od),
+        "rim_w": float(rim_w),
+        "rim_t": float(rim_t),
+        "bore_d": float(bore_d + clear),
+        "style": style,
+        "spokes": int(spokes) if style == "spoked" else 0,
+        "mass_g": float(mass_g),
+        "inertia_kg_mm2": float(inertia_kg_mm2),
+        "stored_energy_J": float(energy_j),
+        "ref_rpm": float(ref_rpm),
+    })
+    return body
+
+
 __all__ = (
     "printed_worm",
     "flat_worm",
@@ -672,4 +779,5 @@ __all__ = (
     "worm_coupon",
     "planet_stage",
     "harmonic_drive",
+    "flywheel",
 )

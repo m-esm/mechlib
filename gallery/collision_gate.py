@@ -147,6 +147,27 @@ ALLOW_CONTACT = {
     "demo_torque_limiter": {
         frozenset(("pocket_driven", "preload_spring")),
     },
+    # Threaded running fit of the nut on the screw (clocked to mesh).
+    "demo_lead_screw": {
+        frozenset(("screw", "nut")),
+    },
+    # Grip spins on the crank pin at a designed 0.3 mm running clearance.
+    "demo_handwheel": {
+        frozenset(("grip", "wheel")),
+    },
+    # Roller pin is press-fit into the follower arm.
+    "demo_roller_follower": {
+        frozenset(("arm", "pin")),
+    },
+    # Detent plunger nose is seated in the wheel notch by design.
+    "demo_detent_pair": {
+        frozenset(("plunger", "wheel")),
+    },
+    # Pawl tip engages the tooth valley; the leaf spring preloads the pawl.
+    "demo_ratchet_wheel_pawl": {
+        frozenset(("pawl", "wheel")),
+        frozenset(("pawl", "spring")),
+    },
 }
 
 

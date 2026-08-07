@@ -1,4 +1,4 @@
-__version__ = "0.9.0"
+__version__ = "0.10.0"
 
 from .bearings import plain_bushing, printed_ball_bearing, thrust_washer
 from .cams import (
@@ -10,11 +10,13 @@ from .cams import (
     face_cam,
     heart_cam,
     plate_cam,
+    roller_follower,
     snail_cam,
 )
 from .chains import drag_chain, drag_chain_link, roller_chain, roller_chain_link
 from .closures import (
     SnapSpec,
+    annular_snap,
     clamshell_shiplap,
     fix_pin,
     nut_ac,
@@ -29,6 +31,7 @@ from .closures import (
 )
 from .clutches import dog_clutch, freewheel_clutch, torque_limiter
 from .couplings import (
+    beam_coupling,
     cv_velocity_fluctuation,
     cv_velocity_ratio,
     double_cardan_joint,
@@ -68,6 +71,9 @@ from .fasteners import (
     fastener_mesh,
     hex_nut_mesh,
     pick_length,
+    shaft_key,
+    thread_insert,
+    tslot_nut,
     washer_mesh,
     zmin0,
 )
@@ -89,6 +95,7 @@ from .flexures import (
     wave_spring,
 )
 from .fluid import (
+    check_valve,
     external_gear_pump,
     gerotor_pump,
     hose_barb,
@@ -97,6 +104,7 @@ from .fluid import (
 )
 from .drives import (
     flat_worm,
+    flywheel,
     harmonic_drive,
     planet_stage,
     printed_worm,
@@ -122,6 +130,7 @@ from .gears import (
     worm,
 )
 from .grippers import (
+    bellows_suction_cup,
     collet_chuck,
     eccentric_cam_clamp,
     iris_control_range,
@@ -129,17 +138,20 @@ from .grippers import (
 )
 from .guides import linear_way, telescoping_stage
 from .indexing import (
+    detent_pair,
     escapement,
     escapement_pose,
     geneva_pair,
     geneva_wheel_angle,
     intermittent_gear_pair,
+    star_wheel,
 )
 from .joints import ball_socket_joint, clevis, gimbal_rings, knuckle_hinge
 from .lattices import auxetic_panel, kerf_bend_cutter
 from .linear import (
     archimedes_screw,
     differential_screw,
+    lead_screw,
     rack_pinion,
     scroll_drive,
     screw_jack,
@@ -174,9 +186,12 @@ from .linkages import (
 from .mechanisms import (
     coarse_pitch,
     dog_slot_coupling,
+    handwheel,
     helix_tube,
     helix_solid,
     knurl,
+    shaft_collar,
+    star_knob,
     tap,
     thread_solid,
     threaded_rod,
@@ -233,6 +248,7 @@ from .pulleys import (
     grooved_drum,
     idler_pulley,
     timing_pulley,
+    v_belt_pulley,
 )
 from .ratchets import (
     arc_ratchet_2d,
@@ -243,6 +259,7 @@ from .ratchets import (
     pip_ratchet_hub_2d,
     ratchet_ring,
     ratchet_ring_2d,
+    ratchet_wheel_pawl,
     spring_cartridge_ratchet,
     spring_cartridge_ratchet_2d,
 )
@@ -486,4 +503,22 @@ __all__ = (
     "clevis",
     "external_gear_pump",
     "harmonic_drive",
+    # gap-analysis wave v0.10.0
+    "v_belt_pulley",
+    "flywheel",
+    "shaft_collar",
+    "star_knob",
+    "handwheel",
+    "beam_coupling",
+    "lead_screw",
+    "roller_follower",
+    "detent_pair",
+    "star_wheel",
+    "ratchet_wheel_pawl",
+    "thread_insert",
+    "tslot_nut",
+    "shaft_key",
+    "annular_snap",
+    "check_valve",
+    "bellows_suction_cup",
 )

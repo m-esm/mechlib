@@ -388,4 +388,134 @@ __all__ = (
     "swash_plate",
     "screw_jack",
     "rack_pinion",
+    "lead_screw",
 )
+
+
+def _trapezoid_profile(d_nom, pitch, clear):
+    """One closed trapezoidal (Tr-style 30 degree) thread-turn profile.
+
+    Returns ``(poly, r_tip, r_root)`` in radius-Z like the ISO V profile
+    generator in ``mechanisms``: flat crest and root (0.32*pitch each),
+    30 degree flanks, thread height 0.3*pitch -- a form that prints far
+    better at power-screw leads than a sharp 60 degree V.
+    """
+    h = 0.3 * pitch
+    r_tip = d_nom / 2.0 - clear / 2.0
+    r_root = r_tip - h
+    r_back = max(0.05, r_root - 0.5 * pitch)
+    fc = 0.16 * pitch          # crest half-width
+    fr = 0.5 * pitch - fc - h / math.tan(math.radians(60.0))
+    surf = [(r_root, -pitch / 2.0),
+            (r_root, -pitch / 2.0 + fr),
+            (r_tip, -fc),
+            (r_tip, fc),
+            (r_root, pitch / 2.0 - fr),
+            (r_root, pitch / 2.0)]
+    poly = [(r_back, -pitch / 2.0)] + surf + [(r_back, pitch / 2.0)]
+    return np.array(poly), r_tip, r_root, r_back
+
+
+def lead_screw(d=12.0, pitch=3.0, length=60.0, starts=1, nut_len=16.0,
+               nut_od=None, flange_d=0.0, clear=0.2, sections=96):
+    """Build a trapezoidal power screw and its matching nut.
+
+    The standard rotary-to-linear actuator of vices, C-clamps, Z-axis
+    stages and press screws: a 30 degree flat-crested trapezoidal thread
+    (metric ``Tr`` form; the 29 degree ACME is the imperial equivalent),
+    which prints far better at power-screw leads than the ISO 60 degree V
+    of ``mechanisms.thread_solid``. ``starts`` > 1 gives a multi-start
+    screw of lead ``starts * pitch`` (stored as ``lead`` in the metadata).
+    The nut is bored with the same profile grown by ``clear``; ``nut_od``
+    defaults to ``d + 8`` and ``flange_d`` > 0 adds a mounting flange with
+    four 4.5 mm holes at the nut's z=0 end. Returns ``{'screw', 'nut'}``.
+    Print the screw standing on end (every flank is self-supporting at
+    these leads) and the nut bore-up. Units are mm.
+    """
+    from .mechanisms import helix_solid
+    from .meshutil import sub, uni
+    from .prim import cyl
+
+    if d <= 0 or pitch <= 0 or length <= 0 or nut_len <= 0 or clear < 0:
+        raise ValueError("lead_screw(): d, pitch, length and nut_len must "
+                         "be positive, clear non-negative")
+    starts = int(round(starts))
+    if starts < 1:
+        raise ValueError("lead_screw(): starts must be at least 1")
+    if pitch > 0.45 * d:
+        raise ValueError("lead_screw(): pitch too coarse for the diameter")
+    if nut_od is None:
+        nut_od = d + 8.0
+    if nut_od / 2.0 - d / 2.0 < 2.4:
+        raise ValueError("lead_screw(): nut wall below 2.4 mm")
+    if flange_d < 0.0:
+        raise ValueError("lead_screw(): flange_d must be non-negative")
+    if flange_d and flange_d < nut_od + 6.0:
+        raise ValueError("lead_screw(): flange_d must exceed nut_od by 6 mm")
+
+    lead = pitch * starts
+    prof, r_tip, r_root, _ = _trapezoid_profile(d, pitch, clear)
+    turns = length / lead + 2.0
+    bands = []
+    for s in range(starts):
+        band = helix_solid(prof, lead, turns, int(sections))
+        band.apply_transform(tf.rotation_matrix(
+            2.0 * math.pi * s / starts, (0, 0, 1)))
+        bands.append(band)
+    core = cyl(r_root + 0.02, length + 6.0 * pitch,
+               center=(0, 0, length / 2.0), sections=int(sections))
+    screw = uni(bands + [core])
+    lo = cyl(d + 4.0, 3.0 * pitch, center=(0, 0, -1.5 * pitch),
+             sections=int(sections))
+    hi = cyl(d + 4.0, 3.0 * pitch,
+             center=(0, 0, length + 1.5 * pitch), sections=int(sections))
+    screw = sub(sub(screw, lo), hi)
+
+    # Nut: same profile grown radially by `clear`, cut from a blank.
+    nprof, n_tip, n_root, _ = _trapezoid_profile(d + 2.0 * clear, pitch,
+                                                 clear)
+    nturns = nut_len / lead + 2.0
+    nbands = []
+    for s in range(starts):
+        band = helix_solid(nprof, lead, nturns, int(sections))
+        band.apply_transform(tf.rotation_matrix(
+            2.0 * math.pi * s / starts, (0, 0, 1)))
+        nbands.append(band)
+    ncore = cyl(n_root + 0.02, nut_len + 6.0 * pitch,
+                center=(0, 0, nut_len / 2.0), sections=int(sections))
+    cutter = uni(nbands + [ncore])
+    nlo = cyl(d + 4.0, 3.0 * pitch, center=(0, 0, -1.5 * pitch),
+              sections=int(sections))
+    nhi = cyl(d + 4.0, 3.0 * pitch,
+              center=(0, 0, nut_len + 1.5 * pitch), sections=int(sections))
+    cutter = sub(sub(cutter, nlo), nhi)
+
+    nut = cyl(nut_od / 2.0, nut_len, center=(0, 0, nut_len / 2.0),
+              sections=int(sections))
+    holes = []
+    if flange_d:
+        flange_t = 3.0
+        nut = uni([nut, cyl(flange_d / 2.0, flange_t,
+                            center=(0, 0, flange_t / 2.0),
+                            sections=int(sections))])
+        hole_r = flange_d / 2.0 - 4.5
+        for k in range(4):
+            a = math.pi / 4.0 + k * math.pi / 2.0
+            holes.append(cyl(2.25, flange_t + 2.0,
+                             center=(hole_r * math.cos(a),
+                                     hole_r * math.sin(a), flange_t / 2.0),
+                             sections=24))
+    nut = sub(nut, uni([cutter] + holes))
+
+    meta = {
+        "d": float(d),
+        "pitch": float(pitch),
+        "starts": int(starts),
+        "lead": float(lead),
+        "length": float(length),
+        "nut_len": float(nut_len),
+        "style": "Tr",
+    }
+    screw.metadata.update(meta)
+    nut.metadata.update(meta)
+    return {"screw": screw, "nut": nut}

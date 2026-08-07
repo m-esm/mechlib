@@ -19,6 +19,11 @@ from __future__ import annotations
 # ---------------------------------------------------------------------------
 
 USE_CASES = {
+    'annular_snap': (
+        "Bottle-cap and filter-housing lids, pipe couplings, and round "
+        "enclosure closures that snap together on a circumferential "
+        "ridge."
+    ),
     'arc_ratchet_2d': (
         "Tension-loaded one-way clutches, winch handles, and compact ratchets "
         "that use flexure arms instead of rigid pawls."
@@ -39,6 +44,11 @@ USE_CASES = {
         "Fishing-reel level winds, tool-changer drums, textile traverse "
         "mechanisms, and cylindrical groove cams for axial programs."
     ),
+    'beam_coupling': (
+        "3D-printer Z axes, CNC builds, and motor-to-leadscrew links "
+        "that need one cheap part forgiving angular, parallel, and "
+        "axial misalignment."
+    ),
     'bearing_seat': (
         "608 and similar skate-bearing pockets in robots, printers, and "
         "rollers that need a retained race."
@@ -50,6 +60,10 @@ USE_CASES = {
     'belleville_washer': (
         "Bolted-joint preload, clutch packs, and high-load short-stroke "
         "stacks of disc springs."
+    ),
+    'bellows_suction_cup': (
+        "TPU pick-and-place end effectors and vacuum handling of smooth "
+        "parts, with a hose-barb stem for the vacuum line."
     ),
     'belt_tensioner': (
         "Automatic belt tensioners on engines and printers, compliant arms "
@@ -78,6 +92,10 @@ USE_CASES = {
     'chebyshev_linkage': (
         "Straight-line walking and leg mechanisms, Russian school teaching "
         "models, and approximate linear guides with only revolute joints."
+    ),
+    'check_valve': (
+        "Pump outlet lines, siphon breaks, and air lines that need one- "
+        "way flow: a bought bearing ball on a conical seat."
     ),
     'clamshell_shiplap': (
         "Split enclosures, clamshell housings, and lid-to-base seams that "
@@ -122,6 +140,10 @@ USE_CASES = {
     'dbore': (
         "Double-D motor and pot shafts, keyed hubs, and sockets that must "
         "transmit torque without a set screw."
+    ),
+    'detent_pair': (
+        "Pan-tilt heads, adjustable arm joints, rotary selectors, and "
+        "folding-leg locks that click positively into position."
     ),
     'differential_screw': (
         "Fine-adjustment stages, micrometers, and slow linear motion from two "
@@ -187,6 +209,10 @@ USE_CASES = {
         "Optical and nanopositioning stages, vibration-isolated mounts, and "
         "printed straight-line stages without bearings."
     ),
+    'flywheel': (
+        "Punch presses, engines, spin-casters, and gyro demos that "
+        "smooth shaft speed with a rim-heavy inertia wheel."
+    ),
     'four_bar': (
         "Walking-robot legs, windshield-wiper kinematics, folding-furniture "
         "hinges, and any hobby build that needs a guided coupler curve."
@@ -218,6 +244,10 @@ USE_CASES = {
     'grooved_drum': (
         "Winches, cranes, fishing reels, and cable drums that need a helical "
         "groove so the rope stacks cleanly."
+    ),
+    'handwheel': (
+        "Manual leadscrew and valve adjustment on screw jacks, indexing "
+        "tables, and machine axes; the crank variant drives winches."
     ),
     'harmonic_drive': (
         "Cobot and industrial robot joints, pan-tilt heads, and anywhere you "
@@ -286,6 +316,10 @@ USE_CASES = {
     'lazy_tongs': (
         "Lazy-tongs riveters, scissor lifts, folding gates, and extendable "
         "booms that multiply a short squeeze into a long straight stroke."
+    ),
+    'lead_screw': (
+        "Vices, C-clamps, Z-axis stages, and press screws: trapezoidal "
+        "power threads turning rotation into linear force."
     ),
     'leaf_spring': (
         "Vehicle suspensions, clamp arms, and multi-leaf springs that carry "
@@ -371,6 +405,10 @@ USE_CASES = {
         "Print-in-place freewheels, one-way knobs, and socket adapters that "
         "click when turning the drive way only."
     ),
+    'ratchet_wheel_pawl': (
+        "Winch drums, come-alongs, windlasses, and webbing tensioners "
+        "that need a serviceable, high-torque one-way drive."
+    ),
     'rbox': (
         "Enclosure walls and buttons with rounded corners that print cleanly "
         "and feel finished."
@@ -398,6 +436,10 @@ USE_CASES = {
     'roller_chain_link': (
         "Bicycle and industrial roller-chain pitches, printable chain "
         "segments matched to a sprocket."
+    ),
+    'roller_follower': (
+        "Valve lifters, pump diaphragm drives, and automata: the "
+        "pivoted roller lever that rides plate, heart, and snail cams."
     ),
     'roller_sprocket_2d': (
         "Bicycle and conveyor chain drives, 3D-printer motion systems, and "
@@ -447,6 +489,14 @@ USE_CASES = {
         "Collar and hub locks on shafts, pulley set-screw seats, and printed "
         "bosses that take a radial screw."
     ),
+    'shaft_collar': (
+        "Axially locating bearings, gears, and sprockets on a shaft "
+        "without machining a shoulder into it."
+    ),
+    'shaft_key': (
+        "Gear hubs, hand cranks, and pulley drives that transmit torque "
+        "through a DIN 6885 sunk key where a D-bore would slip."
+    ),
     'slider_crank': (
         "Piston engines and compressors, bicycle pumps, shapers, and every "
         "classic rotary-to-reciprocating conversion."
@@ -487,6 +537,14 @@ USE_CASES = {
         "Clamshell shaft cradles and support-light upper bores in split "
         "housings."
     ),
+    'star_knob': (
+        "Jigs, fixtures, machine adjustment points, and camera rigs "
+        "that are tightened and loosened by hand."
+    ),
+    'star_wheel': (
+        "Filling, capping, and sorting machines that meter bottles, "
+        "cans, or bearings at a fixed pitch."
+    ),
     'swash_plate': (
         "Axial piston pumps and motors, helicopter cyclic control analogues, "
         "and multi-piston rotary-to-linear conversion."
@@ -515,6 +573,10 @@ USE_CASES = {
         "Raised labels on parts, nameplates, and logos that must print with "
         "counters preserved."
     ),
+    'thread_insert': (
+        "Enclosure lids opened repeatedly, motor mounts, and adjustment "
+        "points that need durable heat-set machine-screw threads."
+    ),
     'thread_solid': (
         "Printed screws and nuts, lead screws, and any FDM thread that must "
         "mate with a real or printed counterpart."
@@ -534,6 +596,10 @@ USE_CASES = {
     'timing_pulley': (
         "GT2 and similar belt drives on printers and CNC, synchronous shaft "
         "coupling without slip."
+    ),
+    'tslot_nut': (
+        "Bolting printed parts onto 2020/3030/4040 aluminium-extrusion "
+        "frames and machine-table T-slots."
     ),
     'toggle_clamp': (
         "Welding and woodworking hold-downs, drill-press fixtures, and CNC "
@@ -558,6 +624,10 @@ USE_CASES = {
     'universal_joint': (
         "Driveshafts, steering columns, and any angled shaft pair that can "
         "live with Cardan speed variation."
+    ),
+    'v_belt_pulley': (
+        "Washing machines, drill presses, lathes, and HVAC blowers: "
+        "wedge-belt power transmission between parallel shafts."
     ),
     'watt_linkage': (
         "Beam-engine parallel motion (historical), solid-axle rear suspension "
@@ -622,6 +692,23 @@ GALLERY_FILE_OVERRIDES = {
 
 # GLB filename -> primary API (for gallery index generation).
 GALLERY_FILE_TO_API = {
+    'annular_snap_demo.glb': 'annular_snap',
+    'beam_coupling_demo.glb': 'beam_coupling',
+    'bellows_suction_cup_demo.glb': 'bellows_suction_cup',
+    'check_valve_demo.glb': 'check_valve',
+    'detent_pair_demo.glb': 'detent_pair',
+    'flywheel_demo.glb': 'flywheel',
+    'handwheel_demo.glb': 'handwheel',
+    'lead_screw_demo.glb': 'lead_screw',
+    'ratchet_wheel_pawl_demo.glb': 'ratchet_wheel_pawl',
+    'roller_follower_demo.glb': 'roller_follower',
+    'shaft_collar_demo.glb': 'shaft_collar',
+    'shaft_key_demo.glb': 'shaft_key',
+    'star_knob_demo.glb': 'star_knob',
+    'star_wheel_demo.glb': 'star_wheel',
+    'thread_insert_demo.glb': 'thread_insert',
+    'tslot_nut_demo.glb': 'tslot_nut',
+    'v_belt_pulley_demo.glb': 'v_belt_pulley',
     'arc_ratchet_demo.glb': 'arc_ratchet_2d',
     'archimedes_screw_demo.glb': 'archimedes_screw',
     'auxetic_panel_demo.glb': 'auxetic_panel',

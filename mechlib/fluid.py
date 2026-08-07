@@ -905,3 +905,123 @@ def external_gear_pump(teeth=12, module=1.5, width=8.0, pressure_angle=20.0,
         mesh.metadata.update(meta)
     parts["displacement_per_rev"] = displacement
     return parts
+
+
+def check_valve(ball_d=9.525, port_d=6.0, wall=3.0, spring_seat=8.0,
+                barbs=True, clear=0.2, sections=96):
+    """Build a ball-check (non-return) valve around a bought bearing ball.
+
+    Pump outlet lines (mates with ``gerotor_pump`` and
+    ``peristaltic_pump_head``, which need check valves to actually pump),
+    siphon breaks and air lines: a 45 degree conical seat, a ball chamber,
+    and a light ``flexures.coil_spring`` pressing a standard steel or
+    airsoft ball (default 9.525 mm = 3/8 in) onto the seat. Flow is
+    strictly +Z: pressure at the z=0 inlet lifts the ball, reverse flow
+    seats it. Returns ``{'body', 'cap'}``: the body carries the inlet port
+    and the seat, the cap snaps over the body on an
+    ``closures.annular_snap`` ring (serviceable, no threads) and carries
+    the ``spring_seat`` pocket (diameter mm) and the outlet port. With
+    ``barbs=True`` both ports end in ``hose_barb`` tails for ``port_d``
+    tube (flow bore is then the barb bore, about ``port_d - 2.8`` mm);
+    otherwise the ports are plain ``port_d`` bores. The ball and spring
+    are BOUGHT hardware. Print body and cap upright in their posed
+    orientation, so the seat stays concentric; every flank is at or above
+    45 degrees. Units are mm.
+    """
+    from .closures import annular_snap
+
+    if ball_d <= 0 or port_d <= 0 or wall < 2.0 or spring_seat <= 0:
+        raise ValueError("check_valve(): ball_d, port_d and spring_seat "
+                         "must be positive, wall at least 2.0 mm")
+    if clear < 0.1:
+        raise ValueError("check_valve(): clear below 0.1 mm jams the ball")
+    if barbs:
+        bore_r = (port_d - 2.8) / 2.0
+        if bore_r < 0.6:
+            raise ValueError("check_valve(): port_d too small for a barb "
+                             "bore")
+    else:
+        bore_r = port_d / 2.0
+    chamber_r = ball_d / 2.0 + 0.5
+    if chamber_r < bore_r + 0.5:
+        raise ValueError("check_valve(): ball_d too small for the port "
+                         "bore")
+    seat_r = 0.7071 * ball_d / 2.0
+    if seat_r < bore_r + 0.3:
+        raise ValueError("check_valve(): no seat land between bore and "
+                         "ball")
+
+    body_r = chamber_r + wall
+    z_in = 4.0
+    h_seat = chamber_r - bore_r
+    z_seat_top = z_in + h_seat
+    z_body = z_seat_top + ball_d + 2.0
+    ridge_h = 0.5
+
+    body = cyl(body_r, z_body, center=(0, 0, z_body / 2.0),
+               sections=int(sections))
+    snap = annular_snap(outer_d=2.0 * (body_r + wall), wall=wall,
+                        ridge_h=ridge_h, clear=0.15)
+    ridge = snap["ridge"]
+    ridge.apply_translation((0, 0, z_body - 3.0))
+    parts_body = [body, ridge]
+    if barbs:
+        tail = hose_barb(tube_id=port_d, barbs=3, foot="none",
+                         sections=int(sections))
+        tail_h = tail.bounds[1][2] - tail.bounds[0][2]
+        tail.apply_transform(tf.rotation_matrix(math.pi, (1, 0, 0)))
+        tail.apply_translation((0, 0, -tail.bounds[1][2]))
+        parts_body.append(tail)
+    body = uni(parts_body)
+
+    body_cuts = [cyl(bore_r, z_in + 8.0, center=(0, 0, z_in / 2.0 - 4.0),
+                     sections=int(sections)),
+                 frustum(bore_r, chamber_r, h_seat, z0=z_in,
+                         sections=int(sections)),
+                 cyl(chamber_r, ball_d + 2.2,
+                     center=(0, 0, z_seat_top + (ball_d + 2.0) / 2.0),
+                     sections=int(sections))]
+    body = sub(body, uni(body_cuts))
+
+    # Cap: snaps over the body top, spring pocket above the chamber.
+    cap_bore_r = body_r + ridge_h + 0.25
+    cap_r = cap_bore_r + wall
+    cap_len = 8.0 + 2.0 + 3.0
+    z_cap0 = z_body - 6.0
+    cap = cyl(cap_r, cap_len, center=(0, 0, z_cap0 + cap_len / 2.0),
+              sections=int(sections))
+    groove = snap["groove"]
+    groove.apply_translation((0, 0, z_body - 3.0))
+    pocket_r = spring_seat / 2.0
+    if pocket_r > cap_r - 1.6:
+        raise ValueError("check_valve(): spring_seat too wide for the cap")
+    cap_cuts = [
+        cyl(cap_bore_r, 6.4, center=(0, 0, z_cap0 + 3.0),
+            sections=int(sections)),
+        groove,
+        cyl(pocket_r, 5.0, center=(0, 0, z_body + 2.5),
+            sections=int(sections)),
+        cyl(bore_r, 4.0, center=(0, 0, z_cap0 + cap_len + 1.0),
+            sections=int(sections)),
+        frustum(bore_r, pocket_r, cap_len - 11.0,
+                z0=z_cap0 + cap_len - 1.0 - (cap_len - 11.0),
+                sections=int(sections)),
+    ]
+    cap = sub(cap, uni(cap_cuts))
+    if barbs:
+        tail = hose_barb(tube_id=port_d, barbs=3, foot="none",
+                         sections=int(sections))
+        tail.apply_translation((0, 0, z_cap0 + cap_len - 0.2))
+        cap = uni([cap, tail])
+
+    meta = {
+        "ball_d": float(ball_d),
+        "port_d": float(port_d),
+        "flow_direction": "+Z",
+        "spring_seat": float(spring_seat),
+        "barbs": bool(barbs),
+        "cracking_note": "set by the coil spring seated in the cap",
+    }
+    body.metadata.update(meta)
+    cap.metadata.update(meta)
+    return {"body": body, "cap": cap}

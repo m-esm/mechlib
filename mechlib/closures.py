@@ -1,15 +1,26 @@
 """Press-fit, snap-fit, captive-nut, and locating closure features."""
 
+import math
 from dataclasses import dataclass
 
 import numpy as np
 import shapely.geometry as sg
 import trimesh
 import trimesh.transformations as tf
+from shapely.geometry.polygon import orient as _orient_ccw
 from shapely.ops import polygonize, unary_union
 
 from .meshutil import orient, sub, uni
 from .prim import boxc, cyl, extrude_down, rbox
+
+_MIN_WALL = 0.8
+
+
+def _revolve(poly, sections=96):
+    """Revolve a closed (r, z) profile polygon about the Z axis."""
+    ring = _orient_ccw(poly, 1.0)
+    return trimesh.creation.revolve(np.asarray(ring.exterior.coords),
+                                    sections=int(sections))
 
 
 def press_lid(ox, oy, cav_x, cav_y, c, plate_t=2.4, plug_h=5.0,
@@ -275,3 +286,85 @@ def push_pin(d, length, barb=True, axis="z", flip=False):
     elif axis == "x":
         m.apply_transform(tf.rotation_matrix(np.pi / 2, [0, 1, 0]))
     return m
+
+
+def annular_snap(outer_d=40.0, wall=2.0, ridge_h=0.6, lead_angle=30.0,
+                 retention=0.4, split=False, clear=0.15, sections=96):
+    """Build an annular snap-fit joint pair for cylindrical parts.
+
+    The third classical snap fit (cantilever and torsion are covered by
+    ``snap_catch``/``snap_finger``): a circumferential ridge on one
+    cylindrical part snaps into a matching groove on the mating part --
+    bottle caps, filter housings, pipe couplings and round enclosure lids.
+    The joint is dimensioned for a tube of ``outer_d`` and ``wall``: the
+    inner part's outer surface is at ``outer_d/2 - wall`` and the outer
+    part's bore is that plus ``clear``. ``ridge`` is a revolved solid
+    feature ring to union onto the inner part: a triangular ridge of
+    height ``ridge_h`` whose lead flank rises at ``lead_angle`` (keep at
+    or under 45 degrees for FDM and for assembly force) and whose
+    retention face drops near-vertical by ``retention`` mm; the ridge
+    crest sits at z=0 with the lead side toward +Z (the insertion
+    direction). ``groove`` is the matching revolved cutter, grown by
+    ``clear`` and embedded deep enough to subtract from the outer part's
+    wall. With ``split=True`` four axial slots segment the ridge ring so
+    a rigid printed part can still flex over it. Both features are
+    centred on the Z axis; position them with a translation. Units are
+    mm and degrees.
+    """
+    if outer_d <= 0 or wall < 1.2:
+        raise ValueError("annular_snap(): outer_d must be positive and "
+                         "wall at least 1.2 mm")
+    if not 0.3 <= ridge_h <= wall / 2.0:
+        raise ValueError("annular_snap(): ridge_h must be 0.3..wall/2 mm")
+    if not 10.0 <= lead_angle <= 45.0:
+        raise ValueError("annular_snap(): lead_angle must be 10..45 deg")
+    if retention <= 0 or retention >= ridge_h:
+        raise ValueError("annular_snap(): retention must be positive and "
+                         "under ridge_h")
+    if clear < 0.0:
+        raise ValueError("annular_snap(): clear must be non-negative")
+
+    r_surf = outer_d / 2.0 - wall
+    z_lead = ridge_h / math.tan(math.radians(lead_angle))
+    crest_r = r_surf + ridge_h
+
+    ridge_prof = sg.Polygon([
+        (r_surf - 0.5, -retention),
+        (crest_r, 0.0),
+        (r_surf, z_lead),
+        (r_surf - 0.5, z_lead),
+    ])
+    ridge = _revolve(ridge_prof, sections=sections)
+    if split:
+        slots = []
+        for k in range(4):
+            a = math.pi / 4.0 + k * math.pi / 2.0
+            slot = boxc((1.0, ridge_h + 2.0, z_lead + retention + 1.0),
+                        center=((crest_r + 0.5) * math.cos(a),
+                                (crest_r + 0.5) * math.sin(a),
+                                (z_lead - retention) / 2.0))
+            slot.apply_transform(tf.rotation_matrix(a, (0, 0, 1)))
+            slots.append(slot)
+        ridge = sub(ridge, uni(slots))
+
+    g = clear
+    groove_prof = sg.Polygon([
+        (r_surf + g - 0.5, -retention - g - 0.3),
+        (crest_r + g + 0.4, -retention - g - 0.3),
+        (crest_r + g + 0.4, z_lead + g + 0.3),
+        (r_surf + g - 0.5, z_lead + g + 0.3),
+    ])
+    groove = _revolve(groove_prof, sections=sections)
+
+    meta = {
+        "outer_d": float(outer_d),
+        "wall": float(wall),
+        "ridge_h": float(ridge_h),
+        "lead_angle": float(lead_angle),
+        "retention": float(retention),
+        "split": bool(split),
+        "joint_clear": float(clear),
+    }
+    ridge.metadata.update(meta)
+    groove.metadata.update(meta)
+    return {"ridge": ridge, "groove": groove}

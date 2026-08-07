@@ -125,6 +125,18 @@ from mechlib.gears import (
 from mechlib.grippers import collet_chuck, eccentric_cam_clamp, iris_diaphragm
 from mechlib.guides import linear_way, telescoping_stage
 from mechlib.indexing import escapement, geneva_pair, intermittent_gear_pair
+from mechlib.cams import roller_follower
+from mechlib.closures import annular_snap
+from mechlib.couplings import beam_coupling
+from mechlib.drives import flywheel
+from mechlib.fasteners import shaft_key, thread_insert, tslot_nut
+from mechlib.fluid import check_valve
+from mechlib.grippers import bellows_suction_cup
+from mechlib.indexing import detent_pair, star_wheel
+from mechlib.linear import lead_screw
+from mechlib.mechanisms import handwheel, shaft_collar, star_knob
+from mechlib.pulleys import v_belt_pulley
+from mechlib.ratchets import ratchet_wheel_pawl
 from mechlib.joints import ball_socket_joint, clevis, gimbal_rings, knuckle_hinge
 from mechlib.lattices import auxetic_panel, kerf_bend_cutter
 from mechlib.linear import (
@@ -2789,6 +2801,257 @@ def build():
                 "Gap-analysis wave v0.9.0; classic ref: C. W. Musser "
                 "harmonic drive (1957)"),
             "demo": "demo_harmonic_drive",
+        },
+        {
+            "file": "v_belt_pulley_demo.glb",
+            "name": "v_belt_pulley",
+            "module": "mechlib.pulleys",
+            "signature": signature(v_belt_pulley),
+            "description": (
+                "A trapezoidal-groove wedge-belt sheave with stock hub "
+                "styles (flat plate, one-sided, two-sided hub), keyway and "
+                "setscrew options. Washing machines, drill presses, lathes, "
+                "and HVAC blowers."),
+            "origin": (
+                "Gap-analysis wave v0.10.0; classic ref: V-belt drive"),
+            "demo": "demo_v_belt_pulley",
+        },
+        {
+            "file": "flywheel_demo.glb",
+            "name": "flywheel",
+            "module": "mechlib.drives",
+            "signature": signature(flywheel),
+            "description": (
+                "A rim-heavy energy-storage wheel, spoked or webbed, with "
+                "mass, moment of inertia, and stored energy computed from "
+                "the actual mesh. Punch presses, engines, spin-casters, "
+                "and gyro demos."),
+            "origin": (
+                "Gap-analysis wave v0.10.0; classic ref: engine / press "
+                "flywheel"),
+            "demo": "demo_flywheel",
+        },
+        {
+            "file": "shaft_collar_demo.glb",
+            "name": "shaft_collar",
+            "module": "mechlib.mechanisms",
+            "signature": signature(shaft_collar),
+            "description": (
+                "A split clamping collar (or setscrew ring) that axially "
+                "locates bearings, gears, and sprockets on a shaft without "
+                "machining a shoulder into it."),
+            "origin": (
+                "Gap-analysis wave v0.10.0; classic ref: clamping shaft "
+                "collar"),
+            "demo": "demo_shaft_collar",
+        },
+        {
+            "file": "star_knob_demo.glb",
+            "name": "star_knob",
+            "module": "mechlib.mechanisms",
+            "signature": signature(star_knob),
+            "description": (
+                "A DIN 6336 style lobed clamping knob with a printed "
+                "internal thread. The hand-operated fastener of jigs, "
+                "fixtures, machine adjustment, and camera rigs."),
+            "origin": (
+                "Gap-analysis wave v0.10.0; classic ref: DIN 6336 star "
+                "knob"),
+            "demo": "demo_star_knob",
+        },
+        {
+            "file": "handwheel_demo.glb",
+            "name": "handwheel",
+            "module": "mechlib.mechanisms",
+            "signature": signature(handwheel),
+            "description": (
+                "A spoked handwheel for leadscrew and valve adjustment, "
+                "here in the crank variant with a free-spinning captured "
+                "grip. Manual drives for screw jacks, indexing tables, "
+                "and winches."),
+            "origin": (
+                "Gap-analysis wave v0.10.0; classic ref: DIN 950 spoked "
+                "handwheel / crank handle"),
+            "demo": "demo_handwheel",
+        },
+        {
+            "file": "beam_coupling_demo.glb",
+            "name": "beam_coupling",
+            "module": "mechlib.couplings",
+            "signature": signature(beam_coupling),
+            "description": (
+                "A helical-slit flexible coupling: torsionally stiff yet "
+                "compliant in angular, parallel, and axial misalignment. "
+                "The standard printed coupling of 3D-printer Z axes and "
+                "CNC builds."),
+            "origin": (
+                "Gap-analysis wave v0.10.0; classic ref: helical beam / "
+                "slit coupling"),
+            "demo": "demo_beam_coupling",
+        },
+        {
+            "file": "lead_screw_demo.glb",
+            "name": "lead_screw",
+            "module": "mechlib.linear",
+            "signature": signature(lead_screw),
+            "description": (
+                "A trapezoidal (Tr) power screw and matching nut: flat "
+                "crests print cleanly at power-screw leads where a sharp V "
+                "thread would not. Vices, C-clamps, Z-axis stages, and "
+                "press screws."),
+            "origin": (
+                "Gap-analysis wave v0.10.0; classic ref: trapezoidal lead "
+                "screw (ISO 2903 Tr / ACME)"),
+            "demo": "demo_lead_screw",
+        },
+        {
+            "file": "roller_follower_demo.glb",
+            "name": "roller_follower",
+            "module": "mechlib.cams",
+            "signature": signature(roller_follower),
+            "description": (
+                "A pivoted lever carrying a roller (plain, or a bought 625 "
+                "bearing in a press pocket) that rides a plate, heart, or "
+                "snail cam. Valve lifters, pump drives, and automata."),
+            "origin": (
+                "Gap-analysis wave v0.10.0; classic ref: oscillating "
+                "roller follower"),
+            "demo": "demo_roller_follower",
+        },
+        {
+            "file": "detent_pair_demo.glb",
+            "name": "detent_pair",
+            "module": "mechlib.indexing",
+            "signature": signature(detent_pair),
+            "description": (
+                "A spring-loaded plunger clicking into the notches of a "
+                "dial, guided by a housing with a coil-spring pocket. "
+                "Pan-tilt heads, adjustable arms, rotary selectors, and "
+                "folding-leg locks."),
+            "origin": (
+                "Gap-analysis wave v0.10.0; classic ref: spring detent / "
+                "click positioning"),
+            "demo": "demo_detent_pair",
+        },
+        {
+            "file": "star_wheel_demo.glb",
+            "name": "star_wheel",
+            "module": "mechlib.indexing",
+            "signature": signature(star_wheel),
+            "description": (
+                "A rotating disc with concave pockets that meters "
+                "cylindrical objects at a fixed pitch. The packaging-"
+                "industry star wheel of filling, capping, and sorting "
+                "machines."),
+            "origin": (
+                "Gap-analysis wave v0.10.0; classic ref: packaging star "
+                "wheel"),
+            "demo": "demo_star_wheel",
+        },
+        {
+            "file": "ratchet_wheel_pawl_demo.glb",
+            "name": "ratchet_wheel_pawl",
+            "module": "mechlib.ratchets",
+            "signature": signature(ratchet_wheel_pawl),
+            "description": (
+                "The canonical bolt-on ratchet: an external sawtooth wheel "
+                "and a separate pivoted pawl with a leaf or coil spring. "
+                "Winch drums, come-alongs, windlasses, and webbing "
+                "tensioners."),
+            "origin": (
+                "Gap-analysis wave v0.10.0; classic ref: ratchet wheel "
+                "and pawl"),
+            "demo": "demo_ratchet_wheel_pawl",
+        },
+        {
+            "file": "thread_insert_demo.glb",
+            "name": "thread_insert",
+            "module": "mechlib.fasteners",
+            "signature": signature(thread_insert),
+            "description": (
+                "A heat-set threaded insert, its receiving boss, and the "
+                "tapered cavity cutter: durable machine-screw threads in "
+                "printed parts. Enclosure lids, motor mounts, and "
+                "adjustment points."),
+            "origin": (
+                "Gap-analysis wave v0.10.0; classic ref: heat-set insert "
+                "(McMaster 94180A style)"),
+            "demo": "demo_thread_insert",
+        },
+        {
+            "file": "tslot_nut_demo.glb",
+            "name": "tslot_nut",
+            "module": "mechlib.fasteners",
+            "signature": signature(tslot_nut),
+            "description": (
+                "A printed drop-in or slide-in nut that keys into "
+                "2020/3030/4040 aluminium-extrusion slots, with a printed "
+                "thread and an anti-rattle spring leaf. The standard way "
+                "to bolt parts to printer frames and CNC gantries."),
+            "origin": (
+                "Gap-analysis wave v0.10.0; classic ref: T-slot / "
+                "extrusion nut"),
+            "demo": "demo_tslot_nut",
+        },
+        {
+            "file": "shaft_key_demo.glb",
+            "name": "shaft_key",
+            "module": "mechlib.fasteners",
+            "signature": signature(shaft_key),
+            "description": (
+                "A DIN 6885 sunk key with its shaft and hub keyway "
+                "cutters, sized from the shaft diameter table. Torque "
+                "transmission into gear hubs, hand cranks, and pulleys "
+                "where a D-bore slips."),
+            "origin": (
+                "Gap-analysis wave v0.10.0; classic ref: parallel / "
+                "Woodruff machine key (DIN 6885)"),
+            "demo": "demo_shaft_key",
+        },
+        {
+            "file": "annular_snap_demo.glb",
+            "name": "annular_snap",
+            "module": "mechlib.closures",
+            "signature": signature(annular_snap),
+            "description": (
+                "A circumferential ridge snapping into a groove: the "
+                "cylindrical snap fit of bottle caps, filter housings, "
+                "pipe couplings, and round enclosure lids, as unionable "
+                "ridge and groove features."),
+            "origin": (
+                "Gap-analysis wave v0.10.0; classic ref: annular snap-fit "
+                "joint"),
+            "demo": "demo_annular_snap",
+        },
+        {
+            "file": "check_valve_demo.glb",
+            "name": "check_valve",
+            "module": "mechlib.fluid",
+            "signature": signature(check_valve),
+            "description": (
+                "A ball-check non-return valve built around a bought "
+                "bearing ball on a conical seat, with a snap-on cap and "
+                "hose-barb ports. Pump outlet lines, siphon breaks, and "
+                "air lines."),
+            "origin": (
+                "Gap-analysis wave v0.10.0; classic ref: ball check "
+                "valve"),
+            "demo": "demo_check_valve",
+        },
+        {
+            "file": "bellows_suction_cup_demo.glb",
+            "name": "bellows_suction_cup",
+            "module": "mechlib.grippers",
+            "signature": signature(bellows_suction_cup),
+            "description": (
+                "A bellows vacuum cup for TPU pick-and-place: a thin "
+                "sealing lip, compliant folds, and a hose-barb stem for "
+                "the vacuum line, with collapsed height and cup volume in "
+                "the metadata."),
+            "origin": (
+                "Gap-analysis wave v0.10.0; classic ref: bellows vacuum "
+                "suction cup"),
+            "demo": "demo_bellows_suction_cup",
         },
     ]
 

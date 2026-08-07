@@ -4,18 +4,26 @@ import math
 
 import numpy as np
 import shapely.geometry as sg
+from shapely.geometry.polygon import orient
 from shapely.ops import unary_union
 import trimesh
 
 from .closures import setscrew
 from .cutters import bearing_seat
 from .meshutil import from_manifold, sub, to_manifold, uni
-from .prim import cyl, hex_poly
+from .prim import boxc, cyl, hex_poly
 from .sweep import loft
 
 
 def _polar(r, angle):
     return r * math.cos(angle), r * math.sin(angle)
+
+
+def _revolve(poly, sections=96):
+    """Revolve a closed (r, z) profile polygon about the Z axis."""
+    ring = orient(poly, 1.0)
+    return trimesh.creation.revolve(np.asarray(ring.exterior.coords),
+                                    sections=int(sections))
 
 
 def _extrude(poly, height, z0=0.0):
@@ -473,10 +481,155 @@ def belt_tensioner(arm_len=30.0, sweep_deg=50.0, beam_t=1.4, beam_w=6.0,
     return body
 
 
+# Belt top width, groove depth and total flank angle per classic V-belt
+# section (3L, A, B); the pitch line sits PITCH_FRAC of the depth above the
+# groove root.
+_V_SECTIONS = {
+    "3L": (9.7, 6.0, 36.0),
+    "A": (12.7, 8.0, 34.0),
+    "B": (16.3, 10.5, 34.0),
+}
+_V_PITCH_FRAC = 0.7
+
+
+def v_belt_pulley(section="3L", pitch_d=60.0, grooves=1, bore_d=8.0,
+                  clear=0.2, hub="B", hub_d=None, hub_len=8.0,
+                  keyway=False, setscrew_d=3.0, sections=96):
+    """Build a trapezoidal-groove V-belt pulley (sheave), axis along +Z.
+
+    The classic wedge-belt pulley of washing machines, drill presses, lathes
+    and HVAC blowers: a rim carrying ``grooves`` trapezoidal grooves for
+    ``section`` belts (``"3L"``, ``"A"`` or ``"B"``; top width, depth and
+    flank angle from the standard section table), a web, and a hub. ``hub``
+    selects the stock hub style: ``"A"`` is a flat plate with no hub,
+    ``"B"`` adds a one-sided hub of ``hub_d`` x ``hub_len`` below the rim,
+    ``"C"`` carries the hub on both faces. The groove pitch line sits at
+    ``pitch_d``; the outer diameter is ``pitch_d + 2*(1-PITCH_FRAC)*depth``.
+    The bore is printed at ``bore_d + clear``. With ``keyway`` a 3 mm
+    keyway slot is broached along the bore; with hub style ``"B"``/``"C"`` a
+    radial ``setscrew_d`` boss (via ``closures.setscrew``) pierces the hub
+    into the bore. The rim sits on z=0 with the hub extending below it for
+    hub styles ``"B"``/``"C"``; print hub-face down. The standard wedge
+    flank angle (34-38 degrees) is shallower than the 45 degree FDM rule on
+    the grooves' upper flanks, so print at 0.12-0.2 mm layers; the short
+    flanks bridge cleanly at those layer heights. Units are mm and
+    degrees.
+    """
+    if section not in _V_SECTIONS:
+        raise ValueError("v_belt_pulley(): section must be one of %s"
+                         % (sorted(_V_SECTIONS),))
+    if pitch_d <= 0 or bore_d <= 0 or clear < 0 or hub_len < 0:
+        raise ValueError("v_belt_pulley(): pitch_d and bore_d must be "
+                         "positive, clear and hub_len non-negative")
+    if hub not in ("A", "B", "C"):
+        raise ValueError("v_belt_pulley(): hub must be 'A', 'B' or 'C'")
+    grooves = int(round(grooves))
+    if grooves < 1:
+        raise ValueError("v_belt_pulley(): grooves must be at least 1")
+    if hub == "A":
+        hub_len = 0.0
+
+    belt_w, depth, angle = _V_SECTIONS[section]
+    pitch_r = pitch_d / 2.0
+    root_r = pitch_r - _V_PITCH_FRAC * depth
+    outer_r = root_r + depth
+    bore_r = (bore_d + clear) / 2.0
+    if root_r - bore_r < 2.0:
+        raise ValueError("v_belt_pulley(): groove root leaves under 2.0 mm "
+                         "above the bore; raise pitch_d or lower bore_d")
+    half_ang = math.radians(angle / 2.0)
+    root_w = belt_w - 2.0 * depth * math.tan(half_ang)
+    if root_w < 1.0:
+        raise ValueError("v_belt_pulley(): %s groove closes up at the root "
+                         "for this depth" % section)
+
+    spacing = belt_w + 3.0
+    edge = 2.0
+    rim_w = (grooves - 1) * spacing + belt_w + 2.0 * edge
+
+    if hub_d is None:
+        hub_d = max(bore_d + clear + 4.8, 2.0 * bore_d)
+    if hub in ("B", "C"):
+        if hub_d < bore_d + clear + 2.4:
+            raise ValueError("v_belt_pulley(): hub wall below 1.2 mm around "
+                             "the bore")
+        if hub_d / 2.0 >= root_r:
+            raise ValueError("v_belt_pulley(): hub_d reaches the groove "
+                             "roots")
+    if hub_len > 0 and hub == "A":
+        raise ValueError("v_belt_pulley(): hub='A' takes no hub_len")
+
+    # Rim block from z=0 to rim_w, hub(s) outside it.
+    parts = [cyl(outer_r, rim_w, center=(0, 0, rim_w / 2.0),
+                 sections=int(sections))]
+    if hub in ("B", "C") and hub_len > 0:
+        parts.append(cyl(hub_d / 2.0, hub_len,
+                         center=(0, 0, -hub_len / 2.0),
+                         sections=int(sections)))
+    if hub == "C" and hub_len > 0:
+        parts.append(cyl(hub_d / 2.0, hub_len,
+                         center=(0, 0, rim_w + hub_len / 2.0),
+                         sections=int(sections)))
+    body = uni(parts)
+
+    # Groove cutters: revolved trapezoids opening outward.
+    cutters = []
+    z_c0 = edge + belt_w / 2.0
+    top_w = belt_w + 2.0 * 2.0 * math.tan(half_ang)
+    for k in range(grooves):
+        zc = z_c0 + k * spacing
+        trap = sg.Polygon([
+            (root_r - 0.5, zc - root_w / 2.0 - 0.5 * math.tan(half_ang)),
+            (root_r - 0.5, zc + root_w / 2.0 + 0.5 * math.tan(half_ang)),
+            (outer_r + 2.0, zc + top_w / 2.0),
+            (outer_r + 2.0, zc - top_w / 2.0),
+        ])
+        cutters.append(_revolve(trap, sections=sections))
+    body = sub(body, uni(cutters))
+
+    # Bore, optional keyway, optional setscrew into the lower hub.
+    total_h = rim_w + (hub_len if hub in ("B", "C") else 0.0) + \
+        (hub_len if hub == "C" else 0.0)
+    bore_cuts = [cyl(bore_r, total_h + 4.0,
+                     center=(0, 0, total_h / 2.0 - (hub_len if hub in ("B", "C") else 0.0)),
+                     sections=int(sections))]
+    if keyway:
+        if root_r - (bore_r + 1.5) < 1.2:
+            raise ValueError("v_belt_pulley(): keyway breaks through the "
+                             "groove root; raise pitch_d")
+        key = boxc((3.0, 3.0, total_h + 4.0),
+                   center=(bore_r + 0.5, 0.0,
+                           total_h / 2.0 - (hub_len if hub in ("B", "C") else 0.0)))
+        bore_cuts.append(key)
+    body = sub(body, uni(bore_cuts))
+
+    if hub in ("B", "C") and hub_len > 0 and setscrew_d > 0:
+        ss_point = np.array([hub_d / 2.0, 0.0, -hub_len / 2.0])
+        ss_dir = np.array([-1.0, 0.0, 0.0])
+        boss, hole = setscrew(ss_point, ss_dir,
+                              into=hub_d / 2.0, hole_d=setscrew_d,
+                              boss_d=setscrew_d + 5.0, boss_h=3.0,
+                              sections=32)
+        body = sub(uni([body, boss]), hole)
+
+    body.metadata.update({
+        "section": section,
+        "pitch_d": float(pitch_d),
+        "outer_d": float(2.0 * outer_r),
+        "grooves": int(grooves),
+        "bore_d": float(bore_d + clear),
+        "groove_angle_deg": float(angle),
+        "rim_w": float(rim_w),
+        "belt_line_speed_per_rpm": float(math.pi * pitch_d),
+    })
+    return body
+
+
 __all__ = (
     "timing_pulley",
     "grooved_drum",
     "idler_pulley",
     "eccentric_idler_mount",
     "belt_tensioner",
+    "v_belt_pulley",
 )

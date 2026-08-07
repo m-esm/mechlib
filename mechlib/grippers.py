@@ -7,6 +7,7 @@ import shapely.geometry as sg
 import trimesh
 import trimesh.transformations as tf
 from shapely import affinity
+from shapely.geometry.polygon import orient
 from shapely.ops import nearest_points, unary_union
 
 from .cutters import slot_cutter
@@ -692,4 +693,92 @@ __all__ = (
     "iris_control_range",
     "collet_chuck",
     "eccentric_cam_clamp",
+    "bellows_suction_cup",
 )
+
+
+def bellows_suction_cup(d=20.0, folds=2, lip_t=0.8, stem_d=6.0, barb=True,
+                        sections=96):
+    """Build a bellows vacuum suction cup for TPU pick-and-place tooling.
+
+    The misumi-style bellows cup of printed pick-and-place heads: a sealing
+    lip of ``lip_t`` at the ``d`` rim, ``folds`` convolutions that let the
+    cup comply to uneven surfaces, and a stem of ``stem_d`` for the vacuum
+    line -- a ``fluid.hose_barb`` tail when ``barb=True``, a plain tube
+    otherwise. Every bellows flank runs at exactly 45 degrees from
+    vertical, so the cup prints lip-down on z=0 with no support (print in
+    TPU; PLA is too stiff to seal). The metadata carries ``compressed_h``
+    (folds fully collapsed, for Z travel budgeting) and
+    ``cup_volume_mm3`` (interior volume, for vacuum sizing). Units are mm.
+    """
+    if d <= 0 or lip_t < 0.4 or stem_d <= 0:
+        raise ValueError("bellows_suction_cup(): d and stem_d must be "
+                         "positive, lip_t at least 0.4 mm")
+    folds = int(round(folds))
+    if folds < 1:
+        raise ValueError("bellows_suction_cup(): need at least 1 fold")
+    r_hub = stem_d / 2.0 + 2.5
+    if d / 2.0 - r_hub < 4.0:
+        raise ValueError("bellows_suction_cup(): d too small for the stem")
+
+    # Wall centerline: a 45-degree zigzag from the rim up to the hub.
+    step_r = (d / 2.0 - r_hub) / folds
+    h_fold = step_r + 2.4
+    pts = [(d / 2.0 - lip_t / 2.0 - 1.5, lip_t / 2.0),
+           (d / 2.0 - lip_t / 2.0, lip_t / 2.0)]
+    radii = [d / 2.0]
+    z = lip_t / 2.0
+    for f in range(folds):
+        r_a = d / 2.0 - step_r * f
+        r_b = r_a - step_r
+        pts.append((r_a - step_r / 2.0 - 1.2, z + step_r / 2.0 + 1.2))
+        pts.append((r_b, z + h_fold))
+        radii.append(r_b)
+        z += h_fold
+    z_body = z
+    wall = sg.LineString(pts).buffer(lip_t / 2.0, cap_style=2,
+                                     join_style=2)
+    cup = _revolve_cup(wall, sections)
+
+    # Hub flange and stem with the vacuum bore into the cup interior.
+    flange = cyl(r_hub + 1.5, 2.0, center=(0, 0, z_body + 1.0),
+                 sections=int(sections))
+    parts = [cup, flange]
+    if barb:
+        from .fluid import hose_barb
+        tail = hose_barb(tube_id=stem_d, barbs=2, foot="none",
+                         sections=int(sections))
+        tail.apply_translation((0, 0, z_body + 1.8))
+        parts.append(tail)
+        z_top = z_body + 1.8 + (tail.bounds[1][2] - tail.bounds[0][2])
+    else:
+        stem = cyl(stem_d / 2.0 + 1.6, 8.0,
+                   center=(0, 0, z_body + 2.0 + 4.0),
+                   sections=int(sections))
+        parts.append(stem)
+        z_top = z_body + 10.0
+    cup = uni(parts)
+    cup = sub(cup, cyl(stem_d / 2.0, z_top - z_body + 2.0,
+                       center=(0, 0, (z_body + z_top) / 2.0),
+                       sections=int(sections)))
+
+    volume = 0.0
+    for f in range(folds):
+        r_a, r_b = radii[f], radii[f + 1]
+        volume += math.pi / 3.0 * h_fold * (r_a ** 2 + r_a * r_b + r_b ** 2)
+    cup.metadata.update({
+        "d": float(d),
+        "folds": int(folds),
+        "lip_t": float(lip_t),
+        "stem_d": float(stem_d),
+        "barb": bool(barb),
+        "compressed_h": float(folds * 2.0 * lip_t + 2.0),
+        "cup_volume_mm3": float(volume),
+    })
+    return cup
+
+
+def _revolve_cup(poly, sections):
+    ring = orient(poly, 1.0)
+    return trimesh.creation.revolve(np.asarray(ring.exterior.coords),
+                                    sections=int(sections))
