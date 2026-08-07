@@ -115,27 +115,36 @@ def four_bar_pose(l_ground, l_crank, l_coupler, l_rocker, crank_angle_deg,
 def four_bar(l_ground=25.0, l_crank=12.5, l_coupler=25.0, l_rocker=25.0,
              crank_angle_deg=60.0, branch=1, coupler_ext=0.0,
              width=6.0, thickness=4.0, bore_d=3.0, clearance=0.25,
-             pin_extra=2.0):
+             pin_extra=2.0, layer_gap=0.5):
     """Build a flat-printable four-bar linkage kit posed in assembly.
 
     Returns ``{"ground", "crank", "coupler", "rocker", "pins", "joints"}``;
     ``pins`` are the four printed pivot pins at the solved joints and
-    ``joints`` is the ``four_bar_pose`` dict. The links are stacked one
-    thickness apart (ground lowest, then rocker, coupler, crank) so the
-    assembled parts never intersect. ``coupler_ext`` (mm) extends the coupler
-    bar past the rocker joint and adds a ``"trace"`` boss at its tip — the
-    coupler-curve tracer point. The defaults (ground 2 : crank 1 : coupler
-    2.5 : rocker 2.5 with a 2.5 extension) are the Hoecken straight-line
-    proportions. Raises ``ValueError`` for unreachable poses.
+    ``joints`` is the ``four_bar_pose`` dict. Links stack ground → rocker →
+    coupler → crank with ``layer_gap`` (mm) of air between slabs so a bar
+    that swings under a higher pivot never sits face-to-face on that pin
+    (Hoecken coupler passes under O1 near 255 deg crank). Pins only occupy
+    the Z slabs of the links they join: O1 is two stubs (ground + crank)
+    with open air through rocker/coupler. ``coupler_ext`` (mm) extends the
+    coupler past the rocker joint and adds a ``"trace"`` boss at its tip.
+    Defaults are the Hoecken straight-line proportions. Raises
+    ``ValueError`` for unreachable poses.
     """
     if (width < 2.4 or thickness < 1.2 or bore_d <= 0 or clearance < 0 or
-            bore_d + clearance >= width or coupler_ext < 0 or pin_extra < 0):
+            bore_d + clearance >= width or coupler_ext < 0 or pin_extra < 0 or
+            layer_gap < 0):
         raise ValueError("four_bar(): invalid link or pin dimensions")
     joints = four_bar_pose(l_ground, l_crank, l_coupler, l_rocker,
                            crank_angle_deg, branch)
     O1, O2, A, B = (joints[key] for key in ("O1", "O2", "A", "B"))
     hole_d = bore_d + clearance
-    t = thickness
+    t = float(thickness)
+    g = float(layer_gap)
+    # Contiguous thickness slabs separated by air gaps.
+    z_g0, z_g1 = 0.0, t
+    z_r0, z_r1 = t + g, 2.0 * t + g
+    z_c0, z_c1 = 2.0 * t + 2.0 * g, 3.0 * t + 2.0 * g
+    z_k0, z_k1 = 3.0 * t + 3.0 * g, 4.0 * t + 3.0 * g
     direction = np.asarray(B, float) - np.asarray(A, float)
     direction /= np.linalg.norm(direction)
     tip = np.asarray(A, float) + (l_coupler + coupler_ext) * direction
@@ -144,33 +153,26 @@ def four_bar(l_ground=25.0, l_crank=12.5, l_coupler=25.0, l_rocker=25.0,
     # trace pin seats in a hole rather than punching solid bar stock.
     coupler_holes = (A, B, tip_xy) if coupler_ext > 0 else (A, B)
     parts = {
-        "ground": _bar_mesh(O1, O2, width, 0.0, t, hole_d, (O1, O2)),
-        "rocker": _bar_mesh(O2, B, width, t, 2.0 * t, hole_d, (O2, B)),
-        "coupler": _bar_mesh(A, tip, width, 2.0 * t, 3.0 * t, hole_d,
-                             coupler_holes),
-        "crank": _bar_mesh(O1, A, width, 3.0 * t, 4.0 * t, hole_d, (O1, A)),
-        # Pins only span the layers that meet at each joint. A continuous
-        # post through the full stack stabs any bar that later swings over
-        # that XY (O1 vs coupler near 240 deg crank on Hoecken proportions).
-        # Layers are contiguous (ground 0..t, rocker t..2t, coupler 2t..3t,
-        # crank 3t..4t), so pin_extra is only safe above the TOP of the stack
-        # (crank) or flush with a joint's top face when the next layer has no
-        # hole at that pivot.
-        # O1 joins ground and crank with air between them → two stubs.
+        "ground": _bar_mesh(O1, O2, width, z_g0, z_g1, hole_d, (O1, O2)),
+        "rocker": _bar_mesh(O2, B, width, z_r0, z_r1, hole_d, (O2, B)),
+        "coupler": _bar_mesh(A, tip, width, z_c0, z_c1, hole_d, coupler_holes),
+        "crank": _bar_mesh(O1, A, width, z_k0, z_k1, hole_d, (O1, A)),
+        # O1 joins ground + crank only → two stubs; air through rocker/coupler
+        # so the coupler can swing under O1 without stabbing a post.
         "pins": (
             uni([
-                _pin_xy(O1, 0.0, t, bore_d),
-                _pin_xy(O1, 3.0 * t, 4.0 * t + pin_extra, bore_d),
+                _pin_xy(O1, z_g0, z_g1, bore_d),
+                _pin_xy(O1, z_k0, z_k1 + pin_extra, bore_d),
             ]),
-            _pin_xy(O2, 0.0, 2.0 * t, bore_d),                 # ground+rocker
-            _pin_xy(A, 2.0 * t, 4.0 * t + pin_extra, bore_d),  # coupler+crank
-            _pin_xy(B, t, 3.0 * t, bore_d),                    # rocker+coupler
+            _pin_xy(O2, z_g0, z_r1, bore_d),                 # ground+rocker
+            _pin_xy(A, z_c0, z_k1 + pin_extra, bore_d),      # coupler+crank
+            _pin_xy(B, z_r0, z_c1, bore_d),                  # rocker+coupler
         ),
         "joints": joints,
     }
     if coupler_ext > 0:
         # Trace boss sits in the coupler slab only (coupler is bored at tip).
-        parts["trace"] = _pin_xy(tip_xy, 2.0 * t, 3.0 * t, bore_d)
+        parts["trace"] = _pin_xy(tip_xy, z_c0, z_c1, bore_d)
     return parts
 
 
