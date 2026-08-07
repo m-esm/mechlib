@@ -1907,7 +1907,7 @@
           }
         }
       },
-      "usage": "from mechlib.linkages import four_bar\n\nresult = four_bar()  # keys: ground, rocker, coupler, crank, pins\nfrom mechlib import export_stl\nexport_stl(result[\"ground\"], \"four_bar.stl\")"
+      "applications": "Walking-robot legs, windshield-wiper kinematics, folding-furniture hinges, and any hobby build that needs a guided coupler curve."
     },
     {
       "file": "toggle_clamp_demo.glb",
@@ -3308,7 +3308,7 @@
           }
         }
       },
-      "usage": "from mechlib.linkages import toggle_clamp\n\nresult = toggle_clamp()  # keys: base, arm, link, handle, pins\nfrom mechlib import export_stl\nexport_stl(result[\"base\"], \"toggle_clamp.stl\")"
+      "applications": "Welding and woodworking hold-downs, drill-press fixtures, and CNC fixture clamps that must lock solid without continuous force."
     },
     {
       "file": "scotch_yoke_demo.glb",
@@ -3889,7 +3889,7 @@
           }
         }
       },
-      "usage": "from mechlib.linkages import scotch_yoke\n\nresult = scotch_yoke()  # keys: crank_disc, crank_pin, yoke, rail_a, rail_b\nfrom mechlib import export_stl\nexport_stl(result[\"crank_disc\"], \"scotch_yoke.stl\")"
+      "applications": "Pneumatic and hydraulic valve actuators, shaper tables, and any drive that wants pure simple-harmonic stroke from a rotating shaft."
     },
     {
       "file": "quick_return_demo.glb",
@@ -4470,7 +4470,7 @@
           }
         }
       },
-      "usage": "from mechlib.linkages import quick_return\n\nresult = quick_return()  # keys: base, crank_disc, crank_pin, lever, pins, time_ratio\nfrom mechlib import export_stl\nexport_stl(result[\"base\"], \"quick_return.stl\")"
+      "applications": "Metal shapers and slotters, packing machines, and press feeders where the return stroke should run faster than the working stroke."
     },
     {
       "file": "peaucellier_linkage_demo.glb",
@@ -7491,7 +7491,7 @@
           }
         }
       },
-      "usage": "from mechlib.linkages import peaucellier_linkage\n\nresult = peaucellier_linkage()  # keys: long_a, long_b, rhomb_pa, rhomb_bq, rhomb_pb, rhomb_aq, ground, crank\nfrom mechlib import export_stl\nexport_stl(result[\"long_a\"], \"peaucellier_linkage.stl\")"
+      "applications": "Straight-line guides without a slideway: instrument mechanisms, historical drafting machines, and teaching models of exact motion."
     },
     {
       "file": "watt_linkage_demo.glb",
@@ -9162,7 +9162,7 @@
           }
         }
       },
-      "usage": "from mechlib.linkages import watt_linkage\n\nresult = watt_linkage()  # keys: ground, lever_a, lever_b, coupler, tracer, pins, straight_dev\nfrom mechlib import export_stl\nexport_stl(result[\"ground\"], \"watt_linkage.stl\")"
+      "applications": "Beam-engine parallel motion (historical), solid-axle rear suspension links, and approximate straight-line guides in vehicles."
     },
     {
       "file": "sarrus_linkage_demo.glb",
@@ -11643,7 +11643,7 @@
           }
         }
       },
-      "usage": "from mechlib.linkages import sarrus_linkage\n\nresult = sarrus_linkage()  # keys: base, platform, bars, pins, lift, platform_z\nfrom mechlib import export_stl\nexport_stl(result[\"base\"], \"sarrus_linkage.stl\")"
+      "applications": "Lift platforms and parallel stages that must rise without twisting; FDM-friendly alternative to linear rails for pure vertical travel."
     },
     {
       "file": "pantograph_linkage_demo.glb",
@@ -14124,7 +14124,7 @@
           }
         }
       },
-      "usage": "from mechlib.linkages import pantograph_linkage\n\nresult = pantograph_linkage()  # keys: base, bar1, bar2, bar3, bar4, tracer, pins, ratio\nfrom mechlib import export_stl\nexport_stl(result[\"base\"], \"pantograph_linkage.stl\")"
+      "applications": "Engraving and sign-cutting pantographs, scale-copying arms, and any setup that traces a shape at a fixed scale ratio."
     },
     {
       "file": "lazy_tongs_demo.glb",
@@ -18765,7 +18765,7 @@
           }
         }
       },
-      "usage": "from mechlib.linkages import lazy_tongs\n\nresult = lazy_tongs()  # keys: frame, output, bars, pins, span, height, stroke_mult, gain\nfrom mechlib import export_stl\nexport_stl(result[\"frame\"], \"lazy_tongs.stl\")"
+      "applications": "Lazy-tongs riveters, scissor lifts, folding gates, and extendable booms that multiply a short squeeze into a long straight stroke."
     },
     {
       "file": "slider_crank_demo.glb",
@@ -20166,7 +20166,7 @@
           }
         }
       },
-      "usage": "from mechlib.linkages import slider_crank\n\nresult = slider_crank()  # keys: base, crank_disc, conrod, slider, pins\nfrom mechlib import export_stl\nexport_stl(result[\"base\"], \"slider_crank.stl\")"
+      "applications": "Piston engines and compressors, bicycle pumps, shapers, and every classic rotary-to-reciprocating conversion."
     },
     {
       "file": "chebyshev_linkage_demo.glb",
@@ -21837,7 +21837,7 @@
           }
         }
       },
-      "usage": "from mechlib.linkages import chebyshev_linkage\n\nresult = chebyshev_linkage()  # keys: ground, rocker_a, rocker_b, coupler, tracer, pins, max_error\nfrom mechlib import export_stl\nexport_stl(result[\"ground\"], \"chebyshev_linkage.stl\")"
+      "applications": "Straight-line walking and leg mechanisms, Russian school teaching models, and approximate linear guides with only revolute joints."
     },
     {
       "file": "scott_russell_linkage_demo.glb",
@@ -23508,7 +23508,7 @@
           }
         }
       },
-      "usage": "from mechlib.linkages import scott_russell_linkage\n\nresult = scott_russell_linkage()  # keys: base, crank, bar, slider, tracer, pins\nfrom mechlib import export_stl\nexport_stl(result[\"base\"], \"scott_russell_linkage.stl\")"
+      "applications": "Compact exact straight-line guides, early steam and marine parallel motions, and instruments that can afford one sliding joint."
     },
     {
       "file": "bell_crank_demo.glb",
@@ -25449,7 +25449,7 @@
           }
         }
       },
-      "usage": "from mechlib.linkages import bell_crank\n\nresult = bell_crank()  # keys: base, crank, link_a, link_b, pins\nfrom mechlib import export_stl\nexport_stl(result[\"base\"], \"bell_crank.stl\")"
+      "applications": "Brake and clutch pedals, throttle and shift linkages, print-bed levellers, and any force redirect through a fixed angle."
     },
     {
       "file": "iris_diaphragm_demo.glb",
@@ -25503,7 +25503,7 @@
           }
         ]
       },
-      "usage": "from mechlib.grippers import iris_diaphragm\n\nresult = iris_diaphragm()  # keys: base, blades, drive_ring, cap\nfrom mechlib import export_stl\nexport_stl(result[\"base\"], \"iris_diaphragm.stl\")"
+      "applications": "Camera and projector apertures, laser beam expanders, soft-robot grippers, and printed iris valves for light or air."
     },
     {
       "file": "collet_chuck_demo.glb",
@@ -25557,7 +25557,7 @@
           }
         ]
       },
-      "usage": "from mechlib.grippers import collet_chuck\n\nresult = collet_chuck()  # keys: collet, spindle_nose, nut\nfrom mechlib import export_stl\nexport_stl(result[\"collet\"], \"collet_chuck.stl\")"
+      "applications": "CNC spindle and router collets, lathe workholding, and any on-axis grip that must close concentrically on a round tool or stock."
     },
     {
       "file": "eccentric_cam_clamp_demo.glb",
@@ -26158,7 +26158,7 @@
           }
         }
       },
-      "usage": "from mechlib.grippers import eccentric_cam_clamp\n\nresult = eccentric_cam_clamp()  # keys: base, cam, follower, pin\nfrom mechlib import export_stl\nexport_stl(result[\"base\"], \"eccentric_cam_clamp.stl\")"
+      "applications": "Quick-release workholding on mills and fixtures, bicycle seat and stem clamps, and over-centre cam locks on jigs."
     },
     {
       "file": "plate_cam_demo.glb",
@@ -26769,7 +26769,7 @@
           }
         }
       },
-      "usage": "from mechlib.cams import plate_cam\n\nresult = plate_cam()  # watertight Trimesh\nfrom mechlib import export_stl\nexport_stl(result, \"plate_cam.stl\")"
+      "applications": "Model engines and automata valve timing, packaging-machine motion programs, and any radial cam that must follow a prescribed lift law."
     },
     {
       "file": "snail_cam_demo.glb",
@@ -26833,7 +26833,7 @@
           }
         ]
       },
-      "usage": "from mechlib.cams import snail_cam\n\nresult = snail_cam()  # watertight Trimesh\nfrom mechlib import export_stl\nexport_stl(result, \"snail_cam.stl\")"
+      "applications": "Clock strike trains, trip hammers, and slow-wind sudden-release mechanisms that need one drop per revolution."
     },
     {
       "file": "heart_cam_demo.glb",
@@ -27434,7 +27434,7 @@
           }
         }
       },
-      "usage": "from mechlib.cams import heart_cam\n\nresult = heart_cam()  # watertight Trimesh\nfrom mechlib import export_stl\nexport_stl(result, \"heart_cam.stl\")"
+      "applications": "Chronograph hand reset (heart piece), sewing-machine take-up, and any cam that must return a pointer to a unique zero."
     },
     {
       "file": "barrel_cam_demo.glb",
@@ -28025,7 +28025,7 @@
           }
         }
       },
-      "usage": "from mechlib.cams import barrel_cam\n\nresult = barrel_cam()  # keys: barrel, pin\nfrom mechlib import export_stl\nexport_stl(result[\"barrel\"], \"barrel_cam.stl\")"
+      "applications": "Fishing-reel level winds, tool-changer drums, textile traverse mechanisms, and cylindrical groove cams for axial programs."
     },
     {
       "file": "face_cam_demo.glb",
@@ -28346,7 +28346,7 @@
           }
         }
       },
-      "usage": "from mechlib.cams import face_cam\n\nresult = face_cam()  # keys: cam, pin, lift_at_phase\nfrom mechlib import export_stl\nexport_stl(result[\"cam\"], \"face_cam.stl\")"
+      "applications": "Automotive and textile end cams, axial followers on face tracks, and compact lift programs normal to a disc face."
     },
     {
       "file": "geneva_pair_demo.glb",
@@ -30795,7 +30795,7 @@
           }
         }
       },
-      "usage": "from mechlib.indexing import geneva_pair\n\nresult = geneva_pair()  # keys: driver, wheel\nfrom mechlib import export_stl\nexport_stl(result[\"driver\"], \"geneva_pair.stl\")"
+      "applications": "Movie and film projectors, assembly turrets, indexing tables, and any station that needs dwell then a fixed step per revolution."
     },
     {
       "file": "escapement_demo.glb",
@@ -31925,7 +31925,7 @@
         },
         "closed": true
       },
-      "usage": "from mechlib.indexing import escapement\n\nresult = escapement()  # keys: wheel, anchor, pivot\nfrom mechlib import export_stl\nexport_stl(result[\"wheel\"], \"escapement.stl\")"
+      "applications": "Longcase and printed clocks, metronomes, and any build that must release one tooth at a time under a pendulum or balance."
     },
     {
       "file": "intermittent_gear_pair_demo.glb",
@@ -31969,7 +31969,7 @@
           }
         ]
       },
-      "usage": "from mechlib.indexing import intermittent_gear_pair\n\nresult = intermittent_gear_pair()  # keys: driver, driven\nfrom mechlib import export_stl\nexport_stl(result[\"driver\"], \"intermittent_gear_pair.stl\")"
+      "applications": "Mechanical counters, washing-machine timers, odometers, and digit-advance mechanisms that step once per input turn."
     },
     {
       "file": "spur_gear_pair_demo.glb",
@@ -32359,7 +32359,7 @@
         },
         "closed": true
       },
-      "usage": "from mechlib.gears import spur_gear_2d\n\nresult = spur_gear_2d(N=12, m=10.0)\n# adjust the required args above as needed"
+      "applications": "Clockwork and instrument trains, printer extruder gears, and any parallel-shaft reduction that must mesh without clash."
     },
     {
       "file": "spur_gear_mesh_demo.glb",
@@ -32590,7 +32590,7 @@
         },
         "closed": true
       },
-      "usage": "from mechlib.gears import spur_gear_mesh\n\nresult = spur_gear_mesh(N=12, m=10.0, width=10.0)\n# adjust the required args above as needed"
+      "applications": "General spur gearing: gearboxes, robot joints, and FDM-printed power transmission where you need a single involute gear blank."
     },
     {
       "file": "roller_sprocket_demo.glb",
@@ -32654,7 +32654,7 @@
           }
         ]
       },
-      "usage": "from mechlib.gears import roller_sprocket_2d\n\nresult = roller_sprocket_2d(n_teeth=12, pitch=10.0, pin_d=10.0)\n# adjust the required args above as needed"
+      "applications": "Bicycle and conveyor chain drives, 3D-printer motion systems, and roller-chain sprockets matched to a pin envelope."
     },
     {
       "file": "worm_demo.glb",
@@ -32738,7 +32738,7 @@
           }
         ]
       },
-      "usage": "from mechlib.gears import worm\n\nresult = worm(module=10.0, length=10.0, pitch_d=10.0)\n# adjust the required args above as needed"
+      "applications": "High-ratio right-angle reducers, tuning knobs, winches, and self-locking stages that should not back-drive."
     },
     {
       "file": "spur_gear_sector_demo.glb",
@@ -32822,7 +32822,7 @@
           }
         ]
       },
-      "usage": "from mechlib.gears import spur_gear\n\nresult = spur_gear(module=10.0, teeth=12, width=10.0)\n# adjust the required args above as needed"
+      "applications": "Steering sectors, limited-travel instruments, and any place a full gear would waste space when only a few teeth are needed."
     },
     {
       "file": "rack_2d_demo.glb",
@@ -32876,7 +32876,7 @@
           }
         ]
       },
-      "usage": "from mechlib.gears import rack_2d\n\nresult = rack_2d(n_teeth=12, module=10.0)\n# adjust the required args above as needed"
+      "applications": "Linear stages, rack-and-pinion steering, and CNC axes that convert rotation into straight travel along a pitch line."
     },
     {
       "file": "herringbone_gear_demo.glb",
@@ -34533,7 +34533,7 @@
           }
         }
       },
-      "usage": "from mechlib.gears import herringbone_gear\n\nresult = herringbone_gear()  # watertight Trimesh\nfrom mechlib import export_stl\nexport_stl(result, \"herringbone_gear.stl\")"
+      "applications": "Quiet high-load gearboxes, marine and industrial herringbone pairs, and FDM gears that cancel axial thrust from helix angle."
     },
     {
       "file": "cycloidal_drive_demo.glb",
@@ -39364,7 +39364,7 @@
           }
         }
       },
-      "usage": "from mechlib.gears import cycloidal_drive\n\nresult = cycloidal_drive()  # keys: housing, disc, input, output\nfrom mechlib import export_stl\nexport_stl(result[\"housing\"], \"cycloidal_drive.stl\")"
+      "applications": "Robot joint reducers, cobot arms, and compact high-ratio drives where cycloidal geometry packs more torque than a planetary."
     },
     {
       "file": "bevel_gear_pair_demo.glb",
@@ -42605,7 +42605,7 @@
           }
         }
       },
-      "usage": "from mechlib.gears import bevel_gear_pair\n\nresult = bevel_gear_pair()  # keys: pinion, gear\nfrom mechlib import export_stl\nexport_stl(result[\"pinion\"], \"bevel_gear_pair.stl\")"
+      "applications": "Differentials, hand drills, right-angle gearboxes, and any intersecting-axis mesh at 90 degrees."
     },
     {
       "file": "ring_gear_demo.glb",
@@ -42624,7 +42624,7 @@
         57.7,
         8.0
       ],
-      "usage": "from mechlib.gears import ring_gear\n\nresult = ring_gear()  # watertight Trimesh\nfrom mechlib import export_stl\nexport_stl(result, \"ring_gear.stl\")"
+      "applications": "Planetary ring gears, internal mesh housings, and turntable drives that run a pinion inside an annulus."
     },
     {
       "file": "ring_gear_mesh_demo.glb",
@@ -44809,7 +44809,7 @@
           }
         }
       },
-      "usage": "from mechlib.gears import ring_gear_mesh\n\nresult = ring_gear_mesh()  # keys: ring, pinion\nfrom mechlib import export_stl\nexport_stl(result[\"ring\"], \"ring_gear_mesh.stl\")"
+      "applications": "Epicyclic stages, slewing drives, and internal gear pairs where pinion and ring turn the same way."
     },
     {
       "file": "pip_ratchet_demo.glb",
@@ -44863,7 +44863,7 @@
           }
         ]
       },
-      "usage": "from mechlib.ratchets import ratchet_ring_2d\n\nresult = ratchet_ring_2d()  # Shapely Polygon"
+      "applications": "Print-in-place freewheels, one-way knobs, and socket adapters that click when turning the drive way only."
     },
     {
       "file": "spring_cartridge_ratchet_demo.glb",
@@ -44927,7 +44927,7 @@
           }
         ]
       },
-      "usage": "from mechlib.ratchets import spring_cartridge_ratchet_2d\n\nresult = spring_cartridge_ratchet_2d()"
+      "applications": "Serviceable ratchet wrenches and winch freewheels where pawls and springs are separate replaceable parts."
     },
     {
       "file": "compliant_clutch_demo.glb",
@@ -44961,7 +44961,7 @@
           }
         ]
       },
-      "usage": "from mechlib.ratchets import compliant_clutch_2d\n\nresult = compliant_clutch_2d()"
+      "applications": "Torque-limiting knobs, safety clutches on feeders, and printed drives that should slip before something breaks."
     },
     {
       "file": "arc_ratchet_demo.glb",
@@ -44995,7 +44995,7 @@
           }
         ]
       },
-      "usage": "from mechlib.ratchets import arc_ratchet_2d\n\nresult = arc_ratchet_2d()"
+      "applications": "Tension-loaded one-way clutches, winch handles, and compact ratchets that use flexure arms instead of rigid pawls."
     },
     {
       "file": "torque_limiter_demo.glb",
@@ -45049,7 +45049,7 @@
           }
         ]
       },
-      "usage": "from mechlib.clutches import torque_limiter\n\nresult = torque_limiter()  # keys: driver, driven\nfrom mechlib import export_stl\nexport_stl(result[\"driver\"], \"torque_limiter.stl\")"
+      "applications": "Drill and screwdriver clutches, conveyor overload protection, and any shaft that must slip at a set torque."
     },
     {
       "file": "freewheel_clutch_demo.glb",
@@ -45093,7 +45093,7 @@
           }
         ]
       },
-      "usage": "from mechlib.clutches import freewheel_clutch\n\nresult = freewheel_clutch()  # keys: ring, hub, rollers\nfrom mechlib import export_stl\nexport_stl(result[\"ring\"], \"freewheel_clutch.stl\")"
+      "applications": "Bicycle freehubs, starter motors, and overrunning clutches that drive one way and freewheel the other."
     },
     {
       "file": "dog_clutch_demo.glb",
@@ -45414,7 +45414,7 @@
           }
         }
       },
-      "usage": "from mechlib.clutches import dog_clutch\n\nresult = dog_clutch()  # keys: hub_a, hub_b\nfrom mechlib import export_stl\nexport_stl(result[\"hub_a\"], \"dog_clutch.stl\")"
+      "applications": "Motorcycle and gearbox dog rings, PTO engagements, and positive-lock couplings that must not slip once seated."
     },
     {
       "file": "oldham_coupling_demo.glb",
@@ -45478,7 +45478,7 @@
           }
         ]
       },
-      "usage": "from mechlib.couplings import oldham_coupling\n\nresult = oldham_coupling()  # keys: hub_a, disc, hub_b\nfrom mechlib import export_stl\nexport_stl(result[\"hub_a\"], \"oldham_coupling.stl\")"
+      "applications": "Misaligned parallel shafts on pumps and encoders, and printed couplings that tolerate offset without side load."
     },
     {
       "file": "universal_joint_demo.glb",
@@ -45532,7 +45532,7 @@
           }
         ]
       },
-      "usage": "from mechlib.couplings import universal_joint\n\nresult = universal_joint()  # keys: yoke_a, spider, yoke_b\nfrom mechlib import export_stl\nexport_stl(result[\"yoke_a\"], \"universal_joint.stl\")"
+      "applications": "Driveshafts, steering columns, and any angled shaft pair that can live with Cardan speed variation."
     },
     {
       "file": "jaw_coupling_demo.glb",
@@ -45596,7 +45596,7 @@
           }
         ]
       },
-      "usage": "from mechlib.couplings import jaw_coupling\n\nresult = jaw_coupling()  # keys: hub_a, spider, hub_b\nfrom mechlib import export_stl\nexport_stl(result[\"hub_a\"], \"jaw_coupling.stl\")"
+      "applications": "Servo and stepper motor couplings, pump shafts, and general flexible jaw (Lovejoy-style) connections with a spider."
     },
     {
       "file": "tripod_cv_joint_demo.glb",
@@ -47275,7 +47275,7 @@
           }
         }
       },
-      "usage": "from mechlib.couplings import tripod_cv_joint\n\nresult = tripod_cv_joint()  # keys: housing, spider, rollers, shaft\nfrom mechlib import export_stl\nexport_stl(result[\"housing\"], \"tripod_cv_joint.stl\")"
+      "applications": "Front-wheel-drive halfshafts, plunging CV joints, and constant-velocity drives that also allow axial travel."
     },
     {
       "file": "double_cardan_joint_demo.glb",
@@ -47339,7 +47339,7 @@
           }
         ]
       },
-      "usage": "from mechlib.couplings import double_cardan_joint\n\nresult = double_cardan_joint()  # keys: yoke_in, spider_in, intermediate, spider_out, yoke_out\nfrom mechlib import export_stl\nexport_stl(result[\"yoke_in\"], \"double_cardan_joint.stl\")"
+      "applications": "Steering columns and industrial drives that cancel single-U-joint speed fluctuation with two Hooke joints phased 90 degrees."
     },
     {
       "file": "hirth_coupling_demo.glb",
@@ -47373,7 +47373,7 @@
           }
         ]
       },
-      "usage": "from mechlib.couplings import hirth_coupling\n\nresult = hirth_coupling()  # keys: hub_a, hub_b\nfrom mechlib import export_stl\nexport_stl(result[\"hub_a\"], \"hirth_coupling.stl\")"
+      "applications": "Machine-tool spindles, indexing tables, and face couplings that must locate torque and centerline with radial teeth."
     },
     {
       "file": "ball_socket_joint_demo.glb",
@@ -47437,7 +47437,7 @@
           }
         ]
       },
-      "usage": "from mechlib.joints import ball_socket_joint\n\nresult = ball_socket_joint()  # keys: ball, socket\nfrom mechlib import export_stl\nexport_stl(result[\"ball\"], \"ball_socket_joint.stl\")"
+      "applications": "Control arms, camera gimbals, robotic wrists, and snap-together spherical joints for multi-axis motion."
     },
     {
       "file": "knuckle_hinge_demo.glb",
@@ -47501,7 +47501,7 @@
           }
         ]
       },
-      "usage": "from mechlib.joints import knuckle_hinge\n\nresult = knuckle_hinge()  # keys: leaf_a, leaf_b\nfrom mechlib import export_stl\nexport_stl(result[\"leaf_a\"], \"knuckle_hinge.stl\")"
+      "applications": "Print-in-place lids and doors, laptop-style hinges, and living hinges that need a hard stop at open or closed."
     },
     {
       "file": "gimbal_rings_demo.glb",
@@ -48376,7 +48376,7 @@
           }
         }
       },
-      "usage": "from mechlib.joints import gimbal_rings\n\nresult = gimbal_rings()  # keys: ring_0, ring_1, ring_2\nfrom mechlib import export_stl\nexport_stl(result[\"ring_0\"], \"gimbal_rings.stl\")"
+      "applications": "Camera and sensor gimbals, gyroscope mounts, and nested rings that free two or three rotation axes."
     },
     {
       "file": "clevis_demo.glb",
@@ -48410,7 +48410,7 @@
           }
         ]
       },
-      "usage": "from mechlib.joints import clevis\n\nresult = clevis()  # keys: fork, eye, pin\nfrom mechlib import export_stl\nexport_stl(result[\"fork\"], \"clevis.stl\")"
+      "applications": "Actuator rod ends, turnbuckles, control links, and any pin joint that couples a fork to an eye."
     },
     {
       "file": "printed_worm_demo.glb",
@@ -48444,7 +48444,7 @@
           }
         ]
       },
-      "usage": "from mechlib.drives import printed_worm\n\nresult = printed_worm()  # watertight Trimesh\nfrom mechlib import export_stl\nexport_stl(result, \"printed_worm.stl\")"
+      "applications": "Fully printed worm reducers for robots and turntables, when metal worms are overkill and self-locking is welcome."
     },
     {
       "file": "flat_worm_pair_demo.glb",
@@ -48478,7 +48478,7 @@
           }
         ]
       },
-      "usage": "from mechlib.drives import flat_worm\n\nresult = flat_worm()  # watertight Trimesh\nfrom mechlib import export_stl\nexport_stl(result, \"flat_worm.stl\")"
+      "applications": "Bench-proven multi-start flat worms for FDM gearboxes and high-ratio printed drives that must actually mesh."
     },
     {
       "file": "worm_coupon_demo.glb",
@@ -48497,7 +48497,7 @@
         40.9,
         36.7
       ],
-      "usage": "from mechlib.drives import worm_coupon\n\nresult = worm_coupon()  # keys: worm, wheel_band\nfrom mechlib import export_stl\nexport_stl(result[\"worm\"], \"worm_coupon.stl\")"
+      "applications": "Quick mesh test coupons before committing a full gearbox print; iterate backlash and lead angle on a small pair."
     },
     {
       "file": "planet_stage_demo.glb",
@@ -48561,7 +48561,7 @@
           }
         ]
       },
-      "usage": "from mechlib.drives import planet_stage\n\nresult = planet_stage()  # keys: sun, planets, ring, carrier\nfrom mechlib import export_stl\nexport_stl(result[\"sun\"], \"planet_stage.stl\")"
+      "applications": "Robot gearboxes, cordless-tool reducers, and multi-stage planetary transmissions with a fixed ring."
     },
     {
       "file": "harmonic_drive_demo.glb",
@@ -48595,7 +48595,7 @@
           }
         ]
       },
-      "usage": "from mechlib.drives import harmonic_drive\n\nresult = harmonic_drive()  # keys: circular_spline, flex_spline, wave_generator, ratio\nfrom mechlib import export_stl\nexport_stl(result[\"circular_spline\"], \"harmonic_drive.stl\")"
+      "applications": "Cobot and industrial robot joints, pan-tilt heads, and anywhere you need huge ratio and near-zero backlash in a short package."
     },
     {
       "file": "gerotor_pump_demo.glb",
@@ -48965,7 +48965,7 @@
         },
         "closed": true
       },
-      "usage": "from mechlib.fluid import gerotor_pump\n\nresult = gerotor_pump()  # keys: inner, outer, housing, cap\nfrom mechlib import export_stl\nexport_stl(result[\"inner\"], \"gerotor_pump.stl\")"
+      "applications": "Oil pumps in engines and transmissions, compact hydraulic power packs, and positive-displacement lubrication circuits."
     },
     {
       "file": "hose_barb_demo.glb",
@@ -49029,7 +49029,7 @@
           }
         ]
       },
-      "usage": "from mechlib.fluid import hose_barb\n\nresult = hose_barb()  # watertight Trimesh\nfrom mechlib import export_stl\nexport_stl(result, \"hose_barb.stl\")"
+      "applications": "Coolant and air tubing on printers and lab gear, barbed hose tails that grip soft tube without a clamp."
     },
     {
       "file": "rotary_spool_valve_demo.glb",
@@ -49370,7 +49370,7 @@
           }
         }
       },
-      "usage": "from mechlib.fluid import rotary_spool_valve\n\nresult = rotary_spool_valve()  # keys: body, plug, cap\nfrom mechlib import export_stl\nexport_stl(result[\"body\"], \"rotary_spool_valve.stl\")"
+      "applications": "Pneumatic and hydraulic direction valves, multi-port manifolds, and rotary selectors that route flow by plug angle."
     },
     {
       "file": "peristaltic_pump_head_demo.glb",
@@ -49434,7 +49434,7 @@
           }
         ]
       },
-      "usage": "from mechlib.fluid import peristaltic_pump_head\n\nresult = peristaltic_pump_head()  # keys: body, rotor, cap\nfrom mechlib import export_stl\nexport_stl(result[\"body\"], \"peristaltic_pump_head.stl\")"
+      "applications": "Lab and medical dosing pumps, food-safe fluid transfer, and any pump that must never touch the fluid with gears or seals."
     },
     {
       "file": "external_gear_pump_demo.glb",
@@ -50553,7 +50553,7 @@
           }
         }
       },
-      "usage": "from mechlib.fluid import external_gear_pump\n\nresult = external_gear_pump()  # keys: body, gear_a, gear_b, cap, displacement_per_rev\nfrom mechlib import export_stl\nexport_stl(result[\"body\"], \"external_gear_pump.stl\")"
+      "applications": "Hydraulic power units, oil transfer pumps, and compact positive-displacement gear pumps for viscous fluids."
     },
     {
       "file": "scroll_drive_demo.glb",
@@ -50597,7 +50597,7 @@
           }
         ]
       },
-      "usage": "from mechlib.linear import scroll_drive\n\nresult = scroll_drive()  # keys: scroll, jaws\nfrom mechlib import export_stl\nexport_stl(result[\"scroll\"], \"scroll_drive.stl\")"
+      "applications": "Lathe chuck scroll plates, self-centering three-jaw mechanisms, and any drive that closes jaws equally from one rotation."
     },
     {
       "file": "differential_screw_demo.glb",
@@ -50641,7 +50641,7 @@
           }
         ]
       },
-      "usage": "from mechlib.linear import differential_screw\n\nresult = differential_screw()  # keys: shaft, nut_frame, nut_moving\nfrom mechlib import export_stl\nexport_stl(result[\"shaft\"], \"differential_screw.stl\")"
+      "applications": "Fine-adjustment stages, micrometers, and slow linear motion from two slightly different pitches on one shaft."
     },
     {
       "file": "archimedes_screw_demo.glb",
@@ -50685,7 +50685,7 @@
           }
         ]
       },
-      "usage": "from mechlib.linear import archimedes_screw\n\nresult = archimedes_screw()  # keys: screw, trough\nfrom mechlib import export_stl\nexport_stl(result[\"screw\"], \"archimedes_screw.stl\")"
+      "applications": "Irrigation and drainage lifts, bulk-material conveyors, and demonstration models of the classical water screw."
     },
     {
       "file": "swash_plate_demo.glb",
@@ -53406,7 +53406,7 @@
           }
         }
       },
-      "usage": "from mechlib.linear import swash_plate\n\nresult = swash_plate()  # keys: shaft, plate, shoes\nfrom mechlib import export_stl\nexport_stl(result[\"shaft\"], \"swash_plate.stl\")"
+      "applications": "Axial piston pumps and motors, helicopter cyclic control analogues, and multi-piston rotary-to-linear conversion."
     },
     {
       "file": "screw_jack_demo.glb",
@@ -53717,7 +53717,7 @@
           }
         }
       },
-      "usage": "from mechlib.linear import screw_jack\n\nresult = screw_jack()  # keys: base, screw, pad\nfrom mechlib import export_stl\nexport_stl(result[\"base\"], \"screw_jack.stl\")"
+      "applications": "Car jacks, theater stage lifts, machine levelling feet, and self-locking screw actuators for slow heavy lifts."
     },
     {
       "file": "rack_pinion_demo.glb",
@@ -54562,7 +54562,7 @@
           }
         }
       },
-      "usage": "from mechlib.linear import rack_pinion\n\nresult = rack_pinion()  # keys: pinion, rack, travel_per_rev\nfrom mechlib import export_stl\nexport_stl(result[\"pinion\"], \"rack_pinion.stl\")"
+      "applications": "Steering racks, CNC and plotter axes, camera sliders, and linear stages driven by a spur pinion."
     },
     {
       "file": "linear_way_demo.glb",
@@ -54626,7 +54626,7 @@
           }
         ]
       },
-      "usage": "from mechlib.guides import linear_way\n\nresult = linear_way()  # keys: gib, rail, carriage\nfrom mechlib import export_stl\nexport_stl(result[\"gib\"], \"linear_way.stl\")"
+      "applications": "Machine-tool and 3D-printer linear guides, dovetail slides, and adjustable gibbed carriages."
     },
     {
       "file": "telescoping_stage_demo.glb",
@@ -54690,7 +54690,7 @@
           }
         ]
       },
-      "usage": "from mechlib.guides import telescoping_stage\n\nresult = telescoping_stage()  # keys: section_0, section_1, section_2\nfrom mechlib import export_stl\nexport_stl(result[\"section_0\"], \"telescoping_stage.stl\")"
+      "applications": "Drawer slides, boom extensions, camera columns, and nested tubes that travel farther than any single section."
     },
     {
       "file": "timing_pulley_demo.glb",
@@ -54734,7 +54734,7 @@
           }
         ]
       },
-      "usage": "from mechlib.pulleys import timing_pulley\n\nresult = timing_pulley()  # watertight Trimesh\nfrom mechlib import export_stl\nexport_stl(result, \"timing_pulley.stl\")"
+      "applications": "GT2 and similar belt drives on printers and CNC, synchronous shaft coupling without slip."
     },
     {
       "file": "winch_drum_demo.glb",
@@ -54778,7 +54778,7 @@
           }
         ]
       },
-      "usage": "from mechlib.pulleys import grooved_drum\n\nresult = grooved_drum()  # watertight Trimesh\nfrom mechlib import export_stl\nexport_stl(result, \"grooved_drum.stl\")"
+      "applications": "Winches, cranes, fishing reels, and cable drums that need a helical groove so the rope stacks cleanly."
     },
     {
       "file": "fusee_demo.glb",
@@ -54822,7 +54822,7 @@
           }
         ]
       },
-      "usage": "from mechlib.pulleys import grooved_drum\n\nresult = grooved_drum()  # watertight Trimesh\nfrom mechlib import export_stl\nexport_stl(result, \"grooved_drum.stl\")"
+      "applications": "Historical clock and watch fusees that equalize spring torque as the mainspring runs down."
     },
     {
       "file": "idler_pulley_demo.glb",
@@ -54866,7 +54866,7 @@
           }
         ]
       },
-      "usage": "from mechlib.pulleys import idler_pulley\n\nresult = idler_pulley()  # watertight Trimesh\nfrom mechlib import export_stl\nexport_stl(result, \"idler_pulley.stl\")"
+      "applications": "Belt path redirects on printers and conveyors, free-spinning pulleys that only change direction or take up slack."
     },
     {
       "file": "eccentric_idler_mount_demo.glb",
@@ -54910,7 +54910,7 @@
           }
         ]
       },
-      "usage": "from mechlib.pulleys import eccentric_idler_mount\n\nresult = eccentric_idler_mount()  # keys: bushing, pulley\nfrom mechlib import export_stl\nexport_stl(result[\"bushing\"], \"eccentric_idler_mount.stl\")"
+      "applications": "Belt tension take-up on mills and printers: turn the eccentric to set belt preload without a sliding slot."
     },
     {
       "file": "belt_tensioner_demo.glb",
@@ -54954,7 +54954,7 @@
           }
         ]
       },
-      "usage": "from mechlib.pulleys import belt_tensioner\n\nresult = belt_tensioner()  # watertight Trimesh\nfrom mechlib import export_stl\nexport_stl(result, \"belt_tensioner.stl\")"
+      "applications": "Automatic belt tensioners on engines and printers, compliant arms that keep constant belt load as the belt stretches."
     },
     {
       "file": "drag_chain_link_demo.glb",
@@ -54998,7 +54998,7 @@
           }
         ]
       },
-      "usage": "from mechlib.chains import drag_chain_link\n\nresult = drag_chain_link()  # keys: link, pin, lid\nfrom mechlib import export_stl\nexport_stl(result[\"link\"], \"drag_chain_link.stl\")"
+      "applications": "Cable carriers on CNC and robots; single link of an energy chain that flexes only one way."
     },
     {
       "file": "drag_chain_demo.glb",
@@ -55042,7 +55042,7 @@
           }
         ]
       },
-      "usage": "from mechlib.chains import drag_chain\n\nresult = drag_chain()  # keys: link_00, pin_00, lid_00, link_01, pin_01, lid_01, link_02, pin_02\nfrom mechlib import export_stl\nexport_stl(result[\"link_00\"], \"drag_chain.stl\")"
+      "applications": "Full cable-carrier runs protecting wires and hoses on moving axes of machines and 3D printers."
     },
     {
       "file": "roller_chain_link_demo.glb",
@@ -55086,7 +55086,7 @@
           }
         ]
       },
-      "usage": "from mechlib.chains import roller_chain_link\n\nresult = roller_chain_link()  # keys: inner_plate, outer_plate, roller, bushing, pin\nfrom mechlib import export_stl\nexport_stl(result[\"inner_plate\"], \"roller_chain_link.stl\")"
+      "applications": "Bicycle and industrial roller-chain pitches, printable chain segments matched to a sprocket."
     },
     {
       "file": "roller_chain_demo.glb",
@@ -55130,7 +55130,7 @@
           }
         ]
       },
-      "usage": "from mechlib.chains import roller_chain\n\nresult = roller_chain()  # keys: sprocket, roller_00, roller_01, roller_02, roller_03, roller_04, roller_05, roller_06\nfrom mechlib import export_stl\nexport_stl(result[\"sprocket\"], \"roller_chain.stl\")"
+      "applications": "Conveyors, motorcycles, and machine drives that wrap a roller chain around a sprocket."
     },
     {
       "file": "cross_flexure_demo.glb",
@@ -55174,7 +55174,7 @@
           }
         ]
       },
-      "usage": "from mechlib.flexures import cross_flexure\n\nresult = cross_flexure()  # watertight Trimesh\nfrom mechlib import export_stl\nexport_stl(result, \"cross_flexure.stl\")"
+      "applications": "Precision instrument pivots, watch balances, and monolithic hinges that flex instead of using a pin."
     },
     {
       "file": "wave_spring_demo.glb",
@@ -55228,7 +55228,7 @@
           }
         ]
       },
-      "usage": "from mechlib.flexures import wave_spring\n\nresult = wave_spring()  # watertight Trimesh\nfrom mechlib import export_stl\nexport_stl(result, \"wave_spring.stl\")"
+      "applications": "Compact axial preload in bearings and seals, crest-to-crest springs where a coil spring is too tall."
     },
     {
       "file": "bistable_beam_demo.glb",
@@ -55272,7 +55272,7 @@
           }
         ]
       },
-      "usage": "from mechlib.flexures import bistable_beam\n\nresult = bistable_beam()  # watertight Trimesh\nfrom mechlib import export_stl\nexport_stl(result, \"bistable_beam.stl\")"
+      "applications": "Snap switches, tactile buttons, and mechanisms that click between two stable positions."
     },
     {
       "file": "belleville_washer_demo.glb",
@@ -55326,7 +55326,7 @@
           }
         ]
       },
-      "usage": "from mechlib.flexures import belleville_washer\n\nresult = belleville_washer()  # watertight Trimesh\nfrom mechlib import export_stl\nexport_stl(result, \"belleville_washer.stl\")"
+      "applications": "Bolted-joint preload, clutch packs, and high-load short-stroke stacks of disc springs."
     },
     {
       "file": "coil_spring_demo.glb",
@@ -55380,7 +55380,7 @@
           }
         ]
       },
-      "usage": "from mechlib.flexures import coil_spring\n\nresult = coil_spring()  # watertight Trimesh\nfrom mechlib import export_stl\nexport_stl(result, \"coil_spring.stl\")"
+      "applications": "Suspension and return springs, battery contacts, and general helical compression springs in machines."
     },
     {
       "file": "spiral_power_spring_demo.glb",
@@ -55434,7 +55434,7 @@
           }
         ]
       },
-      "usage": "from mechlib.flexures import spiral_power_spring\n\nresult = spiral_power_spring()  # keys: barrel, spring, arbor\nfrom mechlib import export_stl\nexport_stl(result[\"barrel\"], \"spiral_power_spring.stl\")"
+      "applications": "Clock and toy mainsprings, retractable reels, and flat spiral power springs in a barrel."
     },
     {
       "file": "leaf_spring_demo.glb",
@@ -55488,7 +55488,7 @@
           }
         ]
       },
-      "usage": "from mechlib.flexures import leaf_spring\n\nresult = leaf_spring()  # keys: clamp, leaf_1, leaf_2, leaf_3\nfrom mechlib import export_stl\nexport_stl(result[\"clamp\"], \"leaf_spring.stl\")"
+      "applications": "Vehicle suspensions, clamp arms, and multi-leaf springs that carry load in bending."
     },
     {
       "file": "flexure_stage_demo.glb",
@@ -55542,7 +55542,7 @@
           }
         ]
       },
-      "usage": "from mechlib.flexures import flexure_stage\n\nresult = flexure_stage()  # watertight Trimesh\nfrom mechlib import export_stl\nexport_stl(result, \"flexure_stage.stl\")"
+      "applications": "Optical and nanopositioning stages, vibration-isolated mounts, and printed straight-line stages without bearings."
     },
     {
       "file": "thread_demo.glb",
@@ -55616,7 +55616,7 @@
           }
         ]
       },
-      "usage": "from mechlib.mechanisms import thread_solid\n\nresult = thread_solid(d_nom=10.0, length=10.0)\n# adjust the required args above as needed"
+      "applications": "Printed screws and nuts, lead screws, and any FDM thread that must mate with a real or printed counterpart."
     },
     {
       "file": "knurl_demo.glb",
@@ -55670,7 +55670,7 @@
           }
         ]
       },
-      "usage": "from mechlib.mechanisms import knurl\n\nresult = knurl(mesh=mesh, r=10.0, z0=10.0, z1=12)\n# adjust the required args above as needed"
+      "applications": "Thumb screws, adjustment knobs, and grip surfaces that need knurling without a lathe."
     },
     {
       "file": "torsion_spring_demo.glb",
@@ -55724,7 +55724,7 @@
           }
         ]
       },
-      "usage": "from mechlib.mechanisms import torsion_spring_mesh\n\nresult = torsion_spring_mesh()  # watertight Trimesh\nfrom mechlib import export_stl\nexport_stl(result, \"torsion_spring_mesh.stl\")"
+      "applications": "Clothes-peg and clip springs, hinge returns, and mechanisms that store energy in twist."
     },
     {
       "file": "threaded_rod_demo.glb",
@@ -55778,7 +55778,7 @@
           }
         ]
       },
-      "usage": "from mechlib.mechanisms import threaded_rod\n\nresult = threaded_rod(major_d=10.0, pitch=10.0, length=10.0)\n# adjust the required args above as needed"
+      "applications": "Lead screws, all-thread stand-offs, and display rods where a fast radial-grid thread is enough."
     },
     {
       "file": "helix_tube_demo.glb",
@@ -55852,7 +55852,7 @@
           }
         ]
       },
-      "usage": "from mechlib.mechanisms import helix_tube\n\nresult = helix_tube(R=10.0, rw=10.0, turns=12, z0=10.0, z1=12)\n# adjust the required args above as needed"
+      "applications": "Spiral cable wraps, decorative helices, and swept tubes along a helical path."
     },
     {
       "file": "dog_slot_coupling_demo.glb",
@@ -55886,7 +55886,7 @@
           }
         ]
       },
-      "usage": "from mechlib.mechanisms import dog_slot_coupling\n\nresult = dog_slot_coupling()"
+      "applications": "Lost-motion couplings, indexed drives with backlash on purpose, and angular play between a dog and a slot."
     },
     {
       "file": "fastener_trio_demo.glb",
@@ -55950,7 +55950,7 @@
           }
         ]
       },
-      "usage": "from mechlib.fasteners import fastener_mesh\n\nresult = fastener_mesh(d=10.0, L=10.0)\n# adjust the required args above as needed"
+      "applications": "Assembly visualization: pan, socket, and countersunk screws with nuts and washers in CAD layouts."
     },
     {
       "file": "plain_bushing_demo.glb",
@@ -56004,7 +56004,7 @@
           }
         ]
       },
-      "usage": "from mechlib.bearings import plain_bushing\n\nresult = plain_bushing()  # watertight Trimesh\nfrom mechlib import export_stl\nexport_stl(result, \"plain_bushing.stl\")"
+      "applications": "Journal bearings in printed machines, flanged sleeve bushings for shafts that only need sliding support."
     },
     {
       "file": "thrust_washer_demo.glb",
@@ -56058,7 +56058,7 @@
           }
         ]
       },
-      "usage": "from mechlib.bearings import thrust_washer\n\nresult = thrust_washer()  # watertight Trimesh\nfrom mechlib import export_stl\nexport_stl(result, \"thrust_washer.stl\")"
+      "applications": "Axial load washers under gears and pulleys, thrust ball cages between rotating faces."
     },
     {
       "file": "printed_ball_bearing_demo.glb",
@@ -56112,7 +56112,7 @@
           }
         ]
       },
-      "usage": "from mechlib.bearings import printed_ball_bearing\n\nresult = printed_ball_bearing()  # keys: inner_race, outer_race, cage, balls\nfrom mechlib import export_stl\nexport_stl(result[\"inner_race\"], \"printed_ball_bearing.stl\")"
+      "applications": "Fully printed radial bearings for light-duty rollers, demo models, and places steel bearings will not fit the budget."
     },
     {
       "file": "press_lid_demo.glb",
@@ -56186,7 +56186,7 @@
           }
         ]
       },
-      "usage": "from mechlib.closures import press_lid\n\nresult = press_lid(ox=10.0, oy=10.0, cav_x=10.0, cav_y=10.0, c=10.0)\n# adjust the required args above as needed"
+      "applications": "Battery and electronics boxes, snap-fit instrument lids, and friction-plug covers that press closed without screws."
     },
     {
       "file": "clamshell_shiplap_demo.glb",
@@ -56250,7 +56250,7 @@
           }
         ]
       },
-      "usage": "from mechlib.closures import clamshell_shiplap\n\nresult = clamshell_shiplap(outer_solid=10.0)\n# adjust the required args above as needed"
+      "applications": "Split enclosures, clamshell housings, and lid-to-base seams that interlock with a shiplap lip."
     },
     {
       "file": "ydovetail_demo.glb",
@@ -56324,7 +56324,7 @@
           }
         ]
       },
-      "usage": "from mechlib.closures import ydovetail\n\nresult = ydovetail(xc=10.0, y0=10.0, y1=10.0)\n# adjust the required args above as needed"
+      "applications": "Printable drawer slides, modular plate joins, and self-supporting dovetail tongues that assemble along Y."
     },
     {
       "file": "snap_pair_demo.glb",
@@ -56378,7 +56378,7 @@
           }
         ]
       },
-      "usage": "from mechlib.closures import snap_catch\n\nresult = snap_catch(axis=10.0, fc=10.0, t=10.0, sgn=10.0, box_top=10.0)\n# adjust the required args above as needed"
+      "applications": "Battery doors, access panels, and plastic enclosures that click shut with a catch and finger."
     },
     {
       "file": "nut_slot_demo.glb",
@@ -56442,7 +56442,7 @@
           }
         ]
       },
-      "usage": "from mechlib.closures import nut_slot\n\nresult = nut_slot(center=10.0)\n# adjust the required args above as needed"
+      "applications": "Captive hex nuts in printed parts, T-nut slots, and any fastener seat that must not spin."
     },
     {
       "file": "pins_and_posts_demo.glb",
@@ -56516,7 +56516,7 @@
           }
         ]
       },
-      "usage": "from mechlib.closures import screw_post\n\nresult = screw_post(pos=10.0, normal=10.0, depth=10.0)\n# adjust the required args above as needed"
+      "applications": "PCB standoffs, locating pins, screw bosses, and alignment features between mating plastic parts."
     },
     {
       "file": "push_pin_demo.glb",
@@ -56560,7 +56560,7 @@
           }
         ]
       },
-      "usage": "from mechlib.closures import push_pin\n\nresult = push_pin(d=10.0, length=10.0)\n# adjust the required args above as needed"
+      "applications": "Barbed press-fit pins for plastics, axles that push in and stay, and printed rivets with a lead-in."
     },
     {
       "file": "setscrew_demo.glb",
@@ -56614,7 +56614,7 @@
           }
         ]
       },
-      "usage": "from mechlib.closures import setscrew\n\nresult = setscrew(point=10.0, direction=10.0)\n# adjust the required args above as needed"
+      "applications": "Collar and hub locks on shafts, pulley set-screw seats, and printed bosses that take a radial screw."
     },
     {
       "file": "board_cradle_demo.glb",
@@ -56688,7 +56688,7 @@
           }
         ]
       },
-      "usage": "from mechlib.fixtures import board_cradle\n\nresult = board_cradle(rect=10.0, fl=10.0)\n# adjust the required args above as needed"
+      "applications": "PCB mounting in instruments and printers: corner standoffs and capture walls around a board outline."
     },
     {
       "file": "saddle_demo.glb",
@@ -56752,7 +56752,7 @@
           }
         ]
       },
-      "usage": "from mechlib.fixtures import saddle\n\nresult = saddle(axis0=10.0, axis1=10.0, r=10.0, yi=10.0, rib_t=10.0, interior=10.0)\n# adjust the required args above as needed"
+      "applications": "Cradles for tubes and batteries, ribs that hug a cylinder without a full bore."
     },
     {
       "file": "kinematic_coupling_demo.glb",
@@ -56816,7 +56816,7 @@
           }
         ]
       },
-      "usage": "from mechlib.fixtures import kinematic_coupling\n\nresult = kinematic_coupling()  # keys: base, top, balls\nfrom mechlib import export_stl\nexport_stl(result[\"base\"], \"kinematic_coupling.stl\")"
+      "applications": "Optical mounts, metrology fixtures, and any plate pair that must reseat to the same six-point pose every time."
     },
     {
       "file": "repeatable_dock_demo.glb",
@@ -56880,7 +56880,7 @@
           }
         ]
       },
-      "usage": "from mechlib.fixtures import repeatable_dock\n\nresult = repeatable_dock()  # keys: base, top, balls\nfrom mechlib import export_stl\nexport_stl(result[\"base\"], \"repeatable_dock.stl\")"
+      "applications": "Tool changers, probe docks, and magnetic kinematic mounts that need preload so they do not fall apart when tipped."
     },
     {
       "file": "three_point_leveller_demo.glb",
@@ -56944,7 +56944,7 @@
           }
         ]
       },
-      "usage": "from mechlib.fixtures import three_point_leveller\n\nresult = three_point_leveller()  # keys: base, table, screws\nfrom mechlib import export_stl\nexport_stl(result[\"base\"], \"three_point_leveller.stl\")"
+      "applications": "Optical tables, printer beds, and surface plates that level with three screws without fighting an over-constrained bolt pattern."
     },
     {
       "file": "cyl_demo.glb",
@@ -56998,7 +56998,7 @@
           }
         ]
       },
-      "usage": "from mechlib.prim import cyl\n\nresult = cyl(r=10.0, h=10.0)\n# adjust the required args above as needed"
+      "applications": "Bosses, pins, rollers, and any cylindrical stock or cutter axis in a parametric assembly."
     },
     {
       "file": "boxc_demo.glb",
@@ -57052,7 +57052,7 @@
           }
         ]
       },
-      "usage": "from mechlib.prim import boxc\n\nresult = boxc(ext=10.0)\n# adjust the required args above as needed"
+      "applications": "Blocks, spacers, and axis-aligned volumes that start most bracket and housing models."
     },
     {
       "file": "rbox_demo.glb",
@@ -57116,7 +57116,7 @@
           }
         ]
       },
-      "usage": "from mechlib.prim import rbox\n\nresult = rbox(ext=10.0)\n# adjust the required args above as needed"
+      "applications": "Enclosure walls and buttons with rounded corners that print cleanly and feel finished."
     },
     {
       "file": "frustum_demo.glb",
@@ -57180,7 +57180,7 @@
           }
         ]
       },
-      "usage": "from mechlib.prim import frustum\n\nresult = frustum(r0=10.0, r1=10.0, h=10.0)\n# adjust the required args above as needed"
+      "applications": "Tapers, funnels, draft on molds, and stepped cones between two diameters."
     },
     {
       "file": "sector2d_demo.glb",
@@ -57254,7 +57254,7 @@
           }
         ]
       },
-      "usage": "from mechlib.prim import sector2d\n\nresult = sector2d(a0_deg=0.0, a1_deg=0.0, R=10.0)\n# adjust the required args above as needed"
+      "applications": "Pie slices, partial flanges, and sector plates used as 2D profiles before extrusion."
     },
     {
       "file": "hex_poly_demo.glb",
@@ -57298,7 +57298,7 @@
           }
         ]
       },
-      "usage": "from mechlib.prim import hex_poly\n\nresult = hex_poly(af=10.0)\n# adjust the required args above as needed"
+      "applications": "Nut and bolt blanks, hex columns, and across-flats hex stock for wrench-driven parts."
     },
     {
       "file": "chamfer_prism_demo.glb",
@@ -57372,7 +57372,7 @@
           }
         ]
       },
-      "usage": "from mechlib.prim import chamfer_prism\n\nresult = chamfer_prism(w=10.0, d=10.0, h=10.0, r=10.0, cham=10.0)\n# adjust the required args above as needed"
+      "applications": "Enclosures with a soft top edge, control knobs, and prisms that need a clean hull chamfer."
     },
     {
       "file": "seg_cylinder_demo.glb",
@@ -57436,7 +57436,7 @@
           }
         ]
       },
-      "usage": "from mechlib.prim import seg_cylinder\n\nresult = seg_cylinder(p0=10.0, p1=10.0, d=10.0)\n# adjust the required args above as needed"
+      "applications": "Struts and links between skew points, space-frame bars, and cylinders that do not share an axis-aligned path."
     },
     {
       "file": "extrude_twist_demo.glb",
@@ -57520,7 +57520,7 @@
           }
         ]
       },
-      "usage": "from mechlib.sweep import extrude_twist\n\nresult = extrude_twist(base_outer=10.0, base_inner=10.0, zlist=10.0, phi_of=10.0)\n# adjust the required args above as needed"
+      "applications": "Twisted columns, augers, and decorative or functional solids swept with continuous rotation."
     },
     {
       "file": "swept_keyed_bore_demo.glb",
@@ -57594,7 +57594,7 @@
           }
         ]
       },
-      "usage": "from mechlib.sweep import swept_keyed_bore\n\nresult = swept_keyed_bore(bore_poly=10.0, free_angle=0.0)\n# adjust the required args above as needed"
+      "applications": "D-shaft hubs, keyed bores with free-rotation clearance, and sockets that must drive a shaft only over a limited angle."
     },
     {
       "file": "loft_demo.glb",
@@ -57678,7 +57678,7 @@
           }
         ]
       },
-      "usage": "from mechlib.sweep import loft\n\nresult = loft(rings=10.0)\n# adjust the required args above as needed"
+      "applications": "Organic housings, fairings, and solids that blend unequal cross-sections along a path."
     },
     {
       "file": "teardrop_demo.glb",
@@ -57752,7 +57752,7 @@
           }
         ]
       },
-      "usage": "from mechlib.cutters import teardrop\n\nresult = teardrop(r=10.0, length=10.0)\n# adjust the required args above as needed"
+      "applications": "Horizontal bores in FDM parts that would otherwise need support: axles, cable holes, and fastener clearances."
     },
     {
       "file": "ss_bore_demo.glb",
@@ -57816,7 +57816,7 @@
           }
         ]
       },
-      "usage": "from mechlib.cutters import ss_bore\n\nresult = ss_bore(R=10.0, Robj=10.0, length=10.0, center=10.0)\n# adjust the required args above as needed"
+      "applications": "Clamshell shaft cradles and support-light upper bores in split housings."
     },
     {
       "file": "dbore_demo.glb",
@@ -57890,7 +57890,7 @@
           }
         ]
       },
-      "usage": "from mechlib.cutters import dbore\n\nresult = dbore(shaft_d=10.0, flat=10.0, length=10.0)\n# adjust the required args above as needed"
+      "applications": "Double-D motor and pot shafts, keyed hubs, and sockets that must transmit torque without a set screw."
     },
     {
       "file": "counterbore_demo.glb",
@@ -57954,7 +57954,7 @@
           }
         ]
       },
-      "usage": "from mechlib.cutters import counterbore\n\nresult = counterbore(d_hole=10.0, d_head=10.0, head_depth=10.0, length=10.0)\n# adjust the required args above as needed"
+      "applications": "Socket-head and pan-head screw seats, flush fastener pockets in plates and brackets."
     },
     {
       "file": "bearing_seat_demo.glb",
@@ -57998,7 +57998,7 @@
           }
         ]
       },
-      "usage": "from mechlib.cutters import bearing_seat\n\nresult = bearing_seat(kind=10.0)\n# adjust the required args above as needed"
+      "applications": "608 and similar skate-bearing pockets in robots, printers, and rollers that need a retained race."
     },
     {
       "file": "crush_ribs_demo.glb",
@@ -58082,7 +58082,7 @@
           }
         ]
       },
-      "usage": "from mechlib.cutters import crush_ribs\n\nresult = crush_ribs(component_size=10.0, rib_thickness=10.0, rib_length=10.0, rib_height=10.0)\n# adjust the required args above as needed"
+      "applications": "Press-fit captures for PCBs, sensors, and rectangular inserts that should grip without glue."
     },
     {
       "file": "slot_cutter_demo.glb",
@@ -58156,7 +58156,7 @@
           }
         ]
       },
-      "usage": "from mechlib.cutters import slot_cutter\n\nresult = slot_cutter(w=10.0, t=10.0, z0=10.0, z1=12)\n# adjust the required args above as needed"
+      "applications": "Blade and tab slots in FDM parts, dog-bone relief so square inserts seat fully."
     },
     {
       "file": "tapered_cavity_demo.glb",
@@ -58230,7 +58230,7 @@
           }
         ]
       },
-      "usage": "from mechlib.cutters import tapered_cavity\n\nresult = tapered_cavity(g=10.0, zlo=10.0, height=10.0)\n# adjust the required args above as needed"
+      "applications": "Lightened legs and hollow structures whose roofs print without bridging failures."
     },
     {
       "file": "u_channel_between_demo.glb",
@@ -58304,7 +58304,7 @@
           }
         ]
       },
-      "usage": "from mechlib.cutters import u_channel_between\n\nresult = u_channel_between(p0=10.0, p1=10.0, channel_w=10.0, z_floor=10.0, body_h=10.0)\n# adjust the required args above as needed"
+      "applications": "Wire ways, cable channels, and open U runs that snake between arbitrary points on a panel."
     },
     {
       "file": "revolved_gable_cavity_demo.glb",
@@ -58388,7 +58388,7 @@
           }
         ]
       },
-      "usage": "from mechlib.cutters import revolved_gable_cavity\n\nresult = revolved_gable_cavity(r_in=10.0, r_out=10.0, z0=10.0, h=10.0)\n# adjust the required args above as needed"
+      "applications": "Annular chambers under self-supporting roofs, plumbing voids, and lightened rings."
     },
     {
       "file": "oring_groove_demo.glb",
@@ -58452,7 +58452,7 @@
           }
         ]
       },
-      "usage": "from mechlib.cutters import oring_groove\n\nresult = oring_groove()"
+      "applications": "Face-seal glands on lids and flanges, AS568 O-ring seats designed for correct squeeze and fill."
     },
     {
       "file": "labyrinth_seal_demo.glb",
@@ -58516,7 +58516,7 @@
           }
         ]
       },
-      "usage": "from mechlib.cutters import labyrinth_seal\n\nresult = labyrinth_seal()  # keys: rotor, stator\nfrom mechlib import export_stl\nexport_stl(result[\"rotor\"], \"labyrinth_seal.stl\")"
+      "applications": "Dust and splash seals on printed rotating shafts, non-contact comb seals where elastomer is unwanted."
     },
     {
       "file": "gasket_channel_demo.glb",
@@ -58580,7 +58580,7 @@
           }
         ]
       },
-      "usage": "from mechlib.cutters import gasket_channel\n\nresult = gasket_channel()"
+      "applications": "Enclosure lids and irregular flanges that seal with cord-stock gasket rather than a circular O-ring."
     },
     {
       "file": "lighten_grid_demo.glb",
@@ -58654,7 +58654,7 @@
           }
         ]
       },
-      "usage": "from mechlib.patterns import lighten_grid_centres\n\nresult = lighten_grid_centres(minx=10.0, miny=10.0, maxx=10.0, maxy=10.0, cell=10.0, web=10.0, pattern=10.0)\n# adjust the required args above as needed"
+      "applications": "Weight-saving panels on robots and drones, hex lattices that keep stiffness while cutting plastic."
     },
     {
       "file": "directed_holes_demo.glb",
@@ -58728,7 +58728,7 @@
           }
         ]
       },
-      "usage": "from mechlib.patterns import directed_holes\n\nresult = directed_holes(points=points, vectors=10.0, d=10.0, length=10.0)\n# adjust the required args above as needed"
+      "applications": "Shower heads, spray nozzles, and multi-axis hole patterns aimed along arbitrary vectors."
     },
     {
       "file": "auxetic_panel_demo.glb",
@@ -58782,7 +58782,7 @@
           }
         ]
       },
-      "usage": "from mechlib.lattices import auxetic_panel\n\nresult = auxetic_panel()  # watertight Trimesh\nfrom mechlib import export_stl\nexport_stl(result, \"auxetic_panel.stl\")"
+      "applications": "Impact pads, expandable meshes, medical and sports structures that widen when stretched."
     },
     {
       "file": "kerf_bend_cutter_demo.glb",
@@ -58836,7 +58836,7 @@
           }
         ]
       },
-      "usage": "from mechlib.lattices import kerf_bend_cutter\n\nresult = kerf_bend_cutter()"
+      "applications": "Living hinges, foldable enclosures, and kerf-bent panels that roll or twist from a flat print."
     },
     {
       "file": "text_polygon_demo.glb",
@@ -58910,7 +58910,7 @@
           }
         ]
       },
-      "usage": "from mechlib.text import text_polygon\n\nresult = text_polygon(text=10.0, size=10.0)\n# adjust the required args above as needed"
+      "applications": "Raised labels on parts, nameplates, and logos that must print with counters preserved."
     },
     {
       "file": "text_block_demo.glb",
@@ -58984,7 +58984,7 @@
           }
         ]
       },
-      "usage": "from mechlib.text import text_block\n\nresult = text_block(lines=10.0, cx=10.0, cy=10.0, h=10.0)\n# adjust the required args above as needed"
+      "applications": "Multi-line plaques, version labels, and stacked raised text on enclosures and tools."
     }
   ],
   "utilities": [
@@ -58992,225 +58992,193 @@
       "module": "mechlib.meshutil",
       "signature": "to_manifold(mesh)",
       "description": "Convert trimesh geometry to manifold3d.",
-      "category": "meshutil",
-      "usage": "from mechlib.meshutil import to_manifold\n\nresult = to_manifold(mesh=mesh)\n# adjust the required args above as needed"
+      "category": "meshutil"
     },
     {
       "module": "mechlib.meshutil",
       "signature": "from_manifold(man)",
       "description": "Convert manifold3d results back to trimesh.",
-      "category": "meshutil",
-      "usage": "from mechlib.meshutil import from_manifold\n\nresult = from_manifold(man=10.0)\n# adjust the required args above as needed"
+      "category": "meshutil"
     },
     {
       "module": "mechlib.meshutil",
       "signature": "sub(a, b)",
       "description": "Subtract one watertight solid from another.",
-      "category": "meshutil",
-      "usage": "from mechlib.meshutil import sub\n\nresult = sub(a=mesh, b=mesh)\n# adjust the required args above as needed"
+      "category": "meshutil"
     },
     {
       "module": "mechlib.meshutil",
       "signature": "uni(parts)",
       "description": "Union a sequence of watertight solids.",
-      "category": "meshutil",
-      "usage": "from mechlib.meshutil import uni\n\nresult = uni(parts=10.0)\n# adjust the required args above as needed"
+      "category": "meshutil"
     },
     {
       "module": "mechlib.meshutil",
       "signature": "inter(a, b)",
       "description": "Intersect two watertight solids.",
-      "category": "meshutil",
-      "usage": "from mechlib.meshutil import inter\n\nresult = inter(a=mesh, b=mesh)\n# adjust the required args above as needed"
+      "category": "meshutil"
     },
     {
       "module": "mechlib.meshutil",
       "signature": "export_stl(mesh, path)",
       "description": "Export STL through a watertightness gate.",
-      "category": "meshutil",
-      "usage": "from mechlib.meshutil import export_stl\n\nexport_stl(mesh=mesh, path=\"part.stl\")"
+      "category": "meshutil"
     },
     {
       "module": "mechlib.meshutil",
       "signature": "inflate(m, gap=0.6)",
       "description": "Offset mesh vertices along their normals.",
-      "category": "meshutil",
-      "usage": "from mechlib.meshutil import inflate\n\nresult = inflate(m=10.0)\n# adjust the required args above as needed"
+      "category": "meshutil"
     },
     {
       "module": "mechlib.meshutil",
       "signature": "bbox_overlap(a, b)",
       "description": "Check axis-aligned bounding-box overlap.",
-      "category": "meshutil",
-      "usage": "from mechlib.meshutil import bbox_overlap\n\nresult = bbox_overlap(a=mesh, b=mesh)\n# adjust the required args above as needed"
+      "category": "meshutil"
     },
     {
       "module": "mechlib.meshutil",
       "signature": "overlap_volume(a, b)",
       "description": "Measure exact manifold overlap volume.",
-      "category": "meshutil",
-      "usage": "from mechlib.meshutil import overlap_volume\n\nresult = overlap_volume(a=mesh, b=mesh)\n# adjust the required args above as needed"
+      "category": "meshutil"
     },
     {
       "module": "mechlib.meshutil",
       "signature": "inside(mesh, pts)",
       "description": "Probe points expected inside a solid.",
-      "category": "meshutil",
-      "usage": "from mechlib.meshutil import inside\n\nresult = inside(mesh=mesh, pts=pts)\n# adjust the required args above as needed"
+      "category": "meshutil"
     },
     {
       "module": "mechlib.meshutil",
       "signature": "clear(mesh, pts)",
       "description": "Probe points expected outside a solid.",
-      "category": "meshutil",
-      "usage": "from mechlib.meshutil import clear\n\nresult = clear(mesh=mesh, pts=pts)\n# adjust the required args above as needed"
+      "category": "meshutil"
     },
     {
       "module": "mechlib.meshutil",
       "signature": "bore_pierces(mesh, start, direction, length, n=12)",
       "description": "Probe a bore along its real axis.",
-      "category": "meshutil",
-      "usage": "from mechlib.meshutil import bore_pierces\n\nresult = bore_pierces(mesh=mesh, start=10.0, direction=10.0, length=10.0)\n# adjust the required args above as needed"
+      "category": "meshutil"
     },
     {
       "module": "mechlib.meshutil",
       "signature": "void_cube(mesh, pt, s=0.5)",
       "description": "Confirm local void with a cube intersection.",
-      "category": "meshutil",
-      "usage": "from mechlib.meshutil import void_cube\n\nresult = void_cube(mesh=mesh, pt=10.0)\n# adjust the required args above as needed"
+      "category": "meshutil"
     },
     {
       "module": "mechlib.meshutil",
       "signature": "solid_cube(mesh, pt, s=0.25)",
       "description": "Confirm local material with a cube intersection.",
-      "category": "meshutil",
-      "usage": "from mechlib.meshutil import solid_cube\n\nresult = solid_cube(mesh=mesh, pt=10.0)\n# adjust the required args above as needed"
+      "category": "meshutil"
     },
     {
       "module": "mechlib.meshutil",
       "signature": "self_thickness(mesh, n, seed=0)",
       "description": "Sample ray-based wall thickness.",
-      "category": "meshutil",
-      "usage": "from mechlib.meshutil import self_thickness\n\nresult = self_thickness(mesh=mesh, n=12)\n# adjust the required args above as needed"
+      "category": "meshutil"
     },
     {
       "module": "mechlib.meshutil",
       "signature": "cube_rotations()",
       "description": "Return the 24 proper cube rotations.",
-      "category": "meshutil",
-      "usage": "from mechlib.meshutil import cube_rotations\n\nresult = cube_rotations()"
+      "category": "meshutil"
     },
     {
       "module": "mechlib.meshutil",
       "signature": "fit_transform(real, placeholder)",
       "description": "Fit a real mesh to an oriented placeholder.",
-      "category": "meshutil",
-      "usage": "from mechlib.meshutil import fit_transform\n\nresult = fit_transform(real=10.0, placeholder=10.0)\n# adjust the required args above as needed"
+      "category": "meshutil"
     },
     {
       "module": "mechlib.meshutil",
       "signature": "decimate(m, pitch)",
       "description": "Cluster vertices on a regular grid.",
-      "category": "meshutil",
-      "usage": "from mechlib.meshutil import decimate\n\nresult = decimate(m=10.0, pitch=10.0)\n# adjust the required args above as needed"
+      "category": "meshutil"
     },
     {
       "module": "mechlib.meshutil",
       "signature": "orient(m, normal)",
       "description": "Rotate positive Z onto a normal vector.",
-      "category": "meshutil",
-      "usage": "from mechlib.meshutil import orient\n\nresult = orient(m=10.0, normal=10.0)\n# adjust the required args above as needed"
+      "category": "meshutil"
     },
     {
       "module": "mechlib.meshutil",
       "signature": "extrude_poly_z(poly2d, z0, z1)",
       "description": "Extrude Polygon or MultiPolygon between Z planes.",
-      "category": "meshutil",
-      "usage": "from mechlib.meshutil import extrude_poly_z\n\nresult = extrude_poly_z(poly2d=poly2d, z0=10.0, z1=12)\n# adjust the required args above as needed"
+      "category": "meshutil"
     },
     {
       "module": "mechlib.meshutil",
       "signature": "largest_poly(g)",
       "description": "Select the largest Shapely polygon.",
-      "category": "meshutil",
-      "usage": "from mechlib.meshutil import largest_poly\n\nresult = largest_poly(g=10.0)\n# adjust the required args above as needed"
+      "category": "meshutil"
     },
     {
       "module": "mechlib.mechanisms",
       "signature": "coarse_pitch(nominal_d)",
       "description": "Look up a printable coarse metric pitch.",
-      "category": "mechanisms",
-      "usage": "from mechlib.mechanisms import coarse_pitch\n\nresult = coarse_pitch(nominal_d=10.0)\n# adjust the required args above as needed"
+      "category": "mechanisms"
     },
     {
       "module": "mechlib.fasteners",
       "signature": "pick_length(span, std_lengths=(6, 8, 10, 12, 16, 20, 25, 30))",
       "description": "Select the next usable standard screw length.",
-      "category": "fasteners",
-      "usage": "from mechlib.fasteners import pick_length\n\nresult = pick_length(span=10.0)\n# adjust the required args above as needed"
+      "category": "fasteners"
     },
     {
       "module": "mechlib.closures",
       "signature": "nut_ac(size='M3')",
       "description": "Convert nut across-flats to across-corners.",
-      "category": "closures",
-      "usage": "from mechlib.closures import nut_ac\n\nresult = nut_ac()"
+      "category": "closures"
     },
     {
       "module": "mechlib.meshutil",
       "signature": "audit(parts, clearance, allow, label='', aliases={})",
       "description": "Audit pairwise overlap and clearance.",
-      "category": "meshutil",
-      "usage": "from mechlib.meshutil import audit\n\nresult = audit(parts=10.0, clearance=10.0, allow=10.0)\n# adjust the required args above as needed"
+      "category": "meshutil"
     },
     {
       "module": "mechlib.meshutil",
       "signature": "min_distance(a, b, n=800)",
       "description": "Approximate sampled surface distance.",
-      "category": "meshutil",
-      "usage": "from mechlib.meshutil import min_distance\n\nresult = min_distance(a=mesh, b=mesh)\n# adjust the required args above as needed"
+      "category": "meshutil"
     },
     {
       "module": "mechlib.meshutil",
       "signature": "approach_clear(mesh, mouth, direction, max_dist=50.0)",
       "description": "Measure free travel toward an opening.",
-      "category": "meshutil",
-      "usage": "from mechlib.meshutil import approach_clear\n\nresult = approach_clear(mesh=mesh, mouth=10.0, direction=10.0)\n# adjust the required args above as needed"
+      "category": "meshutil"
     },
     {
       "module": "mechlib.meshutil",
       "signature": "slicer_area(polys, infill, line_w=0.42, perimeters=3)",
       "description": "Predict perimeter-plus-infill layer area.",
-      "category": "meshutil",
-      "usage": "from mechlib.meshutil import slicer_area\n\nresult = slicer_area(polys=10.0, infill=10.0)\n# adjust the required args above as needed"
+      "category": "meshutil"
     },
     {
       "module": "mechlib.packing",
       "signature": "shelf_pack(sized, bed=(256.0, 256.0), gap=6.0)",
       "description": "Pack brim-grown footprints across plates.",
-      "category": "packing",
-      "usage": "from mechlib.packing import shelf_pack\n\nshelf_pack(sized=10.0)"
+      "category": "packing"
     },
     {
       "module": "mechlib.stepio",
       "signature": "export_assembly(named_meshes, path)",
       "description": "Export positioned meshes as a STEP assembly.",
-      "category": "stepio",
-      "usage": "from mechlib.stepio import export_assembly\n\nexport_assembly(named_meshes=10.0, path=\"part.stl\")"
+      "category": "stepio"
     },
     {
       "module": "mechlib.meshutil",
       "signature": "extrude_snapped(poly2d, z0, z1)",
       "description": "Snap tangent vertices before extrusion.",
-      "category": "meshutil",
-      "usage": "from mechlib.meshutil import extrude_snapped\n\nresult = extrude_snapped(poly2d=poly2d, z0=10.0, z1=12)\n# adjust the required args above as needed"
+      "category": "meshutil"
     },
     {
       "module": "mechlib.cutters",
       "signature": "lobe_cavity_polys(section2d, wall=1.2, rib_w=1.6, n_rib=0)",
       "description": "Build hollow lobe polygons around ribs.",
-      "category": "cutters",
-      "usage": "from mechlib.cutters import lobe_cavity_polys\n\nresult = lobe_cavity_polys(section2d=10.0)\n# adjust the required args above as needed"
+      "category": "cutters"
     }
   ]
 }
