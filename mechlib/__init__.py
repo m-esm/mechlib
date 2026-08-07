@@ -1,4 +1,4 @@
-__version__ = "0.8.0"
+__version__ = "0.9.0"
 
 from .bearings import plain_bushing, printed_ball_bearing, thrust_washer
 from .cams import (
@@ -7,6 +7,7 @@ from .cams import (
     barrel_cam,
     cam_lift,
     cam_profile_2d,
+    face_cam,
     heart_cam,
     plate_cam,
     snail_cam,
@@ -26,11 +27,12 @@ from .closures import (
     setscrew,
     ydovetail,
 )
-from .clutches import freewheel_clutch, torque_limiter
+from .clutches import dog_clutch, freewheel_clutch, torque_limiter
 from .couplings import (
     cv_velocity_fluctuation,
     cv_velocity_ratio,
     double_cardan_joint,
+    hirth_coupling,
     jaw_coupling,
     oldham_coupling,
     tripod_cv_joint,
@@ -87,6 +89,7 @@ from .flexures import (
     wave_spring,
 )
 from .fluid import (
+    external_gear_pump,
     gerotor_pump,
     hose_barb,
     peristaltic_pump_head,
@@ -94,6 +97,7 @@ from .fluid import (
 )
 from .drives import (
     flat_worm,
+    harmonic_drive,
     planet_stage,
     printed_worm,
     worm_coupon,
@@ -102,6 +106,7 @@ from .drives import (
 from .gears import (
     bevel_gear_pair,
     cycloidal_drive,
+    cycloidal_pose,
     herringbone_gear,
     internal_gear_2d,
     internal_mesh_phase,
@@ -125,14 +130,25 @@ from .grippers import (
 from .guides import linear_way, telescoping_stage
 from .indexing import (
     escapement,
+    escapement_pose,
     geneva_pair,
     geneva_wheel_angle,
     intermittent_gear_pair,
 )
-from .joints import ball_socket_joint, gimbal_rings, knuckle_hinge
+from .joints import ball_socket_joint, clevis, gimbal_rings, knuckle_hinge
 from .lattices import auxetic_panel, kerf_bend_cutter
-from .linear import archimedes_screw, differential_screw, scroll_drive
+from .linear import (
+    archimedes_screw,
+    differential_screw,
+    rack_pinion,
+    scroll_drive,
+    screw_jack,
+    swash_plate,
+)
 from .linkages import (
+    bell_crank,
+    chebyshev_linkage,
+    chebyshev_pose,
     four_bar,
     four_bar_pose,
     lazy_tongs,
@@ -147,6 +163,10 @@ from .linkages import (
     sarrus_linkage,
     sarrus_pose,
     scotch_yoke,
+    scott_russell_linkage,
+    scott_russell_pose,
+    slider_crank,
+    slider_crank_pose,
     toggle_clamp,
     watt_linkage,
     watt_pose,
@@ -255,6 +275,7 @@ __all__ = (
     "worm",
     "herringbone_gear",
     "cycloidal_drive",
+    "cycloidal_pose",
     "bevel_gear_pair",
     "board_cradle",
     "saddle",
@@ -388,6 +409,7 @@ __all__ = (
     "geneva_pair",
     "geneva_wheel_angle",
     "escapement",
+    "escapement_pose",
     "intermittent_gear_pair",
     # gap-analysis wave v0.8.0, grouped by module like everything above
     "internal_gear_2d",
@@ -447,4 +469,21 @@ __all__ = (
     "gasket_channel",
     "auxetic_panel",
     "kerf_bend_cutter",
+    # gap-analysis wave v0.9.0
+    "slider_crank_pose",
+    "slider_crank",
+    "chebyshev_pose",
+    "chebyshev_linkage",
+    "scott_russell_pose",
+    "scott_russell_linkage",
+    "bell_crank",
+    "face_cam",
+    "swash_plate",
+    "screw_jack",
+    "rack_pinion",
+    "dog_clutch",
+    "hirth_coupling",
+    "clevis",
+    "external_gear_pump",
+    "harmonic_drive",
 )

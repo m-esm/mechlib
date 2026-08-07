@@ -471,8 +471,60 @@ def gimbal_rings(rings=3, outer_d=44.0, ring_w=5.0, ring_t=6.5, gap=0.3,
     return parts
 
 
+def clevis(fork_w=16.0, fork_d=12.0, fork_t=3.0, gap=8.0, pin_d=4.0,
+           eye_d=12.0, eye_t=5.0, shank_d=8.0, shank_len=14.0,
+           clearance=0.25, pin_extra=2.0, sections=48):
+    """Build a clevis (fork + pin + eye) pin joint.
+
+    The fork is a U of overall width ``fork_w``, depth ``fork_d`` and wall
+    ``fork_t`` (mm) with an open jaw of ``gap`` that accepts the eye of
+    thickness ``eye_t``. A pin of diameter ``pin_d`` passes through both
+    fork ears and the eye bore (opened by ``clearance``). The eye carries a
+    cylindrical shank of ``shank_d`` / ``shank_len`` for linking to a rod or
+    turnbuckle. Returns ``{"fork", "eye", "pin"}`` posed in assembly with
+    the pin along +Y and the fork opening along +X. Units mm.
+    """
+    if (fork_w <= 0 or fork_d <= 0 or fork_t < 1.2 or gap < eye_t or
+            pin_d <= 0 or eye_d <= pin_d or eye_t < 1.2 or
+            shank_d <= 0 or shank_len < 0 or clearance < 0 or
+            pin_extra < 0 or sections < 16):
+        raise ValueError("clevis(): invalid fork, eye, or pin dimensions")
+    if gap + 2.0 * fork_t > fork_w + 1e-9:
+        raise ValueError("clevis(): gap + 2*fork_t exceeds fork_w")
+    if pin_d + clearance >= min(fork_t * 2.0, eye_d - 1.2):
+        raise ValueError("clevis(): pin bore leaves no wall in fork or eye")
+
+    # Fork: solid block with jaw slot and pin bore along Y.
+    fork = boxc((fork_d, fork_w, fork_w), center=(fork_d / 2.0, 0.0, 0.0))
+    jaw = boxc((fork_d + 2.0, gap, fork_w + 2.0),
+               center=(fork_d / 2.0 + 1.0, 0.0, 0.0))
+    fork = sub(fork, jaw)
+    ear_r = fork_w / 2.0
+    pin_x = fork_d - ear_r * 0.55
+    # Pin bore through both ears along Y.
+    fork = sub(fork, cyl((pin_d + clearance) / 2.0, fork_w + 2.0,
+                         center=(pin_x, 0.0, 0.0), axis="y",
+                         sections=sections))
+
+    eye = cyl(eye_d / 2.0, eye_t, center=(pin_x, 0.0, 0.0),
+              axis="y", sections=sections)
+    eye = sub(eye, cyl((pin_d + clearance) / 2.0, eye_t + 2.0,
+                       center=(pin_x, 0.0, 0.0), axis="y",
+                       sections=sections))
+    if shank_len > 0:
+        shank = cyl(shank_d / 2.0, shank_len,
+                    center=(pin_x + eye_d / 2.0 + shank_len / 2.0, 0.0, 0.0),
+                    axis="x", sections=sections)
+        eye = uni([eye, shank])
+
+    pin = cyl(pin_d / 2.0, fork_w + 2.0 * pin_extra,
+              center=(pin_x, 0.0, 0.0), axis="y", sections=sections)
+    return {"fork": fork, "eye": eye, "pin": pin}
+
+
 __all__ = (
     "ball_socket_joint",
     "knuckle_hinge",
     "gimbal_rings",
+    "clevis",
 )

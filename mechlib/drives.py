@@ -3,6 +3,7 @@
 import functools
 import math
 
+import numpy as np
 import shapely.geometry as sg
 import trimesh
 import trimesh.transformations as tf
@@ -574,10 +575,101 @@ def planet_stage(
     return {"sun": sun, "planets": planets, "ring": ring, "carrier": carrier}
 
 
+def harmonic_drive(cs_teeth=50, fs_teeth=48, module=0.8, width=6.0,
+                   pressure_angle=20.0, backlash=0.25, rim=3.0,
+                   wave_a=None, wave_b=None, wave_t=4.0,
+                   fs_wall=1.4, clearance=0.3, phase_deg=0.0,
+                   bore_d=6.0):
+    """Build a strain-wave (harmonic) drive as three printable parts.
+
+    A rigid circular spline of ``cs_teeth`` internal teeth meshes with a
+    thin flexible spline of ``fs_teeth`` external teeth (``cs_teeth`` must
+    exceed ``fs_teeth`` by a positive even count; the classic 2-tooth
+    difference gives ratio ``-fs_teeth / (cs_teeth - fs_teeth)``). An
+    elliptical wave generator of semi-axes ``wave_a`` / ``wave_b`` (default
+    sized to push the flex spline into mesh at the major axis) deforms the
+    flex spline so it engages the circular spline at two opposite zones.
+    ``phase_deg`` rotates the wave generator; the flex spline counter-rotates
+    by the reduction ratio.
+
+    Returns ``{"circular_spline", "flex_spline", "wave_generator", "ratio"}``
+    posed in assembly along +Z. The flex spline is a uniform-wall cup
+    approximation (printable, not a true thin cup), sized so its pitch circle
+    sits between the wave generator and the circular spline. Units mm.
+    """
+    from .gears import internal_gear_2d, spur_gear_2d
+    from .meshutil import sub, uni
+    from .prim import cyl
+    import shapely.affinity as affinity
+    import shapely.geometry as sg
+
+    if (cs_teeth < 30 or fs_teeth < 28 or cs_teeth <= fs_teeth or
+            (cs_teeth - fs_teeth) % 2 != 0 or module <= 0 or width < 1.2 or
+            not 14.0 <= pressure_angle <= 30.0 or backlash < 0 or
+            rim < 1.2 or fs_wall < 0.8 or clearance < 0 or bore_d < 0):
+        raise ValueError("harmonic_drive(): invalid tooth or size dimensions")
+    diff = cs_teeth - fs_teeth
+    ratio = -float(fs_teeth) / float(diff)
+    cs_pitch_r = module * cs_teeth / 2.0
+    fs_pitch_r = module * fs_teeth / 2.0
+    # Wave generator major axis pushes flex pitch out to circular pitch.
+    # Radial stretch needed at the major axis:
+    stretch = cs_pitch_r - fs_pitch_r
+    if wave_a is None:
+        wave_a = fs_pitch_r - fs_wall - clearance - stretch * 0.15
+    if wave_b is None:
+        wave_b = wave_a - stretch
+    if wave_a <= wave_b or wave_b <= bore_d / 2.0 + 1.0:
+        raise ValueError("harmonic_drive(): wave generator axes invalid")
+
+    cs_2d = internal_gear_2d(z=cs_teeth, m=module, pa_deg=pressure_angle,
+                             rim=rim, bl=backlash)
+    circular = trimesh.creation.extrude_polygon(cs_2d, width)
+
+    fs_2d = spur_gear_2d(N=fs_teeth, m=module, pa=pressure_angle, bl=backlash)
+    # Hollow the flex spline to wall thickness about the root.
+    fs_root_r = fs_pitch_r - 1.25 * module
+    inner = sg.Point(0.0, 0.0).buffer(max(fs_root_r - fs_wall, wave_a + 0.5),
+                                      resolution=64)
+    fs_2d = fs_2d.difference(inner).buffer(0)
+    # Pose: wave generator at phase_deg; flex spline rotates by ratio * phase.
+    fs_angle = ratio * phase_deg
+    fs_2d = affinity.rotate(fs_2d, fs_angle, origin=(0.0, 0.0))
+    # Elliptical deformation approximation: scale the 2d profile so the major
+    # axis of the pitch circle reaches the circular spline. Pure scale is a
+    # coarse stand-in for true cup flexure but prints and meshes.
+    scale_maj = (fs_pitch_r + stretch) / fs_pitch_r
+    scale_min = (fs_pitch_r - stretch) / fs_pitch_r
+    fs_2d = affinity.scale(fs_2d, xfact=scale_maj, yfact=scale_min,
+                           origin=(0.0, 0.0))
+    fs_2d = affinity.rotate(fs_2d, phase_deg, origin=(0.0, 0.0))
+    flex = trimesh.creation.extrude_polygon(fs_2d, width)
+
+    # Elliptical wave generator disc.
+    n = 64
+    angs = np.linspace(0.0, 2.0 * math.pi, n, endpoint=False)
+    ellipse = sg.Polygon([(wave_a * math.cos(a), wave_b * math.sin(a))
+                          for a in angs])
+    ellipse = affinity.rotate(ellipse, phase_deg, origin=(0.0, 0.0))
+    wave = trimesh.creation.extrude_polygon(ellipse, wave_t)
+    wave.apply_translation((0.0, 0.0, (width - wave_t) / 2.0))
+    if bore_d > 0:
+        wave = sub(wave, cyl((bore_d + clearance) / 2.0, wave_t + 2.0,
+                             (0.0, 0.0, width / 2.0)))
+
+    metadata = {"ratio": ratio, "cs_teeth": cs_teeth, "fs_teeth": fs_teeth,
+                "module": module, "diff": diff}
+    for mesh in (circular, flex, wave):
+        mesh.metadata.update(metadata)
+    return {"circular_spline": circular, "flex_spline": flex,
+            "wave_generator": wave, "ratio": ratio}
+
+
 __all__ = (
     "printed_worm",
     "flat_worm",
     "worm_wheel_band",
     "worm_coupon",
     "planet_stage",
+    "harmonic_drive",
 )

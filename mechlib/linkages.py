@@ -115,42 +115,116 @@ def four_bar_pose(l_ground, l_crank, l_coupler, l_rocker, crank_angle_deg,
 def four_bar(l_ground=25.0, l_crank=12.5, l_coupler=25.0, l_rocker=25.0,
              crank_angle_deg=60.0, branch=1, coupler_ext=0.0,
              width=6.0, thickness=4.0, bore_d=3.0, clearance=0.25,
-             pin_extra=2.0):
+             pin_extra=2.0, layer_gap=0.5):
     """Build a flat-printable four-bar linkage kit posed in assembly.
 
     Returns ``{"ground", "crank", "coupler", "rocker", "pins", "joints"}``;
     ``pins`` are the four printed pivot pins at the solved joints and
-    ``joints`` is the ``four_bar_pose`` dict. The links are stacked one
-    thickness apart (ground lowest, then rocker, coupler, crank) so the
-    assembled parts never intersect. ``coupler_ext`` (mm) extends the coupler
-    bar past the rocker joint and adds a ``"trace"`` boss at its tip — the
-    coupler-curve tracer point. The defaults (ground 2 : crank 1 : coupler
-    2.5 : rocker 2.5 with a 2.5 extension) are the Hoecken straight-line
-    proportions. Raises ``ValueError`` for unreachable poses.
+    ``joints`` is the ``four_bar_pose`` dict. Links stack ground → rocker →
+    coupler → crank with ``layer_gap`` (mm) of air between slabs so a bar
+    that swings under a higher pivot never sits face-to-face on that pin
+    (Hoecken coupler passes under O1 near 255 deg crank). Pins only occupy
+    the Z slabs of the links they join: O1 is two stubs (ground + crank)
+    with open air through rocker/coupler. ``coupler_ext`` (mm) extends the
+    coupler past the rocker joint and adds a ``"trace"`` boss at its tip.
+    Defaults are the Hoecken straight-line proportions. Raises
+    ``ValueError`` for unreachable poses.
     """
     if (width < 2.4 or thickness < 1.2 or bore_d <= 0 or clearance < 0 or
-            bore_d + clearance >= width or coupler_ext < 0 or pin_extra < 0):
+            bore_d + clearance >= width or coupler_ext < 0 or pin_extra < 0 or
+            layer_gap < 0):
         raise ValueError("four_bar(): invalid link or pin dimensions")
     joints = four_bar_pose(l_ground, l_crank, l_coupler, l_rocker,
                            crank_angle_deg, branch)
     O1, O2, A, B = (joints[key] for key in ("O1", "O2", "A", "B"))
     hole_d = bore_d + clearance
-    t = thickness
+    t = float(thickness)
+    g = float(layer_gap)
+    # Contiguous thickness slabs separated by air gaps.
+    z_g0, z_g1 = 0.0, t
+    z_r0, z_r1 = t + g, 2.0 * t + g
+    z_c0, z_c1 = 2.0 * t + 2.0 * g, 3.0 * t + 2.0 * g
+    z_k0, z_k1 = 3.0 * t + 3.0 * g, 4.0 * t + 3.0 * g
     direction = np.asarray(B, float) - np.asarray(A, float)
     direction /= np.linalg.norm(direction)
     tip = np.asarray(A, float) + (l_coupler + coupler_ext) * direction
+    tip_xy = (float(tip[0]), float(tip[1]))
+    # Coupler is bored at A, B, and (when extended) the tracer tip so the
+    # trace pin seats in a hole rather than punching solid bar stock.
+    coupler_holes = (A, B, tip_xy) if coupler_ext > 0 else (A, B)
     parts = {
-        "ground": _bar_mesh(O1, O2, width, 0.0, t, hole_d, (O1, O2)),
-        "rocker": _bar_mesh(O2, B, width, t, 2.0 * t, hole_d, (O2, B)),
-        "coupler": _bar_mesh(A, tip, width, 2.0 * t, 3.0 * t, hole_d, (A, B)),
-        "crank": _bar_mesh(O1, A, width, 3.0 * t, 4.0 * t, hole_d, (O1, A)),
-        "pins": tuple(_pin_xy(p, 0.0, 4.0 * t + pin_extra, bore_d)
-                      for p in (O1, O2, A, B)),
+        "ground": _bar_mesh(O1, O2, width, z_g0, z_g1, hole_d, (O1, O2)),
+        "rocker": _bar_mesh(O2, B, width, z_r0, z_r1, hole_d, (O2, B)),
+        "coupler": _bar_mesh(A, tip, width, z_c0, z_c1, hole_d, coupler_holes),
+        "crank": _bar_mesh(O1, A, width, z_k0, z_k1, hole_d, (O1, A)),
+        # O1 joins ground + crank only → two stubs; air through rocker/coupler
+        # so the coupler can swing under O1 without stabbing a post.
+        "pins": (
+            uni([
+                _pin_xy(O1, z_g0, z_g1, bore_d),
+                _pin_xy(O1, z_k0, z_k1 + pin_extra, bore_d),
+            ]),
+            _pin_xy(O2, z_g0, z_r1, bore_d),                 # ground+rocker
+            _pin_xy(A, z_c0, z_k1 + pin_extra, bore_d),      # coupler+crank
+            _pin_xy(B, z_r0, z_c1, bore_d),                  # rocker+coupler
+        ),
         "joints": joints,
     }
     if coupler_ext > 0:
-        parts["trace"] = _pin_xy(tip, 2.0 * t, 3.0 * t + pin_extra, width - 2.0)
+        # Trace boss sits in the coupler slab only (coupler is bored at tip).
+        parts["trace"] = _pin_xy(tip_xy, z_c0, z_c1, bore_d)
     return parts
+
+
+def _toggle_clamp_joints(arm_len, link_c, handle_len, link_k,
+                         pivot_angle_deg, overcenter_deg):
+    """Solve the five planar joints of a toggle clamp at one handle angle.
+
+    Returns ``(P0, P1, K, C, T)`` as 2-vectors. Raises ``ValueError`` when the
+    over-center travel is unreachable for the given link lengths.
+    """
+    P0 = np.array([0.0, 0.0])
+    C0 = np.array([link_c, 0.0])
+    dist_pc = handle_len + link_k
+    pa = math.radians(pivot_angle_deg)
+    P1 = C0 + dist_pc * np.array([math.cos(pa), math.sin(pa)])
+    u0 = (C0 - P1) / dist_pc
+    ca, sa = (math.cos(math.radians(overcenter_deg)),
+              math.sin(math.radians(overcenter_deg)))
+    u = np.array([u0[0] * ca - u0[1] * sa, u0[0] * sa + u0[1] * ca])
+    K = P1 + handle_len * u
+    candidates = [_circle_circle(P0, link_c, K, link_k, branch,
+                                 "toggle_clamp()")
+                  for branch in (1, -1)]
+    C = min(candidates, key=lambda c: float(np.hypot(*(c - C0))))
+    th_arm = math.atan2(C[1], C[0])
+    T = arm_len * np.array([math.cos(th_arm), math.sin(th_arm)])
+    return P0, P1, K, C, T
+
+
+def _toggle_clamp_base_bounds(arm_len, link_c, handle_len, link_k,
+                              pivot_angle_deg, base_pad,
+                              oc_lo=-24.0, oc_hi=30.0, samples=25):
+    """Axis-aligned plate that covers every reachable joint across a full swing.
+
+    The base is sized from the pose envelope, not the current pose, so a handle
+    animation reposes the moving bars without reshaping the ground plate.
+    """
+    points = []
+    for i in range(samples):
+        oc = oc_lo + (oc_hi - oc_lo) * i / float(samples - 1)
+        try:
+            P0, P1, K, C, T = _toggle_clamp_joints(
+                arm_len, link_c, handle_len, link_k, pivot_angle_deg, oc)
+        except ValueError:
+            continue
+        points.extend((P0, P1, K, C, T))
+    if not points:
+        raise ValueError("toggle_clamp(): no reachable pose in the base envelope")
+    corners = np.asarray(points, dtype=float)
+    lo = corners.min(axis=0) - base_pad
+    hi = corners.max(axis=0) + base_pad
+    return lo, hi
 
 
 def toggle_clamp(arm_len=34.0, link_c=14.0, handle_len=22.0, link_k=10.0,
@@ -169,6 +243,9 @@ def toggle_clamp(arm_len=34.0, link_c=14.0, handle_len=22.0, link_k=10.0,
     self-locking state. The arm joint ``C`` is re-solved by circle-circle
     intersection; unreachable over-center travel raises ``ValueError``.
 
+    The base plate is sized for the full reachable handle swing so it does not
+    change shape with ``overcenter_deg``; only the moving bars repose.
+
     Returns ``{"base", "arm", "link", "handle", "pins", "joints"}`` with the
     flat base bored at the two fixed pivots and the links stacked one
     thickness apart (arm, connecting link, handle) above it.
@@ -178,32 +255,17 @@ def toggle_clamp(arm_len=34.0, link_c=14.0, handle_len=22.0, link_k=10.0,
             bore_d <= 0 or clearance < 0 or bore_d + clearance >= width or
             base_pad < 0 or pin_extra < 0):
         raise ValueError("toggle_clamp(): invalid clamp dimensions")
-    P0 = np.array([0.0, 0.0])
-    C0 = np.array([link_c, 0.0])
-    dist_pc = handle_len + link_k
-    pa = math.radians(pivot_angle_deg)
-    P1 = C0 + dist_pc * np.array([math.cos(pa), math.sin(pa)])
-    u0 = (C0 - P1) / dist_pc
-    ca, sa = (math.cos(math.radians(overcenter_deg)),
-              math.sin(math.radians(overcenter_deg)))
-    u = np.array([u0[0] * ca - u0[1] * sa, u0[0] * sa + u0[1] * ca])
-    K = P1 + handle_len * u
-    candidates = [_circle_circle(P0, link_c, K, link_k, branch,
-                                 "toggle_clamp()")
-                  for branch in (1, -1)]
-    C = min(candidates, key=lambda c: float(np.hypot(*(c - C0))))
-    th_arm = math.atan2(C[1], C[0])
-    T = arm_len * np.array([math.cos(th_arm), math.sin(th_arm)])
+    P0, P1, K, C, T = _toggle_clamp_joints(
+        arm_len, link_c, handle_len, link_k, pivot_angle_deg, overcenter_deg)
 
     hole_d = bore_d + clearance
     t = thickness
     z_arm = base_h
     z_link = base_h + t
     z_handle = base_h + 2.0 * t
-    corners = np.array([P0, P1, K, C, T])
-    lo = corners.min(axis=0) - base_pad
-    hi = corners.max(axis=0) + base_pad
-    plate = sg.box(lo[0], lo[1], hi[0], hi[1])
+    lo, hi = _toggle_clamp_base_bounds(
+        arm_len, link_c, handle_len, link_k, pivot_angle_deg, base_pad)
+    plate = sg.box(float(lo[0]), float(lo[1]), float(hi[0]), float(hi[1]))
     for pivot in (P0, P1):
         plate = plate.difference(
             sg.Point(float(pivot[0]), float(pivot[1])).buffer(
@@ -997,6 +1059,453 @@ def lazy_tongs(rhombs=3, bar_len=30.0, angle_deg=35.0, slot_lo_deg=20.0,
     }
 
 
+# ---------------------------------------------------------------------------
+# Classic missing linkages (gap-analysis wave v0.9.0)
+# ---------------------------------------------------------------------------
+
+
+def slider_crank_pose(crank_r=14.0, conrod=40.0, crank_angle_deg=35.0,
+                      offset=0.0, branch=1):
+    """Solve the planar slider-crank pose for one crank angle.
+
+    Crank pivot ``O`` is at the origin. The crank pin ``A`` rides a circle of
+    ``crank_r`` (mm) at ``crank_angle_deg`` (degrees, CCW from +X). The
+    connecting rod of length ``conrod`` (mm) joins ``A`` to the slider pin
+    ``B``, which is constrained to the line ``y = offset``. ``branch`` (+1 /
+    -1) picks the assembly side of the radical; +1 places ``B`` on the far
+    side of ``A`` along +X for the usual inline engine pose.
+
+    Returns ``{"O", "A", "B", "slider_x", "stroke"}``. The full stroke of an
+    inline (``offset == 0``) mechanism is ``2 * crank_r``; with offset it is
+    slightly longer. Raises ``ValueError`` when the conrod cannot reach the
+    slide line. Units are mm and degrees.
+    """
+    if crank_r <= 0 or conrod <= 0:
+        raise ValueError("slider_crank_pose(): lengths must be positive")
+    if branch not in (1, -1):
+        raise ValueError("slider_crank_pose(): branch must be +1 or -1")
+    if abs(offset) >= conrod - crank_r - 1e-9 and conrod <= crank_r:
+        raise ValueError(
+            "slider_crank_pose(): conrod too short for the crank and offset")
+    th = math.radians(crank_angle_deg)
+    ax = crank_r * math.cos(th)
+    ay = crank_r * math.sin(th)
+    dy = offset - ay
+    disc = conrod * conrod - dy * dy
+    if disc < -1e-9:
+        raise ValueError(
+            "slider_crank_pose(): crank angle %.3f deg puts the pin "
+            "%.3f mm off the slide line, past conrod length %.3f mm"
+            % (crank_angle_deg, abs(dy), conrod))
+    # Far (+X) assembly for branch +1, near for -1.
+    bx = ax + float(branch) * math.sqrt(max(disc, 0.0))
+    # Full stroke extremes: A at +/-crank_r on X when offset allows.
+    stroke = 2.0 * math.sqrt(max(crank_r * crank_r - 0.0, 0.0))
+    if abs(offset) > 1e-12:
+        # Extreme slider positions when the conrod is collinear with the
+        # radial vector from O to the slide line.
+        lo = math.sqrt(max((conrod - crank_r) ** 2 - offset ** 2, 0.0))
+        hi = math.sqrt(max((conrod + crank_r) ** 2 - offset ** 2, 0.0))
+        stroke = hi - lo
+    else:
+        stroke = 2.0 * crank_r
+    return {"O": (0.0, 0.0), "A": (ax, ay), "B": (bx, float(offset)),
+            "slider_x": bx, "stroke": float(stroke)}
+
+
+def slider_crank(crank_r=14.0, conrod=40.0, crank_angle_deg=35.0,
+                 offset=0.0, branch=1, disc_r=18.0, pin_d=5.0,
+                 slider_w=14.0, slider_h=10.0, guide_pad=6.0,
+                 width=6.0, thickness=4.0, base_h=3.0, clearance=0.25,
+                 pin_extra=2.0, bore_d=None):
+    """Build an inline (or offset) slider-crank posed in assembly.
+
+    The fundamental rotary-to-reciprocating conversion: a crank disc of
+    radius ``disc_r`` carries pin ``A`` at ``crank_r``, a flat connecting rod
+    of length ``conrod`` joins it to slider pin ``B``, and the slider block
+    (``slider_w`` along the travel, ``slider_h`` across the rails) rides
+    between two fixed rail walls with ``clearance`` (mm) play. ``offset``
+    (mm) shifts the slide line off the crank centre for the classic offset
+    engine geometry; leave it 0 for the inline case.
+
+    Parts are stacked so nothing solid-collides: disc and slider share the
+    lower layer (``base_h`` .. ``base_h + thickness``) but the rails only
+    cover the slider's X travel past the disc rim, and the conrod sits one
+    thickness above both. A balance hole opposite pin ``A`` breaks the
+    disc's continuous symmetry so a crank-angle animation is visible.
+
+    Bodies are ``{"base", "crank_disc", "conrod", "slider", "pins"}`` plus
+    the solved ``"joints"`` and the closed-form ``"stroke"``. All dimensions
+    mm / degrees.
+    """
+    if bore_d is None:
+        bore_d = pin_d
+    if (disc_r < crank_r + pin_d / 2.0 + 1.0 or pin_d <= 0 or
+            slider_w < 2.4 or slider_h < 2.4 or guide_pad < 1.2 or
+            width < 2.4 or thickness < 1.2 or base_h < 1.2 or
+            clearance < 0 or bore_d <= 0 or
+            bore_d + clearance >= width or pin_extra < 0):
+        raise ValueError("slider_crank(): invalid part dimensions")
+    joints = slider_crank_pose(crank_r, conrod, crank_angle_deg, offset,
+                               branch)
+    O, A, B = joints["O"], joints["A"], joints["B"]
+    hole_d = bore_d + clearance
+    t = float(thickness)
+    stroke = joints["stroke"]
+    sx, sy = slider_w / 2.0, slider_h / 2.0
+    # Slider travel envelope (branch +1: B on the far +X side of A).
+    if branch >= 0:
+        b_lo = conrod - crank_r
+        b_hi = conrod + crank_r
+    else:
+        b_lo = -conrod - crank_r
+        b_hi = -conrod + crank_r
+    if abs(offset) > 1e-12:
+        # Offset lengthens the extremes slightly; pad covers the difference.
+        b_lo -= abs(offset)
+        b_hi += abs(offset)
+    # Rails only where the slider runs — starting past the disc rim so the
+    # crank disc never punches through the guide walls.
+    x_rail0 = max(b_lo - sx - guide_pad, disc_r + clearance)
+    x_rail1 = b_hi + sx + guide_pad
+    if x_rail0 >= x_rail1:
+        raise ValueError(
+            "slider_crank(): disc_r leaves no room for the slider rails "
+            "(shorten disc_r or lengthen conrod)")
+    rail_half = sy + clearance
+    wall = 2.4
+    # Base plate covers disc and rail span.
+    x_plate0 = min(-disc_r, x_rail0) - wall
+    x_plate1 = x_rail1 + wall
+    y_plate = max(disc_r, rail_half + wall) + guide_pad
+    base_poly = sg.box(x_plate0, -y_plate, x_plate1, y_plate)
+    # Disc layer and conrod layer — one thickness each, no Z overlap.
+    z0, z1, z2 = base_h, base_h + t, base_h + 2.0 * t
+    rail_a = _extrude(
+        sg.box(x_rail0, rail_half, x_rail1, rail_half + wall), z0, z1)
+    rail_b = _extrude(
+        sg.box(x_rail0, -rail_half - wall, x_rail1, -rail_half), z0, z1)
+    base = uni([_extrude(base_poly, 0.0, base_h), rail_a, rail_b])
+
+    # Disc is built once in a local frame (throw along +X, balance hole on
+    # -X) and then rigidly rotated to crank_angle. Re-booleaning the hole at
+    # the world pose re-facetises every frame and fails the gallery bake.
+    z_mid = (z0 + z1) / 2.0
+    disc = cyl(disc_r, t, center=(0.0, 0.0, z_mid), sections=64)
+    bal_r = disc_r * 0.55
+    disc = sub(disc, cyl(max(pin_d * 0.55, 2.0), t + 2.0,
+                         center=(-bal_r, 0.0, z_mid), sections=48))
+    disc = sub(disc, cyl(hole_d / 2.0, t + 2.0,
+                         center=(0.0, 0.0, z_mid), sections=48))
+    disc.apply_transform(tf.rotation_matrix(math.radians(crank_angle_deg),
+                                            (0.0, 0.0, 1.0)))
+
+    conrod_mesh = _bar_mesh(A, B, width, z1, z2, hole_d, (A, B))
+    # Slider on the disc layer, clear of the disc in X, below the conrod.
+    slider_poly = sg.box(B[0] - sx, B[1] - sy, B[0] + sx, B[1] + sy)
+    slider_poly = slider_poly.difference(
+        sg.Point(B[0], B[1]).buffer(hole_d / 2.0, resolution=48))
+    slider = _extrude(slider_poly.buffer(0), z0, z1)
+
+    # Pin at O lives only in the disc slab. pin_extra stick-up used to poke
+    # into the conrod layer and stab the bar whenever A-B swept over the
+    # origin (near 170 deg on the default geometry).
+    pins = (
+        _pin_xy(O, z0, z1, bore_d),
+        _pin_xy(A, z0, z2 + pin_extra, bore_d),
+        _pin_xy(B, z0, z2 + pin_extra, bore_d),
+    )
+    return {
+        "base": base,
+        "crank_disc": disc,
+        "conrod": conrod_mesh,
+        "slider": slider,
+        "pins": pins,
+        "joints": joints,
+        "stroke": stroke,
+    }
+
+
+def chebyshev_pose(unit=10.0, crank_angle_deg=0.0, branch=1):
+    """Solve Chebyshev's lambda linkage pose for one input angle.
+
+    Classic proportions ``ground : rocker : coupler = 4 : 5 : 2`` scaled by
+    ``unit`` (mm): ground pivots at ``O1 = (-2u, 0)`` and ``O2 = (+2u, 0)``,
+    equal rockers of length ``5u``, coupler of length ``2u``. The tracer ``T``
+    is the coupler midpoint and traces an approximate straight line of length
+    about ``3u`` along ``y = u`` over the working half-turn. ``crank_angle_deg``
+    is the angle of rocker ``O1-A`` measured CCW from +X; ``branch`` picks the
+    open (+1) or crossed (-1) assembly of the second rocker.
+
+    Returns ``{"O1", "O2", "A", "B", "T"}``. Units are mm and degrees.
+    """
+    if unit <= 0:
+        raise ValueError("chebyshev_pose(): unit must be positive")
+    if branch not in (1, -1):
+        raise ValueError("chebyshev_pose(): branch must be +1 or -1")
+    u = float(unit)
+    ground = 4.0 * u
+    rocker = 5.0 * u
+    coupler = 2.0 * u
+    O1 = np.array([-ground / 2.0, 0.0])
+    O2 = np.array([ground / 2.0, 0.0])
+    th = math.radians(crank_angle_deg)
+    A = O1 + rocker * np.array([math.cos(th), math.sin(th)])
+    B = _circle_circle(O2, rocker, A, coupler, branch, "chebyshev_pose()")
+    T = 0.5 * (A + B)
+    return {"O1": (float(O1[0]), float(O1[1])),
+            "O2": (float(O2[0]), float(O2[1])),
+            "A": (float(A[0]), float(A[1])),
+            "B": (float(B[0]), float(B[1])),
+            "T": (float(T[0]), float(T[1])),
+            "unit": u}
+
+
+def chebyshev_linkage(unit=10.0, crank_angle_deg=70.0, branch=1,
+                      width=6.0, thickness=3.0, bore_d=3.0, clearance=0.25,
+                      pin_extra=2.0, samples=31):
+    """Build Chebyshev's lambda linkage posed in assembly.
+
+    Pafnuty Chebyshev's 1869 approximate straight-line four-bar: two equal
+    rockers of ``5u`` on a ground of ``4u``, joined by a coupler of ``2u``.
+    The coupler midpoint holds a nearly straight horizontal path (error is a
+    few hundredths of ``unit`` over the working stroke) and was the Russian
+    school's answer to Watt's parallel motion. Bodies are
+    ``{"ground", "rocker_a", "rocker_b", "coupler", "tracer"}`` plus four
+    printed pins; ``"max_error"`` is the measured peak lateral deviation of
+    the tracer from its mean line over ``samples`` poses across the working
+    arc. Units mm / degrees.
+    """
+    if (width < 2.4 or thickness < 1.2 or bore_d <= 0 or clearance < 0 or
+            bore_d + clearance >= width or pin_extra < 0 or samples < 5):
+        raise ValueError("chebyshev_linkage(): invalid link or pin sizes")
+    joints = chebyshev_pose(unit, crank_angle_deg, branch)
+    O1, O2, A, B, T = (joints[k] for k in ("O1", "O2", "A", "B", "T"))
+    hole_d = bore_d + clearance
+    t = float(thickness)
+    # One layer per bar so the rockers never share a plane (they cross in
+    # XY over the working stroke). Coupler is bored at the tracer midpoint.
+    ground = _bar_mesh(O1, O2, width, 0.0, t, hole_d, (O1, O2))
+    rocker_a = _bar_mesh(O1, A, width, t, 2.0 * t, hole_d, (O1, A))
+    rocker_b = _bar_mesh(O2, B, width, 2.0 * t, 3.0 * t, hole_d, (O2, B))
+    coupler = _bar_mesh(A, B, width, 3.0 * t, 4.0 * t, hole_d, (A, B, T))
+    tracer = _pin_xy(T, 3.0 * t, 4.0 * t + 2.0 * pin_extra, bore_d)
+    pins = (
+        _pin_xy(O1, 0.0, 2.0 * t + pin_extra, bore_d),      # ground+rocker_a
+        _pin_xy(O2, 0.0, 3.0 * t + pin_extra, bore_d),      # ground+rocker_b
+        _pin_xy(A, t, 4.0 * t + pin_extra, bore_d),         # rocker_a+coupler
+        _pin_xy(B, 2.0 * t, 4.0 * t + pin_extra, bore_d),   # rocker_b+coupler
+    )
+    # Measure peak deviation of the tracer from a horizontal fit over the
+    # reachable arc (branch +1 reaches about 37..101 deg for these proportions).
+    ys, xs = [], []
+    for step in range(samples):
+        ang = 40.0 + 58.0 * step / (samples - 1)
+        try:
+            p = chebyshev_pose(unit, ang, branch)
+        except ValueError:
+            continue
+        xs.append(p["T"][0])
+        ys.append(p["T"][1])
+    max_error = 0.0
+    if len(ys) >= 3:
+        mean_y = float(sum(ys) / len(ys))
+        max_error = float(max(abs(y - mean_y) for y in ys))
+    return {
+        "ground": ground,
+        "rocker_a": rocker_a,
+        "rocker_b": rocker_b,
+        "coupler": coupler,
+        "tracer": tracer,
+        "pins": pins,
+        "joints": joints,
+        "max_error": max_error,
+    }
+
+
+def scott_russell_pose(half_len=20.0, crank_angle_deg=40.0):
+    """Solve the Scott-Russell exact straight-line pose for one crank angle.
+
+    Fixed pivot ``O`` at the origin. Crank pin ``M`` (the bar midpoint) rides
+    a circle of radius ``half_len`` at ``crank_angle_deg`` (degrees, CCW from
+    +X). Slider pin ``A`` is constrained to the X axis with
+    ``|A - M| = half_len``, which forces ``A = (2 * M_x, 0)``. The free end
+    ``B = 2M - A = (0, 2 * M_y)`` therefore travels the exact Y axis, a
+    diameter of the circle of radius ``2 * half_len`` about ``O``.
+
+    Returns ``{"O", "M", "A", "B", "stroke"}`` with ``stroke = 4 * half_len``
+    for a full revolution of the crank. Units mm / degrees.
+    """
+    if half_len <= 0:
+        raise ValueError("scott_russell_pose(): half_len must be positive")
+    th = math.radians(crank_angle_deg)
+    mx = half_len * math.cos(th)
+    my = half_len * math.sin(th)
+    A = (2.0 * mx, 0.0)
+    B = (0.0, 2.0 * my)
+    return {"O": (0.0, 0.0), "M": (mx, my), "A": A, "B": B,
+            "stroke": 4.0 * float(half_len)}
+
+
+def scott_russell_linkage(half_len=20.0, crank_angle_deg=55.0,
+                          width=6.0, thickness=3.0, bore_d=3.0,
+                          clearance=0.25, pin_extra=2.0,
+                          slider_w=8.0, guide_pad=8.0, base_h=3.0):
+    """Build a Scott-Russell exact straight-line linkage posed in assembly.
+
+    John Scott Russell's 1840s half-length inversor: a bar of length
+    ``2 * half_len`` whose midpoint is driven on a circle of radius
+    ``half_len`` about a fixed pivot on the slider guide. One end rides the
+    guide; the other end draws an exact straight line perpendicular to it,
+    of stroke ``4 * half_len`` over a full crank turn. Far fewer bars than
+    Peaucellier, at the cost of one prismatic joint.
+
+    Stacking (lowest first): base floor + X-rails, slider on layer 1, crank
+    on layer 2, long bar on layer 3. Slider and crank never share a plane, so
+    the guide pin can pass under the crank without a solid collision even
+    near the ground pivot. Pins only span the layers they join. The free
+    tracer stands proud of the bar at B.
+
+    Bodies are ``{"base", "crank", "bar", "slider", "tracer", "pins"}`` plus
+    the solved ``"joints"`` and closed-form ``"stroke"``. Units mm / degrees.
+    """
+    if (width < 2.4 or thickness < 1.2 or bore_d <= 0 or clearance < 0 or
+            bore_d + clearance >= width or pin_extra < 0 or
+            slider_w < 2.4 or guide_pad < 1.2 or base_h < 1.2):
+        raise ValueError("scott_russell_linkage(): invalid dimensions")
+    joints = scott_russell_pose(half_len, crank_angle_deg)
+    O, M, A, B = (joints[k] for k in ("O", "M", "A", "B"))
+    hole_d = bore_d + clearance
+    t = float(thickness)
+    stroke = joints["stroke"]
+    z0 = float(base_h)           # top of floor
+    z1 = z0 + t                  # top of slider layer
+    z2 = z1 + t                  # top of crank layer
+    z3 = z2 + t                  # top of bar layer
+
+    # Floor spans the full X stroke of A and a Y pad for the tracer path.
+    # Bored at O so the ground pin seats in the floor rather than floating.
+    x_lo = -2.0 * half_len - guide_pad
+    x_hi = 2.0 * half_len + guide_pad
+    y_pad = 2.0 * half_len + guide_pad
+    wall = 2.4
+    rail_half = slider_w / 2.0 + clearance
+    floor_poly = sg.box(x_lo - wall, -y_pad, x_hi + wall, y_pad).difference(
+        sg.Point(0.0, 0.0).buffer(hole_d / 2.0, resolution=48))
+    floor = _extrude(floor_poly.buffer(0), 0.0, z0)
+    # Full-length X-rails on the slider layer only (crank lives above them).
+    rail_a = _extrude(
+        sg.box(x_lo, rail_half, x_hi, rail_half + wall), z0, z1)
+    rail_b = _extrude(
+        sg.box(x_lo, -rail_half - wall, x_hi, -rail_half), z0, z1)
+    base = uni([floor, rail_a, rail_b])
+
+    sx = slider_w / 2.0
+    sy = width / 2.0 + clearance
+    slider_poly = sg.box(A[0] - sx, -sy, A[0] + sx, sy).difference(
+        sg.Point(A[0], A[1]).buffer(hole_d / 2.0, resolution=48))
+    slider = _extrude(slider_poly.buffer(0), z0, z1)
+    crank = _bar_mesh(O, M, width, z1, z2, hole_d, (O, M))
+    bar = _bar_mesh(A, B, width, z2, z3, hole_d, (A, M, B))
+    tracer = _pin_xy(B, z2, z3 + 2.0 * pin_extra, bore_d)
+    pins = (
+        _pin_xy(O, 0.0, z2 + pin_extra, bore_d),          # floor + crank
+        _pin_xy(M, z1, z3 + pin_extra, bore_d),           # crank + bar
+        _pin_xy(A, z0, z3 + pin_extra, bore_d),           # slider + bar
+    )
+    return {
+        "base": base,
+        "crank": crank,
+        "bar": bar,
+        "slider": slider,
+        "tracer": tracer,
+        "pins": pins,
+        "joints": joints,
+        "stroke": stroke,
+    }
+
+
+def bell_crank(arm_a=28.0, arm_b=22.0, angle_deg=90.0, pose_deg=25.0,
+               link_a=22.0, link_b=22.0, width=7.0, thickness=3.5,
+               bore_d=3.5, clearance=0.25, pin_extra=2.0, hub_r=None,
+               base_pad=10.0, base_h=3.0):
+    """Build a bell-crank force redirector with input and output links.
+
+    A two-arm lever on a ground pivot redirects force through a fixed
+    included angle ``angle_deg`` (degrees, default 90) between arms of
+    lengths ``arm_a`` and ``arm_b`` (mm, pivot-to-bore). ``pose_deg`` sets
+    the orientation of arm A (CCW from +X). Two flat links of lengths
+    ``link_a`` / ``link_b`` hang off the arm ends so the motion is readable:
+    rocking the crank swings one link roughly one way and the other link
+    roughly the orthogonal way.
+
+    Stacking: base floor with pivot boss, crank on layer 1, both links on
+    layer 2. Returns ``{"base", "crank", "link_a", "link_b", "pins",
+    "joints"}``. Units mm / degrees.
+    """
+    if (arm_a <= 0 or arm_b <= 0 or link_a <= 0 or link_b <= 0 or
+            not 15.0 < angle_deg < 165.0 or width < 2.4 or thickness < 1.2 or
+            bore_d <= 0 or clearance < 0 or bore_d + clearance >= width or
+            pin_extra < 0 or base_pad < 2.0 or base_h < 1.2):
+        raise ValueError("bell_crank(): invalid crank dimensions")
+    if hub_r is None:
+        hub_r = max(width, bore_d + 2.0 * clearance + 2.4)
+    hole_d = bore_d + clearance
+    t = float(thickness)
+    z0 = float(base_h)
+    z1 = z0 + t
+    z2 = z1 + t
+    th = math.radians(pose_deg)
+    inc = math.radians(angle_deg)
+    O = (0.0, 0.0)
+    A = (arm_a * math.cos(th), arm_a * math.sin(th))
+    B = (arm_b * math.cos(th + inc), arm_b * math.sin(th + inc))
+    # Free ends of the input/output links: extend outward along each arm.
+    ua = np.array([math.cos(th), math.sin(th)])
+    ub = np.array([math.cos(th + inc), math.sin(th + inc)])
+    A2 = (float(A[0] + link_a * ua[0]), float(A[1] + link_a * ua[1]))
+    B2 = (float(B[0] + link_b * ub[0]), float(B[1] + link_b * ub[1]))
+
+    arm1 = _capsule_2d(O, A, width)
+    arm2 = _capsule_2d(O, B, width)
+    hub = sg.Point(0.0, 0.0).buffer(hub_r, resolution=48)
+    body = arm1.union(arm2).union(hub)
+    for pt in (O, A, B):
+        body = body.difference(
+            sg.Point(pt[0], pt[1]).buffer(hole_d / 2.0, resolution=48))
+    crank = _extrude(body.buffer(0), z0, z1)
+
+    # Base is a flat floor only (no raised boss that would share the crank
+    # layer). Bored at O for the ground pin. Sized so the free link ends
+    # still overhang and the force paths read clearly.
+    reach = max(arm_a + link_a, arm_b + link_b) + width
+    floor_poly = sg.box(
+        -reach * 0.2, -reach * 0.2, reach * 0.6, reach * 0.6
+    ).difference(sg.Point(0.0, 0.0).buffer(hole_d / 2.0, resolution=48))
+    base = _extrude(floor_poly.buffer(0), 0.0, z0)
+
+    link_a_mesh = _bar_mesh(A, A2, width, z1, z2, hole_d, (A, A2))
+    link_b_mesh = _bar_mesh(B, B2, width, z1, z2, hole_d, (B, B2))
+    pins = (
+        _pin_xy(O, 0.0, z1 + pin_extra, bore_d),            # floor+crank
+        _pin_xy(A, z0, z2 + pin_extra, bore_d),             # crank+link_a
+        _pin_xy(B, z0, z2 + pin_extra, bore_d),             # crank+link_b
+        _pin_xy(A2, z1, z2 + pin_extra, bore_d),            # free end A
+        _pin_xy(B2, z1, z2 + pin_extra, bore_d),            # free end B
+    )
+    return {
+        "base": base,
+        "crank": crank,
+        "link_a": link_a_mesh,
+        "link_b": link_b_mesh,
+        "pins": pins,
+        "joints": {
+            "O": O, "A": A, "B": B, "A2": A2, "B2": B2,
+            "angle_deg": float(angle_deg), "pose_deg": float(pose_deg),
+        },
+    }
+
+
 __all__ = (
     "link_bar",
     "four_bar_pose",
@@ -1015,4 +1524,11 @@ __all__ = (
     "pantograph_linkage",
     "lazy_tongs_pose",
     "lazy_tongs",
+    "slider_crank_pose",
+    "slider_crank",
+    "chebyshev_pose",
+    "chebyshev_linkage",
+    "scott_russell_pose",
+    "scott_russell_linkage",
+    "bell_crank",
 )

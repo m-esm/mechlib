@@ -48,6 +48,17 @@ Consumers keep thin facade modules that bind their own params.
 - After changing any geometry function used by the gallery, rebuild the
   gallery and visually verify the affected GLBs (delegate the render check to
   a subagent; keep screenshots out of the main context).
+- **Gallery collision gate (required before commit):** every multi-body
+  gallery demo is built at rest and, if it is in `ANIMATE`, across a phase
+  sweep. A body pair that was clear at rest and later gains solid overlap
+  fails. Designed contacts live in `gallery/collision_gate.py` →
+  `ALLOW_CONTACT`. Run manually with
+  `python3 gallery/collision_gate.py` (or `-q`). Parametrized pytest:
+  `tests/test_gallery_collisions.py` (covered by CI). Install the local
+  pre-commit hook once per clone:
+  `cp scripts/pre-commit-gallery-collisions.sh .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit`
+  (skips when the staged diff does not touch `mechlib/`, `gallery/`, or the
+  gate itself).
 - Consumers install editable: `pip3 install -e ~/Desktop/myprojects/mechlib`.
   Known consumers: finnish-doors (Klonk). Planned: finnish-windows, parviz,
   dual-axis-turntable, wall-shelf-clamp.

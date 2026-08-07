@@ -88,6 +88,35 @@ def test_four_bar_hoecken_defaults_fully_rotate():
             pytest.approx(25.0, abs=1e-9)
 
 
+def test_four_bar_pins_clear_links_through_full_cycle():
+    # Regression: a full-stack pin at O1 stabbed the coupler whenever the
+    # Hoecken coupler swung over the ground pivot (~255 deg). Pins must stay
+    # clear of every link at every crank angle, not only at the rest pose.
+    # layer_gap keeps the O1 crank stub from sitting face-to-face on the
+    # coupler when the coupler lug passes under the ground pivot.
+    from mechlib.meshutil import min_distance as _min_d
+
+    for angle in range(0, 360, 15):
+        parts = four_bar(crank_angle_deg=float(angle), coupler_ext=25.0)
+        links = {n: parts[n] for n in ("ground", "rocker", "coupler", "crank")}
+        names = list(links)
+        for i in range(len(names)):
+            for j in range(i + 1, len(names)):
+                assert overlap_volume(links[names[i]], links[names[j]]) < 1e-3, (
+                    angle, names[i], names[j])
+        for pin in parts["pins"]:
+            for name, link in links.items():
+                assert overlap_volume(pin, link) < 1e-3, (
+                    "pin vs %s at crank_angle_deg=%s" % (name, angle))
+        # Coupler lug under O1: real air gap to the O1 pin, not coplanar rub.
+        if 240 <= angle <= 270:
+            gap = _min_d(parts["pins"][0], parts["coupler"], n=2500)
+            assert gap > 0.3, (
+                "O1 pin rubs coupler at %s deg (gap %.4g mm)" % (angle, gap))
+        if "trace" in parts:
+            assert overlap_volume(parts["trace"], parts["coupler"]) < 1e-3, angle
+
+
 def test_toggle_clamp_dead_center_and_overcenter():
     dead = toggle_clamp(overcenter_deg=0.0)
     joints = dead["joints"]
@@ -115,6 +144,17 @@ def test_toggle_clamp_dead_center_and_overcenter():
 def test_toggle_clamp_excessive_overcenter_raises():
     with pytest.raises(ValueError):
         toggle_clamp(overcenter_deg=80.0)
+
+
+def test_toggle_clamp_base_is_pose_invariant():
+    # The base plate covers the full handle swing, so animating overcenter
+    # only reposes the moving bars — required for gallery rigid-track bake.
+    open_pose = toggle_clamp(overcenter_deg=-20.0)
+    locked = toggle_clamp(overcenter_deg=4.0)
+    assert open_pose["base"].bounds == pytest.approx(locked["base"].bounds, abs=1e-9)
+    assert abs(open_pose["base"].volume - locked["base"].volume) < 1e-9
+    # Moving parts actually move.
+    assert dist(open_pose["joints"]["K"], locked["joints"]["K"]) > 1.0
 
 
 def test_scotch_yoke_kinematics_and_clearance():

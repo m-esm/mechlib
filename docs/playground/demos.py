@@ -20,6 +20,7 @@ import mechlib
 from mechlib.cams import (
     barrel_cam,
     cam_lift,
+    face_cam,
     heart_cam,
     plate_cam,
     snail_cam,
@@ -43,9 +44,10 @@ from mechlib.chains import (
     roller_chain,
     roller_chain_link,
 )
-from mechlib.clutches import freewheel_clutch, torque_limiter
+from mechlib.clutches import dog_clutch, freewheel_clutch, torque_limiter
 from mechlib.couplings import (
     double_cardan_joint,
+    hirth_coupling,
     jaw_coupling,
     oldham_coupling,
     tripod_cv_joint,
@@ -70,6 +72,7 @@ from mechlib.cutters import (
 )
 from mechlib.drives import (
     flat_worm,
+    harmonic_drive,
     planet_stage,
     printed_worm,
     worm_coupon,
@@ -94,6 +97,7 @@ from mechlib.flexures import (
     wave_spring,
 )
 from mechlib.fluid import (
+    external_gear_pump,
     gerotor_pump,
     hose_barb,
     peristaltic_pump_head,
@@ -126,14 +130,19 @@ from mechlib.indexing import (
     geneva_wheel_angle,
     intermittent_gear_pair,
 )
-from mechlib.joints import ball_socket_joint, gimbal_rings, knuckle_hinge
+from mechlib.joints import ball_socket_joint, clevis, gimbal_rings, knuckle_hinge
 from mechlib.lattices import auxetic_panel, kerf_bend_cutter
 from mechlib.linear import (
     archimedes_screw,
     differential_screw,
+    rack_pinion,
     scroll_drive,
+    screw_jack,
+    swash_plate,
 )
 from mechlib.linkages import (
+    bell_crank,
+    chebyshev_linkage,
     four_bar,
     lazy_tongs,
     pantograph_linkage,
@@ -141,6 +150,8 @@ from mechlib.linkages import (
     quick_return,
     sarrus_linkage,
     scotch_yoke,
+    scott_russell_linkage,
+    slider_crank,
     toggle_clamp,
     watt_linkage,
 )
@@ -530,6 +541,9 @@ PLAY: dict = {
         "l_crank": (5.5, 18.0, 1.0),
     },
     "demo_toggle_clamp": {
+        # drive_deg is the motion phase (out-and-back through open ↔ lock);
+        # overcenter_deg is how far past dead-center the locked pose sits.
+        "drive_deg": (0.0, 360.0, 15.0),
         "overcenter_deg": (0.0, 12.0, 1.0),
     },
     "demo_scotch_yoke": {
@@ -565,6 +579,8 @@ PLAY: dict = {
         "clearance": (0.1, 0.5, 0.05),
     },
     "demo_escapement": {
+        # phase_deg: one pendulum period = two beats, two teeth advanced.
+        "phase_deg": (0.0, 360.0, 5.0),
         "teeth": (20, 40, 2),
         "clearance": (0.15, 0.5, 0.05),
     },
@@ -582,6 +598,9 @@ PLAY: dict = {
         "helix_deg": (10, 35, 5),
     },
     "demo_cycloidal_drive": {
+        # One input turn per 360 deg of phase; full pose-close needs
+        # (pins-1) turns (see ANIMATE). Slider covers one turn for inspection.
+        "phase_deg": (0.0, 360.0, 5.0),
         "pins": (8, 14, 1),
         "explode": (0, 10, 1),
     },
@@ -912,6 +931,57 @@ PLAY: dict = {
         "mode_index": (0, 2, 1),
         "kerf": (0.4, 0.8, 0.1),
         "pitch": (4.0, 10.0, 1.0),
+    },
+    # ----- gap-analysis wave v0.9.0 -----
+    "demo_slider_crank": {
+        "crank_angle_deg": (0.0, 360.0, 5.0),
+        "crank_r": (8.0, 14.0, 1.0),
+    },
+    "demo_chebyshev": {
+        "drive_deg": (0.0, 360.0, 15.0),
+        "unit": (8.0, 14.0, 1.0),
+    },
+    "demo_scott_russell": {
+        "drive_deg": (0.0, 360.0, 15.0),
+        "half_len": (14.0, 28.0, 2.0),
+    },
+    "demo_bell_crank": {
+        "pose_deg": (0.0, 360.0, 5.0),
+        "angle_deg": (60.0, 120.0, 5.0),
+    },
+    "demo_face_cam": {
+        "pin_phase_deg": (0.0, 360.0, 5.0),
+        "lift": (3.0, 10.0, 1.0),
+    },
+    "demo_swash_plate": {
+        "phase_deg": (0.0, 360.0, 5.0),
+        "tilt_deg": (8.0, 22.0, 1.0),
+    },
+    "demo_screw_jack": {
+        # drive_deg maps through a cosine onto lift 0..1..0 so one turn closes.
+        "drive_deg": (0.0, 360.0, 15.0),
+    },
+    "demo_rack_pinion": {
+        # drive_deg maps through a sine onto ±2 teeth of travel.
+        "drive_deg": (0.0, 360.0, 15.0),
+    },
+    "demo_dog_clutch": {
+        # drive_deg maps through a cosine onto engage 0..1..0 so one turn closes.
+        "drive_deg": (0.0, 360.0, 15.0),
+        "dogs": (3, 6, 1),
+    },
+    "demo_hirth_coupling": {
+        "teeth": (8, 18, 1),
+    },
+    "demo_clevis": {
+        "gap": (6.0, 10.0, 1.0),
+    },
+    "demo_external_gear_pump": {
+        "phase_deg": (0.0, 360.0, 5.0),
+        "teeth": (10, 16, 1),
+    },
+    "demo_harmonic_drive": {
+        "phase_deg": (0.0, 360.0, 5.0),
     },
 }
 
@@ -1889,8 +1959,19 @@ def demo_four_bar(crank_angle_deg: float = 60.0, l_crank: float = 12.5):
     return entries
 
 
-def demo_toggle_clamp(overcenter_deg: float = 4.0):
-    parts = toggle_clamp(overcenter_deg=overcenter_deg)
+# Handle travel for the gallery cycle: open (~-20 deg) through dead center to
+# the design overcenter (positive). A sine of drive_deg maps one full turn onto
+# that out-and-back swing — same pattern as peaucellier/watt/lazy_tongs.
+TOGGLE_OPEN_DEG = -20.0
+
+
+def demo_toggle_clamp(drive_deg: float = 0.0, overcenter_deg: float = 4.0):
+    # Cosine of drive_deg: 0 deg = fully open, 180 deg = locked overcenter,
+    # 360 deg = open again. Default drive_deg=0 keeps the GLB at the open pose.
+    mid = 0.5 * (TOGGLE_OPEN_DEG + overcenter_deg)
+    swing = 0.5 * (overcenter_deg - TOGGLE_OPEN_DEG)
+    oc = mid - swing * math.cos(math.radians(drive_deg))
+    parts = toggle_clamp(overcenter_deg=oc)
     return [
         ("base", parts["base"], PALETTE[7]),
         ("clamp_arm", parts["arm"], PALETTE[1]),
@@ -2063,8 +2144,12 @@ def demo_geneva_pair(slots: int = 6, clearance: float = 0.25,
     ]
 
 
-def demo_escapement(teeth: int = 30, clearance: float = 0.25) -> MeshList:
-    pair = escapement(teeth=teeth, style="anchor", clearance=clearance)
+def demo_escapement(phase_deg: float = 0.0, teeth: int = 30,
+                    clearance: float = 0.25) -> MeshList:
+    # phase_deg drives escapement_pose: anchor swings once, wheel steps two
+    # teeth (one per beat). Default 0 keeps the GLB at the locked rest pose.
+    pair = escapement(teeth=int(teeth), style="anchor", clearance=clearance,
+                      phase_deg=phase_deg)
     return [
         ("escape_wheel", pair["wheel"], PALETTE[5]),
         ("anchor", pair["anchor"], PALETTE[4]),
@@ -2107,12 +2192,18 @@ def demo_herringbone_gear(m: float = 1.5, z: int = 24, helix_deg: float = 25.0,
     ]
 
 
-def demo_cycloidal_drive(pins: int = 12, explode: float = 5.0) -> MeshList:
-    """Exploded-but-aligned cycloidal reducer stack."""
-    drive = cycloidal_drive(pins=pins)
-    drive["input"].apply_translation((0.0, 0.0, -explode))
-    drive["disc"].apply_translation((0.0, 0.0, explode))
-    drive["output"].apply_translation((0.0, 0.0, 2.0 * explode))
+def demo_cycloidal_drive(phase_deg: float = 0.0, pins: int = 12,
+                         explode: float = 0.0) -> MeshList:
+    """Cycloidal reducer; default assembled so ANIMATE can orbit the disc.
+
+    ``phase_deg`` is the input angle (``cycloidal_pose``). ``explode`` lifts
+    parts along Z for inspection only — leave at 0 for motion.
+    """
+    drive = cycloidal_drive(pins=int(pins), phase_deg=phase_deg)
+    if explode:
+        drive["input"].apply_translation((0.0, 0.0, -explode))
+        drive["disc"].apply_translation((0.0, 0.0, explode))
+        drive["output"].apply_translation((0.0, 0.0, 2.0 * explode))
     return [
         ("housing_ring", drive["housing"], PALETTE[7]),
         ("cycloidal_disc", drive["disc"], PALETTE[4]),
@@ -3078,3 +3169,168 @@ def demo_kerf_bend_cutter(mode_index: int = 0, kerf: float = 0.5,
     slab = boxc((width, height, thickness), center=(0.0, 0.0, thickness / 2.0))
     cut = sub(slab, uni(cutters))
     return [("kerf_bend_panel", cut, PALETTE[8])]
+
+
+# ---------------------------------------------------------------------------
+# Gap-analysis wave v0.9.0: classic mechanisms still missing from the catalog
+# ---------------------------------------------------------------------------
+
+CHEBYSHEV_MID_DEG = 70.0
+CHEBYSHEV_SWING_DEG = 28.0  # stays inside the ~37..101 deg reachable arc
+# Scott-Russell is exact for a full turn, but at 0/180 the bar is flat on
+# the guide and at 90 the slider pin lands on the ground pivot. Drive a
+# sine onto the open upper-right quadrant so the tracer walks a clear +Y
+# segment and the slider stays clear of the ground pivot.
+SCOTT_RUSSELL_MID_DEG = 50.0
+SCOTT_RUSSELL_SWING_DEG = 20.0
+
+
+def demo_slider_crank(crank_angle_deg: float = 35.0,
+                      crank_r: float = 14.0) -> MeshList:
+    parts = slider_crank(crank_r=crank_r, crank_angle_deg=crank_angle_deg)
+    entries = [
+        ("base", parts["base"], PALETTE[7]),
+        ("crank_disc", parts["crank_disc"], PALETTE[4]),
+        ("conrod", parts["conrod"], PALETTE[2]),
+        ("slider", parts["slider"], PALETTE[10]),
+    ]
+    for index, pin in enumerate(parts["pins"]):
+        entries.append(("pin_%d" % index, pin, PALETTE[11]))
+    return entries
+
+
+def demo_chebyshev(drive_deg: float = 0.0, unit: float = 10.0) -> MeshList:
+    angle = CHEBYSHEV_MID_DEG + CHEBYSHEV_SWING_DEG * math.sin(
+        math.radians(drive_deg))
+    parts = chebyshev_linkage(unit=unit, crank_angle_deg=angle)
+    entries = [
+        ("ground", parts["ground"], PALETTE[7]),
+        ("rocker_a", parts["rocker_a"], PALETTE[2]),
+        ("rocker_b", parts["rocker_b"], PALETTE[4]),
+        ("coupler", parts["coupler"], PALETTE[5]),
+        ("tracer", parts["tracer"], PALETTE[10]),
+    ]
+    for index, pin in enumerate(parts["pins"]):
+        entries.append(("pin_%d" % index, pin, PALETTE[11]))
+    return entries
+
+
+def demo_scott_russell(drive_deg: float = 0.0,
+                       half_len: float = 20.0) -> MeshList:
+    angle = SCOTT_RUSSELL_MID_DEG + SCOTT_RUSSELL_SWING_DEG * math.sin(
+        math.radians(drive_deg))
+    parts = scott_russell_linkage(half_len=half_len, crank_angle_deg=angle)
+    entries = [
+        ("base", parts["base"], PALETTE[7]),
+        ("crank", parts["crank"], PALETTE[4]),
+        ("bar", parts["bar"], PALETTE[2]),
+        ("slider", parts["slider"], PALETTE[5]),
+        ("tracer", parts["tracer"], PALETTE[10]),
+    ]
+    for index, pin in enumerate(parts["pins"]):
+        entries.append(("pin_%d" % index, pin, PALETTE[11]))
+    return entries
+
+
+def demo_bell_crank(pose_deg: float = 25.0, angle_deg: float = 90.0) -> MeshList:
+    parts = bell_crank(pose_deg=pose_deg, angle_deg=angle_deg)
+    entries = [
+        ("base", parts["base"], PALETTE[7]),
+        ("crank", parts["crank"], PALETTE[4]),
+        ("input_link", parts["link_a"], PALETTE[2]),
+        ("output_link", parts["link_b"], PALETTE[10]),
+    ]
+    for index, pin in enumerate(parts["pins"]):
+        entries.append(("pin_%d" % index, pin, PALETTE[11]))
+    return entries
+
+
+def demo_face_cam(pin_phase_deg: float = 0.0, lift: float = 6.0) -> MeshList:
+    parts = face_cam(lift=lift, pin_phase_deg=pin_phase_deg)
+    return [
+        ("cam", parts["cam"], PALETTE[4]),
+        ("follower_pin", parts["pin"], PALETTE[10]),
+    ]
+
+
+def demo_swash_plate(phase_deg: float = 0.0, tilt_deg: float = 15.0) -> MeshList:
+    parts = swash_plate(phase_deg=phase_deg, tilt_deg=tilt_deg)
+    entries = [
+        ("shaft", parts["shaft"], PALETTE[11]),
+        ("plate", parts["plate"], PALETTE[4]),
+    ]
+    for index, shoe in enumerate(parts["shoes"]):
+        entries.append(("shoe_%d" % index, shoe, PALETTE[2 + index % 4]))
+    return entries
+
+
+def demo_screw_jack(drive_deg: float = 0.0) -> MeshList:
+    # Cosine of drive_deg: 0 deg = pad down, 180 deg = full travel, 360 deg =
+    # down again. An open lift_frac ramp cannot close a loop; this out-and-back
+    # is the same pattern as toggle_clamp / peaucellier.
+    lift = 0.5 * (1.0 - math.cos(math.radians(drive_deg)))
+    parts = screw_jack(lift_frac=lift)
+    return [
+        ("base", parts["base"], PALETTE[7]),
+        ("screw", parts["screw"], PALETTE[4]),
+        ("pad", parts["pad"], PALETTE[10]),
+    ]
+
+
+def demo_rack_pinion(drive_deg: float = 0.0) -> MeshList:
+    # ±2 teeth of travel over one drive turn; sine keeps the cycle closed on
+    # the same pose (a finite rack has no tooth-pitch picture identity).
+    phase_teeth = 2.0 * math.sin(math.radians(drive_deg))
+    parts = rack_pinion(phase_teeth=phase_teeth)
+    return [
+        ("pinion", parts["pinion"], PALETTE[4]),
+        ("rack", parts["rack"], PALETTE[2]),
+    ]
+
+
+def demo_dog_clutch(drive_deg: float = 0.0, dogs: int = 4) -> MeshList:
+    # Cosine of drive_deg: 0 deg = fully withdrawn, 180 deg = fully engaged,
+    # 360 deg = withdrawn. Direct engage_frac 0→1 cannot close a loop.
+    engage = 0.5 * (1.0 - math.cos(math.radians(drive_deg)))
+    parts = dog_clutch(dogs=int(dogs), engage_frac=engage)
+    return [
+        ("hub_a", parts["hub_a"], PALETTE[4]),
+        ("hub_b", parts["hub_b"], PALETTE[2]),
+    ]
+
+
+def demo_hirth_coupling(teeth: int = 12) -> MeshList:
+    parts = hirth_coupling(teeth=int(teeth))
+    return [
+        ("hub_a", parts["hub_a"], PALETTE[4]),
+        ("hub_b", parts["hub_b"], PALETTE[2]),
+    ]
+
+
+def demo_clevis(gap: float = 8.0) -> MeshList:
+    parts = clevis(gap=gap)
+    return [
+        ("fork", parts["fork"], PALETTE[4]),
+        ("eye", parts["eye"], PALETTE[2]),
+        ("pin", parts["pin"], PALETTE[11]),
+    ]
+
+
+def demo_external_gear_pump(phase_deg: float = 0.0,
+                            teeth: int = 12) -> MeshList:
+    parts = external_gear_pump(teeth=int(teeth), phase_deg=phase_deg)
+    return [
+        ("body", parts["body"], PALETTE[7]),
+        ("gear_a", parts["gear_a"], PALETTE[4]),
+        ("gear_b", parts["gear_b"], PALETTE[2]),
+        ("cap", parts["cap"], PALETTE[12]),
+    ]
+
+
+def demo_harmonic_drive(phase_deg: float = 0.0) -> MeshList:
+    parts = harmonic_drive(phase_deg=phase_deg)
+    return [
+        ("circular_spline", parts["circular_spline"], PALETTE[7]),
+        ("flex_spline", parts["flex_spline"], PALETTE[4]),
+        ("wave_generator", parts["wave_generator"], PALETTE[10]),
+    ]

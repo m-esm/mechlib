@@ -813,3 +813,95 @@ def peristaltic_pump_head(rollers=3, tube_od=6.0, tube_wall=1.5,
     for mesh in parts.values():
         mesh.metadata.update(meta)
     return parts
+
+
+def external_gear_pump(teeth=12, module=1.5, width=8.0, pressure_angle=20.0,
+                       backlash=0.35, wall=3.0, base_t=4.0, cap_t=4.0,
+                       shaft_d=5.0, clearance=0.3, phase_deg=0.0):
+    """Build an external spur-gear pump with a close-fitting housing.
+
+    Two identical involute gears of ``teeth`` / ``module`` mesh on centres
+    spaced one pitch diameter apart inside a figure-eight bore. Inlet and
+    outlet pockets sit on the mesh line so fluid is carried around the
+    outside of each gear from one port to the other. ``phase_deg`` rotates
+    the driving gear; the driven gear counter-rotates by the same amount
+    after the fixed ``mesh_phase`` tooth-to-gap offset (conjugate ratio -1
+    for equal tooth counts). Gears are extruded once and reposed by rigid
+    transforms so a phase sweep is a pure rigid motion. Returns
+    ``{"body", "gear_a", "gear_b", "cap", "displacement_per_rev"}``.
+    Units mm / degrees.
+    """
+    from .gears import mesh_phase, spur_gear_2d
+
+    if (teeth < 8 or module <= 0 or width < 1.2 or
+            not 14.0 <= pressure_angle <= 30.0 or backlash < 0 or
+            wall < 1.2 or base_t < 1.2 or cap_t < 1.2 or
+            shaft_d < 0 or clearance < 0):
+        raise ValueError("external_gear_pump(): invalid pump dimensions")
+    pitch_r = module * teeth / 2.0
+    tip_r = pitch_r + module
+    centre_dist = 2.0 * pitch_r
+    # Tip circles almost touch the housing with clearance.
+    cavity_r = tip_r + clearance
+    body_r = cavity_r + wall
+
+    # Extrude a single blank, then rigid-transform both members. Rebuilding
+    # the 2d profile per phase re-facetises the bores and fails the gallery
+    # rigid-recovery bake.
+    gear_poly = spur_gear_2d(N=teeth, m=module, pa=pressure_angle,
+                             bl=backlash)
+    z0 = base_t + clearance
+    blank = extrude_poly_z(gear_poly, z0, z0 + width)
+    if shaft_d > 0:
+        blank = sub(blank, cyl((shaft_d + clearance) / 2.0, width + 2.0,
+                               (0.0, 0.0, z0 + width / 2.0)))
+    # mesh_phase's third arg is the line-of-centres azimuth, not driver spin.
+    # Centres lie on +X, so the fixed tooth-to-gap offset is at phi=0.
+    mesh_off = mesh_phase(teeth, teeth, 0.0)
+    gear_a = blank.copy()
+    gear_a.apply_transform(tf.rotation_matrix(math.radians(phase_deg),
+                                              (0.0, 0.0, 1.0)))
+    gear_b = blank.copy()
+    gear_b.apply_transform(tf.rotation_matrix(
+        math.radians(mesh_off - phase_deg), (0.0, 0.0, 1.0)))
+    gear_b.apply_translation((centre_dist, 0.0, 0.0))
+
+    # Figure-eight cavity: two overlapping discs.
+    c1 = sg.Point(0.0, 0.0).buffer(cavity_r, resolution=64)
+    c2 = sg.Point(centre_dist, 0.0).buffer(cavity_r, resolution=64)
+    cavity = c1.union(c2)
+    # Port pockets top and bottom on the mesh line.
+    port = sg.box(pitch_r - module, cavity_r - 0.5,
+                  pitch_r + module, cavity_r + wall * 0.6)
+    port2 = affinity.translate(port, 0.0, -2.0 * (cavity_r + wall * 0.3))
+    void = cavity.union(port).union(port2)
+
+    body_outer = sg.Point(centre_dist / 2.0, 0.0).buffer(
+        body_r + centre_dist / 2.0, resolution=64)
+    # Tighter rectangular envelope with rounded ends.
+    body_outer = c1.buffer(wall).union(c2.buffer(wall)).buffer(0)
+    z1 = base_t + width + 2.0 * clearance
+    body = extrude_poly_z(body_outer, 0.0, z1)
+    body = sub(body, extrude_poly_z(void, base_t, z1 + 0.5))
+    # Shaft bores through the base.
+    if shaft_d > 0:
+        for cx in (0.0, centre_dist):
+            body = sub(body, cyl((shaft_d + clearance) / 2.0, base_t + 2.0,
+                                 (cx, 0.0, base_t / 2.0)))
+
+    cap = extrude_poly_z(body_outer, z1, z1 + cap_t)
+    if shaft_d > 0:
+        for cx in (0.0, centre_dist):
+            cap = sub(cap, cyl((shaft_d + clearance) / 2.0, cap_t + 2.0,
+                               (cx, 0.0, z1 + cap_t / 2.0)))
+
+    # Approximate displacement: volume of tooth spaces carried per rev.
+    # Classic estimate: 2 * pi * pitch_r * module * width (both gears).
+    displacement = 2.0 * math.pi * pitch_r * module * width
+    meta = {"teeth": teeth, "module": module, "width": width,
+            "centre_dist": centre_dist, "displacement_per_rev": displacement}
+    parts = {"body": body, "gear_a": gear_a, "gear_b": gear_b, "cap": cap}
+    for mesh in parts.values():
+        mesh.metadata.update(meta)
+    parts["displacement_per_rev"] = displacement
+    return parts

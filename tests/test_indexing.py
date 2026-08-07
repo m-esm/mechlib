@@ -181,6 +181,42 @@ def test_escapement_parameter_validation():
         escapement(teeth=16, pallet_span=7.5)  # span too wide for tooth count
 
 
+def test_escapement_pose_two_teeth_per_period():
+    from mechlib.indexing import escapement_pose
+    teeth = 30
+    pitch = 360.0 / teeth
+    rest = escapement_pose(0.0, teeth=teeth)
+    assert rest["wheel_deg"] == pytest.approx(0.0)
+    assert rest["anchor_deg"] == pytest.approx(0.0)
+    mid = escapement_pose(180.0, teeth=teeth)
+    # First impulse done, second not yet: exactly one tooth advanced, anchor
+    # back through zero.
+    assert mid["wheel_deg"] == pytest.approx(pitch, abs=1e-9)
+    assert mid["anchor_deg"] == pytest.approx(0.0, abs=1e-9)
+    done = escapement_pose(360.0, teeth=teeth)
+    assert done["wheel_deg"] == pytest.approx(2.0 * pitch, abs=1e-9)
+    assert done["anchor_deg"] == pytest.approx(0.0, abs=1e-12)
+    # Anchor peaks at the quarter marks.
+    assert escapement_pose(90.0, teeth=teeth, swing_deg=8.0)["anchor_deg"] == (
+        pytest.approx(8.0, abs=1e-9))
+    assert escapement_pose(270.0, teeth=teeth, swing_deg=8.0)["anchor_deg"] == (
+        pytest.approx(-8.0, abs=1e-9))
+    # Wheel dwells outside the impulse windows.
+    early = escapement_pose(20.0, teeth=teeth)
+    assert early["wheel_deg"] == pytest.approx(0.0, abs=1e-12)
+
+
+def test_escapement_phase_is_rigid_repose():
+    rest = escapement(phase_deg=0.0)
+    moved = escapement(phase_deg=90.0)
+    assert len(rest["wheel"].vertices) == len(moved["wheel"].vertices)
+    assert len(rest["anchor"].vertices) == len(moved["anchor"].vertices)
+    # At 90 deg the wheel is mid-impulse (half a tooth on for the defaults)
+    # and the anchor is at +swing.
+    assert moved["joints"]["anchor_deg"] == pytest.approx(8.0, abs=1e-9)
+    assert moved["joints"]["wheel_deg"] > 0.0
+
+
 def test_intermittent_pair_is_watertight_and_meshed_clear():
     parts = intermittent_gear_pair()
     assert_mesh(parts["driver"])

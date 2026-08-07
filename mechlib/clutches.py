@@ -216,7 +216,75 @@ def freewheel_clutch(rollers=6, hub_r=8.0, roller_r=3.0, pocket_deg=45.0,
     return {"ring": ring, "hub": hub, "rollers": roller_meshes}
 
 
+def dog_clutch(d=30.0, bore_d=8.0, dogs=4, dog_h=5.0, dog_frac=0.45,
+               hub_len=12.0, face_gap=0.4, engage_frac=1.0,
+               clearance=0.25, sections=96):
+    """Build a positive-engagement dog clutch as two mating hubs.
+
+    Each hub face carries ``dogs`` rectangular teeth of height ``dog_h``
+    (mm) spanning ``dog_frac`` of each pitch sector; the mating hub's dogs
+    fill the complementary sectors so the pair locks in torsion when
+    pressed together. ``engage_frac`` in [0, 1] poses the axial engagement
+    (1 = fully meshed with ``face_gap`` remaining, 0 = fully withdrawn by
+    ``dog_h + face_gap``). Unlike a friction or detent clutch this transmits
+    full torque once the dogs seat, with no slip. Returns
+    ``{"hub_a", "hub_b"}`` along +Z. Units mm.
+    """
+    if (d <= 0 or bore_d <= 0 or dogs < 2 or dog_h < 1.2 or
+            not 0.2 <= dog_frac <= 0.55 or hub_len < 1.2 or
+            face_gap < 0 or not 0.0 <= engage_frac <= 1.0 or
+            clearance < 0 or sections < 24):
+        raise ValueError("dog_clutch(): invalid clutch dimensions")
+    if (bore_d + clearance) / 2.0 + 1.2 >= d / 2.0:
+        raise ValueError("dog_clutch(): bore leaves no hub wall")
+    pitch = 360.0 / dogs
+    dog_deg = pitch * dog_frac
+    # Leave diametral clearance on the dog flanks via a reduced angle.
+    flank_shrink = math.degrees(clearance / (d / 2.0)) if d > 0 else 0.0
+    dog_deg = max(dog_deg - 2.0 * flank_shrink, pitch * 0.15)
+
+    def hub(z0, phase_deg, dogs_up):
+        body = cyl(d / 2.0, hub_len, (0.0, 0.0, z0 + hub_len / 2.0),
+                   sections=sections)
+        if bore_d > 0:
+            body = sub(body, cyl((bore_d + clearance) / 2.0, hub_len + 2.0,
+                                 (0.0, 0.0, z0 + hub_len / 2.0),
+                                 sections=sections))
+        teeth = []
+        for i in range(dogs):
+            a0 = phase_deg + i * pitch - dog_deg / 2.0
+            sector = sg.Polygon([
+                (0.0, 0.0),
+                *[_polar(d / 2.0, a0 + dog_deg * s / 8.0) for s in range(9)],
+            ])
+            # Keep an annular dog (not to the bore).
+            ring = sg.Point(0.0, 0.0).buffer(d / 2.0, resolution=48).difference(
+                sg.Point(0.0, 0.0).buffer((bore_d + clearance) / 2.0 + 1.2,
+                                         resolution=32))
+            tooth2d = sector.intersection(ring)
+            if tooth2d.is_empty:
+                continue
+            if tooth2d.geom_type == "MultiPolygon":
+                tooth2d = max(tooth2d.geoms, key=lambda g: g.area)
+            z_tooth0 = z0 + hub_len if dogs_up else z0 - dog_h
+            teeth.append(_extrude(tooth2d, dog_h, z_tooth0))
+        return uni([body] + teeth) if teeth else body
+
+    # Hub A sits below, dogs pointing +Z; hub B above, dogs pointing -Z.
+    withdrawn = (1.0 - engage_frac) * (dog_h + face_gap)
+    z_a = 0.0
+    z_b = hub_len + face_gap + withdrawn
+    # Phase hub B by half a pitch so its dogs drop into hub A's gaps.
+    hub_a = hub(z_a, 0.0, dogs_up=True)
+    hub_b = hub(z_b, pitch / 2.0, dogs_up=False)
+    metadata = {"dogs": dogs, "dog_h": dog_h, "engage_frac": engage_frac}
+    hub_a.metadata.update(metadata)
+    hub_b.metadata.update(metadata)
+    return {"hub_a": hub_a, "hub_b": hub_b}
+
+
 __all__ = (
     "torque_limiter",
     "freewheel_clutch",
+    "dog_clutch",
 )

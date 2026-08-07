@@ -482,25 +482,64 @@ def trochoid_profile_2d(pins, pin_circle_r, pin_d, ecc, clearance=0.0,
 # earned a public name. Same function, no behaviour change.
 _cycloidal_disc_2d = trochoid_profile_2d
 
+
+def cycloidal_pose(phase_deg, pins=12, ecc=1.5):
+    """Return the rigid-body pose of a single-stage cycloidal reducer.
+
+    ``phase_deg`` is the input-shaft angle (degrees, CCW about +Z from the
+    rest pose where the eccentric sits at ``(+ecc, 0)``). With ``pins`` ring
+    rollers the disc has ``pins - 1`` lobes and the reduction is
+    ``(pins - 1):1`` reverse: the disc centre orbits the fixed axis at
+    radius ``ecc`` with the input, the disc spins about that centre by
+    ``-phase_deg / (pins - 1)``, and the output plate (driven by the
+    oversized pin holes) takes the same spin about the fixed axis.
+
+    One full pose-closing cycle needs ``pins - 1`` input turns: the disc's
+    lobe count is typically coprime with its output-hole count, so nothing
+    short of a whole disc revolution returns the picture. Returns
+    ``{"input_deg", "disc_rot_deg", "disc_center", "output_deg", "ratio",
+    "lobes"}``. Units mm / degrees.
+    """
+    if pins < 4:
+        raise ValueError("cycloidal_pose(): pins must be >= 4")
+    if ecc <= 0:
+        raise ValueError("cycloidal_pose(): ecc must be positive")
+    lobes = pins - 1
+    th = math.radians(phase_deg)
+    phi = -float(phase_deg) / float(lobes)
+    return {
+        "input_deg": float(phase_deg),
+        "disc_rot_deg": phi,
+        "disc_center": (ecc * math.cos(th), ecc * math.sin(th)),
+        "output_deg": phi,
+        "ratio": float(lobes),
+        "lobes": lobes,
+    }
+
+
 def cycloidal_drive(pins=12, pin_d=4.0, pin_circle_r=22.0, ecc=1.5,
                     disc_thickness=6.0, out_pins=6, out_pin_d=4.0,
                     out_circle_r=10.0, cam_d=8.0, shaft_d=5.0,
                     housing_t=4.0, rim_w=4.0, clearance=0.25,
-                    shaft_tail=6.0, samples=None):
+                    shaft_tail=6.0, samples=None, phase_deg=0.0):
     """Single-stage cycloidal speed reducer as four printable parts.
 
     Returns ``{"housing", "disc", "input", "output"}`` posed in assembled
-    coordinates (common axis +Z, disc orbiting at (+``ecc``, 0)). The housing
-    is a base plate carrying ``pins`` roller pins on ``pin_circle_r``; the disc
-    is the closed-form shortened-epitrochoid with ``pins - 1`` lobes and
-    reduction ratio ``pins - 1``:1; the input is a shaft with an eccentric cam
-    of ``cam_d`` offset by ``ecc``; the output plate carries ``out_pins`` pins
-    of ``out_pin_d`` on ``out_circle_r`` engaging disc holes of
-    ``hole_d = out_pin_d + 2*ecc + clearance`` (the classic oversize that
-    absorbs the disc's orbit, plus print clearance). All dimensions mm.
-    ``samples`` controls disc-curve resolution (modest by default).
+    coordinates (common axis +Z). At ``phase_deg = 0`` the disc orbits at
+    ``(+ecc, 0)``; general phase is applied as rigid transforms of that rest
+    pose via ``cycloidal_pose`` (input spin, disc orbit + counter-rotation,
+    output counter-rotation at ratio ``-(pins - 1)``). The housing is a base
+    plate carrying ``pins`` roller pins on ``pin_circle_r``; the disc is the
+    closed-form shortened-epitrochoid with ``pins - 1`` lobes; the input is a
+    shaft with an eccentric cam of ``cam_d`` offset by ``ecc``; the output
+    plate carries ``out_pins`` pins of ``out_pin_d`` on ``out_circle_r``
+    engaging disc holes of ``hole_d = out_pin_d + 2*ecc + clearance`` (the
+    classic oversize that absorbs the disc's orbit, plus print clearance).
+    All dimensions mm. ``samples`` controls disc-curve resolution (modest by
+    default).
     """
     import trimesh
+    import trimesh.transformations as tf
 
     from .meshutil import sub, uni
     from .patterns import polar_ring
@@ -552,7 +591,17 @@ def cycloidal_drive(pins=12, pin_d=4.0, pin_circle_r=22.0, ecc=1.5,
                 (0.0, 0.0, (shaft_top - shaft_tail) / 2.0))
     cam = cyl(cam_d / 2.0, disc_thickness,
               (ecc, 0.0, disc_z0 + disc_thickness / 2.0))
-    input_shaft = uni([shaft, cam])
+    # Drive tab on the shaft tail: a round shaft+eccentric-cam is still
+    # nearly axisymmetric to Kabsch (apparent motion ~45% of true travel),
+    # so the gallery bake aliases it. A rectangular tab gives a clear
+    # once-per-turn feature without changing the kinematics.
+    tab_w = max(shaft_d * 0.9, 3.0)
+    tab_h = max(shaft_d * 0.55, 2.0)
+    tab_t = max(shaft_tail * 0.45, 2.0)
+    tab = trimesh.creation.box(extents=(tab_w, tab_h, tab_t))
+    tab.apply_translation((0.0, shaft_d / 2.0 + tab_h / 2.0 - 0.4,
+                           -shaft_tail + tab_t / 2.0 + 0.3))
+    input_shaft = uni([shaft, cam, tab])
 
     out_z0 = disc_z0 + disc_thickness + clearance
     out_t = max(2.0, housing_t / 2.0)
@@ -564,12 +613,32 @@ def cycloidal_drive(pins=12, pin_d=4.0, pin_circle_r=22.0, ecc=1.5,
                for px, py in polar_ring(out_pins, out_circle_r)]
     output = uni([out_plate] + out_rod)
 
+    pose = cycloidal_pose(phase_deg, pins=pins, ecc=ecc)
+    if abs(phase_deg) > 1e-12:
+        # Input: whole eccentric shaft about the fixed axis.
+        input_shaft.apply_transform(tf.rotation_matrix(
+            math.radians(pose["input_deg"]), (0.0, 0.0, 1.0)))
+        # Disc: spin about its rest centre, then orbit the centre with the
+        # eccentric. Both steps are rigid so a phase sweep bakes cleanly.
+        rest_c = (ecc, 0.0, 0.0)
+        disc.apply_transform(tf.rotation_matrix(
+            math.radians(pose["disc_rot_deg"]), (0.0, 0.0, 1.0),
+            point=rest_c))
+        cx, cy = pose["disc_center"]
+        disc.apply_translation((cx - ecc, cy, 0.0))
+        # Output takes only the disc spin (orbit cancelled by the hole play).
+        output.apply_transform(tf.rotation_matrix(
+            math.radians(pose["output_deg"]), (0.0, 0.0, 1.0)))
+
     metadata = {"ratio": float(pins - 1), "lobes": pins - 1, "ecc": ecc,
-                "hole_d": hole_d}
+                "hole_d": hole_d, "phase_deg": float(phase_deg),
+                "input_deg": pose["input_deg"],
+                "disc_rot_deg": pose["disc_rot_deg"],
+                "output_deg": pose["output_deg"]}
     for mesh in (housing, disc, input_shaft, output):
         mesh.metadata.update(metadata)
     return {"housing": housing, "disc": disc,
-            "input": input_shaft, "output": output}
+            "input": input_shaft, "output": output, "joints": pose}
 
 
 def bevel_gear_pair(m=1.5, z1=16, z2=24, face_w=None, pa=20.0, bl=0.35,

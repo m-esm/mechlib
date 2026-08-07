@@ -213,8 +213,179 @@ def archimedes_screw(shaft_r=4.0, flight_r=12.0, lead=14.0, turns=4.0,
     return {"screw": screw, "trough": trough}
 
 
+def swash_plate(plate_r=22.0, plate_t=4.0, tilt_deg=15.0, phase_deg=0.0,
+                pistons=4, piston_r=4.0, piston_len=14.0, pitch_r=14.0,
+                shaft_d=8.0, shaft_len=30.0, shoe_t=3.0, clearance=0.25,
+                sections=48):
+    """Build a swash-plate rotary-to-axial converter with piston shoes.
+
+    A disc of ``plate_r`` / ``plate_t`` (mm) is fixed at ``tilt_deg`` to the
+    shaft axis and spins with the shaft. ``pistons`` shoes of radius
+    ``piston_r`` ride the plate face on a pitch circle of ``pitch_r``; each
+    shoe's axial height is ``z = pitch_r * tan(tilt) * cos(azimuth - phase)``
+    relative to the plate centre, so one shaft turn drives every shoe through
+    a stroke of ``2 * pitch_r * tan(tilt_deg)``. Returns
+    ``{"shaft", "plate", "shoes", "stroke"}`` posed at ``phase_deg``.
+    Units mm / degrees.
+    """
+    from .meshutil import uni
+    from .prim import cyl
+
+    if (plate_r <= 0 or plate_t < 1.2 or not 1.0 < tilt_deg < 40.0 or
+            pistons < 2 or piston_r <= 0 or piston_len < 2.0 or
+            pitch_r <= 0 or pitch_r + piston_r > plate_r - 1.0 or
+            shaft_d <= 0 or shaft_len < plate_t + 4.0 or shoe_t < 1.2 or
+            clearance < 0 or sections < 16):
+        raise ValueError("swash_plate(): invalid plate or piston dimensions")
+    tilt = math.radians(tilt_deg)
+    stroke = 2.0 * pitch_r * math.tan(tilt)
+    shaft = cyl(shaft_d / 2.0, shaft_len, center=(0.0, 0.0, 0.0),
+                sections=sections)
+    plate = cyl(plate_r, plate_t, center=(0.0, 0.0, 0.0), sections=96)
+    # A plain disc is continuous-symmetric about its normal, so a pure spin
+    # about Z is almost invisible to the gallery's apparent-motion gate.
+    # A radial phase mark on the rim makes the rotation readable without
+    # changing the plate's kinematics.
+    mark = cyl(max(plate_r * 0.08, 1.2), plate_t + 0.4,
+               center=(plate_r * 0.72, 0.0, 0.0), sections=24)
+    plate = uni([plate, mark])
+    # Tilt about X, then spin by phase about Z.
+    plate.apply_transform(tf.rotation_matrix(tilt, (1.0, 0.0, 0.0)))
+    plate.apply_transform(tf.rotation_matrix(math.radians(phase_deg),
+                                             (0.0, 0.0, 1.0)))
+
+    shoes = []
+    for k in range(pistons):
+        az = 2.0 * math.pi * k / pistons
+        # Shoe azimuth in world frame; plate phase already applied so shoe
+        # axial position uses the relative angle to the high point.
+        rel = az - math.radians(phase_deg)
+        z = pitch_r * math.tan(tilt) * math.cos(rel)
+        x = pitch_r * math.cos(az)
+        y = pitch_r * math.sin(az)
+        shoe = cyl(piston_r, shoe_t,
+                   center=(x, y, z + plate_t / 2.0 + clearance + shoe_t / 2.0),
+                   sections=sections)
+        rod = cyl(piston_r * 0.55, piston_len,
+                  center=(x, y, z + plate_t / 2.0 + clearance + shoe_t
+                          + piston_len / 2.0),
+                  sections=sections)
+        shoes.append(uni([shoe, rod]))
+    metadata = {"tilt_deg": tilt_deg, "pistons": pistons, "stroke": stroke}
+    shaft.metadata.update(metadata)
+    plate.metadata.update(metadata)
+    for shoe in shoes:
+        shoe.metadata.update(metadata)
+    return {"shaft": shaft, "plate": plate, "shoes": shoes, "stroke": stroke}
+
+
+def screw_jack(d=12.0, pitch=2.0, travel=20.0, nut_w=22.0, nut_h=12.0,
+               base_w=36.0, base_h=6.0, pad_w=28.0, pad_h=5.0,
+               lift_frac=0.5, clearance=0.3, knob_d=18.0, knob_h=4.0):
+    """Build a screw jack: threaded rod, nut/frame, and lifting pad.
+
+    A printed external thread of diameter ``d`` and ``pitch`` (mm) stands in
+    a base nut of across-flat ``nut_w``; a top pad of ``pad_w`` rides the
+    screw. ``lift_frac`` in [0, 1] poses the pad between the nut top and the
+    full ``travel`` (mm). One turn raises the pad by ``pitch`` (metadata
+    ``travel_per_rev``). Returns ``{"base", "screw", "pad"}``. Units mm.
+    """
+    from .mechanisms import tap, thread_solid
+    from .meshutil import uni
+    from .prim import boxc, cyl
+
+    if (d <= 0 or pitch <= 0 or travel <= 0 or nut_w <= d or nut_h <= 0 or
+            base_w < nut_w or base_h < 1.2 or pad_w <= d or pad_h < 1.2 or
+            not 0.0 <= lift_frac <= 1.0 or clearance < 0 or
+            knob_d <= 0 or knob_h < 0):
+        raise ValueError("screw_jack(): invalid jack dimensions")
+    screw_len = nut_h + travel + pad_h + 2.0
+    rod = thread_solid(d, screw_len, pitch=pitch)
+    parts = [rod]
+    if knob_h > 0:
+        parts.append(cyl(knob_d / 2.0, knob_h, (0.0, 0.0, -knob_h / 2.0)))
+    screw = uni(parts)
+
+    base_block = boxc((base_w, base_w, base_h),
+                      center=(0.0, 0.0, base_h / 2.0))
+    nut_block = boxc((nut_w, nut_w, nut_h),
+                     center=(0.0, 0.0, base_h + nut_h / 2.0))
+    base = uni([base_block, nut_block])
+    base = tap(base, d, (0.0, 0.0, base_h), nut_h, pitch=pitch,
+               clear=clearance)
+
+    pad_z0 = base_h + nut_h + lift_frac * travel
+    pad = boxc((pad_w, pad_w, pad_h),
+               center=(0.0, 0.0, pad_z0 + pad_h / 2.0))
+    pad = tap(pad, d, (0.0, 0.0, pad_z0), pad_h, pitch=pitch,
+              clear=clearance)
+
+    metadata = {"pitch": pitch, "travel": travel, "travel_per_rev": pitch,
+                "lift_frac": lift_frac}
+    for mesh in (base, screw, pad):
+        mesh.metadata.update(metadata)
+    return {"base": base, "screw": screw, "pad": pad}
+
+
+def rack_pinion(module=1.5, pinion_teeth=16, rack_teeth=18, width=8.0,
+                pressure_angle=20.0, backlash=0.35, bore_d=6.0,
+                base_height=None, phase_teeth=0.0, clearance=0.25):
+    """Build a spur pinion posed in mesh with a straight rack.
+
+    The pinion is an involute gear of ``pinion_teeth`` at ``module`` (mm);
+    the rack has ``rack_teeth`` teeth of the same module. ``phase_teeth``
+    (fractional tooth count) rotates the pinion about a fixed centre at
+    ``(0, pitch_r)`` and shifts the rack by ``phase_teeth * pi * module``
+    along the pitch line (no-slip rolling). Returns
+    ``{"pinion", "rack", "travel_per_rev"}`` with the rack pitch line on
+    ``y = 0``. Units mm.
+    """
+    from .gears import rack_2d, spur_gear_mesh
+    from .meshutil import extrude_poly_z
+
+    if (module <= 0 or pinion_teeth < 8 or rack_teeth < 4 or width < 1.2 or
+            not 14.0 <= pressure_angle <= 30.0 or backlash < 0 or
+            bore_d < 0 or clearance < 0):
+        raise ValueError("rack_pinion(): invalid rack or pinion dimensions")
+    pitch_r = module * pinion_teeth / 2.0
+    travel_per_rev = math.pi * module * pinion_teeth
+    travel = phase_teeth * math.pi * module
+    # CW pinion (negative about +Z) drives the rack toward -X so the pitch
+    # lines roll without slip; see bottom-point velocity of a pinion above
+    # the rack.
+    angle_deg = -phase_teeth * (360.0 / pinion_teeth)
+
+    pinion = spur_gear_mesh(pinion_teeth, module, width, bore_d=bore_d,
+                            pa=pressure_angle, bl=backlash)
+    # Fixed-axis drive: rotate about the pinion centre, park it at x = 0.
+    pinion.apply_transform(tf.rotation_matrix(math.radians(angle_deg),
+                                              (0.0, 0.0, 1.0)))
+    pinion.apply_translation((0.0, pitch_r, 0.0))
+
+    rack_kwargs = dict(n_teeth=rack_teeth, module=module,
+                       pa_deg=pressure_angle, backlash=backlash)
+    if base_height is not None:
+        rack_kwargs["base_height"] = base_height
+    rack_poly = rack_2d(**rack_kwargs)
+    rack = extrude_poly_z(rack_poly, 0.0, width)
+    # Rigid shift (not a re-boolean) so phase sweeps recover as pure
+    # translation. Opposite the pinion's CW rotation: rack travels -X.
+    if travel:
+        rack.apply_translation((-travel, 0.0, 0.0))
+
+    metadata = {"module": module, "pinion_teeth": pinion_teeth,
+                "travel_per_rev": travel_per_rev, "phase_teeth": phase_teeth}
+    pinion.metadata.update(metadata)
+    rack.metadata.update(metadata)
+    return {"pinion": pinion, "rack": rack,
+            "travel_per_rev": travel_per_rev}
+
+
 __all__ = (
     "scroll_drive",
     "differential_screw",
     "archimedes_screw",
+    "swash_plate",
+    "screw_jack",
+    "rack_pinion",
 )

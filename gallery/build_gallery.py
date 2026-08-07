@@ -25,6 +25,7 @@ import mechlib
 from mechlib.cams import (
     barrel_cam,
     cam_lift,
+    face_cam,
     heart_cam,
     plate_cam,
     snail_cam,
@@ -48,9 +49,10 @@ from mechlib.chains import (
     roller_chain,
     roller_chain_link,
 )
-from mechlib.clutches import freewheel_clutch, torque_limiter
+from mechlib.clutches import dog_clutch, freewheel_clutch, torque_limiter
 from mechlib.couplings import (
     double_cardan_joint,
+    hirth_coupling,
     jaw_coupling,
     oldham_coupling,
     tripod_cv_joint,
@@ -75,6 +77,7 @@ from mechlib.cutters import (
 )
 from mechlib.drives import (
     flat_worm,
+    harmonic_drive,
     planet_stage,
     printed_worm,
     worm_coupon,
@@ -99,6 +102,7 @@ from mechlib.flexures import (
     wave_spring,
 )
 from mechlib.fluid import (
+    external_gear_pump,
     gerotor_pump,
     hose_barb,
     peristaltic_pump_head,
@@ -121,14 +125,19 @@ from mechlib.gears import (
 from mechlib.grippers import collet_chuck, eccentric_cam_clamp, iris_diaphragm
 from mechlib.guides import linear_way, telescoping_stage
 from mechlib.indexing import escapement, geneva_pair, intermittent_gear_pair
-from mechlib.joints import ball_socket_joint, gimbal_rings, knuckle_hinge
+from mechlib.joints import ball_socket_joint, clevis, gimbal_rings, knuckle_hinge
 from mechlib.lattices import auxetic_panel, kerf_bend_cutter
 from mechlib.linear import (
     archimedes_screw,
     differential_screw,
+    rack_pinion,
     scroll_drive,
+    screw_jack,
+    swash_plate,
 )
 from mechlib.linkages import (
+    bell_crank,
+    chebyshev_linkage,
     four_bar,
     lazy_tongs,
     pantograph_linkage,
@@ -136,6 +145,8 @@ from mechlib.linkages import (
     quick_return,
     sarrus_linkage,
     scotch_yoke,
+    scott_russell_linkage,
+    slider_crank,
     toggle_clamp,
     watt_linkage,
 )
@@ -412,6 +423,9 @@ ANIMATE = {
     "demo_four_bar":         ("crank_angle_deg",  360.0,  24, False),
     "demo_quick_return":     ("crank_angle_deg",  360.0,  24, False),
     "demo_scotch_yoke":      ("angle_deg",        360.0,  24, False),
+    # Toggle clamp: base is pose-invariant (full-swing envelope); drive_deg
+    # maps through a sine onto the open↔lock arc so one linear ramp is enough.
+    "demo_toggle_clamp":     ("drive_deg",        360.0,  24, False),
     # Cams: the follower sweeps the profile through one revolution.
     "demo_plate_cam":        ("follower_deg",     360.0,  24, False),
     "demo_heart_cam":        ("follower_deg",     360.0,  24, False),
@@ -466,6 +480,23 @@ ANIMATE = {
     "demo_sarrus":           ("drive_deg",        360.0,  24, False),
     "demo_pantograph":       ("crank_angle_deg",  360.0,  24, False),
     "demo_lazy_tongs":       ("drive_deg",        360.0,  24, False),
+    # ----- gap-analysis wave v0.9.0 -----
+    "demo_slider_crank":     ("crank_angle_deg",  360.0,  24, False),
+    "demo_chebyshev":        ("drive_deg",        360.0,  24, False),
+    "demo_scott_russell":    ("drive_deg",        360.0,  24, False),
+    "demo_bell_crank":       ("pose_deg",         360.0,  24, False),
+    "demo_face_cam":         ("pin_phase_deg",    360.0,  24, False),
+    "demo_swash_plate":      ("phase_deg",        360.0,  48, False),
+    # Screw jack / dog clutch: open [0,1] lifts cannot close a loop; demos
+    # map drive_deg through a cosine onto lift/engage so one turn is out-and-back.
+    "demo_screw_jack":       ("drive_deg",        360.0,  24, False),
+    # Finite rack has no tooth-pitch picture identity; demo maps drive_deg
+    # through a sine onto ±2 teeth so the cycle closes on the same pose.
+    "demo_rack_pinion":      ("drive_deg",        360.0,  36, False),
+    "demo_dog_clutch":       ("drive_deg",        360.0,  24, False),
+    # Equal-tooth external mesh: 1:1 counter-rotation, one turn closes both.
+    # 48 frames: a 12-tooth gear has a 30 deg pitch and 24 frames would alias.
+    "demo_external_gear_pump": ("phase_deg",      360.0,  48, False),
     # Tripod CV joint: the one coupling whose motion law is in the module.
     # tripod_pose gives it in closed form -- the housing angle equals the input
     # angle exactly (that IS constant velocity), and the spider centre rides a
@@ -497,6 +528,17 @@ ANIMATE = {
     # built once at the clamped pose and then moved, and a whole turn brings all
     # four bodies back to identity.
     "demo_eccentric_cam_clamp": ("handle_deg",    360.0,  24, False),
+    # Escapement: one phase turn is one pendulum period. The wheel steps two
+    # teeth (one per beat) and is teeth-fold symmetric, so the picture closes
+    # on a closed track; the anchor returns to the rest pose. 48 frames keep
+    # the two impulse windows readable (each is ~14% of the cycle).
+    "demo_escapement":       ("phase_deg",        360.0,  48, True),
+    # Cycloidal: default 12 pins → 11:1. Disc lobes (11) are coprime with the
+    # 6 output holes, so the picture only repeats after 11 input turns
+    # (3960 deg). 144 frames keep the input step at 27.5 deg (under the
+    # 30 deg cap). A drive tab on the input shaft stops the eccentric from
+    # aliasing (bare shaft scored ~45% apparent motion).
+    "demo_cycloidal_drive":  ("phase_deg",       3960.0, 144, False),
 }
 
 # Mechanisms deliberately left out, and why. Each was measured, not assumed.
@@ -507,31 +549,27 @@ ANIMATE = {
 # whole turn of that body will do, and the input has to turn as many times as
 # the ratio demands.
 #
-#   demo_toggle_clamp      Its base plate is sized from the pose bounding box,
-#                          so it reshapes rather than reposes (residual climbs
-#                          to 0.54 mm). Its travel is also an out-and-back,
-#                          which a single linear phase ramp cannot express.
 #   demo_worm              The demo poses worm and wheel for display, already
 #                          interpenetrating by 93 mm^3, and the pair has no
 #                          measurable conjugate contact (overlap stays 0 across
 #                          a +/-8 degree wheel band), so the drive sense cannot
 #                          be recovered from the geometry -- only asserted.
-#   demo_cycloidal_drive   The disc's 11 lobes are coprime with its 6 output
-#                          holes, so it has NO rotational symmetry at all
-#                          (measured: no angle from 360/2 to 360/60 maps it
-#                          onto itself). One lobe pitch of disc rotation is a
-#                          whole input turn and still leaves the picture 3.9 mm
-#                          out, so the assembly only repeats after 11 of them.
+#   demo_cycloidal_drive   Animated: cycloidal_pose + 11 input turns (3960 deg)
+#                          for the default 12-pin / 6-hole layout. Listed in
+#                          ANIMATE. Shorter closed tracks fail because lobes
+#                          and holes are coprime.
 #   demo_planet_stage      The sun's D-flat bore leaves it 1-fold symmetric
 #                          (measured), so the sun needs a whole turn; the
 #                          carrier runs at 2/7 sun and is 3-fold, so it needs
 #                          seven of them. Shortest repeating picture is 2520
 #                          deg of sun, and the sun's 30 deg tooth pitch then
 #                          needs 252 frames. Feasible, just not worth it.
-#   escapement,            mechlib exposes no engagement relation for these
-#   intermittent_gear_pair (unlike geneva_wheel_angle for the Geneva). Rotating
-#                          them at a continuous ratio would drive the locking
+#   intermittent_gear_pair mechlib exposes no engagement relation (unlike
+#                          geneva_wheel_angle / escapement_pose). Rotating the
+#                          pair at a continuous ratio would drive the locking
 #                          segment through the notch: an invented motion.
+#   escapement             Animated: escapement_pose gives the stepped wheel
+#                          + swinging anchor law; listed in ANIMATE.
 #   oldham_coupling,       Their POSE laws (the disc's 2-omega orbit, the
 #   universal_joint,       Cardan tangent relation) are textbook but are not in
 #   double_cardan_joint    the module, so baking them would mean authoring one.
@@ -545,6 +583,12 @@ ANIMATE = {
 #   collet_chuck,          These DEFORM rather than repose: fingers deflect,
 #   the flexure springs,   coils compress, panels flex. The rigid-recovery gate
 #   auxetic/kerf panels    rejects that by design.
+#   harmonic_drive         The flex spline is anisotropically scaled to the
+#                          wave-generator ellipse every frame: that is real
+#                          strain-wave deformation, not a rigid body. The bake
+#                          correctly rejects it (residual ~0.15 mm over a
+#                          0.11 mm limit). Wave generator alone would spin, but
+#                          leaving the cup frozen misrepresents the ratio.
 #   linear_way,            Pure translation along an open interval: the cycle
 #   telescoping_stage      genuinely does not close.
 #   eccentric_idler_mount  Geometrically it would pass, but it is a static
@@ -583,11 +627,9 @@ RIGID_REL = 1e-6
 # That threshold also separates re-facetting from a body that genuinely
 # reshapes with the pose, and the separation is measured rather than assumed.
 # Re-polygonisation noise is bounded by the facetting: across every animated
-# linkage it tops out at 0.055 mm (quick_return's slotted lever) and does not
-# care how far the phase moved. toggle_clamp's base plate is the counter-case,
-# sized from the pose bounding box, and its residual climbs monotonically --
-# 0.004, 0.013, 0.049, 0.129, 0.281, 0.541 mm as the handle swings -- crossing
-# its own 0.126 mm limit at six degrees of travel.
+# linkage it tops out around 0.03 mm and does not climb with phase. A body that
+# truly reshapes with the pose (old toggle_clamp base, sized from the current
+# pose bbox) climbs monotonically past REPOSE_ABS and is rejected by the bake.
 REPOSE_ABS = 0.25
 REPOSE_REL = 2e-3
 
@@ -2538,6 +2580,201 @@ def build():
                 "cutting."),
             "origin": "Gap-analysis wave v0.8.0; classic ref: kerf bending (laser-cut plywood furniture)",
             "demo": "demo_kerf_bend_cutter",
+        },
+        # ------------------------------------------------------------------
+        # Gap-analysis wave v0.9.0: textbook classics still missing.
+        # ------------------------------------------------------------------
+        {
+            "file": "slider_crank_demo.glb",
+            "name": "slider_crank",
+            "module": "mechlib.linkages",
+            "signature": signature(slider_crank),
+            "description": (
+                "The fundamental rotary-to-reciprocating conversion: a crank disc "
+                "drives a connecting rod whose far pin rides a guided slider. "
+                "Stroke is exactly 2*crank_r for the inline case. Every piston "
+                "engine, compressor, and many shapers start from this chain."),
+            "origin": (
+                "Gap-analysis wave v0.9.0; classic ref: 507 Mechanical Movements "
+                "crank and slider / steam-engine piston drive"),
+            "demo": "demo_slider_crank",
+        },
+        {
+            "file": "chebyshev_linkage_demo.glb",
+            "name": "chebyshev_linkage",
+            "module": "mechlib.linkages",
+            "signature": signature(chebyshev_linkage),
+            "description": (
+                "Chebyshev's lambda four-bar: rockers of 5u on a ground of 4u "
+                "joined by a coupler of 2u. The coupler midpoint holds an "
+                "approximate straight line (error a few hundredths of the unit) "
+                "over its working stroke. The Russian school's answer to Watt."),
+            "origin": (
+                "Gap-analysis wave v0.9.0; classic ref: P. L. Chebyshev lambda "
+                "linkage (1869)"),
+            "demo": "demo_chebyshev",
+        },
+        {
+            "file": "scott_russell_linkage_demo.glb",
+            "name": "scott_russell_linkage",
+            "module": "mechlib.linkages",
+            "signature": signature(scott_russell_linkage),
+            "description": (
+                "Exact straight-line motion from a half-length inversor: a bar "
+                "of length 2L has its midpoint driven on a circle of radius L "
+                "about a pivot on the slider guide. One end rides the guide; the "
+                "other draws a diameter line of stroke 4L. Far fewer bars than "
+                "Peaucellier, at the cost of one prismatic joint."),
+            "origin": (
+                "Gap-analysis wave v0.9.0; classic ref: John Scott Russell "
+                "straight-line linkage (1840s)"),
+            "demo": "demo_scott_russell",
+        },
+        {
+            "file": "bell_crank_demo.glb",
+            "name": "bell_crank",
+            "module": "mechlib.linkages",
+            "signature": signature(bell_crank),
+            "description": (
+                "A two-arm lever on a ground pivot that redirects force through "
+                "a fixed included angle (default 90 degrees). The simplest force "
+                "redirector in mechanical design: brake pedals, throttle links, "
+                "and print-bed levellers all use one."),
+            "origin": (
+                "Gap-analysis wave v0.9.0; classic ref: 507 Mechanical Movements "
+                "bell-crank lever"),
+            "demo": "demo_bell_crank",
+        },
+        {
+            "file": "face_cam_demo.glb",
+            "name": "face_cam",
+            "module": "mechlib.cams",
+            "signature": signature(face_cam),
+            "description": (
+                "An axial face cam: the end face of a disc carries a raised "
+                "track whose height follows a motion-law program, and a roller "
+                "follower rides it for pure axial stroke. Complements plate "
+                "(radial) and barrel (groove-on-drum) cams."),
+            "origin": (
+                "Gap-analysis wave v0.9.0; classic ref: face / end cam, "
+                "automotive and textile machinery"),
+            "demo": "demo_face_cam",
+        },
+        {
+            "file": "swash_plate_demo.glb",
+            "name": "swash_plate",
+            "module": "mechlib.linear",
+            "signature": signature(swash_plate),
+            "description": (
+                "A disc fixed at a tilt to a spinning shaft drives a ring of "
+                "piston shoes through an axial stroke of 2*pitch_r*tan(tilt). "
+                "The rotary-to-multi-piston conversion of axial piston pumps "
+                "and helicopter cyclic controls."),
+            "origin": (
+                "Gap-analysis wave v0.9.0; classic ref: swash-plate axial "
+                "piston pump / helicopter rotor control"),
+            "demo": "demo_swash_plate",
+        },
+        {
+            "file": "screw_jack_demo.glb",
+            "name": "screw_jack",
+            "module": "mechlib.linear",
+            "signature": signature(screw_jack),
+            "description": (
+                "A printed-thread screw standing in a base nut with a lifting "
+                "pad on top. One turn raises the pad by the thread pitch. The "
+                "simplest self-locking rotary-to-linear actuator."),
+            "origin": (
+                "Gap-analysis wave v0.9.0; classic ref: screw jack / "
+                "machine-screw linear actuator"),
+            "demo": "demo_screw_jack",
+        },
+        {
+            "file": "rack_pinion_demo.glb",
+            "name": "rack_pinion",
+            "module": "mechlib.linear",
+            "signature": signature(rack_pinion),
+            "description": (
+                "An involute spur pinion posed in mesh with a straight rack. "
+                "One pinion turn advances the rack by pi*module*teeth along "
+                "the pitch line. Steering racks, linear stages, and CNC axes."),
+            "origin": (
+                "Gap-analysis wave v0.9.0; classic ref: rack and pinion "
+                "drive"),
+            "demo": "demo_rack_pinion",
+        },
+        {
+            "file": "dog_clutch_demo.glb",
+            "name": "dog_clutch",
+            "module": "mechlib.clutches",
+            "signature": signature(dog_clutch),
+            "description": (
+                "Two hubs with interleaved axial teeth that lock in torsion "
+                "when pressed together and freewheel when withdrawn. Positive "
+                "engagement, no slip once seated: gearbox dog rings and "
+                "quick-change spindles."),
+            "origin": (
+                "Gap-analysis wave v0.9.0; classic ref: dog / claw clutch"),
+            "demo": "demo_dog_clutch",
+        },
+        {
+            "file": "hirth_coupling_demo.glb",
+            "name": "hirth_coupling",
+            "module": "mechlib.couplings",
+            "signature": signature(hirth_coupling),
+            "description": (
+                "Two faces carrying radial V-teeth that seat into each other's "
+                "valleys. Self-centring, zero-backlash torsion once preloaded: "
+                "the standard machine-tool spindle and indexing-table face "
+                "coupling."),
+            "origin": (
+                "Gap-analysis wave v0.9.0; classic ref: Albert Hirth face "
+                "coupling (patent 1894)"),
+            "demo": "demo_hirth_coupling",
+        },
+        {
+            "file": "clevis_demo.glb",
+            "name": "clevis",
+            "module": "mechlib.joints",
+            "signature": signature(clevis),
+            "description": (
+                "A U-fork, a pin, and an eye: the basic pin joint for linking "
+                "a rod end to a lever or turnbuckle. Prints as three separate "
+                "parts that assemble with the designed pin clearance."),
+            "origin": (
+                "Gap-analysis wave v0.9.0; classic ref: clevis pin joint / "
+                "shackle"),
+            "demo": "demo_clevis",
+        },
+        {
+            "file": "external_gear_pump_demo.glb",
+            "name": "external_gear_pump",
+            "module": "mechlib.fluid",
+            "signature": signature(external_gear_pump),
+            "description": (
+                "Two meshing spur gears in a figure-eight bore carry fluid "
+                "around the outside of each gear from inlet to outlet. The "
+                "classic positive-displacement hydraulic pump; complements "
+                "the internal gerotor already in the library."),
+            "origin": (
+                "Gap-analysis wave v0.9.0; classic ref: external gear pump"),
+            "demo": "demo_external_gear_pump",
+        },
+        {
+            "file": "harmonic_drive_demo.glb",
+            "name": "harmonic_drive",
+            "module": "mechlib.drives",
+            "signature": signature(harmonic_drive),
+            "description": (
+                "A strain-wave gear: an elliptical wave generator deforms a "
+                "thin flex spline so it meshes a rigid circular spline at two "
+                "opposite zones. Ratio is -fs_teeth/(cs_teeth-fs_teeth); the "
+                "default 50:48 pair is 24:1. The high-ratio compact reducer "
+                "of robot joints."),
+            "origin": (
+                "Gap-analysis wave v0.9.0; classic ref: C. W. Musser "
+                "harmonic drive (1957)"),
+            "demo": "demo_harmonic_drive",
         },
     ]
 
