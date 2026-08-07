@@ -30,13 +30,37 @@ Consumers keep thin facade modules that bind their own params.
 ## Layout
 
 - `mechlib/` — the package (prim, sweep, cutters, closures, gears, mechanisms,
-  fasteners, fixtures, meshutil, packing, patterns, text, stepio).
+  fasteners, fixtures, meshutil, packing, patterns, text, stepio, usecases).
+- `mechlib/usecases.py` — **machinery use cases for every public API** (where
+  each part shows up in real machines). Source of truth for AI part selection
+  and for the gallery "Used in" lines. See "Choosing a part" below.
 - `gallery/build_gallery.py` — regenerates `docs/models/*.glb` plus
   `docs/models/index.json`. Run from repo root: `python3 gallery/build_gallery.py`.
 - `docs/` — GitHub Pages site (interactive gallery) at
   https://m-esm.github.io/mechlib/, served from `main:/docs`. Committing
   rebuilt GLBs publishes them.
 - `tests/` — pytest suite: `python3 -m pytest tests/ -q`.
+
+## Choosing a part (for AI agents)
+
+When an agent needs geometry for a mechanism (leg, clamp, gear train, seal,
+linear stage, …), **do not invent it from boxes and cylinders** if a mechlib
+API already covers it.
+
+1. Read use cases: `mechlib/usecases.py`, or at runtime:
+   ```python
+   from mechlib.usecases import use_case, search_use_cases, all_use_cases
+   search_use_cases("robot joint")   # [(api_name, text), ...]
+   use_case("four_bar")              # one machinery situation string
+   ```
+2. Match the **job** to a concrete situation in those strings (shaper ram,
+   CV halfshaft, O-ring face seal, printer bed level, …), then call that API.
+3. Browse the same text on the live gallery cards ("Used in") at
+   https://m-esm.github.io/mechlib/ — each card’s applications field comes
+   from `usecases.py`.
+4. New public function: add a `USE_CASES["fn_name"] = "..."` line in
+   `mechlib/usecases.py` (and a gallery GLB mapping if the demo file name
+   does not match), same PR as the function.
 
 ## Workflow
 
