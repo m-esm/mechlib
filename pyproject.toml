@@ -12,6 +12,10 @@ dependencies = [
     "trimesh>=4",
     "shapely>=2",
     "manifold3d",
+    # trimesh ray/proximity queries (contains, min_distance, thickness)
+    "rtree",
+    # trimesh topology repair (fix_normals / face adjacency graphs)
+    "networkx",
 ]
 authors = [
     {name = "m-esm"},

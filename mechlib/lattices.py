@@ -98,10 +98,36 @@ def _fit_frame(material, width, height, border, overlap):
     return frame, border_actual
 
 
-def _count_holes(poly):
-    """Return the total interior-ring count across a (Multi)Polygon."""
+def _count_holes(poly, min_area=0.5):
+    """Return the total interior-ring count across a (Multi)Polygon.
+
+    Rings smaller than ``min_area`` mm² are ignored. GEOS boolean ops can
+    leave sub-nozzle sliver holes that vanish during extrusion/repair, so
+    counting them would disagree with the printed solid's Euler genus.
+    """
     geoms = poly.geoms if poly.geom_type == "MultiPolygon" else [poly]
-    return sum(len(g.interiors) for g in geoms)
+    n = 0
+    for g in geoms:
+        for ring in g.interiors:
+            if abs(sg.Polygon(ring).area) >= min_area:
+                n += 1
+    return n
+
+
+def _prune_holes(poly, min_area=0.5):
+    """Drop interior rings smaller than ``min_area`` mm² (GEOS slivers)."""
+    def _one(g):
+        if g.geom_type != "Polygon" or not g.interiors:
+            return g
+        keep = [r for r in g.interiors
+                if abs(sg.Polygon(r).area) >= min_area]
+        if len(keep) == len(g.interiors):
+            return g
+        return sg.Polygon(g.exterior, keep)
+
+    if poly.geom_type == "MultiPolygon":
+        return unary_union([_one(g) for g in poly.geoms])
+    return _one(poly)
 
 
 # ---------------------------------------------------------------------------
@@ -360,6 +386,9 @@ def auxetic_panel(mode="reentrant", width=60.0, height=60.0, thickness=3.0,
                                             width / 2.0, height / 2.0))
     if combined.geom_type not in ("Polygon", "MultiPolygon"):
         raise ValueError("auxetic_panel(): degenerate panel geometry")
+    # Drop GEOS sliver interiors so the 2D hole count matches the extruded
+    # solid's genus (platform GEOS builds differ on which slivers survive).
+    combined = _prune_holes(combined)
     hole_count = _count_holes(combined)
 
     mesh = _extrude(combined, thickness)
