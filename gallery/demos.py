@@ -39,6 +39,9 @@ from mechlib.closures import (
 )
 from mechlib.bearings import plain_bushing, printed_ball_bearing, thrust_washer
 from mechlib.chains import (
+    chain_dual_output,
+    chain_reverse,
+    chain_s_wrap,
     drag_chain,
     drag_chain_link,
     roller_chain,
@@ -830,6 +833,18 @@ PLAY: dict = {
         "preload_mm": (0.5, 4.0, 0.5),
         "sweep_deg": (20, 120, 10),
     },
+    "demo_chain_reverse": {
+        "wrap_deg": (120, 240, 30),
+        "idler_teeth": (8, 16, 2),
+    },
+    "demo_chain_s_wrap": {
+        "out_wrap_deg": (60, 180, 30),
+        "out_teeth": (8, 16, 2),
+    },
+    "demo_chain_dual_output": {
+        "in_pitches": (3, 6, 1),
+        "idler_teeth": (8, 16, 2),
+    },
     "demo_drag_chain_link": {
         "bend_deg": (15, 45, 5),
         "width": (8, 12, 1),
@@ -837,6 +852,7 @@ PLAY: dict = {
     "demo_drag_chain": {
         "links": (6, 10, 1),
         "bend_deg": (15, 45, 5),
+        "s_bend_at": (0, 8, 1),
     },
     "demo_roller_chain_link": {
         "roller_d": (7.75, 11.75, 1.0),
@@ -2899,8 +2915,12 @@ def demo_drag_chain_link(bend_deg: float = 30.0, width: float = 9.0) -> MeshList
     return out
 
 
-def demo_drag_chain(links: int = 8, bend_deg: float = 30.0) -> MeshList:
-    parts = drag_chain(links=links, bend_deg=bend_deg)
+def demo_drag_chain(links: int = 8, bend_deg: float = 30.0,
+                    s_bend_at: int = 0) -> MeshList:
+    # Clamp so any playground slider combo stays valid (s_bend_at <= links).
+    s = min(s_bend_at, links)
+    parts = drag_chain(links=links, bend_deg=bend_deg, reverse_bend=s > 0,
+                       s_bend_at=s if s > 0 else None)
     out = []
     for name, mesh in parts.items():
         if name.startswith("link_"):
@@ -2928,6 +2948,39 @@ def demo_roller_chain(n_teeth: int = 14, wrap_deg: float = 200.0) -> MeshList:
     out = [("sprocket", parts["sprocket"], PALETTE[0])]
     for name, mesh in parts.items():
         if name != "sprocket":
+            out.append((name, mesh, PALETTE[4]))
+    return out
+
+
+def demo_chain_reverse(wrap_deg: float = 160.0, idler_teeth: int = 10) -> MeshList:
+    parts = chain_reverse(wrap_deg=wrap_deg, idler_teeth=idler_teeth)
+    out = [("sprocket", parts["sprocket"], PALETTE[0]),
+           ("idler", parts["idler"], PALETTE[1])]
+    for name, mesh in parts.items():
+        if name.startswith("roller_"):
+            out.append((name, mesh, PALETTE[4]))
+    return out
+
+
+def demo_chain_s_wrap(wrap_deg: float = 160.0, out_wrap_deg: float = 150.0,
+                      out_teeth: int = 12) -> MeshList:
+    parts = chain_s_wrap(wrap_deg=wrap_deg, out_wrap_deg=out_wrap_deg,
+                         out_teeth=out_teeth)
+    out = [("sprocket", parts["sprocket"], PALETTE[0]),
+           ("out_sprocket", parts["out_sprocket"], PALETTE[1])]
+    for name, mesh in parts.items():
+        if name.startswith("roller_"):
+            out.append((name, mesh, PALETTE[4]))
+    return out
+
+
+def demo_chain_dual_output(in_pitches: int = 4, idler_teeth: int = 10) -> MeshList:
+    parts = chain_dual_output(in_pitches=in_pitches, idler_teeth=idler_teeth)
+    out = [("driver", parts["driver"], PALETTE[0]),
+           ("out_forward", parts["out_forward"], PALETTE[2]),
+           ("idler_reverse", parts["idler_reverse"], PALETTE[1])]
+    for name, mesh in parts.items():
+        if name.startswith("roller_"):
             out.append((name, mesh, PALETTE[4]))
     return out
 

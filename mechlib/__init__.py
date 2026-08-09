@@ -13,7 +13,15 @@ from .cams import (
     roller_follower,
     snail_cam,
 )
-from .chains import drag_chain, drag_chain_link, roller_chain, roller_chain_link
+from .chains import (
+    chain_dual_output,
+    chain_reverse,
+    chain_s_wrap,
+    drag_chain,
+    drag_chain_link,
+    roller_chain,
+    roller_chain_link,
+)
 from .closures import (
     SnapSpec,
     annular_snap,

@@ -85,6 +85,21 @@ USE_CASES = {
         "Blocks, spacers, and axis-aligned volumes that start most bracket "
         "and housing models."
     ),
+    'chain_dual_output': (
+        "Jackshafts and conveyor lines needing simultaneous forward and "
+        "reverse take-offs from one chain run: a sprocket inside the loop "
+        "turns with the driver, an idler on the back of a span turns opposite."
+    ),
+    'chain_reverse': (
+        "Reverse-rotation takeoffs on conveyors, agricultural machinery, and "
+        "machine drives: an idler sprocket bearing on the back of a chain "
+        "span turns opposite to the driver."
+    ),
+    'chain_s_wrap': (
+        "S-wrap reversing drives on conveyors, mixers, and farm machinery: "
+        "the chain snakes over the driver and around the outside of the "
+        "driven sprocket, so the output shaft turns opposite without gears."
+    ),
     'chamfer_prism': (
         "Enclosures with a soft top edge, control knobs, and prisms that need "
         "a clean hull chamfer."
@@ -167,11 +182,13 @@ USE_CASES = {
     ),
     'drag_chain': (
         "Full cable-carrier runs protecting wires and hoses on moving axes of "
-        "machines and 3D printers."
+        "machines and 3D printers; reverse_bend/s_bend_at pose RBR S-bend "
+        "runs that snake between levels."
     ),
     'drag_chain_link': (
         "Cable carriers on CNC and robots; single link of an energy chain "
-        "that flexes only one way."
+        "that flexes only one way (reverse_bend=True for RBR links that "
+        "articulate both ways)."
     ),
     'eccentric_cam_clamp': (
         "Quick-release workholding on mills and fixtures, bicycle seat and "
@@ -722,6 +739,9 @@ GALLERY_FILE_TO_API = {
     'bistable_beam_demo.glb': 'bistable_beam',
     'board_cradle_demo.glb': 'board_cradle',
     'boxc_demo.glb': 'boxc',
+    'chain_dual_output_demo.glb': 'chain_dual_output',
+    'chain_reverse_demo.glb': 'chain_reverse',
+    'chain_s_wrap_demo.glb': 'chain_s_wrap',
     'chamfer_prism_demo.glb': 'chamfer_prism',
     'chebyshev_linkage_demo.glb': 'chebyshev_linkage',
     'clamshell_shiplap_demo.glb': 'clamshell_shiplap',
