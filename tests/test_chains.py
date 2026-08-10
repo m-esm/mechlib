@@ -45,6 +45,16 @@ def test_drag_chain_link_returns_named_watertight_parts():
     assert set(no_lid) == {"link", "pin"}
 
 
+def test_drag_chain_link_is_one_connected_solid():
+    # Regression: the full-height end carves once severed the socket ring
+    # and boss post from the trough (3 floating bodies). The mid-band
+    # connector webs must keep every variant a single printable solid.
+    for rbr in (False, True):
+        link = drag_chain_link(reverse_bend=rbr)["link"]
+        bodies = link.split(only_watertight=False)
+        assert len(bodies) == 1
+
+
 def test_drag_chain_link_min_bend_radius_matches_closed_form():
     for bend_deg, pitch in ((20.0, 18.0), (45.0, 24.0)):
         out = drag_chain_link(bend_deg=bend_deg, pitch=pitch)

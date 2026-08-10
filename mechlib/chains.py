@@ -83,11 +83,20 @@ def drag_chain_link(pitch=20.0, width=9.0, height=8.0, bend_deg=30.0,
     ring, inner radius ``sock_r`` — and the other (local x=``pitch``) is a
     round MALE boss post of radius ``boss_r = sock_r - clear`` that nests
     inside the neighbour's ring with ``clear`` mm radial running clearance.
-    Both features run the link's FULL height (never a partial-depth pocket),
-    so the pivot is a plain Z-axis through-bore-and-post pair: every layer of
-    every hole is a complete supported ring and every layer of the post is a
-    complete supported disc, so the hinge itself needs no bridging support at
-    any diameter (unlike a horizontal pin bore, which would).
+    The bores and the post run the link's FULL height (never a partial-depth
+    pocket), so the pivot is a plain Z-axis through-bore-and-post pair: every
+    layer of every hole is a complete supported ring and every layer of the
+    post is a complete supported disc (unlike a horizontal pin bore, which
+    would need support). A planar full-height ring-and-post joint can never
+    tie the post back to the trough — any bridge must cross the neighbour's
+    ring annulus in the same Z band — so connectivity is staggered in Z: in
+    one mid band (``wall`` to ``height - 2.4`` mm) a narrow web ties each
+    end feature to the trough floor, the socket ring gets a clearance NOTCH
+    (sized to the articulation window) that the neighbour's boss web
+    travels through, and the stop tab skips that band so it cannot meet the
+    neighbour's socket web. The link is ONE connected solid; the only
+    bridging when printing is the ~4 mm web spans and the short arcs over
+    the notch — no supports needed.
 
     The socket also carries a keyway-shaped stop GROOVE cut into its ring,
     and the boss a matching stop TAB projecting from its post — posed so the
@@ -96,7 +105,8 @@ def drag_chain_link(pitch=20.0, width=9.0, height=8.0, bend_deg=30.0,
     groove wall just outside that window: reverse bending is blocked within
     about ``stop_clear_deg`` of straight (drag chains stay rigid the wrong
     way), forward bending is capped ``stop_clear_deg`` past ``bend_deg``.
-    Both are Z-prismatic cuts/posts too — no overhang.
+    The tab skips the mid connector band (see above) but runs full height
+    otherwise, so the stop engages in the top and floor bands.
 
     With ``reverse_bend=True`` the stop groove is mirrored, giving a
     SYMMETRIC travel window of ``±(bend_deg + stop_clear_deg)``: the link
@@ -123,8 +133,9 @@ def drag_chain_link(pitch=20.0, width=9.0, height=8.0, bend_deg=30.0,
     the circle a fully-curled run of these links traces, ``pitch / (2 *
     sin(bend_deg/2))``), ``boss_r``, ``sock_r``, and ``bore_r``.
 
-    Print the link flat (as generated, z=0 on the bed) with no supports; print
-    the pin standing on end. Units are mm and degrees.
+    Print the link flat (as generated, z=0 on the bed) with no supports (the
+    connector webs and the arcs over the ring notch bridge ~4 mm on their
+    own); print the pin standing on end. Units are mm and degrees.
     """
     if (pitch <= 0 or width < 6.0 or height <= 0 or wall < 0.8 or
             pin_d <= 0 or clear < 0.05 or
@@ -218,6 +229,58 @@ def drag_chain_link(pitch=20.0, width=9.0, height=8.0, bend_deg=30.0,
                                  wall + (height - roof_h - wall) / 2.0))
     channel_cut = uni([lower_cut, roof_cut])
     link = sub(link, channel_cut)
+
+    # --- Connectivity: mid-band connector webs --------------------------
+    # The full-height end carves above sever the socket ring and the boss
+    # post from the trough (any planar full-height bridge from the post
+    # would have to cross the neighbour's ring annulus — impossible
+    # in-plane). The fix staggers the joint in Z: in ONE mid band
+    # [wall, height - 2.4] a narrow web ties each end back to the trough
+    # floor, the socket ring gets a clearance NOTCH (toward the previous
+    # link) sized to the articulation window so the neighbour's boss web
+    # passes through it at every allowed angle, and the stop tab is
+    # removed from that band so it cannot collide with the neighbour's
+    # socket web refilling its groove there. Ring, post, bores, and the
+    # tab/groove stop stay full height outside the band, so the hinge
+    # still prints with only short (~4 mm) bridges at the webs and over
+    # the notch.
+    band_z0 = wall
+    band_z1 = height - 2.4
+    if band_z1 - band_z0 < 1.2:
+        raise ValueError(
+            "drag_chain_link(): height too small for the connector band; "
+            "need height >= wall + 3.6")
+    web_w = min(3.0, width - 3.0)
+    # Relative travel window the groove permits, and the web's angular
+    # half-width where it crosses the ring annulus (worst at sock_r).
+    wmin = lo + tab_hw_deg
+    wmax = hi - tab_hw_deg
+    web_hw = math.degrees(
+        math.asin(min(1.0, (web_w / 2.0 + clear) / sock_r))) + 1.0
+    notch2d = sector2d(180.0 + wmin - web_hw, 180.0 + wmax + web_hw,
+                       neck_r + 0.5, n=n_arc).difference(
+        sg.Point(0.0, 0.0).buffer(max(0.1, sock_r - 0.05),
+                                  resolution=sections))
+    link = sub(link, _extrude(notch2d, band_z0 - 0.1, band_z1 + 0.1))
+    # The tab stays out of the web band (0.2 mm Z clearance both sides).
+    link = sub(link, _extrude(tab2d, band_z0 - 0.2, band_z1 + 0.2))
+    # Socket web: fills part of this link's own groove in the band and ties
+    # the ring to the trough; boss web: ties the post back through where
+    # the neighbour's ring is notched. Each gets a floor rib so the union
+    # overlaps the trough floor in volume, not just at a plane.
+    web_sock = sg.box(sock_r + 0.1, -web_w / 2.0,
+                      collar_r + 2.5, web_w / 2.0)
+    rib_sock = sg.box(collar_r + 0.8, -web_w / 2.0,
+                      collar_r + 2.5, web_w / 2.0)
+    web_boss = sg.box(pitch - collar_r - 2.5, -web_w / 2.0,
+                      pitch - bore_r - 0.25, web_w / 2.0)
+    rib_boss = sg.box(pitch - collar_r - 2.5, -web_w / 2.0,
+                      pitch - collar_r - 0.8, web_w / 2.0)
+    link = uni([link,
+                _extrude(web_sock, band_z0, band_z1),
+                _extrude(rib_sock, 0.0, band_z0 + 0.4),
+                _extrude(web_boss, band_z0, band_z1),
+                _extrude(rib_boss, 0.0, band_z0 + 0.4)])
 
     min_r = pitch / (2.0 * math.sin(math.radians(bend_deg / 2.0)))
     link.metadata.update({
