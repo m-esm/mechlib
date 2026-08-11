@@ -124,9 +124,10 @@ def drag_chain_link(pitch=20.0, width=9.0, height=8.0, bend_deg=30.0,
 
     If ``lid=True`` the dict also carries a friction-fit ("press-on", not a
     true cantilever snap — FDM plastic across a 1.6 mm wall is not reliable
-    enough for a repeatable snap) cable-retention lid: a flat cap plus an
-    underside plug sized ``width - 0.3`` mm so it presses lightly into the
-    open channel and holds by friction alone.
+    enough for a repeatable snap) cable-retention lid: a flat cap resting on
+    the wall tops plus an underside plug sized ``width - 2 * roof_overhang -
+    0.3`` mm that presses lightly into the roof-narrowed top opening and
+    holds by friction alone.
 
     Returns ``{"link", "pin"}`` plus ``"lid"`` when requested. ``link.metadata``
     carries ``pitch``, ``bend_deg``, ``min_bend_radius`` (mm — the radius of
@@ -295,14 +296,17 @@ def drag_chain_link(pitch=20.0, width=9.0, height=8.0, bend_deg=30.0,
 
     out = {"link": link, "pin": pin}
     if lid:
+        # The cap closes the trough from ABOVE: its plate rests on the wall
+        # tops (z = height) and the underside plug presses down into the
+        # roof-narrowed top opening, holding the lid by friction.
         plate2d = sg.box(lx0 - wall * 0.6, -collar_r + 0.4,
                          lx1 + wall * 0.6, collar_r - 0.4)
-        cap = _extrude(plate2d, 0.0, lid_t)
+        cap = _extrude(plate2d, height, height + lid_t)
         plug_w = max(1.0, width - 2.0 * roof_overhang - 0.3)
         plug_h = min(1.5, max(0.0, roof_h - 0.4))
         if plug_h > 0.4:
             plug2d = sg.box(lx0, -plug_w / 2.0, lx1, plug_w / 2.0)
-            plug = _extrude(plug2d, -plug_h, 0.0)
+            plug = _extrude(plug2d, height - plug_h, height)
             cap = uni([cap, plug])
         out["lid"] = cap
     return out

@@ -55,6 +55,20 @@ def test_drag_chain_link_is_one_connected_solid():
         assert len(bodies) == 1
 
 
+def test_drag_chain_link_lid_caps_the_top_opening():
+    # Regression: the lid was extruded at the trough floor (z=0) with its
+    # plug pointing below the bed. It must sit ABOVE the walls: cap resting
+    # on the wall tops, plug pressing down into the top opening, and no
+    # solid overlap with the link (the plug keeps 0.15 mm side clearance).
+    height = 8.0
+    out = drag_chain_link(height=height)
+    lid, link = out["lid"], out["link"]
+    # Default roof_h=1.2 gives plug_h = min(1.5, roof_h - 0.4) = 0.8.
+    assert lid.bounds[0][2] == pytest.approx(height - 0.8, abs=0.01)
+    assert lid.bounds[1][2] == pytest.approx(height + 1.4, abs=0.01)
+    assert overlap_volume(lid, link) == pytest.approx(0.0, abs=1e-3)
+
+
 def test_drag_chain_link_min_bend_radius_matches_closed_form():
     for bend_deg, pitch in ((20.0, 18.0), (45.0, 24.0)):
         out = drag_chain_link(bend_deg=bend_deg, pitch=pitch)
