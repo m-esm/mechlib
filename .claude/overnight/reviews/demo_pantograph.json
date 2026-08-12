@@ -1,0 +1,14 @@
+{
+  "bodies_that_look_frozen": [
+    "base_pad",
+    "pin_f"
+  ],
+  "cycle_closes": true,
+  "demo": "demo_pantograph",
+  "issues": [],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Blue base pad stays fixed. Orange pivot bar, yellow/purple/green parallelogram, stylus pin and output point sweep a closed pose cycle while the parallelogram stays closed.",
+  "notes": "Last column at 302 deg is already near the 0 deg pose (orange bar left, output toward the pad). Scale-copy geometry holds; no broken pins.",
+  "verdict": "pass"
+}

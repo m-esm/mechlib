@@ -415,6 +415,7 @@
       "category": "gears",
       "group": "movements",
       "id": "demo_herringbone_gear",
+      "issues": [],
       "kind": "animate",
       "moving": [],
       "parts": 2,
@@ -422,20 +423,23 @@
       "render_error": null,
       "rendered": true,
       "rereview_reason": "anti-alias phase resample",
+      "review_at": "2026-08-13T00:04:28+03:00",
       "review_claim": "2026-08-13T00:01:11+03:00",
-      "reviewed": false,
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_herringbone_gear.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_herringbone_gear/sheet_s.png",
       "stationary": [
         "herringbone_driven",
         "herringbone_driver"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": true,
       "category": "linkages",
       "group": "movements",
       "id": "demo_lazy_tongs",
+      "issues": [],
       "kind": "animate",
       "moving": [
         "bar_0",
@@ -460,20 +464,23 @@
       "priority": 0,
       "render_error": null,
       "rendered": true,
+      "review_at": "2026-08-13T00:04:28+03:00",
       "review_claim": "2026-08-13T00:01:11+03:00",
-      "reviewed": false,
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_lazy_tongs.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_lazy_tongs/sheet_s.png",
       "stationary": [
         "frame",
         "pin_0"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": true,
       "category": "linkages",
       "group": "movements",
       "id": "demo_pantograph",
+      "issues": [],
       "kind": "animate",
       "moving": [
         "bar_closer",
@@ -490,20 +497,23 @@
       "priority": 0,
       "render_error": null,
       "rendered": true,
+      "review_at": "2026-08-13T00:04:28+03:00",
       "review_claim": "2026-08-13T00:01:11+03:00",
-      "reviewed": false,
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_pantograph.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_pantograph/sheet_s.png",
       "stationary": [
         "base_pad",
         "pin_f"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": true,
       "category": "linkages",
       "group": "movements",
       "id": "demo_peaucellier",
+      "issues": [],
       "kind": "animate",
       "moving": [
         "anchor_link_a",
@@ -522,21 +532,24 @@
       "priority": 0,
       "render_error": null,
       "rendered": true,
+      "review_at": "2026-08-13T00:04:28+03:00",
       "review_claim": "2026-08-13T00:01:11+03:00",
-      "reviewed": false,
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_peaucellier.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_peaucellier/sheet_s.png",
       "stationary": [
         "ground_link",
         "pin_c",
         "pin_o"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": true,
       "category": "cams",
       "group": "movements",
       "id": "demo_plate_cam",
+      "issues": [],
       "kind": "animate",
       "moving": [
         "follower_stem",
@@ -546,19 +559,22 @@
       "priority": 0,
       "render_error": null,
       "rendered": true,
+      "review_at": "2026-08-13T00:04:28+03:00",
       "review_claim": "2026-08-13T00:01:11+03:00",
-      "reviewed": false,
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_plate_cam.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_plate_cam/sheet_s.png",
       "stationary": [
         "plate_cam"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": true,
       "category": "linkages",
       "group": "movements",
       "id": "demo_quick_return",
+      "issues": [],
       "kind": "animate",
       "moving": [
         "crank_pin",
@@ -568,8 +584,10 @@
       "priority": 0,
       "render_error": null,
       "rendered": true,
+      "review_at": "2026-08-13T00:04:28+03:00",
       "review_claim": "2026-08-13T00:01:11+03:00",
-      "reviewed": false,
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_quick_return.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_quick_return/sheet_s.png",
       "stationary": [
         "base",
@@ -577,13 +595,14 @@
         "pin_crank",
         "pin_lever"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": true,
       "category": "linear",
       "group": "movements",
       "id": "demo_rack_pinion",
+      "issues": [],
       "kind": "animate",
       "moving": [
         "rack"
@@ -592,18 +611,22 @@
       "priority": 0,
       "render_error": null,
       "rendered": true,
-      "reviewed": false,
+      "review_at": "2026-08-13T00:05:40+03:00",
+      "review_claim": "2026-08-13T00:04:33+03:00",
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_rack_pinion.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_rack_pinion/sheet_s.png",
       "stationary": [
         "pinion"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": true,
       "category": "gears",
       "group": "movements",
       "id": "demo_ring_gear_mesh",
+      "issues": [],
       "kind": "animate",
       "moving": [],
       "parts": 2,
@@ -611,40 +634,47 @@
       "render_error": null,
       "rendered": true,
       "rereview_reason": "anti-alias phase resample",
-      "review_claim": null,
-      "reviewed": false,
+      "review_at": "2026-08-13T00:05:40+03:00",
+      "review_claim": "2026-08-13T00:04:33+03:00",
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_ring_gear_mesh.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_ring_gear_mesh/sheet_s.png",
       "stationary": [
         "internal_ring_gear",
         "ring_pinion"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": true,
       "category": "fluid",
       "group": "movements",
       "id": "demo_rotary_spool_valve",
+      "issues": [],
       "kind": "animate",
       "moving": [],
       "parts": 3,
       "priority": 0,
       "render_error": null,
       "rendered": true,
-      "reviewed": false,
+      "review_at": "2026-08-13T00:05:40+03:00",
+      "review_claim": "2026-08-13T00:04:33+03:00",
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_rotary_spool_valve.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_rotary_spool_valve/sheet_s.png",
       "stationary": [
         "spool_valve_body",
         "spool_valve_cap",
         "spool_valve_plug"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": true,
       "category": "linkages",
       "group": "movements",
       "id": "demo_sarrus",
+      "issues": [],
       "kind": "animate",
       "moving": [
         "chain_a_lower",
@@ -661,14 +691,17 @@
       "priority": 0,
       "render_error": null,
       "rendered": true,
-      "reviewed": false,
+      "review_at": "2026-08-13T00:05:40+03:00",
+      "review_claim": "2026-08-13T00:04:33+03:00",
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_sarrus.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_sarrus/sheet_s.png",
       "stationary": [
         "base_plate",
         "hinge_pin_0",
         "hinge_pin_1"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": true,
@@ -2163,5 +2196,5 @@
       "verdict": null
     }
   ],
-  "updated": "2026-08-13T00:01:11+03:00"
+  "updated": "2026-08-13T00:05:40+03:00"
 }

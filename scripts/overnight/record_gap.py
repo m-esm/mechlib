@@ -70,6 +70,8 @@ def main() -> int:
         )
     with GAP_REPORT.open("a") as handle:
         handle.write(block)
+    from commit_progress import main as commit_main
+    commit_main(["--loop", "gap-%s" % slice_id])
     print(dest)
     return 0
 

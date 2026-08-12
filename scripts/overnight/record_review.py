@@ -69,6 +69,8 @@ def main() -> int:
         )
     with MOTION_REPORT.open("a") as handle:
         handle.write(block)
+    from commit_progress import main as commit_main
+    commit_main(["--loop", "visual-%s" % demo])
     print(dest)
     return 0
 

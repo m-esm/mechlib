@@ -162,3 +162,143 @@ Port flashes repeat every 180 deg (0~180, 60~240, 120~300), consistent with an e
 ## note — phase aliasing
 
 First bevel_gear_pair fail was a sheet bug: equal cycle/N samples hit tooth-pitch identity (180 deg on a 16-tooth pinion). Sheets were rebuilt with a one-frame step plus uneven fractions. Gear-family reviews were queued again.
+
+## demo_herringbone_gear — pass
+
+- reviewed: 2026-08-13T00:04:28+03:00
+- kind: animate
+- motion: Orange driver and blue driven herringbone pair stay in mesh while tooth and spoke highlights rotate across drive_deg 0/5/79/148/227/302. Centroids stay put as expected for spin-in-place gears.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Anti-alias resample: 0 vs 5 deg are nearly identical (5 deg of mesh) and later columns show clear chevron rotation on both wheels. Not a frozen-from-symmetry miss. Remaining 58 deg would return toward the 0 pose.
+
+**Issues**
+- none
+
+## demo_lazy_tongs — pass
+
+- reviewed: 2026-08-13T00:04:28+03:00
+- kind: animate
+- motion: Red frame stays put. Yellow scissor bars fold from an open zigzag into a compact stack around 80-150 deg, then flatten and shoot the blue output yoke out along the axis by 300 deg.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: frame, pin_0
+
+Nuremberg-scissors stroke: retract then extend in one 360 drive. Front row shows the stack thinning as the rhombs flatten. Pins travel with the joints; nothing detaches.
+
+**Issues**
+- none
+
+## demo_pantograph — pass
+
+- reviewed: 2026-08-13T00:04:28+03:00
+- kind: animate
+- motion: Blue base pad stays fixed. Orange pivot bar, yellow/purple/green parallelogram, stylus pin and output point sweep a closed pose cycle while the parallelogram stays closed.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: base_pad, pin_f
+
+Last column at 302 deg is already near the 0 deg pose (orange bar left, output toward the pad). Scale-copy geometry holds; no broken pins.
+
+**Issues**
+- none
+
+## demo_peaucellier — pass
+
+- reviewed: 2026-08-13T00:04:28+03:00
+- kind: animate
+- motion: Green ground stays put. Orange crank orbits, purple rhombus opens and folds, red/yellow anchor links rock, and the tracer end travels as the inversor works through the drive.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: ground_link, pin_c, pin_o
+
+Cell stays assembled across 0-302 deg. Side row shows the orange crank walking left-right while the rhombus inverts. Last column is still opening, consistent with 58 deg left in the cycle.
+
+**Issues**
+- none
+
+## demo_plate_cam — pass
+
+- reviewed: 2026-08-13T00:04:28+03:00
+- kind: animate
+- motion: Blue plate cam spins in place while the orange roller stays on the profile and the green follower stem walks clockwise around the cam with changing lift (short at 60 deg, longer at 139 deg).
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Demo param is follower_deg starting at 60. Follower orbits rather than sliding on a fixed axis: kinematic inversion of a radial cam, lift still reads off the stem length. Last column at 362.4 continues clockwise toward the 60 deg start.
+
+**Issues**
+- none
+
+## demo_quick_return — pass
+
+- reviewed: 2026-08-13T00:04:28+03:00
+- kind: animate
+- motion: Yellow crank pin rides the orange disc and slides along the green slotted lever. Lever stays nearly flat through 40-188 deg, then rocks up sharply by 267 deg and starts back down at 342 deg (quick return).
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: base, pin_crank, pin_lever
+
+Crank disc is a featureless orange circle so rotation is read from the pin orbit, not disc markings. Blue base and both ground pins stay put. Last column at 342 deg is heading back toward the 40 deg start.
+
+**Issues**
+- none
+
+## demo_rack_pinion — pass
+
+- reviewed: 2026-08-13T00:05:40+03:00
+- kind: animate
+- motion: Red pinion spins in place (tooth orientation walks) and the green rack translates along the pitch line, staying in mesh. Rack left end walks toward the pinion from 0 to 302 deg.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Pinion centroid is fixed as expected. 0 vs 10 deg are close; later columns show both rotation and ~17 mm of rack travel. Last column still short of a full turn back to 0.
+
+**Issues**
+- none
+
+## demo_ring_gear_mesh — pass
+
+- reviewed: 2026-08-13T00:05:40+03:00
+- kind: animate
+- motion: Orange pinion stays centered on the left of the blue internal ring and its face spokes rotate through drive_deg 0/7.5/158/295/454/605. Mesh at the ring ID holds. Ring teeth walk slowly (high ratio).
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Anti-alias resample: 0 vs 7.5 deg look nearly identical; later columns are not a frozen copy. Cycle is 720 deg so last column at 605 is still short of close. Both listed stationary because travel is spin-in-place.
+
+**Issues**
+- none
+
+## demo_rotary_spool_valve — pass
+
+- reviewed: 2026-08-13T00:05:40+03:00
+- kind: animate
+- motion: Blue body and orange cap stay put. Brown plug rotates in the bore: hex socket walks, the stem slot appears and disappears in the side row, and the L-passage lines up with the body port around 227 deg (see-through in the side view).
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: spool_valve_body, spool_valve_cap
+
+Centroids are all ~0 as expected for a rotary valve. Plug_deg 0-302 is a partial turn; last column is heading back toward the 0 hex pose.
+
+**Issues**
+- none
+
+## demo_sarrus — pass
+
+- reviewed: 2026-08-13T00:05:40+03:00
+- kind: animate
+- motion: Purple base stays put. Orthogonal yellow/pink hinge chains fold and the cyan platform rises (0-148 deg, bars near vertical) then drops (227-302 deg) with no visible twist or sideways drift.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: base_plate, hinge_pin_0, hinge_pin_1
+
+Side and front rows confirm pure vertical travel. 302 deg is still low, consistent with rising again toward the mid-height 0 deg pose.
+
+**Issues**
+- none

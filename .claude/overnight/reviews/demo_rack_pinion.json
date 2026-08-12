@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_rack_pinion",
+  "issues": [],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Red pinion spins in place (tooth orientation walks) and the green rack translates along the pitch line, staying in mesh. Rack left end walks toward the pinion from 0 to 302 deg.",
+  "notes": "Pinion centroid is fixed as expected. 0 vs 10 deg are close; later columns show both rotation and ~17 mm of rack travel. Last column still short of a full turn back to 0.",
+  "verdict": "pass"
+}
