@@ -484,3 +484,17 @@ Kinematic inversion: follower_deg walks the stem around a fixed cam. Drop-face j
 
 **Issues**
 - none
+
+## demo_spur_gear_mesh — pass
+
+- reviewed: 2026-08-13T00:23:16+03:00
+- kind: animate
+- motion: Single 20-tooth involute gear spins in place. Top-face hatch and tooth silhouettes advance clockwise across the 18 deg pitch cycle.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Centroid travel is ~0 as expected for spin-in-place. Tooth orientation, not centroid, shows the rotation. Last column 15.1 deg is approaching the 18 deg close. Face hatching is a render alias, not a mesh defect.
+
+**Issues**
+- none

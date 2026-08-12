@@ -852,6 +852,7 @@
       "category": "gears",
       "group": "movements",
       "id": "demo_spur_gear_mesh",
+      "issues": [],
       "kind": "animate",
       "moving": [],
       "parts": 1,
@@ -859,13 +860,15 @@
       "render_error": null,
       "rendered": true,
       "rereview_reason": "anti-alias phase resample",
+      "review_at": "2026-08-13T00:23:16+03:00",
       "review_claim": "2026-08-13T00:21:10+03:00",
-      "reviewed": false,
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_spur_gear_mesh.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_spur_gear_mesh/sheet_s.png",
       "stationary": [
         "20_tooth_gear"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": true,
@@ -2227,5 +2230,5 @@
       "verdict": null
     }
   ],
-  "updated": "2026-08-13T00:23:14+03:00"
+  "updated": "2026-08-13T00:23:16+03:00"
 }
