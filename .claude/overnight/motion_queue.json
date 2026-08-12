@@ -1838,21 +1838,24 @@
       "category": "cams",
       "group": "movements",
       "id": "demo_roller_follower",
+      "issues": [],
       "kind": "movement",
       "moving": [],
       "parts": 3,
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_at": "2026-08-13T01:41:42+03:00",
       "review_claim": "2026-08-13T01:41:12+03:00",
-      "reviewed": false,
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_roller_follower.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_roller_follower/sheet_s.png",
       "stationary": [
         "arm",
         "pin",
         "roller"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": false,
@@ -2384,5 +2387,5 @@
       "verdict": null
     }
   ],
-  "updated": "2026-08-13T01:41:12+03:00"
+  "updated": "2026-08-13T01:41:42+03:00"
 }

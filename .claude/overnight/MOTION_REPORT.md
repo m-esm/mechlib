@@ -1030,3 +1030,17 @@ Non-animated. Pin through roller and plates; opposite hole empty for the next pi
 
 **Issues**
 - none
+
+## demo_roller_follower — pass
+
+- reviewed: 2026-08-13T01:41:42+03:00
+- kind: movement
+- motion: Rest pose: pink pivoted arm, green roller on a blue pin at the tip, pivot hole at the other end.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Roller sits on the pin through the arm; nothing exploded. Sane rest assembly of a cam follower lever.
+
+**Issues**
+- none
