@@ -142,12 +142,19 @@
       "title": "Compliant mechanisms and flexure joints"
     },
     {
-      "claimed_at": null,
-      "completed_at": null,
+      "candidate_count": 15,
+      "claimed_at": "2026-08-13T01:38:14+03:00",
+      "completed_at": "2026-08-13T01:40:08+03:00",
       "id": "clockwork-escapements",
+      "new_categories": [
+        {
+          "name": "clockwork",
+          "why": "Escapements, going barrels, remontoires, and stop-work are a machinery class. Indexing (geneva, star wheel) is intermittent motion from a continuous crank; clockwork is a feedback oscillator. The gallery currently files escapement under indexing. missing-categories can rank the shelf."
+        }
+      ],
       "prompt": "Escapement, fusee, spiral power spring, ratchet exist. Survey deadbeat vs recoil vs detent vs coaxial vs gravity, going barrel, remontoire, maintaining power, count wheel, striking (probably product), stackfreed, constant-force mechanisms, gravity arm.",
-      "report": null,
-      "status": "pending",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/clockwork-escapements.json",
+      "status": "done",
       "title": "Clockwork, escapements, and energy storage"
     },
     {
@@ -205,5 +212,5 @@
       "title": "Mechanisms that exist but cannot play"
     }
   ],
-  "updated": "2026-08-13T01:07:00+03:00"
+  "updated": "2026-08-13T01:40:08+03:00"
 }

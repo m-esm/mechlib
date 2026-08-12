@@ -1,0 +1,177 @@
+{
+  "candidates": [
+    {
+      "already": "escapement",
+      "api_shape": "lever_escapement(teeth, lever_span, roller_d, impulse_pin_d, phase_deg) -> {wheel, lever, roller} plus lever_escapement_pose",
+      "fdm": "Three flat parts: club-tooth wheel, lever with fork, roller with impulse pin. Prints flat. Detached: contact only at impulse. Self-starting. The printed-clock default (Thingiverse pendulum clocks that are not Graham still use a lever).",
+      "mechlib_fit": "yes",
+      "name": "lever_escapement",
+      "priority": "high",
+      "why": "Mudge 1750 / Swiss lever. The watch escapement since the 19th century. escapement() is a pendulum anchor (recoil or deadbeat), always in contact. A lever is detached and talks to a balance, not a pendulum crutch. Different solids, different pose."
+    },
+    {
+      "already": "escapement",
+      "api_shape": "verge_escapement(crown_teeth, pallet_angle_deg=90, phase_deg) -> {crown, verge} plus verge_pose",
+      "fdm": "Crown wheel (axial teeth, prints standing or as a loft) plus a staff with two flags ~90 deg apart. The first mechanical escapement (c. 1300). Recoil is the point. Teaching set.",
+      "mechlib_fit": "yes",
+      "name": "verge_escapement",
+      "priority": "high",
+      "why": "Crown wheel + verge + two pallets. 400 years of clocks before the anchor. 507 is full of them. Not an anchor (radial teeth, planar pallets) and not a lever. The missing historical primitive."
+    },
+    {
+      "already": "escapement",
+      "api_shape": "gravity_escapement(teeth, arm_len, drop_deg, phase_deg) -> {wheel, arm_a, arm_b} plus gravity_escapement_pose",
+      "fdm": "Two pivoted arms that fall a fixed drop and impulse the pendulum; the wheel only lifts them back. Prints large. Tower-clock scale is fine for FDM.",
+      "mechlib_fit": "yes",
+      "name": "gravity_escapement",
+      "priority": "high",
+      "why": "Denison/Grimthorpe (Big Ben): impulse comes from a falling gravity arm, not from the train, so the pendulum sees constant force. The prompt listed gravity. Distinct from deadbeat (train still pushes the pallet) and from a remontoire (which is upstream)."
+    },
+    {
+      "already": "spiral_power_spring, ratchet_wheel_pawl",
+      "api_shape": "going_barrel(z, module, barrel_d, click=True) -> {barrel_gear, spring, arbor, click} reuses spiral_power_spring guts",
+      "fdm": "Existing barrel with external teeth and a click/pawl on the arbor. Prints flat. The modern spring motor; no fusee.",
+      "mechlib_fit": "yes",
+      "name": "going_barrel",
+      "priority": "high",
+      "why": "Mainspring barrel that drives through teeth on the barrel, not the arbor. spiral_power_spring's barrel is a smooth pot. Adding a gear and a click is the missing going-barrel kit. Fusee is the older constant-torque cousin and already has a drum."
+    },
+    {
+      "already": "detent_pair, escapement",
+      "api_shape": "detent_escapement(teeth, detent_spring, roller, phase_deg) -> {wheel, detent, impulse_roller}",
+      "fdm": "Escape wheel + spring detent (printed TPU leaf or a bought strip) + roller. Impulse once per cycle, almost no sliding. Delicate; teaching/chronometer demo.",
+      "mechlib_fit": "yes",
+      "name": "detent_escapement",
+      "priority": "med",
+      "why": "Arnold/Earnshaw marine chronometer. Detached, one impulse per period, no oil on the impulse. detent_pair is a rotary index click, not this. Do not overload that name."
+    },
+    {
+      "already": "geneva_pair",
+      "api_shape": "geneva_stop(slots=5, finger=1, max_turns=4) -> {star, finger_disc}",
+      "fdm": "Maltese cross + one-finger driver with a locking rim. Prints flat. 507 #212-215 (watch winding stops).",
+      "mechlib_fit": "yes",
+      "name": "geneva_stop",
+      "priority": "med",
+      "why": "Limits how far a barrel can wind (typically 4-5 turns). geneva_pair is an indexer (continuous crank, stepped output). Stop-work is a 1-finger Geneva that parks. The missing clock-train safety."
+    },
+    {
+      "already": "spiral_power_spring, escapement",
+      "api_shape": "remontoire(period_teeth, secondary_spring) -> gathering pallet + small spring/weight that the train rewinds",
+      "fdm": "A small spiral or gravity arm plus a gathering pallet. Prints. Composition of existing spring + a one-tooth gatherer.",
+      "mechlib_fit": "yes",
+      "name": "remontoire",
+      "priority": "med",
+      "why": "Secondary spring or weight rewound at short intervals so the escape sees constant torque. B\u00fcrgi, Harrison, tower clocks. The constant-force mechanism the prompt named. Fusee equalizes a rundown; remontoire resets."
+    },
+    {
+      "already": "spiral_power_spring, plate_cam",
+      "api_shape": "stackfreed(cam_profile, spring) -> {cam, spring_arm} torque = f(turns)",
+      "fdm": "A face cam on the barrel plus a sprung follower. Prints. Pre-fusee German (16th c.).",
+      "mechlib_fit": "yes",
+      "name": "stackfreed",
+      "priority": "med",
+      "why": "Cam+spring that loads the barrel more when the mainspring is full. The other historical constant-torque, next to fusee. plate_cam plus a leaf is the composition; a named kit stops people inventing it."
+    },
+    {
+      "already": "lever_escapement",
+      "api_shape": "prefer lever_escapement(pallets='pins') over a second module",
+      "fdm": "Roskopf: two vertical pins on the lever instead of jeweled pallets. Extremely FDM-friendly.",
+      "mechlib_fit": "yes",
+      "name": "pin_pallet",
+      "priority": "med",
+      "why": "Cheap-watch lever. Pins print as cylinders. A pallet= argument on lever_escapement, not a fifth escapement module."
+    },
+    {
+      "already": "ratchet_wheel_pawl",
+      "api_shape": "Harrison/Huygens maintaining ratchet between great wheel and barrel so winding does not drop the train",
+      "fdm": "An extra ratchet and spring between barrel and great wheel. 507 #320-321. Composition.",
+      "mechlib_fit": "maybe",
+      "name": "maintaining_power",
+      "priority": "low",
+      "why": "Keeps the clock going while you wind. Real, but it is a ratchet arrangement on going_barrel, not a new family. Ship going_barrel first."
+    },
+    {
+      "already": "escapement",
+      "api_shape": "hollow cylinder on the balance staff, teeth enter and leave",
+      "fdm": "A cutaway tube and a wedge-tooth wheel. Prints. Wear is the historical complaint; FDM will be worse.",
+      "mechlib_fit": "maybe",
+      "name": "cylinder_escapement",
+      "priority": "low",
+      "why": "Graham 1726 frictional-rest, slim watches. Teaching only after lever and verge exist."
+    },
+    {
+      "already": "lever_escapement, detent_escapement",
+      "api_shape": null,
+      "fdm": "Two coaxial escape wheels + extra pallet. Tiny, Omega-patented. A product-shaped demo.",
+      "mechlib_fit": "maybe",
+      "name": "coaxial_escapement",
+      "priority": "low",
+      "why": "Daniels: lever lock + detent-style radial impulse. After lever and detent exist, a research extra, not a primitive."
+    },
+    {
+      "already": "escapement(style='deadbeat')",
+      "api_shape": null,
+      "fdm": "Covered. Locking faces are arcs about the pivot.",
+      "mechlib_fit": "no",
+      "name": "deadbeat_again",
+      "priority": "low",
+      "why": "Already shipped. Prompt listed deadbeat vs recoil; both styles are arguments on escapement()."
+    },
+    {
+      "already": "escapement(style='anchor')",
+      "api_shape": null,
+      "fdm": "Covered. Flat tilted locking faces.",
+      "mechlib_fit": "no",
+      "name": "recoil_again",
+      "priority": "low",
+      "why": "Already shipped as the default anchor."
+    },
+    {
+      "already": "grooved_drum(radius_law='fusee')",
+      "api_shape": null,
+      "fdm": "Covered (507 #46 hyperbolic cone).",
+      "mechlib_fit": "no",
+      "name": "fusee_again",
+      "priority": "low",
+      "why": "The drum exists. A fusee+chain+barrel assembly is a product built from this drum plus spiral_power_spring."
+    }
+  ],
+  "id": "clockwork-escapements",
+  "new_categories": [
+    {
+      "name": "clockwork",
+      "why": "Escapements, going barrels, remontoires, and stop-work are a machinery class. Indexing (geneva, star wheel) is intermittent motion from a continuous crank; clockwork is a feedback oscillator. The gallery currently files escapement under indexing. missing-categories can rank the shelf."
+    }
+  ],
+  "rejected": [
+    {
+      "name": "striking_train",
+      "why": "Count wheel or rack-striking, warning, gathering pallet, hammer. A finished clock complication. count_wheel alone is a mutilated lock, close to intermittent_gear_pair."
+    },
+    {
+      "name": "tourbillon",
+      "why": "A rotating cage around a whole escapement. Product / complication."
+    },
+    {
+      "name": "detent_pair_as_chronometer",
+      "why": "detent_pair is a rotary index click (vee/ball). Do not file it as Earnshaw."
+    },
+    {
+      "name": "grasshopper_as_first",
+      "why": "Harrison grasshopper is a real detached escapement but niche. Lever, verge, and gravity first."
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Escapement",
+    "https://en.wikipedia.org/wiki/Lever_escapement",
+    "https://en.wikipedia.org/wiki/Verge_escapement",
+    "https://en.wikipedia.org/wiki/Detent_escapement",
+    "https://horology-student.org/themes/types-of-escapements/",
+    "https://www.hodinkee.com/articles/the-modern-watch-escapement-and-how-it-got-that-way",
+    "https://507movements.com/toc.html",
+    ".claude/overnight/catalog.json demo_escapement ANIMATE + fusee_demo.glb maps to grooved_drum + spiral_power_spring",
+    "mechlib/indexing.py (escapement style=anchor|deadbeat, escapement_pose), mechlib/pulleys.py (grooved_drum fusee), mechlib/flexures.py (spiral_power_spring), mechlib/ratchets.py, mechlib/usecases.py"
+  ],
+  "summary": "A clock is a feedback oscillator: a harmonic resonator (pendulum or balance+hairspring) plus an escapement that both locks the train and impulses the resonator. Wikipedia/Airy classify escapements by how much of the cycle they disturb the oscillator: frictional (verge, recoil anchor), frictional-rest (deadbeat, cylinder, duplex), detached (lever, detent/chronometer, gravity). Constant-force devices sit upstream of the escapement so the impulse does not follow Hooke's-law rundown: fusee, going barrel (flat enough), remontoire, stackfreed, gravity arms. 507 Movements is thick here: escapements at 234, 238, 288-314, 36-38, 396, 402; fusees 46 and 358; maintaining power 320-321; winding stops 212-215.\n\nCatalog already covers the pendulum pair and the two constant-torque blanks. escapement(style='anchor'|'deadbeat') plus escapement_pose is Hooke's recoil anchor and Graham's 1715 deadbeat, posed through one tick-tock. The prompt's 'deadbeat vs recoil' is therefore not a gap: both styles ship. grooved_drum(radius_law='fusee') is 507 #46. spiral_power_spring is a mainspring in a smooth barrel with T-slot arbor (no barrel teeth, no click). Ratchets, geneva_pair, star_wheel, intermittent_gear_pair, detent_pair, and flywheel sit next door. detent_pair is an index click, not a chronometer detent. Grep finds no verge, lever, pin-pallet, gravity, cylinder, coaxial, going_barrel teeth, remontoire, maintaining_power, stackfreed, geneva_stop, count_wheel, or balance+hairspring kit.\n\nFDM reality. Recoil and deadbeat print as two plates and already animate. The missing watch primitive is the detached lever (Mudge 1750 / Swiss): escape wheel + lever with fork + impulse pin on a roller. That is what printed clocks that are not pendulums actually use. Verge + crown wheel is the first mechanical escapement and a teaching kit (crown teeth axial, two flags on a staff). Gravity (Denison/Grimthorpe, Big Ben) is two falling arms that give a constant impulse; large, printable, and the prompt named it. Chronometer detent is a spring latch that fires once per cycle; the spring is TPU or bought, the wheel and roller print; do not confuse with detent_pair. Pin-pallet (Roskopf) is the FDM-cheap lever (pins instead of jeweled pallets). Going barrel is spiral_power_spring plus external teeth and a click: the modern spring motor, no fusee. Remontoire is a small secondary spring or weight rewound on a schedule so the escape sees constant torque. Maintaining power (507 320-321) keeps the train alive while winding. Stackfreed is a cam+spring, the German pre-fusee constant-torque. Geneva / Maltese stop-work (507 212-215) limits barrel turns. Cylinder and coaxial are real but cylinder wears and coaxial is a product. Striking trains and tourbillons are products. A count wheel is a mutilated locking plate, close to intermittent_gear_pair.",
+  "title": "Clockwork, escapements, and energy storage"
+}
