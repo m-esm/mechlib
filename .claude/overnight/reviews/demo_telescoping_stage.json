@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_telescoping_stage",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: three nested square tubes (blue, green, gold) partially extended, collars and lips visible.",
+  "notes": "Non-animated. Sections stay nested, not pulled apart. Sane rest assembly of a telescoping boom.",
+  "verdict": "pass"
+}

@@ -1100,3 +1100,17 @@ Non-animated. Pawls sit in the hub slots and engage the ring. Sane rest assembly
 
 **Issues**
 - none
+
+## demo_telescoping_stage — pass
+
+- reviewed: 2026-08-13T01:41:53+03:00
+- kind: movement
+- motion: Rest pose: three nested square tubes (blue, green, gold) partially extended, collars and lips visible.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Sections stay nested, not pulled apart. Sane rest assembly of a telescoping boom.
+
+**Issues**
+- none
