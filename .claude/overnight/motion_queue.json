@@ -927,6 +927,7 @@
       "category": "linkages",
       "group": "movements",
       "id": "demo_toggle_clamp",
+      "issues": [],
       "kind": "animate",
       "moving": [
         "clamp_arm",
@@ -939,15 +940,17 @@
       "priority": 0,
       "render_error": null,
       "rendered": true,
+      "review_at": "2026-08-13T00:23:24+03:00",
       "review_claim": "2026-08-13T00:21:10+03:00",
-      "reviewed": false,
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_toggle_clamp.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_toggle_clamp/sheet_s.png",
       "stationary": [
         "base",
         "pin_arm",
         "pin_handle"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": true,
@@ -2236,5 +2239,5 @@
       "verdict": null
     }
   ],
-  "updated": "2026-08-13T00:23:21+03:00"
+  "updated": "2026-08-13T00:23:24+03:00"
 }

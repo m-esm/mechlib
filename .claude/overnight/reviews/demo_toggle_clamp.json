@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": false,
+  "demo": "demo_toggle_clamp",
+  "issues": [],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Pink handle folds over the yellow connecting link, the knee pin travels, and the brown clamp arm rises then settles as the toggle goes through and past center. Blue base and its two fixed pins stay put.",
+  "notes": "Closed=false; 302.4 deg is heading back toward the upright handle pose of column 0. Compact travels (~5-8 mm) match the short links. Mid columns (147-226) sit near the flattened/locked pose.",
+  "verdict": "pass"
+}

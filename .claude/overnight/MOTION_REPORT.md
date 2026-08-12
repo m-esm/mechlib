@@ -526,3 +526,17 @@ Shaft stays on axis. Plate is catalog-stationary because its centroid barely tra
 
 **Issues**
 - none
+
+## demo_toggle_clamp — pass
+
+- reviewed: 2026-08-13T00:23:24+03:00
+- kind: animate
+- motion: Pink handle folds over the yellow connecting link, the knee pin travels, and the brown clamp arm rises then settles as the toggle goes through and past center. Blue base and its two fixed pins stay put.
+- cycle_closes: False
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Closed=false; 302.4 deg is heading back toward the upright handle pose of column 0. Compact travels (~5-8 mm) match the short links. Mid columns (147-226) sit near the flattened/locked pose.
+
+**Issues**
+- none
