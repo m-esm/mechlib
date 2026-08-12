@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_drag_chain_link",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: one trough link with a press-fit lid and a red pivot pin in the male boss.",
+  "notes": "Non-animated. Lid caps the cable channel; pin is seated. Sane rest assembly of a single energy-chain link.",
+  "verdict": "pass"
+}

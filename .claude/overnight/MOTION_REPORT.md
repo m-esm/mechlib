@@ -736,3 +736,17 @@ Non-animated. Links stay chained; bend is one-way as designed. Side/front show t
 
 **Issues**
 - none
+
+## demo_drag_chain_link — pass
+
+- reviewed: 2026-08-13T00:42:27+03:00
+- kind: movement
+- motion: Rest pose: one trough link with a press-fit lid and a red pivot pin in the male boss.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Lid caps the cable channel; pin is seated. Sane rest assembly of a single energy-chain link.
+
+**Issues**
+- none
