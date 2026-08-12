@@ -582,3 +582,17 @@ Non-animated. Arms trail in the self-energising direction and sit in the undercu
 
 **Issues**
 - none
+
+## demo_archimedes_screw — pass
+
+- reviewed: 2026-08-13T00:24:28+03:00
+- kind: movement
+- motion: Rest pose: cyan helical flight on a shaft lying in a teal half-pipe trough, inclined.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Front row is the trough end-on with the shaft centered. Flight stays inside the trough; no detached bodies. Sane rest assembly of a water/grain screw.
+
+**Issues**
+- none
