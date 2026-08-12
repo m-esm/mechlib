@@ -722,3 +722,17 @@ Non-animated. Intermediate sits at a working angle; both crosses are captured in
 
 **Issues**
 - none
+
+## demo_drag_chain — pass
+
+- reviewed: 2026-08-13T00:42:25+03:00
+- kind: movement
+- motion: Rest pose: eight-link cable carrier with a straight run and a U-bend to the designed min radius, lids on, pins in.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Links stay chained; bend is one-way as designed. Side/front show the trough and lids. Sane rest assembly of an energy-chain run.
+
+**Issues**
+- none
