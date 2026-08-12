@@ -862,3 +862,17 @@ Non-animated. Leaves stay on their pivot posts; aperture is circular. No explode
 
 **Issues**
 - none
+
+## demo_jaw_coupling — pass
+
+- reviewed: 2026-08-13T01:02:24+03:00
+- kind: movement
+- motion: Rest pose: two teal/green jaw hubs interleaved through a magenta lobed spider.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Spider lobes sit in the jaw pockets; hubs coaxial. Sane rest assembly of a Lovejoy-style coupling.
+
+**Issues**
+- none

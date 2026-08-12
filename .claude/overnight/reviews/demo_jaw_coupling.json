@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_jaw_coupling",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: two teal/green jaw hubs interleaved through a magenta lobed spider.",
+  "notes": "Non-animated. Spider lobes sit in the jaw pockets; hubs coaxial. Sane rest assembly of a Lovejoy-style coupling.",
+  "verdict": "pass"
+}

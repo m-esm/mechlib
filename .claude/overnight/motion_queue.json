@@ -1540,21 +1540,24 @@
       "category": "couplings",
       "group": "movements",
       "id": "demo_jaw_coupling",
+      "issues": [],
       "kind": "movement",
       "moving": [],
       "parts": 3,
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_at": "2026-08-13T01:02:24+03:00",
       "review_claim": "2026-08-13T01:01:55+03:00",
-      "reviewed": false,
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_jaw_coupling.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_jaw_coupling/sheet_s.png",
       "stationary": [
         "elastomer_spider",
         "jaw_hub_a",
         "jaw_hub_b"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": false,
@@ -2332,5 +2335,5 @@
       "verdict": null
     }
   ],
-  "updated": "2026-08-13T01:02:21+03:00"
+  "updated": "2026-08-13T01:02:24+03:00"
 }
