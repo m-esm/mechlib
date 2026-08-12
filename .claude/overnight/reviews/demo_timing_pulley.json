@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_timing_pulley",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: blue flanged GT2 pulley with hub and setscrew boss, red toothed belt segment meshed around the teeth.",
+  "notes": "Non-animated. Front row shows belt teeth in the pulley spaces. Sane rest assembly of a timing pulley.",
+  "verdict": "pass"
+}

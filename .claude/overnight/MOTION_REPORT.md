@@ -1114,3 +1114,17 @@ Non-animated. Sections stay nested, not pulled apart. Sane rest assembly of a te
 
 **Issues**
 - none
+
+## demo_timing_pulley — pass
+
+- reviewed: 2026-08-13T01:42:19+03:00
+- kind: movement
+- motion: Rest pose: blue flanged GT2 pulley with hub and setscrew boss, red toothed belt segment meshed around the teeth.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Front row shows belt teeth in the pulley spaces. Sane rest assembly of a timing pulley.
+
+**Issues**
+- none
