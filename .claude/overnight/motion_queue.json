@@ -1417,21 +1417,24 @@
       "category": "drives",
       "group": "movements",
       "id": "demo_harmonic_drive",
+      "issues": [],
       "kind": "movement",
       "moving": [],
       "parts": 3,
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_at": "2026-08-13T01:01:48+03:00",
       "review_claim": "2026-08-13T01:01:08+03:00",
-      "reviewed": false,
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_harmonic_drive.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_harmonic_drive/sheet_s.png",
       "stationary": [
         "circular_spline",
         "flex_spline",
         "wave_generator"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": false,
@@ -2313,5 +2316,5 @@
       "verdict": null
     }
   ],
-  "updated": "2026-08-13T01:01:45+03:00"
+  "updated": "2026-08-13T01:01:48+03:00"
 }

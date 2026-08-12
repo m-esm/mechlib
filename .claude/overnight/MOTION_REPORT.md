@@ -792,3 +792,17 @@ Non-animated. Rollers sit in the wedge pockets, not exploded. Classic sprag/roll
 
 **Issues**
 - none
+
+## demo_harmonic_drive — pass
+
+- reviewed: 2026-08-13T01:01:48+03:00
+- kind: movement
+- motion: Rest pose: orange flex spline and wave generator nested in a blue internally toothed circular spline.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Concentric stack, teeth around the rim. Ellipse of the wave generator is subtle at this scale but the three bodies are assembled, not exploded. Sane rest assembly.
+
+**Issues**
+- none
