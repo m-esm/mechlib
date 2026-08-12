@@ -1380,3 +1380,17 @@ Non-animated. One body. Internal teeth and outer rim read. Sane rest assembly of
 
 **Issues**
 - none
+
+## demo_spur_gear_sector — pass
+
+- reviewed: 2026-08-13T02:21:56+03:00
+- kind: movement
+- motion: Rest pose: green involute sector with a hub and bore, teeth on one arc only.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. One body. Sector, hub, and teeth read. Sane rest assembly of a sector gear.
+
+**Issues**
+- none

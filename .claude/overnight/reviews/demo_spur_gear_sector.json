@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_spur_gear_sector",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: green involute sector with a hub and bore, teeth on one arc only.",
+  "notes": "Non-animated. One body. Sector, hub, and teeth read. Sane rest assembly of a sector gear.",
+  "verdict": "pass"
+}
