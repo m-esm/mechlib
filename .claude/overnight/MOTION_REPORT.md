@@ -470,3 +470,17 @@ Front row is the readable piston stroke. Crank disc has little landmark and ~0 c
 
 **Issues**
 - none
+
+## demo_snail_cam — pass
+
+- reviewed: 2026-08-13T00:23:14+03:00
+- kind: animate
+- motion: Yellow snail stays put while the orange roller and green stem orbit it, riding a slow Archimedean rise then jumping inward at the radial drop face.
+- cycle_closes: False
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Kinematic inversion: follower_deg walks the stem around a fixed cam. Drop-face jump at mid phases is expected and not a fail. Sample ends at 552.4 deg, still closing toward 610 (=250+360).
+
+**Issues**
+- none

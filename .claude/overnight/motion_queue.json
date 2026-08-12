@@ -827,6 +827,7 @@
       "category": "cams",
       "group": "movements",
       "id": "demo_snail_cam",
+      "issues": [],
       "kind": "animate",
       "moving": [
         "follower_stem",
@@ -836,12 +837,15 @@
       "priority": 0,
       "render_error": null,
       "rendered": true,
-      "reviewed": false,
+      "review_at": "2026-08-13T00:23:14+03:00",
+      "review_claim": "2026-08-13T00:21:10+03:00",
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_snail_cam.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_snail_cam/sheet_s.png",
       "stationary": [
         "snail_cam"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": true,
@@ -855,7 +859,7 @@
       "render_error": null,
       "rendered": true,
       "rereview_reason": "anti-alias phase resample",
-      "review_claim": null,
+      "review_claim": "2026-08-13T00:21:10+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_spur_gear_mesh/sheet_s.png",
       "stationary": [
@@ -875,7 +879,7 @@
       "render_error": null,
       "rendered": true,
       "rereview_reason": "anti-alias phase resample",
-      "review_claim": null,
+      "review_claim": "2026-08-13T00:21:10+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_spur_gear_pair/sheet_s.png",
       "stationary": [
@@ -900,6 +904,7 @@
       "priority": 0,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T00:21:10+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_swash_plate/sheet_s.png",
       "stationary": [
@@ -925,6 +930,7 @@
       "priority": 0,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T00:21:10+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_toggle_clamp/sheet_s.png",
       "stationary": [
@@ -945,6 +951,7 @@
       "priority": 0,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T00:21:10+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_tripod_cv_joint/sheet_s.png",
       "stationary": [
@@ -2220,5 +2227,5 @@
       "verdict": null
     }
   ],
-  "updated": "2026-08-13T00:08:38+03:00"
+  "updated": "2026-08-13T00:23:14+03:00"
 }
