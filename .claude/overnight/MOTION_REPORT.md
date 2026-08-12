@@ -904,3 +904,17 @@ Non-animated. Nut sits concentric on the screw; no explode. Sane rest assembly o
 
 **Issues**
 - none
+
+## demo_leaf_spring — pass
+
+- reviewed: 2026-08-13T01:21:43+03:00
+- kind: movement
+- motion: Rest pose: three stacked cambered leaves under a crown clamp, longest leaf with rolled eyes at both ends.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Front row shows the stacked leaf thicknesses. Leaves stay nested, not exploded. Sane rest assembly of a semi-elliptic spring.
+
+**Issues**
+- none

@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_leaf_spring",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: three stacked cambered leaves under a crown clamp, longest leaf with rolled eyes at both ends.",
+  "notes": "Non-animated. Front row shows the stacked leaf thicknesses. Leaves stay nested, not exploded. Sane rest assembly of a semi-elliptic spring.",
+  "verdict": "pass"
+}
