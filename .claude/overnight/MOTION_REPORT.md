@@ -652,3 +652,17 @@ Non-animated. Side row is the pin axis; front is the fork face. Clearance looks 
 
 **Issues**
 - none
+
+## demo_collet_chuck — pass
+
+- reviewed: 2026-08-13T00:41:50+03:00
+- kind: movement
+- motion: Rest pose: green knurled taper nut on a blue threaded spindle nose, orange collet bore visible on axis.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Three bodies stacked concentrically. Threads and knurl read; nothing floating off-axis. Sane rest assembly of an ER-style chuck.
+
+**Issues**
+- none
