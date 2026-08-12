@@ -1002,3 +1002,17 @@ Non-animated. Pawl tip is in a valley; spring is attached. Sane rest assembly of
 
 **Issues**
 - none
+
+## demo_roller_chain — pass
+
+- reviewed: 2026-08-13T01:22:20+03:00
+- kind: movement
+- motion: Rest pose: nine magenta rollers seated in the tooth gaps of a blue sprocket over about 200 degrees of wrap.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Each roller sits in a gap with running clearance; unused teeth are empty. Sane rest assembly proving sprocket/roller fit.
+
+**Issues**
+- none

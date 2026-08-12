@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_roller_chain",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: nine magenta rollers seated in the tooth gaps of a blue sprocket over about 200 degrees of wrap.",
+  "notes": "Non-animated. Each roller sits in a gap with running clearance; unused teeth are empty. Sane rest assembly proving sprocket/roller fit.",
+  "verdict": "pass"
+}

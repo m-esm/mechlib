@@ -1781,14 +1781,17 @@
       "category": "chains",
       "group": "movements",
       "id": "demo_roller_chain",
+      "issues": [],
       "kind": "movement",
       "moving": [],
       "parts": 10,
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_at": "2026-08-13T01:22:20+03:00",
       "review_claim": "2026-08-13T01:21:55+03:00",
-      "reviewed": false,
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_roller_chain.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_roller_chain/sheet_s.png",
       "stationary": [
         "roller_00",
@@ -1802,7 +1805,7 @@
         "roller_08",
         "sprocket"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": false,
@@ -2372,5 +2375,5 @@
       "verdict": null
     }
   ],
-  "updated": "2026-08-13T01:22:18+03:00"
+  "updated": "2026-08-13T01:22:20+03:00"
 }
