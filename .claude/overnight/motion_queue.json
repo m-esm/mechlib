@@ -1587,19 +1587,23 @@
       "category": "linear",
       "group": "movements",
       "id": "demo_lead_screw",
+      "issues": [],
       "kind": "movement",
       "moving": [],
       "parts": 2,
       "priority": 1,
       "render_error": null,
       "rendered": true,
-      "reviewed": false,
+      "review_at": "2026-08-13T01:21:41+03:00",
+      "review_claim": "2026-08-13T01:21:10+03:00",
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_lead_screw.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_lead_screw/sheet_s.png",
       "stationary": [
         "nut",
         "screw"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": false,
@@ -1612,6 +1616,7 @@
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T01:21:10+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_leaf_spring/sheet_s.png",
       "stationary": [
@@ -1633,6 +1638,7 @@
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T01:21:10+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_linear_way/sheet_s.png",
       "stationary": [
@@ -1653,6 +1659,7 @@
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T01:21:10+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_oldham_coupling/sheet_s.png",
       "stationary": [
@@ -1673,6 +1680,7 @@
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T01:21:10+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_peristaltic_pump_head/sheet_s.png",
       "stationary": [
@@ -1693,6 +1701,7 @@
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T01:21:10+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_pip_ratchet/sheet_s.png",
       "stationary": [
@@ -2338,5 +2347,5 @@
       "verdict": null
     }
   ],
-  "updated": "2026-08-13T01:02:26+03:00"
+  "updated": "2026-08-13T01:21:41+03:00"
 }

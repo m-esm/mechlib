@@ -890,3 +890,17 @@ Non-animated. Barrels nest; side row shows the knuckle and stop flanks. Sane res
 
 **Issues**
 - none
+
+## demo_lead_screw — pass
+
+- reviewed: 2026-08-13T01:21:41+03:00
+- kind: movement
+- motion: Rest pose: pink trapezoidal screw through a green nut, threads visible on both sides of the nut.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Nut sits concentric on the screw; no explode. Sane rest assembly of a Tr power screw.
+
+**Issues**
+- none
