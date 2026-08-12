@@ -960,3 +960,17 @@ Non-animated. Cap, body, and rotor stay assembled. Tubing is a bought part so no
 
 **Issues**
 - none
+
+## demo_pip_ratchet — pass
+
+- reviewed: 2026-08-13T01:21:53+03:00
+- kind: movement
+- motion: Rest pose: purple accordion hub with three captive pawls seated inside a green undercut ring.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Pawls sit in the ring teeth; side/front are a flat two-body disc. Sane rest assembly of a print-in-place ratchet.
+
+**Issues**
+- none
