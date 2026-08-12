@@ -876,3 +876,17 @@ Non-animated. Spider lobes sit in the jaw pockets; hubs coaxial. Sane rest assem
 
 **Issues**
 - none
+
+## demo_knuckle_hinge — pass
+
+- reviewed: 2026-08-13T01:02:26+03:00
+- kind: movement
+- motion: Rest pose: blue fixed leaf and green swinging leaf interleaved on one pin, opened to the stop.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Barrels nest; side row shows the knuckle and stop flanks. Sane rest assembly of a print-in-place butt hinge.
+
+**Issues**
+- none
