@@ -131,12 +131,14 @@
       "title": "Screws, jacks, and linear actuators"
     },
     {
-      "claimed_at": null,
-      "completed_at": null,
+      "candidate_count": 14,
+      "claimed_at": "2026-08-13T01:05:22+03:00",
+      "completed_at": "2026-08-13T01:07:00+03:00",
       "id": "flexure-compliant",
+      "new_categories": [],
       "prompt": "Cross flexure, bistable beam, flexure stage, leaf/coil/wave/torsion/spiral springs, kerf, auxetic exist. Survey cartwheel hinge, living hinge as API, lamina emergent, constant-force compliant, contact-aided, ORBITAL / remote-center, notch hinge primitives, split-tube flexure, tape-spring hinge.",
-      "report": null,
-      "status": "pending",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/flexure-compliant.json",
+      "status": "done",
       "title": "Compliant mechanisms and flexure joints"
     },
     {
@@ -203,5 +205,5 @@
       "title": "Mechanisms that exist but cannot play"
     }
   ],
-  "updated": "2026-08-13T01:05:16+03:00"
+  "updated": "2026-08-13T01:07:00+03:00"
 }

@@ -1,0 +1,158 @@
+{
+  "candidates": [
+    {
+      "already": "cross_flexure",
+      "api_shape": "notch_hinge(t, r, width, thickness, profile='circular'|'elliptical'|'filleted') -> one body plus k_theta",
+      "fdm": "A bar with a circular or elliptical neck. Prints flat. t >= 0.8 mm. Rotational stiffness is closed-form (Howell / Paros-Weisbord). The MEMS and instrument primitive.",
+      "mechlib_fit": "yes",
+      "name": "notch_hinge",
+      "priority": "high",
+      "why": "Small-length flexural pivot: all rotation lives in a short neck. Every cartwheel, remote-center, and compliant 4-bar is built from these. cross_flexure is a two-blade 3D crossing, not a notch. Missing the atomic hinge."
+    },
+    {
+      "already": "cross_flexure",
+      "api_shape": "cartwheel_hinge(r, blade_t, n=4, hub_d, rim_d, thickness) -> one body",
+      "fdm": "Planar: n blades from a hub to a rim, prints flat, motion in the layer plane. Larger angle than a notch, smaller than a living hinge. Strain-gate like flexure_stage.",
+      "mechlib_fit": "yes",
+      "name": "cartwheel_hinge",
+      "priority": "high",
+      "why": "Planar cross-axis: four (or more) blades in one plane. Precision rotation, MEMS, optical mounts. Distinct from cross_flexure (two blades crossing in 3D between two blocks) and from a notch (one neck)."
+    },
+    {
+      "already": "kerf_bend_cutter, knuckle_hinge",
+      "api_shape": "living_hinge(length, t, width, n_webbing=1) -> a thin leaf, optional webbing slots",
+      "fdm": "One thin strap, t 0.4-0.8 mm in PE/PP-like TPU or a kerfed PLA stand-in. Prints flat. Not a pin. Cycle life is the material, not the geometry.",
+      "mechlib_fit": "yes",
+      "name": "living_hinge",
+      "priority": "high",
+      "why": "The named polypropylene hinge. Boxes, lids, origami folds. kerf_bend_cutter is a slit lattice across a panel; knuckle_hinge is a PIP pin whose usecase text wrongly says 'living'. Agents searching living_hinge currently miss."
+    },
+    {
+      "already": "kerf_bend_cutter",
+      "api_shape": "let_joint(length, bar_w, bar_t, n_bars, style='outside'|'inside'|'inverted') -> planar cell",
+      "fdm": "Sheet joint: torsion bars in the plane, the sheet folds 90+ deg out of plane. Prints or lasers as 2D. BYU Thingiverse LET arrays exist. kerf is a living-hinge lattice, not a LET (LET uses torsion, kerf uses bending).",
+      "mechlib_fit": "yes",
+      "name": "let_joint",
+      "priority": "high",
+      "why": "Lamina-emergent torsion, Jacobsen/Howell. The LEM primitive: a flat sheet that becomes a hinge. Pop-up machines, origami-inspired deployables, single-sheet chairs. Missing the whole LEM class."
+    },
+    {
+      "already": "leaf_spring, spiral_power_spring",
+      "api_shape": "tape_spring(r_curve, width, length, t) -> curved-section leaf, two poses (straight locked / folded)",
+      "fdm": "A thin curved strip (carpenter-tape section). Prints on its side or as a thin wall. Steel tape is bought; PETG/TPU demos the snap-through lock.",
+      "mechlib_fit": "yes",
+      "name": "tape_spring_hinge",
+      "priority": "med",
+      "why": "Pellegrino / deployable: curved cross-section is stiff when straight and folds with a snap. Satellite panels, self-deploying booms, tape measures. Not a flat leaf_spring and not a Negator (which is prestressed to coil, not to stay straight)."
+    },
+    {
+      "already": "cross_flexure",
+      "api_shape": "split_tube(d, length, slit_w, remaining_arc_deg) -> tube with an axial slit",
+      "fdm": "Cylinder, one axial slit. The remaining ligament is the hinge. Prints standing. Jensen 1991. Compact, high stiffness about the other axes.",
+      "mechlib_fit": "yes",
+      "name": "split_tube_flexure",
+      "priority": "med",
+      "why": "A tube slit along its length so it bends about the remaining wall. Compact revolute stand-in, different construction from blades or notches. Used as instrument pivots and in some surgical tools."
+    },
+    {
+      "already": "flexure_stage, cross_flexure",
+      "api_shape": "remote_center(radius, blades, thickness) -> RCC cell whose instant center sits a stated distance off the body",
+      "fdm": "Two (or three) blade pairs aimed at a remote point. Prints flat. The ORBITAL-class large-displacement remote-center joints are a parameter set, not a second kit.",
+      "mechlib_fit": "yes",
+      "name": "remote_center",
+      "priority": "med",
+      "why": "Remote center of compliance: the rotation center is outside the part. Peg-in-hole, alignment wrists, door hinges that swing about a hidden axis. flexure_stage is a straight line through the body; cross_flexure rotates about the blade crossing. Neither puts the center off-board."
+    },
+    {
+      "already": "bistable_beam, coil_spring",
+      "api_shape": "constant_force_cell(span, beam_t, travel) -> CRBM or compliant slider-crank whose F(x) is flat over a stated stroke",
+      "fdm": "Planar cell, prints flat. Force curve is the point; strain-gate the beams. Distinct from Negator tape (bought strip + drums, screws slice).",
+      "mechlib_fit": "yes",
+      "name": "constant_force_compliant",
+      "priority": "med",
+      "why": "Howell's constant-force mechanisms: a flexure whose restoring force is flat. Electrical contacts, exercise equipment, statically balanced arms. bistable_beam is two wells, not a plateau. The flexure answer to the Negator."
+    },
+    {
+      "already": "bistable_beam",
+      "api_shape": "contact_aided_cell(path, contact_pad) -> a beam plus a stop that reshapes the path or the force after contact",
+      "fdm": "One body, a designed contact face. Prints flat. Clearance before contact is a parameter.",
+      "mechlib_fit": "yes",
+      "name": "contact_aided",
+      "priority": "med",
+      "why": "Contact-aided compliant mechanisms (CAM / CRBM): self-contact is a feature, not a collision. Used to get a prescribed path or a constant-force plateau that a free beam cannot. The collision_gate would have to ALLOW_CONTACT by design, same as a clutch."
+    },
+    {
+      "already": null,
+      "api_shape": "two curved flexure surfaces that roll on each other (CORE)",
+      "fdm": "Prints. Large rotation, low stress. Surfaces must stay in contact (ALLOW_CONTACT).",
+      "mechlib_fit": "maybe",
+      "name": "core_rolling",
+      "priority": "low",
+      "why": "Compliant rolling-contact element. Large-angle revolute stand-in. After cartwheel and tape-spring, a research extra."
+    },
+    {
+      "already": "cross_flexure",
+      "api_shape": null,
+      "fdm": "Covered.",
+      "mechlib_fit": "no",
+      "name": "cross_flexure_again",
+      "priority": "low",
+      "why": "Already the 3D cross-axis pivot. Cartwheel is the planar sibling, not a second cross."
+    },
+    {
+      "already": "flexure_stage",
+      "api_shape": null,
+      "fdm": "Covered (compound and single).",
+      "mechlib_fit": "no",
+      "name": "flexure_stage_again",
+      "priority": "low",
+      "why": "Already the compliant straight line. remote_center is the missing off-board center, not a second stage."
+    },
+    {
+      "already": "kerf_bend_cutter",
+      "api_shape": null,
+      "fdm": "Covered as a panel lattice.",
+      "mechlib_fit": "no",
+      "name": "kerf_as_living",
+      "priority": "low",
+      "why": "A slit pattern across a plate. Useful, not a living_hinge primitive. Keep both."
+    },
+    {
+      "already": "knuckle_hinge",
+      "api_shape": null,
+      "fdm": "Covered as a PIP pin hinge.",
+      "mechlib_fit": "no",
+      "name": "knuckle_as_living",
+      "priority": "low",
+      "why": "Barrels on a printed pin. The usecase string saying 'living hinges' is the bug, not a missing solid."
+    }
+  ],
+  "id": "flexure-compliant",
+  "new_categories": [],
+  "rejected": [
+    {
+      "name": "mems_only_notch",
+      "why": "Notch hinges work at FDM scale if t >= 0.8 mm and strain is gated. Do not reject the class as MEMS-only."
+    },
+    {
+      "name": "fully_compliant_four_bar_product",
+      "why": "A named machine made of notch hinges is an assembly. Ship notch_hinge (and cartwheel) first; Young mechanisms compose later."
+    },
+    {
+      "name": "origami_product",
+      "why": "A finished foldable chair or satellite panel is a product. LET and tape_spring are the cells."
+    }
+  ],
+  "sources": [
+    "https://compliantmechanisms.byu.edu/books",
+    "https://llhwww.groups.et.byu.net/commercialization/LET_Joint.htm",
+    "https://www.thingiverse.com/thing:6815297",
+    "https://scholarsarchive.byu.edu/etd/1330/",
+    "https://en.wikipedia.org/wiki/Compliant_mechanism",
+    "https://www.firgelliauto.com/blogs/mechanisms/compliant-mechanism",
+    ".claude/overnight/catalog.json category flexures + lattices kerf/auxetic + knuckle_hinge usecase mismatch",
+    "mechlib/flexures.py (cross_flexure, flexure_stage, bistable_beam, coil/leaf/wave/spiral/belleville), mechlib/lattices.py (kerf_bend_cutter, auxetic_panel), mechlib/joints.py (knuckle_hinge), mechlib/ratchets.py (compliant_clutch), mechlib/usecases.py"
+  ],
+  "summary": "A compliant mechanism gets its mobility from elastic deflection, not from kinematic pairs. Howell's textbook split is (1) small-length flexural pivots (notch, leaf, living hinge, cross-axis, cartwheel, split-tube) that stand in for a revolute, (2) long flexible members that are the links (compliant four-bars, Young mechanisms), (3) lamina-emergent mechanisms (LEMs) that start as a sheet and fold out of plane, and (4) special-purpose cells: bistable, constant-force, contact-aided, remote-center. IFToMM has a compliant-mechanisms committee on the same map. Reuleaux and 507 Movements barely touch this class (they assume rigid bodies + pairs). FDM is the native process: print flat, bend in the layer plane, keep blades >= 0.8 mm, strain-gate like flexure_stage already does.\n\nCatalog already covers a useful but incomplete shelf. Pivots: cross_flexure (3D two-blade cross-axis, the watch-balance pivot). Linear: flexure_stage (compound parallelogram, parasitic-arc cancelled, strain-gated; compound=False is the single parallelogram). Bistable: bistable_beam (cosine buckled beams + shuttle). Springs (energy, not joints): coil_spring, leaf_spring, wave_spring, belleville_washer, spiral_power_spring, torsion_spring_mesh. Sheet tricks: kerf_bend_cutter (lattice/diagonal/spiral slits), auxetic_panel. Drive: compliant_clutch (flexure pawls). beam_coupling is a helical-slit shaft couple, not a hinge. knuckle_hinge is a print-in-place pin hinge; its usecase text says 'living hinges' but the solid is barrels on a pin. Grep finds no notch_hinge, cartwheel, living_hinge API, LET / lamina_emergent, tape_spring, split_tube, remote_center / RCC / ORBITAL, or contact-aided cell.\n\nFDM and first-principles gaps. The missing primitive under every other pivot is the notch hinge (circular or elliptical neck): one parameter, a documented rotational stiffness, the MEMS and instrument default. Cartwheel is the planar sibling of cross_flexure: four (or more) blades from a hub in one plane, larger angle, prints flat. living_hinge(length, t, width) is the named polypropylene-style leaf; kerf_bend_cutter is a slit lattice, not that API. LET (lamina-emergent torsion, Jacobsen/Howell) is a sheet joint: torsion bars in the plane that let the sheet fold out of plane. Tape-spring (carpenter-tape / Pellegrino) is a curved-section leaf that locks when straight and folds with a snap. Split-tube (Jensen) is a cylinder slit so the remaining ligament is the hinge. Remote-center / RCC (and the ORBITAL-class large-displacement remote-center joints) put the instant center off the body, which is the peg-in-hole / alignment job. Constant-force compliant cells (slider-crank or contact-aided rolling beam) are the flexure answer to the Negator tape named on the screws slice. Contact-aided (CAM / CRBM) uses self-contact to shape a path or flatten a force curve. CORE / rolling-contact flexures are a maybe. Do not re-file knuckle_hinge as a living hinge, and do not add a second flexure_stage.",
+  "title": "Compliant mechanisms and flexure joints"
+}
