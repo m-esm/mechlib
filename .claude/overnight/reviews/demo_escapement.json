@@ -7,16 +7,12 @@
   "issues": [
     {
       "severity": "high",
-      "what": "Escape wheel does not step. Demo is supposed to advance two teeth over 360 deg of phase (~24 deg, ~20 deg by the last column). Hub marks and perimeter teeth are identical from 0 through 300. A rocking pallet on a locked wheel is not an escapement tick."
-    },
-    {
-      "severity": "med",
-      "what": "Anchor motion is lumped into the last two columns; 0/60/120/180 look nearly the same rest pose rather than a beat-and-beat swing."
+      "what": "Escape wheel does not step. Demo should advance two teeth over 360 deg of phase. Hub marks (three ticks at 11/12/1) and perimeter teeth are identical from 0 through 302. A rocking pallet on a locked wheel is not an escapement tick."
     }
   ],
   "kind": "animate",
   "looks_like_intended_mechanism": false,
-  "motion_reads_as": "Pink anchor rocks a few degrees (mostly 180 to 240/300) against a yellow escape wheel whose teeth and hub marks stay in the same clocking in every column.",
-  "notes": "Rest pose looks like an anchor escapement. meta.stationary lists the wheel and centroid travel is ~0 (spin-in-place would also read 0), but the teeth themselves do not walk. Last column is still the rocked pose, so the sequence would close on the return to 360=0.",
+  "motion_reads_as": "Pink anchor rocks through the phase sweep against a yellow escape wheel whose hub ticks and perimeter teeth stay in the same clocking in every column.",
+  "notes": "Rest pose looks like an anchor escapement. Anti-alias phases (0/7.5/79/148/227/302) now show a more gradual anchor rock than the old 60 deg samples; the wheel still never advances. Centroid travel ~0 is expected for spin-in-place, but the teeth themselves do not walk.",
   "verdict": "fail"
 }

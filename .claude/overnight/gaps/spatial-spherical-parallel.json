@@ -1,0 +1,241 @@
+{
+  "candidates": [
+    {
+      "already": "universal_joint, gimbal_rings",
+      "api_shape": "spherical_four_bar_pose(alpha_ground, alpha_crank, alpha_coupler, alpha_rocker, crank_angle_deg, branch) -> joint frames on the sphere; spherical_four_bar(...) -> {ground, crank, coupler, rocker, pins}",
+      "fdm": "Four printed links with teardrop hinge bores whose axes must meet at one point. Print each link as a spherical-arc rib or a two-boss bar with a prescribed twist. Axis concurrency is the hard tolerance; FDM clearance at the pins will hide small errors the way it does on Bennett. Same pin stack as four_bar, just not planar.",
+      "mechlib_fit": "yes",
+      "name": "spherical_four_bar",
+      "priority": "high",
+      "why": "RRRR with four concurrent revolute axes; link lengths are arc angles; spherical Grashof + Freudenstein. The spherical counterpart of four_bar. Used as angled-shaft couplings, loom heald oscillators, Agile Eye limbs, and RCM wrists. universal_joint is the special 90-90-90 case, not the general solver."
+    },
+    {
+      "already": null,
+      "api_shape": "bennett_pose(a, b, alpha_deg, theta_deg) enforcing sin(alpha)/a = sin(beta)/b; bennett(...) -> four links + four pins posed on the hyperboloid",
+      "fdm": "Printables already ships a two-link-type kit (print each twice). Links are twisted bars or two-piece clamped halves so the pin axes take the DH twist. 0.2 percent length error kills travel; emit the exact condition and a closure residual, do not 'approximate' the sculpture.",
+      "mechlib_fit": "yes",
+      "name": "bennett",
+      "priority": "high",
+      "why": "The only 1-DoF spatial 4R. Opposite lengths a,a and b,b, opposite twists alpha,alpha and beta,beta, offsets zero, sin(alpha)/a = sin(beta)/b. Parent of Goldberg/Myard and of Bennett-cell deployable rings. Sarrus is a different overconstrained loop (visible parallelism). four_bar cannot emit skew axes."
+    },
+    {
+      "already": "four_bar",
+      "api_shape": "five_bar_pose(l_a, l_b, l_c, l_d, l_ground, theta_a_deg, theta_b_deg, branch) / five_bar(...) -> bars + pins; optional five_bar_ik(x, y)",
+      "fdm": "Five flat capsule bars, same stack as four_bar. Two driven bores on the ground. Printable on one plate. Pose takes two crank angles (or an IK target for the floating pin).",
+      "mechlib_fit": "yes",
+      "name": "five_bar",
+      "priority": "high",
+      "why": "Planar 2-DoF parallel: two grounded cranks, two couplers, one floating vertex. The smallest parallel robot that is still a bar kit. Pick-and-place, planar plotters, teaching 2R inverse kinematics. Not a 4-bar (two inputs) and not a serial RRR."
+    },
+    {
+      "already": "four_bar (planar parallelogram), ball_socket_joint, universal_joint",
+      "api_shape": "delta_parallelogram(rod_len, rod_d, width, ball_d, clearance, knee_deg) -> {rod_a, rod_b, cups_or_uis} posed as a parallelogram; no base, no three-arm IK",
+      "fdm": "Two equal rods, four ball cups or printed U-joints, optional magnetic balls. Printables Delta models all invent this kit. FDM balls are sloppy; expose clearance and a magnetic-ball option. Do not emit a 3-tower chassis.",
+      "mechlib_fit": "yes",
+      "name": "delta_parallelogram",
+      "priority": "high",
+      "why": "Clavel's reusable cell: a parallelogram forearm with spherical (or universal) pairs at both ends that keeps the platform facing. The full 3-arm + base + platform robot is a product; one posed forearm plus its ball/U joints is the primitive consumers reinvent for every printed Delta."
+    },
+    {
+      "already": "sarrus_linkage",
+      "api_shape": "bricard_pose(kind='line'|'plane'|'trihedral', a, alpha_deg, drive_deg) / bricard_6r(...) -> six links + pins",
+      "fdm": "Six printed links with prescribed twists. Line-symmetric case folds nearly flat. Tolerance on opposite twists summing to 180 deg is tight; printed pin slop will fake a few degrees of travel. Educational and deployable, not a robot chassis.",
+      "mechlib_fit": "yes",
+      "name": "bricard_6r",
+      "priority": "med",
+      "why": "Canonical overconstrained spatial 6R (line / plane / trihedral). Kutzbach M=0, symmetry opens 1 DoF. Deployable rings, kaleidocycle cells, mixer-adjacent Schatz is a specialisation. Same role Bennett plays for 4R. Not Sarrus (Sarrus is two planar 4-bar chains, already shipped)."
+    },
+    {
+      "already": "link_bar, four_bar",
+      "api_shape": "rrr_arm_pose(l1, l2, l3, q1_deg, q2_deg, q3_deg) / rrr_arm(...) -> {link1, link2, link3, pins}; optional rrr_ik(x, y, phi)",
+      "fdm": "Three flat bars, two stacked pin joints, same as four_bar minus the ground closer. Trivial FDM.",
+      "mechlib_fit": "yes",
+      "name": "rrr_arm",
+      "priority": "med",
+      "why": "Serial planar 3R: three link_bar in a chain plus FK/IK. The serial counterpart of five_bar. Teaching arms, SCARA-minus-prism, any planar reach that is not a closed loop. Consumers currently chain link_bar by hand with no pose solver."
+    },
+    {
+      "already": "gimbal_rings, ball_socket_joint, universal_joint",
+      "api_shape": "rpr_wrist_pose(roll1_deg, pitch_deg, roll2_deg) / rpr_wrist(yoke_w, pin_d, ...) -> {yoke1, yoke2, yoke3, pins}",
+      "fdm": "Three printed yokes or clevises whose pin axes meet. Print each yoke flat. Wrist singularity when the two rolls align is the pose law, not a defect.",
+      "mechlib_fit": "yes",
+      "name": "roll_pitch_roll_wrist",
+      "priority": "med",
+      "why": "Three serial revolutes with concurrent axes (Euler / spherical wrist). Distinct from gimbal_rings (nested concentric rings, no serial yokes) and from ball_socket_joint (one S pair). Used as the last three axes of a 6R arm and as a pan-tilt-roll camera wrist. The kit is three yokes + pins, not a robot."
+    },
+    {
+      "already": "lazy_tongs, iris_diaphragm",
+      "api_shape": "angulated_scissor_pose(bar_len, kink_deg, open_deg) / angulated_scissor(...) -> {bar_a, bar_b, pins}",
+      "fdm": "Two V-bars and three pins, prints flat. Ring or hoop consumers by repeating the unit; the generator stops at one pair plus a pose(open_deg).",
+      "mechlib_fit": "yes",
+      "name": "angulated_scissor",
+      "priority": "med",
+      "why": "Hoberman unit cell: two kinked bars, three pins, constant subtended angle (You-Pellegrino). lazy_tongs is the straight-scissor special case (kink=180). The sphere, iris, or canopy assembled from many units is a product."
+    },
+    {
+      "already": "ball_socket_joint, universal_joint, telescoping_stage, lead_screw",
+      "api_shape": "ups_strut(min_len, stroke, ball_d, tube_d, length) -> {base_u_or_s, tube_a, tube_b, platform_s} posed at length",
+      "fdm": "Printed tube-in-tube or leadscrew strut with ball cups. Standing print for the tubes. Pose is length + two end orientations. Do not emit six struts on a platform.",
+      "mechlib_fit": "yes",
+      "name": "ups_strut",
+      "priority": "med",
+      "why": "One Stewart/Gough limb: universal + prismatic + spherical (or SPS). Variable-length strut with ball/U ends. Six of them plus plates is a hexapod product; the strut is the reusable primitive, same argument as delta_parallelogram."
+    },
+    {
+      "already": null,
+      "api_shape": "rssr_pose(a, b, c, d, crank_deg) / rssr(...) ",
+      "fdm": "Two grounded hinges, two rod-ends, one coupler. Prints. The idle spin wants a thrust face or it rattles.",
+      "mechlib_fit": "maybe",
+      "name": "rssr_four_bar",
+      "priority": "low",
+      "why": "Generic spatial four-bar that actually moves without a Bennett condition: R-S-S-R. Mobility 2, one of them idle coupler spin. Used as 3D function generators. Less of a named kit than Bennett; can be composed from revolute_pair + rod_end once those exist."
+    },
+    {
+      "already": null,
+      "api_shape": "bricard_pose(kind='schatz', ...) rather than a second kit",
+      "fdm": "Same six-bar print as Bricard with the Schatz twist table. The mixer drum is a product; the 6R is not.",
+      "mechlib_fit": "maybe",
+      "name": "schatz_turbula",
+      "priority": "low",
+      "why": "Schatz 1929 6R, a Bricard specialisation, used as the Turbula mixer inversion (container tumbles through all octants). Named machine more than a new topology if bricard_6r ships."
+    },
+    {
+      "already": null,
+      "api_shape": "spherical_five_bar_pose(alphas, theta_a, theta_b)",
+      "fdm": "Five spherical-arc links, concurrent axes. Same concurrency pain as spherical 4-bar.",
+      "mechlib_fit": "maybe",
+      "name": "spherical_five_bar",
+      "priority": "low",
+      "why": "2-DoF spherical parallel (two grounded arcs + two couplers on a sphere). Surgical RCM wrists and some camera gimbals. After spherical_four_bar, this is the spherical cousin of five_bar. Smaller demand than the 4-bar."
+    },
+    {
+      "already": "four_bar, pantograph",
+      "api_shape": "rcm_parallelogram(arm, height, pitch_deg) -> bars + reported remote point",
+      "fdm": "Flat parallelograms, prints. The remote point is a pose output, not a part.",
+      "mechlib_fit": "maybe",
+      "name": "rcm_parallelogram",
+      "priority": "low",
+      "why": "Double parallelogram that forces a remote centre (trocar, laparoscopy). Semi-primitive, but it is a composition of two four_bar parallelograms plus a grounded frame. Close to a surgical product once you add the tool tube."
+    },
+    {
+      "already": null,
+      "api_shape": null,
+      "fdm": "Printable as a research model; not a shop staple.",
+      "mechlib_fit": "maybe",
+      "name": "canfield_joint",
+      "priority": "low",
+      "why": "3-DoF constant-velocity wrist (Canfield). Research-grade, few FDM reprints, overlaps rpr_wrist and spherical 3-RRR."
+    },
+    {
+      "already": null,
+      "api_shape": null,
+      "fdm": "Prints as three five_bar on a plate. The plate is a chassis.",
+      "mechlib_fit": "maybe",
+      "name": "planar_3rrr",
+      "priority": "low",
+      "why": "Three 5-bar-like limbs on one platform (planar 3-DoF parallel). The limb is five_bar; the 3-limb + platform assembly is getting product-shaped."
+    },
+    {
+      "already": null,
+      "api_shape": null,
+      "fdm": "Printed research replicas exist. Out of scope as a chassis.",
+      "mechlib_fit": "no",
+      "name": "agile_eye",
+      "priority": "low",
+      "why": "Gosselin 3-RRR spherical parallel camera wrist. The limb is spherical_four_bar. The 3-limb + camera platform is a finished orienting robot."
+    },
+    {
+      "already": null,
+      "api_shape": null,
+      "fdm": "Widely printed as a whole robot. That is the consumer project, not mechlib.",
+      "mechlib_fit": "no",
+      "name": "delta_robot",
+      "priority": "low",
+      "why": "Full Clavel machine: base, three actuated arms, three parallelograms, platform, optional rotary 4th axis. Product. The reusable part is delta_parallelogram."
+    },
+    {
+      "already": null,
+      "api_shape": null,
+      "fdm": "Printed hexapods exist as motion bases. Out of scope.",
+      "mechlib_fit": "no",
+      "name": "stewart_gough",
+      "priority": "low",
+      "why": "6-UPS hexapod: two plates and six struts. Flight simulators, telescope mounts, machine-tool heads. Product. The reusable part is ups_strut."
+    },
+    {
+      "already": null,
+      "api_shape": null,
+      "fdm": "Printed 6-axis arms are finished products.",
+      "mechlib_fit": "no",
+      "name": "serial_7r",
+      "priority": "low",
+      "why": "General 6-DoF or redundant 7R open chain. That is a robot arm. rrr_arm + rpr_wrist already cover the two reusable pieces."
+    },
+    {
+      "already": "lazy_tongs, iris_diaphragm",
+      "api_shape": null,
+      "fdm": "Printed spheres exist. Out of scope.",
+      "mechlib_fit": "no",
+      "name": "hoberman_sphere",
+      "priority": "low",
+      "why": "Closed scissor polyhedron. Toy / architectural product. The reusable part is angulated_scissor."
+    },
+    {
+      "already": "sarrus_linkage",
+      "api_shape": null,
+      "fdm": "Covered.",
+      "mechlib_fit": "no",
+      "name": "sarrus_spatial",
+      "priority": "low",
+      "why": "Already sarrus_pose / sarrus_linkage. Spatial 6-bar, exact translation, animated."
+    }
+  ],
+  "id": "spatial-spherical-parallel",
+  "new_categories": [
+    {
+      "name": "spatial",
+      "why": "Bennett, spherical 4-bar, 5-bar, delta forearm, and UPS strut are a different agent job from planar bar linkages and from hinge/ball joints. four_bar's usecase does not mention concurrent axes or overconstrained spatial loops; joints currently dumps wrists onto ball_socket_joint and gimbal_rings. A movements-group shelf lets search_use_cases hit the right primitive without implying a finished robot."
+    }
+  ],
+  "rejected": [
+    {
+      "name": "tricept_exechon_orthoglide",
+      "why": "Hybrid PKM machine tools. Finished products built from UPS/PRR limbs."
+    },
+    {
+      "name": "cable_driven_parallel",
+      "why": "CDPR / cable hexapod. Winch + cable, not a printable bar kit. grooved_drum already exists."
+    },
+    {
+      "name": "goldberg_myard",
+      "why": "Bennett-derived 5R/6R. After bennett ships they are compositions, not new primitives."
+    },
+    {
+      "name": "linear_delta_linapod",
+      "why": "Delta with prismatic rails instead of rotary arms. Still a 3-limb chassis."
+    },
+    {
+      "name": "hexapod_walking_robot",
+      "why": "Finished walker. Walking legs belong in the six-bar-and-walking slice (Klann/Jansen)."
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Four-bar_linkage",
+    "https://en.wikipedia.org/wiki/Linkage_(mechanical)",
+    "https://www.machinekinematics.xyz/essays/bennett-and-the-condition-that-moves-it/",
+    "https://www.firgelliauto.com/blogs/mechanisms/bennett-s-linkage",
+    "https://www.firgelliauto.com/blogs/mechanisms/spherical-four-bar-linkage",
+    "https://www.firgelliauto.com/blogs/mechanisms/bricard-6r-linkage",
+    "https://www.printables.com/model/369883-bennett-mechanism",
+    "https://digital.library.cornell.edu/catalog/ss:372516",
+    "https://www.firgelliauto.com/blogs/mechanisms/delta-robot",
+    "https://www.printables.com/model/178537-delta-robot-v1-with-three-arms",
+    "https://www.mathworks.com/help/sm/ug/five-bar-robot.html",
+    "https://www.ideals.illinois.edu/items/132699",
+    "https://www.firgelliauto.com/blogs/mechanisms/hoberman-sphere",
+    ".claude/overnight/catalog.json public_api + categories linkages/joints + animate demo_four_bar/demo_sarrus/demo_gimbal_rings/demo_lazy_tongs/demo_tripod_cv_joint + left_out_notes",
+    "mechlib/linkages.py four_bar_pose, sarrus_pose, lazy_tongs; mechlib/joints.py ball_socket_joint, gimbal_rings; mechlib/usecases.py (no Bennett/delta/stewart/spherical_four/hoberman/five_bar)"
+  ],
+  "summary": "Kutzbach says a generic spatial 4R is immobile (M=-2) and a generic spatial 6R is a structure (M=0). The exceptions are the overconstrained loops: Bennett 1903 (4R, opposite lengths and twists equal, sin(alpha)/a = sin(beta)/b, zero offsets, axes skew on a hyperboloid), Bricard 1897 (six 6R types; line-symmetric, plane-symmetric, trihedral), Schatz/Turbula (one Bricard specialisation used as a mixer), Goldberg 5R/6R and Myard 5R (Bennett-derived). Spherical chains are the other exception: four (or more) revolute axes concurrent at one point, links live on a sphere, 'length' is an arc angle, spherical Grashof and a spherical Freudenstein equation apply. A Hooke/Cardan joint is the 90-90-90 spherical 4-bar; Agile Eye (Gosselin, Laval) is three spherical 4-bar / 3-RRR limbs sharing that point. Parallel robots are several limbs on one platform: planar 5-bar (2-R RR, 2-DoF), planar 3-RRR / 3-RPR, Clavel Delta (3-RRPaR, parallelogram forearms), Hunt 3-RPS, Tsai 3-UPU, Stewart-Gough 6-UPS/6-SPS and its 6-PUS / 6-RUS cousins, plus hybrids (Tricept, Exechon, Orthoglide). Serial primitives in the same class are the planar RRR arm, the intersecting-axis spherical wrist (roll-pitch-roll or roll-pitch-yaw), and the general 6R/7R open chain. Deployables sit on the same shelf: Hoberman angulated-scissor unit (kinked bars that keep a constant subtended angle, You-Pellegrino 1997), Bennett-cell rings, Bricard rings, lazy-tongs / iris already in-tree.\n\nCatalog public_api already covers the planar and a few spatial cousins: four_bar / four_bar_pose (planar RRRR), sarrus_pose / sarrus_linkage (spatial 6-bar, two orthogonal hinge chains, exact Z translation, animated), lazy_tongs (straight scissor, not angulated), iris_diaphragm, pantograph, gimbal_rings (nested concentric R, animated), ball_socket_joint, knuckle_hinge, clevis, universal_joint, double_cardan_joint, tripod_cv_joint (animated), flexure_stage. usecases.py mentions robotic wrists only under ball_socket_joint and gimbal_rings. Nothing named Bennett, spherical four-bar, 5-bar, Delta, Stewart, Hoberman, RRR arm, or RPR wrist. left_out_notes are about animation period, not these families.\n\nFilter: a finished robot chassis, hexapod motion base, 6-axis arm, Agile Eye camera mount, Hoberman sphere toy, or Strandbeest-class walker is a product. A pose+kit that is one loop or one limb is a semi-primitive, same as four_bar and sarrus. FDM is proven for Bennett (Printables 4R, print two link types twice), spherical 4-bar (printed hinges, axis-concurrency is the hard tolerance), 5-bar and RRR (flat bars, same stack as four_bar), Delta parallelograms (printed rod-ends or magnetic balls; full Delta frames are everywhere on Printables), and Hoberman units (many pins). Bennett and Bricard bind if the dimensional condition is off by ~0.2 percent; printed clearance can fake mobility and then wear, so a generator must emit the exact DH table, not a 'looks spatial' sculpture.",
+  "title": "Spatial, spherical, and parallel mechanisms"
+}

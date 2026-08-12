@@ -14,6 +14,6 @@
   "kind": "animate",
   "looks_like_intended_mechanism": true,
   "motion_reads_as": "Figure-eight body and cap stay put while red and green flashes in the cap ports walk around the holes, showing the two internal gears turning in place.",
-  "notes": "Port flashes repeat every 180 deg (0~180, 60~240, 120~300), consistent with an even-tooth gear spinning. Housing never drifts. Last column continues the port walk.",
+  "notes": "Port flashes walk continuously across 0/7.5/79/148/227/302, consistent with gears spinning in the bore. Housing never drifts. Last column continues the port walk toward 360=0.",
   "verdict": "pass"
 }

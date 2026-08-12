@@ -1,19 +1,11 @@
 {
-  "bodies_that_look_frozen": [
-    "bevel_gear",
-    "bevel_pinion"
-  ],
+  "bodies_that_look_frozen": [],
   "cycle_closes": true,
   "demo": "demo_bevel_gear_pair",
-  "issues": [
-    {
-      "severity": "high",
-      "what": "drive_deg advances 0/180/360/540/720/900 but both gears are visually frozen; mesh does not turn. Centroid travel is ~0 as expected for spin-in-place, so this is a real animation miss not a travel-metric artifact."
-    }
-  ],
+  "issues": [],
   "kind": "animate",
-  "looks_like_intended_mechanism": false,
-  "motion_reads_as": "A 90-degree bevel pair is posed correctly but tooth orientation is identical across drive_deg 0 through 900; neither wheel rotates.",
-  "notes": "Rest pose looks like a Tredgold bevel pair. Animation is the failure. meta.moving is empty and both bodies are listed stationary.",
-  "verdict": "fail"
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Blue pinion and green crown rotate in place on 90-degree axes; tooth clocking and the pinion hole pattern walk across drive_deg 0 / 7.5 / 238 / 443 / 680 / 907.",
+  "notes": "Prior fail was 180 deg aliasing on a 16/24 pair. Anti-alias phases make the mesh turn obvious in iso and front. Centroid travel stays ~0 as expected for spin-in-place.",
+  "verdict": "pass"
 }

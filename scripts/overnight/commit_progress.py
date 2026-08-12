@@ -103,11 +103,11 @@ def push() -> str:
     return "pushed"
 
 
-def main() -> int:
+def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--loop", default="progress")
     parser.add_argument("--no-push", action="store_true")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     branch = ensure_branch()
     if branch in FORBIDDEN:
         raise SystemExit("refusing to commit on %s" % branch)

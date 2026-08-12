@@ -302,3 +302,171 @@ Side and front rows confirm pure vertical travel. 302 deg is still low, consiste
 
 **Issues**
 - none
+
+## demo_bevel_gear_pair — pass
+
+- reviewed: 2026-08-13T00:06:44+03:00
+- kind: animate
+- motion: Blue pinion and green crown rotate in place on 90-degree axes; tooth clocking and the pinion hole pattern walk across drive_deg 0 / 7.5 / 238 / 443 / 680 / 907.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Prior fail was 180 deg aliasing on a 16/24 pair. Anti-alias phases make the mesh turn obvious in iso and front. Centroid travel stays ~0 as expected for spin-in-place.
+
+**Issues**
+- none
+
+## demo_cycloidal_drive — pass
+
+- reviewed: 2026-08-13T00:06:44+03:00
+- kind: animate
+- motion: Red cycloidal disc walks and precesses around the fixed blue pin ring while the gold eccentric orbits; housing stays put across the 3960 deg input sweep.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: housing_ring
+
+meta lists output_plate stationary with ~0 centroid travel, expected for spin-in-place. Last column at 3326 deg is still approaching 3960=0. Red showing through output holes is designed pin-hole contact.
+
+**Issues**
+- **low**: Output-plate spin is not visually confirmable: 6-hole symmetry plus a weak landmark on the green plate. Disc-to-pin walk is the readable motion.
+
+## demo_escapement — fail
+
+- reviewed: 2026-08-13T00:06:44+03:00
+- kind: animate
+- motion: Pink anchor rocks through the phase sweep against a yellow escape wheel whose hub ticks and perimeter teeth stay in the same clocking in every column.
+- cycle_closes: True
+- looks_like_intended: False
+- frozen_that_should_move: escape_wheel
+
+Rest pose looks like an anchor escapement. Anti-alias phases (0/7.5/79/148/227/302) now show a more gradual anchor rock than the old 60 deg samples; the wheel still never advances. Centroid travel ~0 is expected for spin-in-place, but the teeth themselves do not walk.
+
+**Issues**
+- **high**: Escape wheel does not step. Demo should advance two teeth over 360 deg of phase. Hub marks (three ticks at 11/12/1) and perimeter teeth are identical from 0 through 302. A rocking pallet on a locked wheel is not an escapement tick.
+
+## demo_external_gear_pump — pass
+
+- reviewed: 2026-08-13T00:06:44+03:00
+- kind: animate
+- motion: Figure-eight body and cap stay put while red and green flashes in the cap ports walk around the holes, showing the two internal gears turning in place.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: body, cap
+
+Port flashes walk continuously across 0/7.5/79/148/227/302, consistent with gears spinning in the bore. Housing never drifts. Last column continues the port walk toward 360=0.
+
+**Issues**
+- **low**: Side and front rows are visually identical across phase; mesh rotation is only readable through the iso cap ports. meta.moving is empty because centroid travel is ~0.
+
+## demo_geneva_pair — fail
+
+- reviewed: 2026-08-13T00:06:44+03:00
+- kind: animate
+- motion: Orange pin-driver rotates through dwell and engagement poses, but the blue 6-slot wheel keeps the same arm clocking in every column.
+- cycle_closes: True
+- looks_like_intended: False
+- frozen_that_should_move: slotted_wheel
+
+Driver motion is real (crescent and pin walk around). Wheel centroid travel ~0 is expected for in-place indexing, so this is an orientation miss. Last column at 1814 deg is another in-window pose and still matches the 0 deg star.
+
+**Issues**
+- **high**: Slotted wheel does not index. Columns 0 (crank 0, mid-engagement) and 1 (crank 20, still in the 60 deg window) should differ by ~18 deg of wheel rotation; the star silhouette is identical. Dwell columns cannot prove a 60 deg step on a 6-slot wheel, but the in-window pair can and it does not move.
+
+## demo_gerotor_pump — pass
+
+- reviewed: 2026-08-13T00:06:44+03:00
+- kind: animate
+- motion: Housing and kidney-port cap stay put while red/green/yellow lobe flashes walk along both ports, showing the inner and outer rotors turning in place through the 60 deg pitch cycle.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: gerotor_housing, gerotor_port_cap
+
+Side and front rows hide the rotors, same as the external gear pump. Iso port colors at 50.4 deg are returning toward the 0 deg pattern, as expected for a 60 deg closed cycle. Centroid travel ~0 is spin-in-place.
+
+**Issues**
+- none
+
+## demo_gimbal_rings — pass
+
+- reviewed: 2026-08-13T00:06:44+03:00
+- kind: animate
+- motion: Blue outer ring stays level while the red middle ring swings from nearly flat through vertical and back, and the pink inner ring rides its trunnions through the same tilt_deg sweep.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: gimbal_ring_0
+
+Single-parameter tilt swings the nested rings rather than holding a payload level against a moving frame; that matches tilt_deg on a fixed outer ring. Last column at 322 deg is heading back toward the 20 deg start pose. Near-zero centroid travel is rotation about the trunnion axes.
+
+**Issues**
+- none
+
+## demo_heart_cam — pass
+
+- reviewed: 2026-08-13T00:06:44+03:00
+- kind: animate
+- motion: Green follower stem and orange roller orbit the stationary pink heart disc, staying on the rim while radial reach grows near 180 deg and shrinks toward 0/360.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: heart_cam
+
+Same stationary-cam / walking-follower convention as barrel_cam and face_cam. Heart outline reads almost circular at this scale; the lift program is the changing stem length, longest near follower_deg 169 and shortest near 32/90. Last column at 392=32 continues toward the 90 deg start.
+
+**Issues**
+- none
+
+## demo_scotch_yoke — pass
+
+- reviewed: 2026-08-13T00:08:37+03:00
+- kind: animate
+- motion: Gold crank pin orbits on the orange disc while the blue slotted yoke reciprocates in the purple rails, long at 35/337 deg and shortest near 183 deg.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: crank_disc, rail_a, rail_b
+
+Front row makes the SHM stroke obvious. Disc has no orientation landmark so spin-with-pin is not confirmable; the pin orbit is the driving motion. Last column at 337 deg continues toward the 35 deg start.
+
+**Issues**
+- none
+
+## demo_scott_russell — pass
+
+- reviewed: 2026-08-13T00:08:37+03:00
+- kind: animate
+- motion: Green inversor bar rocks on the yellow crank while the slider rides the base slot and the orange tracer stays on the guide line through the sine-mapped swing.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: base, pin_0
+
+drive_deg is a closed sine around mid-angle, not a full crank turn, so the bar rocks rather than windmills. Joints stay pinned. Last column at 302 deg is heading back toward the 0 deg pose.
+
+**Issues**
+- none
+
+## demo_screw_jack — pass
+
+- reviewed: 2026-08-13T00:08:38+03:00
+- kind: animate
+- motion: Orange pad rides the pink screw from down at 0/15 deg to full height near 148/227 deg and back down by 302 deg; blue base stays put.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: base, screw
+
+Demo is a cosine lift_frac out-and-back so the cycle can close (0=down, 180=up). Screw does not spin; the pad translates on the thread. That matches the demo, not a missed rotation.
+
+**Issues**
+- none
+
+## demo_slider_crank — pass
+
+- reviewed: 2026-08-13T00:08:38+03:00
+- kind: animate
+- motion: Orange crank pin orbits the red disc; green conrod stays pinned and the cyan slider reciprocates in the base slot, inboard near 183 deg and outboard near 35/337 deg.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: base, pin_0
+
+Front row is the readable piston stroke. Crank disc has little landmark and ~0 centroid travel; the pin orbit carries the rotation. Last column at 337 deg continues toward the 35 deg start.
+
+**Issues**
+- none

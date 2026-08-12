@@ -50,30 +50,41 @@
       "title": "Straight-line and inversor linkages"
     },
     {
+      "candidate_count": 21,
       "claimed_at": "2026-08-13T00:01:06+03:00",
-      "completed_at": null,
+      "completed_at": "2026-08-13T00:06:58+03:00",
       "id": "spatial-spherical-parallel",
+      "new_categories": [
+        {
+          "name": "spatial",
+          "why": "Bennett, spherical 4-bar, 5-bar, delta forearm, and UPS strut are a different agent job from planar bar linkages and from hinge/ball joints. four_bar's usecase does not mention concurrent axes or overconstrained spatial loops; joints currently dumps wrists onto ball_socket_joint and gimbal_rings. A movements-group shelf lets search_use_cases hit the right primitive without implying a finished robot."
+        }
+      ],
       "prompt": "Bennett, spherical four-bar, 7R, Agile Eye, delta, Stewart/Gough, 5-bar planar robot, serial RRR arm primitive, roll-pitch-roll wrist, Hoberman / deployable. Filter hard: finished robot chassis is out of scope; a parametric delta-joint kit or spherical 4-bar pose may not be.",
-      "report": null,
-      "status": "in_progress",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/spatial-spherical-parallel.json",
+      "status": "done",
       "title": "Spatial, spherical, and parallel mechanisms"
     },
     {
+      "candidate_count": 17,
       "claimed_at": "2026-08-13T00:01:06+03:00",
-      "completed_at": null,
+      "completed_at": "2026-08-13T00:06:58+03:00",
       "id": "cams-indexing",
+      "new_categories": [],
       "prompt": "Plate, face, barrel, heart, snail already exist. Still in the class: globoidal / Ferguson indexing cam, conjugate / desmodromic pairs, inverse cam, linear / wedge cam, cylindrical face-groove, barrel indexer, Geneva variants (internal, spherical), star wheel vs Maltese, intermittent gears, ratchet-index tables.",
-      "report": null,
-      "status": "in_progress",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/cams-indexing.json",
+      "status": "done",
       "title": "Cam types and intermittent motion"
     },
     {
-      "claimed_at": null,
-      "completed_at": null,
+      "candidate_count": 16,
+      "claimed_at": "2026-08-13T00:07:14+03:00",
+      "completed_at": "2026-08-13T00:09:07+03:00",
       "id": "gear-families",
+      "new_categories": [],
       "prompt": "Spur, internal, herringbone, bevel, worm, cycloidal, harmonic, rack, sector, planetary already exist. Survey helical (single), face/crown, hypoid, spiroid, crossed-helical, lantern/pin, noncircular/elliptical, magnetic, nutating/wobble, compound trains, automotive differential, sun-and-planet, hypoid-ish printable stand-ins. Which are FDM-real?",
-      "report": null,
-      "status": "pending",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/gear-families.json",
+      "status": "done",
       "title": "Gear and reduction families"
     },
     {
@@ -176,5 +187,5 @@
       "title": "Mechanisms that exist but cannot play"
     }
   ],
-  "updated": "2026-08-13T00:01:06+03:00"
+  "updated": "2026-08-13T00:09:07+03:00"
 }

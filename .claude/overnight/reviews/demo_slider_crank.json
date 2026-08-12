@@ -1,0 +1,14 @@
+{
+  "bodies_that_look_frozen": [
+    "base",
+    "pin_0"
+  ],
+  "cycle_closes": true,
+  "demo": "demo_slider_crank",
+  "issues": [],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Orange crank pin orbits the red disc; green conrod stays pinned and the cyan slider reciprocates in the base slot, inboard near 183 deg and outboard near 35/337 deg.",
+  "notes": "Front row is the readable piston stroke. Crank disc has little landmark and ~0 centroid travel; the pin orbit carries the rotation. Last column at 337 deg continues toward the 35 deg start.",
+  "verdict": "pass"
+}

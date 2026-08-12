@@ -1,0 +1,14 @@
+{
+  "bodies_that_look_frozen": [
+    "base",
+    "screw"
+  ],
+  "cycle_closes": true,
+  "demo": "demo_screw_jack",
+  "issues": [],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Orange pad rides the pink screw from down at 0/15 deg to full height near 148/227 deg and back down by 302 deg; blue base stays put.",
+  "notes": "Demo is a cosine lift_frac out-and-back so the cycle can close (0=down, 180=up). Screw does not spin; the pad translates on the thread. That matches the demo, not a missed rotation.",
+  "verdict": "pass"
+}
