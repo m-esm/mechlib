@@ -568,3 +568,17 @@ Ground and its two cyan pivots stay put. Floating pins travel with the joints. 3
 
 **Issues**
 - none
+
+## demo_arc_ratchet — pass
+
+- reviewed: 2026-08-13T00:24:25+03:00
+- kind: movement
+- motion: Rest pose: cyan hub with three trailing arc flexures seated inside a pink internally toothed ring.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Arms trail in the self-energising direction and sit in the undercut teeth. Side/front show a flat two-body disc. Sane rest assembly.
+
+**Issues**
+- none
