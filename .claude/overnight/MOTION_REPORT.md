@@ -1086,3 +1086,17 @@ Non-animated. Inner end on the arbor, outer end toward the barrel wall. Sane res
 
 **Issues**
 - none
+
+## demo_spring_cartridge_ratchet — pass
+
+- reviewed: 2026-08-13T01:41:51+03:00
+- kind: movement
+- motion: Rest pose: three orange rigid pawls in a slotted blue hub inside a green self-energising ring.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Pawls sit in the hub slots and engage the ring. Sane rest assembly of a serviceable cartridge ratchet.
+
+**Issues**
+- none
