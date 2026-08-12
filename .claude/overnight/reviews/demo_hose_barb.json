@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_hose_barb",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: gold hose tail with stacked sawtooth barbs, stop boss, and mounting flange.",
+  "notes": "Non-animated. One body. Barbs taper on, square off. Sane rest assembly of a hose barb.",
+  "verdict": "pass"
+}

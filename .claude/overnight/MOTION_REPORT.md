@@ -1324,3 +1324,17 @@ Non-animated. One body. Groove and cone read. Sane rest assembly of a clock fuse
 
 **Issues**
 - none
+
+## demo_hose_barb — pass
+
+- reviewed: 2026-08-13T02:21:47+03:00
+- kind: movement
+- motion: Rest pose: gold hose tail with stacked sawtooth barbs, stop boss, and mounting flange.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. One body. Barbs taper on, square off. Sane rest assembly of a hose barb.
+
+**Issues**
+- none
