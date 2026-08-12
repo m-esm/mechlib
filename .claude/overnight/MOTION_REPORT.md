@@ -512,3 +512,17 @@ Centroids frozen (spin-in-place). 16.8 deg of driver is most of the 20 deg cycle
 
 **Issues**
 - none
+
+## demo_swash_plate — pass
+
+- reviewed: 2026-08-13T00:23:21+03:00
+- kind: animate
+- motion: Tilted pink plate spins under four colored shoes. Shoes stay on their angular stations and stroke axially, high side walking around the plate as phase advances.
+- cycle_closes: False
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Shaft stays on axis. Plate is catalog-stationary because its centroid barely translates; the tilt orientation rotating is the intended spin. Last column 302.4 deg is approaching the 360 start. Shoe heights at 0 vs 302 are consistent with a continuing cycle.
+
+**Issues**
+- none
