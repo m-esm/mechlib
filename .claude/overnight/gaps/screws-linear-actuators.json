@@ -1,0 +1,187 @@
+{
+  "candidates": [
+    {
+      "already": "linear_way (tapered gib), plate_cam",
+      "api_shape": "wedge(angle_deg, length, width, travel) -> {wedge, follower} plus wedge_lift(s) = s * tan(angle)",
+      "fdm": "Two flat plates or a triangular prism sliding on a way. Prints flat. Optional second opposing wedge (double wedge, no side thrust). The cams slice already named linear_cam / wedge cam as a rotary-law cousin; this is the simple-machine actuator, no cam profile.",
+      "mechlib_fit": "yes",
+      "name": "wedge",
+      "priority": "high",
+      "why": "The missing simple machine. Doorstops, machine-tool tapers, splitting, die-set actuation, every power screw is a wrapped wedge. linear_way's gib is a locked taper, not a running actuator. Distinct from plate_cam (rotary law) and from lead_screw (helix)."
+    },
+    {
+      "already": "lazy_tongs, lead_screw, screw_jack",
+      "api_shape": "scissor_jack(arm_len, n_x=1, screw_d, pitch, lift_frac) -> {base, arms, screw, pad} plus scissor_jack_height(frac)",
+      "fdm": "Two (or more) X-frames, a lead_screw across the middle pivots, a pad on top. Prints as flat bars + the existing trapezoidal screw. Pose is screw extension, height is 2*arm*sin(half-angle).",
+      "mechlib_fit": "yes",
+      "name": "scissor_jack",
+      "priority": "high",
+      "why": "Car jack / table lift: a screw shortens the diagonal of an X and the pad rises. lazy_tongs is a pin-driven rhomb chain (usecase even says 'scissor lifts' but there is no screw). screw_jack is a single vertical screw. This is the named product-shaped request that is still a semi-primitive (one cell, not a vehicle lift)."
+    },
+    {
+      "already": null,
+      "api_shape": "hydraulic_cylinder(bore, rod_d, stroke, extend_frac, ports=2) -> {tube, piston, rod, cap_blind, cap_rod} plus force = p * area",
+      "fdm": "Tube, piston with printed seal groove (O-ring bought), rod, two caps, port bosses. Prints as a kit. Same geometry for pneumatic (just smaller ports). Does not pump; the fluid-machines slice owns pumps and valves.",
+      "mechlib_fit": "yes",
+      "name": "hydraulic_cylinder",
+      "priority": "high",
+      "why": "The default linear force source in machines. Presses, loaders, workholding, any time the prime mover is already fluid. Envelope is a semi-primitive (tube+piston+rod) the way external_gear_pump is a rotor pair. A bottle jack with a lever pump is a product."
+    },
+    {
+      "already": "coil_spring, spiral power spring (clockwork slice)",
+      "api_shape": "negator_spring(tape_w, tape_t, drum_d, turns, pay_out) -> {storage_drum, tape, output} or two-drum motor",
+      "fdm": "Printed drums. Working tape is bought steel (Hunter NEG'ATOR / tape-measure mainspring). A TPU strip demos the constant-radius coil. Pose is pay-out length; force is approximately constant.",
+      "mechlib_fit": "yes",
+      "name": "negator_spring",
+      "priority": "high",
+      "why": "Prestressed flat strip that coils at nearly constant radius, so extension force is flat. Tape measures, counterbalances, cable retractors, some printer-bed assists. Not a coil_spring (force rises with x) and not a clock mainspring (torque on a barrel). The linear actuator form of constant-force. Compliant constant-force flexures belong on the flexure slice."
+    },
+    {
+      "already": null,
+      "api_shape": "cable_cylinder(bore, stroke, extend_frac) -> {tube, piston, cable_a, cable_b, sheaves} or belt_linear(pulley_d, belt, travel)",
+      "fdm": "Tube + piston + two printed sheaves and a cable or GT2 belt. Stroke almost equals tube length; no rod to buckle. Prints. Glands are bought or a printed labyrinth.",
+      "mechlib_fit": "yes",
+      "name": "cable_cylinder",
+      "priority": "med",
+      "why": "Tolomatic-style: cables leave both ends of a sealed piston so the load is pulled from either side. Also the belt-driven linear stage (wheel-and-axle family). Distinct from a rod cylinder (buckling, dead length) and from a winch (the pulleys slice). Long-travel electric/air linear without a screw."
+    },
+    {
+      "already": "lead_screw",
+      "api_shape": "lead_screw(..., form='trapezoid'|'buttress'|'square')",
+      "fdm": "Same helix loft, one flank steep, one shallow. Prints standing. Load is one-way (vices, presses, gun breeches).",
+      "mechlib_fit": "yes",
+      "name": "buttress_lead",
+      "priority": "med",
+      "why": "One-way power-screw profile. lead_screw hard-codes 30 deg trapezoid. Buttress and square are the other two textbook forms (Norton). A form= argument, not a second module."
+    },
+    {
+      "already": "lead_screw, linear_way, printed_ball_bearing",
+      "api_shape": "ball_spline(d, grooves, length, travel) -> {shaft, nut, balls} shaft spins with the nut and slides",
+      "fdm": "Shaft with axial gothic grooves, nut with recirculating or long-ball rows, bought balls. Prints as a demo. Wear is the printed_ball_bearing story.",
+      "mechlib_fit": "yes",
+      "name": "ball_spline",
+      "priority": "med",
+      "why": "Prismatic pair that also carries torque (the sliding_spline named in kinematic-pairs, with rolling elements). PTO shafts, robotic axes, any spline that must run. Distinct from lead_screw (helix) and from linear_way (no torque)."
+    },
+    {
+      "already": "worm, rack_2d, rack_pinion",
+      "api_shape": "worm_rack(module, starts, rack_teeth, width) -> {worm, rack} posed, travel = lead * turns",
+      "fdm": "Reuse worm + rack_2d. Self-locking if the lead angle is shallow. Prints.",
+      "mechlib_fit": "yes",
+      "name": "worm_rack",
+      "priority": "med",
+      "why": "Worm driving a rack: compact, self-locking linear from a rotary input at 90 deg. Not rack_pinion (spur) and not lead_screw (coaxial). Common on slides, gates, and camera heads. A posed pair, not a new tooth."
+    },
+    {
+      "already": "lead_screw, printed_ball_bearing",
+      "api_shape": "ball_screw(d, lead, balls, nut_len) -> {screw, nut, balls} teaching analog",
+      "fdm": "Printed gothic helix + bought balls. Returns and wipers are the hard part. Not a service screw; a demo of recirculation, the way printed_ball_bearing is a demo of a race.",
+      "mechlib_fit": "maybe",
+      "name": "ball_screw",
+      "priority": "low",
+      "why": "The high-efficiency power screw. Ground metal in service. A printed analog is honest only if labelled teaching. Do not claim C0/C5 preload."
+    },
+    {
+      "already": null,
+      "api_shape": "voice_coil(coil_od, magnet_od, stroke) -> {former, magnet_cup, plunger}",
+      "fdm": "Printed coil former and magnet cup. Coil wire and magnet are bought. Stand-in housing, not a working motor.",
+      "mechlib_fit": "maybe",
+      "name": "voice_coil",
+      "priority": "low",
+      "why": "Moving-coil linear: force, position, speed controllable. Hard-disk and loudspeaker class. The printed part is a fixture. Same reject-or-cage pattern as magnetic_gear."
+    },
+    {
+      "already": "drag_chain, lazy_tongs",
+      "api_shape": "rigid_chain_link that locks into a column when pushed, folds when pulled",
+      "fdm": "Links print. The lock face is the primitive. A full Serapid column is a product.",
+      "mechlib_fit": "maybe",
+      "name": "rigid_chain",
+      "priority": "low",
+      "why": "Helical-band / rigid-chain / segmented-spindle: stroke many times the retracted length. Real telescoping class. One locking link is a semi-primitive; a stage lift is not."
+    },
+    {
+      "already": "lead_screw",
+      "api_shape": null,
+      "fdm": "Threaded planetary rollers want ground metal and a cage. A printed stand-in would not conjugate.",
+      "mechlib_fit": "no",
+      "name": "roller_screw",
+      "priority": "low",
+      "why": "Planetary (or inverted) roller screw: many line contacts, huge load, tiny lead. Tolomatic / SKF class. Not printable as a working pair. After lead_screw and a teaching ball_screw, this is hardware."
+    },
+    {
+      "already": "lead_screw",
+      "api_shape": null,
+      "fdm": "Covered (trapezoidal, multi-start).",
+      "mechlib_fit": "no",
+      "name": "lead_screw_again",
+      "priority": "low",
+      "why": "Already the printable power screw. Missing is form= (buttress/square), not a second kit."
+    },
+    {
+      "already": "scotch_yoke",
+      "api_shape": null,
+      "fdm": "Covered.",
+      "mechlib_fit": "no",
+      "name": "scotch_yoke_again",
+      "priority": "low",
+      "why": "Prompt listed it as have. Linkage converter, not a screw."
+    },
+    {
+      "already": "rack_2d, rack_pinion",
+      "api_shape": null,
+      "fdm": "Covered.",
+      "mechlib_fit": "no",
+      "name": "rack_again",
+      "priority": "low",
+      "why": "Prompt listed it as have. worm_rack is the missing posed pair."
+    }
+  ],
+  "id": "screws-linear-actuators",
+  "new_categories": [
+    {
+      "name": "constant_force",
+      "why": "Negator tape, constant-force flexures, and gravity arms are a machinery class of their own: they source a flat force/torque, they are not a screw. The flexure and clockwork slices will name the compliant and horological members; this slice owns the tape-on-drum actuator. missing-categories can rank the shelf."
+    }
+  ],
+  "rejected": [
+    {
+      "name": "bottle_jack_product",
+      "why": "Lever + check valves + ram. Product built from hydraulic_cylinder plus a pump from the fluid slice."
+    },
+    {
+      "name": "electromechanical_actuator_box",
+      "why": "Motor + gearbox + lead_screw + limit switches in a housing. Finished actuator. The reusable part is lead_screw."
+    },
+    {
+      "name": "linear_motor",
+      "why": "Unrolled rotary motor. Coils and magnets. Hardware."
+    },
+    {
+      "name": "piezo_inchworm",
+      "why": "Piezo stacks or ultrasonic. Not FDM working surfaces."
+    },
+    {
+      "name": "wax_motor",
+      "why": "Phase-change pellet. Hardware."
+    },
+    {
+      "name": "archimedes_as_actuator",
+      "why": "archimedes_screw is a conveyor / pump helix, already shipped. Not a linear actuator."
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Linear_actuator",
+    "https://en.wikipedia.org/wiki/Ball_screw",
+    "https://en.wikipedia.org/wiki/Roller_screw",
+    "https://en.wikipedia.org/wiki/Leadscrew",
+    "https://www.tolomatic.com/info-center/resource-details/how-roller-screw-and-ball-screw-actuators-compare-in-high-force-applications/",
+    "https://www.hunterspringandreel.com/products/springs/constant-force-spring-negator",
+    "https://507movements.com/mm_389.html",
+    "https://507movements.com/toc.html",
+    "https://toolbox.igus.com/motion-plastics-blog/types-of-linear-actuators/",
+    ".claude/overnight/catalog.json category linear + ANIMATE demo_screw_jack + lazy_tongs usecase scissor lifts",
+    "mechlib/linear.py (lead_screw, differential_screw, screw_jack, scroll_drive, archimedes_screw, swash_plate, rack_pinion), mechlib/guides.py (linear_way, telescoping_stage), mechlib/linkages.py (scotch_yoke, slider_crank, lazy_tongs, sarrus, toggle_clamp), mechlib/flexures.py (flexure_stage), mechlib/usecases.py"
+  ],
+  "summary": "Linear actuation is rotary-to-line, force-to-line, or stored-energy-to-line. Reuleaux's helical pair H is the screw; the inclined plane / wedge is the parent simple machine (a screw is a wrapped wedge). Norton and Slocum split mechanical actuators by conversion: screw (lead, jack, ball, roller), wheel-and-axle (rack, winch, belt, chain, rigid chain), and cam/wedge (limited travel). Fluid cylinders and moving-coil (voice-coil) sit beside them as force sources, not converters. 507 names a ratchet lifting-jack (389), hydrostatic jack (467), differential screw (266), Archimedes (443), and the toggle (140). Howell's linear piece is the compound parallelogram flexure stage, already in-tree; tape-spring / Negator constant-force is the other Howell-adjacent linear source and is named again on the flexure and clockwork slices.\n\nCatalog already covers the printable screw family and the main linkage converters. Screws: lead_screw (trapezoidal Tr/ACME, multi-start, nut+optional flange), differential_screw (same-hand two-pitch, travel = p1-p2), screw_jack (rod+base nut+pad, lift_frac pose), scroll_drive (Archimedean chuck rib, three jaws). Helical conveyor, not an actuator: archimedes_screw. Rotary-to-reciprocating: swash_plate, scotch_yoke, slider_crank, rack_pinion / rack_2d, worm (rotary only). Guides, not actuators: linear_way, telescoping_stage. Compliant line: flexure_stage (compound parallelogram, strain-gated). Linkage expanders: lazy_tongs (Nuremberg scissors), sarrus_linkage, toggle_clamp (over-center clamp, not a jack). Grep finds no ball_screw, roller_screw, wedge actuator, hydraulic/pneumatic cylinder kit, voice_coil, Negator / constant-force tape, cable cylinder, scissor_jack, or rigid_chain.\n\nFDM reality. The missing simple machine is the wedge: a sliding incline under a load, or two opposing wedges. It is the parent of every power screw and of the machine-tool gib already hiding inside linear_way. Scissor jack is a lead screw across an X-frame, not lazy_tongs (which is a pin-driven rhomb chain). A hydraulic/pneumatic cylinder is tube+piston+rod+gland+ports: the envelope is a semi-primitive even though the fluid is not; same contract as external_gear_pump. Negator / tape-measure constant-force is a prestressed strip on a drum (Hunter NEG'ATOR); print the drums and take bought steel tape, or demo in TPU. Cable cylinder (Tolomatic) is a piston in a tube with cables out both glands, stroke almost the tube length, no rod buckle. Voice-coil is a printed coil-former + magnet pocket + plunger: a stand-in, not a motor. Ball screw is recirculating balls in a gothic race: printed_ball_bearing already exists, so a printed nut + bought balls is a teaching analog, not a service screw. Planetary roller screw (threaded rollers orbiting a multi-start screw) is ground metal; do not claim FDM conjugacy. Buttress is a profile argument on lead_screw. Rigid-chain / helical-band / segmented-spindle telescoping columns are real but sit near products. Linear motors, piezo stacks, and wax motors are hardware.",
+  "title": "Screws, jacks, and linear actuators"
+}

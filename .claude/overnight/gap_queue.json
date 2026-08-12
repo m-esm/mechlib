@@ -115,12 +115,19 @@
       "title": "Shaft couplings and CV joints"
     },
     {
-      "claimed_at": null,
-      "completed_at": null,
+      "candidate_count": 15,
+      "claimed_at": "2026-08-13T01:03:09+03:00",
+      "completed_at": "2026-08-13T01:05:16+03:00",
       "id": "screws-linear-actuators",
+      "new_categories": [
+        {
+          "name": "constant_force",
+          "why": "Negator tape, constant-force flexures, and gravity arms are a machinery class of their own: they source a flat force/torque, they are not a screw. The flexure and clockwork slices will name the compliant and horological members; this slice owns the tape-on-drum actuator. missing-categories can rank the shelf."
+        }
+      ],
       "prompt": "Lead screw, differential screw, screw jack, scroll, archimedes, telescoping stage, linear way exist. Survey ball screw, roller screw, scotch-yoke (have), rack (have), wedge/inclined plane, hydraulic/pneumatic cylinder geometry, voice-coil stand-in, tape measure / constant-force Negator, cable cylinder.",
-      "report": null,
-      "status": "pending",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/screws-linear-actuators.json",
+      "status": "done",
       "title": "Screws, jacks, and linear actuators"
     },
     {
@@ -196,5 +203,5 @@
       "title": "Mechanisms that exist but cannot play"
     }
   ],
-  "updated": "2026-08-13T00:34:12+03:00"
+  "updated": "2026-08-13T01:05:16+03:00"
 }
