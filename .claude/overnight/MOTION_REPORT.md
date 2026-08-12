@@ -806,3 +806,17 @@ Non-animated. Concentric stack, teeth around the rim. Ellipse of the wave genera
 
 **Issues**
 - none
+
+## demo_hirth_coupling — pass
+
+- reviewed: 2026-08-13T01:01:50+03:00
+- kind: movement
+- motion: Rest pose: green and magenta hubs face-to-face with radial V-teeth seated in each other's valleys.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Tooth interface is continuous around the joint; hubs stay coaxial. Sane rest assembly of a Hirth face coupling.
+
+**Issues**
+- none
