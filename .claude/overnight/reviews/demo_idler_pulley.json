@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_idler_pulley",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: cyan crowned idler facing an orange GT2 timing pulley, two free-spinning wheels on parallel axes.",
+  "notes": "Non-animated. Crown on the idler and teeth on the driver both read. Nothing interpenetrates or floats. Sane rest assembly.",
+  "verdict": "pass"
+}

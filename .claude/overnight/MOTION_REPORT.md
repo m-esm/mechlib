@@ -820,3 +820,17 @@ Non-animated. Tooth interface is continuous around the joint; hubs stay coaxial.
 
 **Issues**
 - none
+
+## demo_idler_pulley — pass
+
+- reviewed: 2026-08-13T01:01:53+03:00
+- kind: movement
+- motion: Rest pose: cyan crowned idler facing an orange GT2 timing pulley, two free-spinning wheels on parallel axes.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Crown on the idler and teeth on the driver both read. Nothing interpenetrates or floats. Sane rest assembly.
+
+**Issues**
+- none
