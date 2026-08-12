@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_star_wheel",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: gold disc with six concave pockets and a hub bore, packaging-industry star wheel.",
+  "notes": "Non-animated. One body. Pockets are equally spaced. Sane rest assembly.",
+  "verdict": "pass"
+}

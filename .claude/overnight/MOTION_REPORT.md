@@ -1394,3 +1394,17 @@ Non-animated. One body. Sector, hub, and teeth read. Sane rest assembly of a sec
 
 **Issues**
 - none
+
+## demo_star_wheel — pass
+
+- reviewed: 2026-08-13T02:22:15+03:00
+- kind: movement
+- motion: Rest pose: gold disc with six concave pockets and a hub bore, packaging-industry star wheel.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. One body. Pockets are equally spaced. Sane rest assembly.
+
+**Issues**
+- none

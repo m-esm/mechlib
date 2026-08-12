@@ -2432,18 +2432,22 @@
       "category": "indexing",
       "group": "movements",
       "id": "demo_star_wheel",
+      "issues": [],
       "kind": "movement",
       "moving": [],
       "parts": 1,
       "priority": 2,
       "render_error": null,
       "rendered": true,
-      "reviewed": false,
+      "review_at": "2026-08-13T02:22:15+03:00",
+      "review_claim": "2026-08-13T02:21:58+03:00",
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_star_wheel.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_star_wheel/sheet_s.png",
       "stationary": [
         "star_wheel"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": false,
@@ -2456,6 +2460,7 @@
       "priority": 2,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T02:21:58+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_v_belt_pulley/sheet_s.png",
       "stationary": [
@@ -2474,6 +2479,7 @@
       "priority": 2,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T02:21:58+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_wave_spring/sheet_s.png",
       "stationary": [
@@ -2482,5 +2488,5 @@
       "verdict": null
     }
   ],
-  "updated": "2026-08-13T02:21:56+03:00"
+  "updated": "2026-08-13T02:22:15+03:00"
 }
