@@ -638,3 +638,17 @@ Non-animated. Ball is a bought part so only body+cap print. Cap seats on the bod
 
 **Issues**
 - none
+
+## demo_clevis — pass
+
+- reviewed: 2026-08-13T00:41:47+03:00
+- kind: movement
+- motion: Rest pose: magenta U-fork, green eye between the ears, cyan pin through all three.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Side row is the pin axis; front is the fork face. Clearance looks designed, not exploded. Sane rest assembly of a pin joint.
+
+**Issues**
+- none
