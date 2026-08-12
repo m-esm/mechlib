@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_wave_spring",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: purple crest-to-crest wave spring, two wavy rings stacked half a wave apart.",
+  "notes": "Non-animated. One body. Side/front show opposing crests bearing. Sane rest assembly.",
+  "verdict": "pass"
+}

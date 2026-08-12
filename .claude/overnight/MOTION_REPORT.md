@@ -1422,3 +1422,17 @@ Non-animated. One body. Groove and hub read. Sane rest assembly of a wedge-belt 
 
 **Issues**
 - none
+
+## demo_wave_spring — pass
+
+- reviewed: 2026-08-13T02:22:20+03:00
+- kind: movement
+- motion: Rest pose: purple crest-to-crest wave spring, two wavy rings stacked half a wave apart.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. One body. Side/front show opposing crests bearing. Sane rest assembly.
+
+**Issues**
+- none
