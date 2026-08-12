@@ -1,0 +1,128 @@
+{
+  "candidates": [
+    {
+      "already": null,
+      "api_shape": "revolute_pair(eye_d, pin_d, width_a, width_b, gap, clearance, pose_deg) -> {link_a, link_b, pin}",
+      "fdm": "Two eyes or an eye-and-boss with teardrop bores, a pin, optional thrust washers, and a printed clearance. Prints flat; pin can be integral PIP or a loose dowel. knuckle_hinge is a door hinge, clevis is one fork form; neither is the generic pair.",
+      "mechlib_fit": "yes",
+      "name": "revolute_pair",
+      "priority": "high",
+      "why": "The default machine joint: two links share an axis and one rotation. Every printed linkage, lever, and crank currently invents pin plus two bosses from cyl."
+    },
+    {
+      "already": null,
+      "api_shape": "pin_in_slot(slot_len, slot_w, pin_d, plate_t, clearance, travel) -> {plate, pin} plus pin_in_slot_pose(travel)",
+      "fdm": "Obround slot with chip relief plus a pin (or sliding block) at clearance. slot_neg is a cutter; quick_return embeds the pair inside a mechanism. Pose is pin travel along the slot.",
+      "mechlib_fit": "yes",
+      "name": "pin_in_slot",
+      "priority": "high",
+      "why": "Planar higher pair (slide along a slot plus spin). Whitworth/quick-return, slotted conrods, adjustable levers, lock-stitch, and every pin-in-obround that is not a Scotch yoke."
+    },
+    {
+      "already": null,
+      "api_shape": "cylindrical_pair(bore_d, length, wall, clearance, travel, spin_deg) -> {sleeve, shaft} plus cylindrical_pose(travel, spin_deg)",
+      "fdm": "Concentric tubes printed standing so every running face is a vertical wall. Clearance 0.25-0.4 mm. Optional 45-degree lips that stop pull-out without killing spin. telescoping_stage is square and therefore prismatic. Pareek 2014 printed C-pairs as a DfAM primitive.",
+      "mechlib_fit": "yes",
+      "name": "cylindrical_pair",
+      "priority": "high",
+      "why": "The only Reuleaux lower pair with no generator. Coaxial translation plus rotation: telescoping drive shafts, hydraulic rods that may spin, steering columns, some robot wrists, piston-in-bore without a key."
+    },
+    {
+      "already": null,
+      "api_shape": "rod_end(ball_d, bore_d, shank_d, shank_len, capture, clearance, swing_deg, spin_deg) -> {housing, ball, pin}",
+      "fdm": "Housing printed as two halves or a slotted cup; ball as a sphere with a teardrop through-bore; optional pin. Snap or screw-together after print. Swing cone is the pose law.",
+      "mechlib_fit": "yes",
+      "name": "rod_end",
+      "priority": "high",
+      "why": "Machine-design form of the spherical pair: a through-bored ball captured in a shanked housing. Control rods, suspension links, actuator ends, RC steering. Distinct from ball_socket_joint (snap stud, no through-bore) and from clevis (revolute, not spherical)."
+    },
+    {
+      "already": null,
+      "api_shape": "sliding_spline(d, teeth, length, travel, clearance) -> {shaft, hub}",
+      "fdm": "Involute or square-lobe male/female, printed standing so flanks are vertical. Clearance on the profile, optional end stops. Pose is axial travel.",
+      "mechlib_fit": "yes",
+      "name": "sliding_spline",
+      "priority": "med",
+      "why": "Prismatic pair that also carries torque: PTO shafts, telescoping drives, sliding hubs. shaft_key is a fixed keyway kit; swept_keyed_bore is a limited-angle cutter, not a running pair."
+    },
+    {
+      "already": null,
+      "api_shape": "rolling_pair(roller_d, roller_w, rail_len, clearance, travel) -> {roller, rail, pin} plus rolling_pose(travel)",
+      "fdm": "Crowned roller plus a flat or V rail, pin through the roller. Print roller and rail standing. Pose maps roll angle to travel (travel = r * theta).",
+      "mechlib_fit": "yes",
+      "name": "rolling_pair",
+      "priority": "med",
+      "why": "Higher pair of a cylinder on a plane or on another cylinder. Cam tracks, conveyor rollers, linear roller ways. roller_follower is a lever assembly; printed_ball_bearing is a radial race, not a rolling contact pair."
+    },
+    {
+      "already": null,
+      "api_shape": "planar_pair(plate_size, pad_d, clearance, x, y, yaw_deg) -> {plate, slider}",
+      "fdm": "Three-pad slider on a plate, or a circular pad, held by gravity or a keep-plate. Prints flat. Without a hold-down the pair falls apart, so fit is only maybe.",
+      "mechlib_fit": "maybe",
+      "name": "planar_pair",
+      "priority": "low",
+      "why": "The sixth Reuleaux lower pair: two planes stay in contact (2 translations + 1 rotation). Completes the textbook set. Rare as an unconstrained printed joint; machines usually build E from R and P."
+    }
+  ],
+  "id": "kinematic-pairs",
+  "new_categories": [],
+  "rejected": [
+    {
+      "name": "helical_pair",
+      "why": "Already lead_screw (trapezoidal screw+nut). screw_jack and differential_screw are the same pair inside an actuator."
+    },
+    {
+      "name": "prismatic_pair",
+      "why": "Already linear_way (dovetail/vee/tslot + gib) and telescoping_stage (keyed square tubes)."
+    },
+    {
+      "name": "spherical_pair",
+      "why": "Already ball_socket_joint. rod_end is listed separately because it is a different machine form (through-bore + shank), not a second copy of the snap cup."
+    },
+    {
+      "name": "universal_joint",
+      "why": "Already universal_joint, double_cardan_joint, and gimbal_rings. U is two intersecting R, not a Reuleaux primitive."
+    },
+    {
+      "name": "parallelogram_pair",
+      "why": "IFToMM Pa is just four_bar with equal opposite sides. No new generator."
+    },
+    {
+      "name": "crosshead",
+      "why": "Engine specialization of prismatic. slider_crank already puts a block on rails."
+    },
+    {
+      "name": "cam_follower_pair",
+      "why": "Already plate_cam / face_cam / barrel_cam / snail_cam / heart_cam plus roller_follower. No missing pair, only a missing combined pose helper."
+    },
+    {
+      "name": "gear_mesh_pair",
+      "why": "Already spur_gear_mesh, bevel_gear_pair, rack_pinion, worm, internal, cycloidal, harmonic."
+    },
+    {
+      "name": "wrapping_pair",
+      "why": "Already timing_pulley, v_belt_pulley, grooved_drum, roller_chain, drag_chain."
+    },
+    {
+      "name": "notch_hinge",
+      "why": "Compliant revolute. cross_flexure is the better Howell form; kerf_bend_cutter covers living hinges. A circular-notch flexure would be incremental."
+    },
+    {
+      "name": "plain_bushing_as_pair",
+      "why": "plain_bushing is a sleeve, not a two-body pair with travel. With shoulders it is R; without, it is an incomplete C. cylindrical_pair is the right generator."
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Kinematic_pair",
+    "https://www.cs.cmu.edu/~rapidproto/mechanisms/chpt4.html",
+    "Reuleaux, F. The Kinematics of Machinery (Kennedy trans.), Dover reprint 1963",
+    "Hartenberg, R.S. & Denavit, J. Kinematic Synthesis of Linkages, McGraw-Hill 1964, pp. 17-18",
+    "http://utw10945.utweb.utexas.edu/sites/default/files/2014-059-Pareek.pdf",
+    "https://www.school-mechademic.com/blog/kinematic-pairs-in-mechanism-design",
+    "https://www.designworldonline.com/what-is-a-pin-joint/",
+    "Norton, R.L. Design of Machinery (cam and pair chapters)",
+    "Howell, L.L. Compliant Mechanisms (notch and cross-flexure revolutes)"
+  ],
+  "summary": "Reuleaux and IFToMM treat a machine as links joined by six lower pairs (surface contact: revolute R, prismatic P, helical H, cylindrical C, spherical S, planar E) plus higher pairs (point or line contact: cam-follower, gear mesh, rolling, wrapping). Mechlib already ships named forms of five of the six lower pairs and of every standard higher-pair family, but almost always as a product-shaped kit rather than as the pair itself. Revolute is knuckle_hinge (print-in-place leaf hinge with stop), clevis (fork+eye+pin), gimbal_rings (stacked R), and the hidden pins inside every linkage; there is no generic two-eye pin joint. Prismatic is linear_way (dovetail/vee/tslot plus gib) and telescoping_stage (square tubes keyed against spin). Helical is lead_screw (trapezoidal screw+nut), plus screw_jack and differential_screw. Spherical is ball_socket_joint (snap stud+split cup). Universal (two intersecting R, not a Reuleaux primitive) is universal_joint, double_cardan_joint, and gimbal_rings. Higher pairs are covered as assemblies: plate/face/barrel/snail/heart cams plus roller_follower; spur/bevel/worm/internal/rack meshes; printed_ball_bearing and idler_pulley for rolling; pulleys, belts, and chains for wrapping; kinematic_coupling for six-point contact. The one missing lower pair is cylindrical C (coaxial slide plus spin). The other real gaps are pair-level generators that consumers currently invent from cyl and slot_neg: a generic revolute_pair, a pin-in-slot (the planar higher pair inside quick_return and every slotted lever), a rod-end form of S (through-bored ball in a shanked housing, not a snap stud), and a sliding spline (torque-transmitting P). Planar E is textbook-complete and unused as an unconstrained printed pair; a three-pad-on-plate generator would close the set but is low leverage. Rejected as already covered: a second helical_pair (lead_screw), a second prismatic_pair (linear_way), a second spherical_pair that is just ball_socket_joint, Pa parallelogram (four_bar with equal sides), and engine crossheads (slider_crank rails). Joints is already the gallery shelf; it should grow pair primitives, not a new category.",
+  "title": "Lower and higher kinematic pairs"
+}

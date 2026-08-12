@@ -1,0 +1,2167 @@
+{
+  "items": [
+    {
+      "animated": true,
+      "category": "cams",
+      "group": "movements",
+      "id": "demo_barrel_cam",
+      "issues": [],
+      "kind": "animate",
+      "moving": [
+        "follower_pin",
+        "pin_guide"
+      ],
+      "parts": 3,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "review_at": "2026-08-12T23:54:18+03:00",
+      "review_claim": "2026-08-12T23:52:57+03:00",
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_barrel_cam.json",
+      "reviewed": true,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_barrel_cam/sheet_s.png",
+      "stationary": [
+        "barrel_cam"
+      ],
+      "verdict": "pass"
+    },
+    {
+      "animated": true,
+      "category": "linkages",
+      "group": "movements",
+      "id": "demo_bell_crank",
+      "issues": [],
+      "kind": "animate",
+      "moving": [
+        "crank",
+        "input_link",
+        "output_link",
+        "pin_1",
+        "pin_2",
+        "pin_3",
+        "pin_4"
+      ],
+      "parts": 9,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "review_at": "2026-08-12T23:54:18+03:00",
+      "review_claim": "2026-08-12T23:52:57+03:00",
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_bell_crank.json",
+      "reviewed": true,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_bell_crank/sheet_s.png",
+      "stationary": [
+        "base",
+        "pin_0"
+      ],
+      "verdict": "pass"
+    },
+    {
+      "animated": true,
+      "category": "gears",
+      "group": "movements",
+      "id": "demo_bevel_gear_pair",
+      "issues": [
+        {
+          "severity": "high",
+          "what": "drive_deg advances 0/180/360/540/720/900 but both gears are visually frozen; mesh does not turn. Centroid travel is ~0 as expected for spin-in-place, so this is a real animation miss not a travel-metric artifact."
+        }
+      ],
+      "kind": "animate",
+      "moving": [],
+      "parts": 2,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "rereview_reason": "anti-alias phase resample",
+      "review_at": "2026-08-12T23:54:18+03:00",
+      "review_claim": "2026-08-13T00:01:06+03:00",
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_bevel_gear_pair.json",
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_bevel_gear_pair/sheet_s.png",
+      "stationary": [
+        "bevel_gear",
+        "bevel_pinion"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": true,
+      "category": "linkages",
+      "group": "movements",
+      "id": "demo_chebyshev",
+      "issues": [],
+      "kind": "animate",
+      "moving": [
+        "coupler",
+        "pin_2",
+        "pin_3",
+        "rocker_a",
+        "rocker_b",
+        "tracer"
+      ],
+      "parts": 9,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "review_at": "2026-08-12T23:58:06+03:00",
+      "review_claim": "2026-08-12T23:53:32+03:00",
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_chebyshev.json",
+      "reviewed": true,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_chebyshev/sheet_s.png",
+      "stationary": [
+        "ground",
+        "pin_0",
+        "pin_1"
+      ],
+      "verdict": "pass"
+    },
+    {
+      "animated": true,
+      "category": "gears",
+      "group": "movements",
+      "id": "demo_cycloidal_drive",
+      "issues": [
+        {
+          "severity": "low",
+          "what": "Output-plate spin is not visually confirmable: 6-hole symmetry matches the 60 deg output step per column, and no unique landmark on the green plate walks. Disc-to-pin walk is the readable motion."
+        }
+      ],
+      "kind": "animate",
+      "moving": [
+        "cycloidal_disc",
+        "eccentric_input"
+      ],
+      "parts": 4,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "rereview_reason": "anti-alias phase resample",
+      "review_at": "2026-08-12T23:58:06+03:00",
+      "review_claim": "2026-08-13T00:01:06+03:00",
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_cycloidal_drive.json",
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_cycloidal_drive/sheet_s.png",
+      "stationary": [
+        "housing_ring",
+        "output_plate"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": true,
+      "category": "clutches",
+      "group": "movements",
+      "id": "demo_dog_clutch",
+      "issues": [
+        {
+          "severity": "low",
+          "what": "Mid-engagement columns (120-240) show a mushy sawtooth band at the dog interface, likely z-fighting as the teeth nest, not parts flying apart."
+        }
+      ],
+      "kind": "animate",
+      "moving": [
+        "hub_b"
+      ],
+      "parts": 2,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "review_at": "2026-08-12T23:58:06+03:00",
+      "review_claim": "2026-08-12T23:53:32+03:00",
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_dog_clutch.json",
+      "reviewed": true,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_dog_clutch/sheet_s.png",
+      "stationary": [
+        "hub_a"
+      ],
+      "verdict": "pass"
+    },
+    {
+      "animated": true,
+      "category": "grippers",
+      "group": "movements",
+      "id": "demo_eccentric_cam_clamp",
+      "issues": [],
+      "kind": "animate",
+      "moving": [
+        "eccentric_cam",
+        "follower_plate"
+      ],
+      "parts": 4,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "review_at": "2026-08-12T23:58:06+03:00",
+      "review_claim": "2026-08-12T23:53:32+03:00",
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_eccentric_cam_clamp.json",
+      "reviewed": true,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_eccentric_cam_clamp/sheet_s.png",
+      "stationary": [
+        "clamp_base",
+        "pivot_pin"
+      ],
+      "verdict": "pass"
+    },
+    {
+      "animated": true,
+      "category": "indexing",
+      "group": "movements",
+      "id": "demo_escapement",
+      "issues": [
+        {
+          "severity": "high",
+          "what": "Escape wheel does not step. Demo is supposed to advance two teeth over 360 deg of phase (~24 deg, ~20 deg by the last column). Hub marks and perimeter teeth are identical from 0 through 300. A rocking pallet on a locked wheel is not an escapement tick."
+        },
+        {
+          "severity": "med",
+          "what": "Anchor motion is lumped into the last two columns; 0/60/120/180 look nearly the same rest pose rather than a beat-and-beat swing."
+        }
+      ],
+      "kind": "animate",
+      "moving": [
+        "anchor"
+      ],
+      "parts": 2,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "rereview_reason": "anti-alias phase resample",
+      "review_at": "2026-08-12T23:58:06+03:00",
+      "review_claim": "2026-08-13T00:01:06+03:00",
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_escapement.json",
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_escapement/sheet_s.png",
+      "stationary": [
+        "escape_wheel"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": true,
+      "category": "fluid",
+      "group": "movements",
+      "id": "demo_external_gear_pump",
+      "issues": [
+        {
+          "severity": "low",
+          "what": "Side and front rows are visually identical across phase; mesh rotation is only readable through the iso cap ports. meta.moving is empty because centroid travel is ~0."
+        }
+      ],
+      "kind": "animate",
+      "moving": [],
+      "parts": 4,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "rereview_reason": "anti-alias phase resample",
+      "review_at": "2026-08-12T23:58:06+03:00",
+      "review_claim": "2026-08-13T00:01:06+03:00",
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_external_gear_pump.json",
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_external_gear_pump/sheet_s.png",
+      "stationary": [
+        "body",
+        "cap",
+        "gear_a",
+        "gear_b"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": true,
+      "category": "cams",
+      "group": "movements",
+      "id": "demo_face_cam",
+      "issues": [],
+      "kind": "animate",
+      "moving": [
+        "follower_pin"
+      ],
+      "parts": 2,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "review_at": "2026-08-12T23:54:56+03:00",
+      "review_claim": "2026-08-12T23:54:18+03:00",
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_face_cam.json",
+      "reviewed": true,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_face_cam/sheet_s.png",
+      "stationary": [
+        "cam"
+      ],
+      "verdict": "pass"
+    },
+    {
+      "animated": true,
+      "category": "linkages",
+      "group": "movements",
+      "id": "demo_four_bar",
+      "issues": [],
+      "kind": "animate",
+      "moving": [
+        "coupler",
+        "crank",
+        "pin_2",
+        "pin_3",
+        "rocker",
+        "trace_point"
+      ],
+      "parts": 9,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "review_at": "2026-08-12T23:54:56+03:00",
+      "review_claim": "2026-08-12T23:54:18+03:00",
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_four_bar.json",
+      "reviewed": true,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_four_bar/sheet_s.png",
+      "stationary": [
+        "ground_link",
+        "pin_0",
+        "pin_1"
+      ],
+      "verdict": "pass"
+    },
+    {
+      "animated": true,
+      "category": "indexing",
+      "group": "movements",
+      "id": "demo_geneva_pair",
+      "kind": "animate",
+      "moving": [
+        "pin_driver"
+      ],
+      "parts": 2,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "review_claim": "2026-08-13T00:01:06+03:00",
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_geneva_pair/sheet_s.png",
+      "stationary": [
+        "slotted_wheel"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": true,
+      "category": "fluid",
+      "group": "movements",
+      "id": "demo_gerotor_pump",
+      "kind": "animate",
+      "moving": [],
+      "parts": 4,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "rereview_reason": "anti-alias phase resample",
+      "review_claim": "2026-08-13T00:01:06+03:00",
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_gerotor_pump/sheet_s.png",
+      "stationary": [
+        "gerotor_housing",
+        "gerotor_inner_rotor",
+        "gerotor_outer_rotor",
+        "gerotor_port_cap"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": true,
+      "category": "joints",
+      "group": "movements",
+      "id": "demo_gimbal_rings",
+      "kind": "animate",
+      "moving": [],
+      "parts": 3,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "review_claim": "2026-08-13T00:01:06+03:00",
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_gimbal_rings/sheet_s.png",
+      "stationary": [
+        "gimbal_ring_0",
+        "gimbal_ring_1",
+        "gimbal_ring_2"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": true,
+      "category": "cams",
+      "group": "movements",
+      "id": "demo_heart_cam",
+      "kind": "animate",
+      "moving": [
+        "follower_stem",
+        "roller"
+      ],
+      "parts": 3,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "review_claim": "2026-08-13T00:01:06+03:00",
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_heart_cam/sheet_s.png",
+      "stationary": [
+        "heart_cam"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": true,
+      "category": "gears",
+      "group": "movements",
+      "id": "demo_herringbone_gear",
+      "kind": "animate",
+      "moving": [],
+      "parts": 2,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "rereview_reason": "anti-alias phase resample",
+      "review_claim": "2026-08-13T00:01:11+03:00",
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_herringbone_gear/sheet_s.png",
+      "stationary": [
+        "herringbone_driven",
+        "herringbone_driver"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": true,
+      "category": "linkages",
+      "group": "movements",
+      "id": "demo_lazy_tongs",
+      "kind": "animate",
+      "moving": [
+        "bar_0",
+        "bar_1",
+        "bar_2",
+        "bar_3",
+        "bar_4",
+        "bar_5",
+        "output_yoke",
+        "pin_1",
+        "pin_10",
+        "pin_2",
+        "pin_3",
+        "pin_4",
+        "pin_5",
+        "pin_6",
+        "pin_7",
+        "pin_8",
+        "pin_9"
+      ],
+      "parts": 19,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "review_claim": "2026-08-13T00:01:11+03:00",
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_lazy_tongs/sheet_s.png",
+      "stationary": [
+        "frame",
+        "pin_0"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": true,
+      "category": "linkages",
+      "group": "movements",
+      "id": "demo_pantograph",
+      "kind": "animate",
+      "moving": [
+        "bar_closer",
+        "bar_output",
+        "bar_pivot",
+        "bar_stylus",
+        "output_point",
+        "pin_a",
+        "pin_c",
+        "pin_d",
+        "stylus_pin"
+      ],
+      "parts": 11,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "review_claim": "2026-08-13T00:01:11+03:00",
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_pantograph/sheet_s.png",
+      "stationary": [
+        "base_pad",
+        "pin_f"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": true,
+      "category": "linkages",
+      "group": "movements",
+      "id": "demo_peaucellier",
+      "kind": "animate",
+      "moving": [
+        "anchor_link_a",
+        "anchor_link_b",
+        "crank",
+        "pin_a",
+        "pin_b",
+        "pin_p",
+        "rhombus_aq",
+        "rhombus_bq",
+        "rhombus_pa",
+        "rhombus_pb",
+        "tracer_q"
+      ],
+      "parts": 14,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "review_claim": "2026-08-13T00:01:11+03:00",
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_peaucellier/sheet_s.png",
+      "stationary": [
+        "ground_link",
+        "pin_c",
+        "pin_o"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": true,
+      "category": "cams",
+      "group": "movements",
+      "id": "demo_plate_cam",
+      "kind": "animate",
+      "moving": [
+        "follower_stem",
+        "roller"
+      ],
+      "parts": 3,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "review_claim": "2026-08-13T00:01:11+03:00",
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_plate_cam/sheet_s.png",
+      "stationary": [
+        "plate_cam"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": true,
+      "category": "linkages",
+      "group": "movements",
+      "id": "demo_quick_return",
+      "kind": "animate",
+      "moving": [
+        "crank_pin",
+        "slotted_lever"
+      ],
+      "parts": 6,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "review_claim": "2026-08-13T00:01:11+03:00",
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_quick_return/sheet_s.png",
+      "stationary": [
+        "base",
+        "crank_disc",
+        "pin_crank",
+        "pin_lever"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": true,
+      "category": "linear",
+      "group": "movements",
+      "id": "demo_rack_pinion",
+      "kind": "animate",
+      "moving": [
+        "rack"
+      ],
+      "parts": 2,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_rack_pinion/sheet_s.png",
+      "stationary": [
+        "pinion"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": true,
+      "category": "gears",
+      "group": "movements",
+      "id": "demo_ring_gear_mesh",
+      "kind": "animate",
+      "moving": [],
+      "parts": 2,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "rereview_reason": "anti-alias phase resample",
+      "review_claim": null,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_ring_gear_mesh/sheet_s.png",
+      "stationary": [
+        "internal_ring_gear",
+        "ring_pinion"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": true,
+      "category": "fluid",
+      "group": "movements",
+      "id": "demo_rotary_spool_valve",
+      "kind": "animate",
+      "moving": [],
+      "parts": 3,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_rotary_spool_valve/sheet_s.png",
+      "stationary": [
+        "spool_valve_body",
+        "spool_valve_cap",
+        "spool_valve_plug"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": true,
+      "category": "linkages",
+      "group": "movements",
+      "id": "demo_sarrus",
+      "kind": "animate",
+      "moving": [
+        "chain_a_lower",
+        "chain_a_upper",
+        "chain_b_lower",
+        "chain_b_upper",
+        "hinge_pin_2",
+        "hinge_pin_3",
+        "hinge_pin_4",
+        "hinge_pin_5",
+        "platform"
+      ],
+      "parts": 12,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_sarrus/sheet_s.png",
+      "stationary": [
+        "base_plate",
+        "hinge_pin_0",
+        "hinge_pin_1"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": true,
+      "category": "linkages",
+      "group": "movements",
+      "id": "demo_scotch_yoke",
+      "kind": "animate",
+      "moving": [
+        "crank_pin",
+        "slotted_yoke"
+      ],
+      "parts": 5,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_scotch_yoke/sheet_s.png",
+      "stationary": [
+        "crank_disc",
+        "rail_a",
+        "rail_b"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": true,
+      "category": "linkages",
+      "group": "movements",
+      "id": "demo_scott_russell",
+      "kind": "animate",
+      "moving": [
+        "bar",
+        "crank",
+        "pin_1",
+        "pin_2",
+        "slider",
+        "tracer"
+      ],
+      "parts": 8,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_scott_russell/sheet_s.png",
+      "stationary": [
+        "base",
+        "pin_0"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": true,
+      "category": "linear",
+      "group": "movements",
+      "id": "demo_screw_jack",
+      "kind": "animate",
+      "moving": [
+        "pad"
+      ],
+      "parts": 3,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_screw_jack/sheet_s.png",
+      "stationary": [
+        "base",
+        "screw"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": true,
+      "category": "linkages",
+      "group": "movements",
+      "id": "demo_slider_crank",
+      "kind": "animate",
+      "moving": [
+        "conrod",
+        "pin_1",
+        "pin_2",
+        "slider"
+      ],
+      "parts": 7,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_slider_crank/sheet_s.png",
+      "stationary": [
+        "base",
+        "crank_disc",
+        "pin_0"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": true,
+      "category": "cams",
+      "group": "movements",
+      "id": "demo_snail_cam",
+      "kind": "animate",
+      "moving": [
+        "follower_stem",
+        "roller"
+      ],
+      "parts": 3,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_snail_cam/sheet_s.png",
+      "stationary": [
+        "snail_cam"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": true,
+      "category": "gears",
+      "group": "movements",
+      "id": "demo_spur_gear_mesh",
+      "kind": "animate",
+      "moving": [],
+      "parts": 1,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "rereview_reason": "anti-alias phase resample",
+      "review_claim": null,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_spur_gear_mesh/sheet_s.png",
+      "stationary": [
+        "20_tooth_gear"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": true,
+      "category": "gears",
+      "group": "movements",
+      "id": "demo_spur_gear_pair",
+      "kind": "animate",
+      "moving": [],
+      "parts": 2,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "rereview_reason": "anti-alias phase resample",
+      "review_claim": null,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_spur_gear_pair/sheet_s.png",
+      "stationary": [
+        "18_tooth_driver",
+        "28_tooth_driven"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": true,
+      "category": "linear",
+      "group": "movements",
+      "id": "demo_swash_plate",
+      "kind": "animate",
+      "moving": [
+        "shoe_0",
+        "shoe_1",
+        "shoe_2",
+        "shoe_3"
+      ],
+      "parts": 6,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_swash_plate/sheet_s.png",
+      "stationary": [
+        "plate",
+        "shaft"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": true,
+      "category": "linkages",
+      "group": "movements",
+      "id": "demo_toggle_clamp",
+      "kind": "animate",
+      "moving": [
+        "clamp_arm",
+        "connecting_link",
+        "handle",
+        "pin_joint",
+        "pin_knee"
+      ],
+      "parts": 8,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_toggle_clamp/sheet_s.png",
+      "stationary": [
+        "base",
+        "pin_arm",
+        "pin_handle"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": true,
+      "category": "couplings",
+      "group": "movements",
+      "id": "demo_tripod_cv_joint",
+      "kind": "animate",
+      "moving": [],
+      "parts": 4,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_tripod_cv_joint/sheet_s.png",
+      "stationary": [
+        "crowned_barrels",
+        "tripod_input_shaft",
+        "tripod_spider",
+        "tulip_housing"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": true,
+      "category": "linkages",
+      "group": "movements",
+      "id": "demo_watt",
+      "kind": "animate",
+      "moving": [
+        "coupler",
+        "lever_a",
+        "lever_b",
+        "pin_2",
+        "pin_3",
+        "tracer_point"
+      ],
+      "parts": 9,
+      "priority": 0,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_watt/sheet_s.png",
+      "stationary": [
+        "ground_link",
+        "pin_0",
+        "pin_1"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "ratchets",
+      "group": "movements",
+      "id": "demo_arc_ratchet",
+      "kind": "movement",
+      "moving": [],
+      "parts": 2,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_arc_ratchet/sheet_s.png",
+      "stationary": [
+        "arc_flexure_hub",
+        "arc_ring"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "linear",
+      "group": "movements",
+      "id": "demo_archimedes_screw",
+      "kind": "movement",
+      "moving": [],
+      "parts": 2,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_archimedes_screw/sheet_s.png",
+      "stationary": [
+        "half_pipe_trough",
+        "screw_flight"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "joints",
+      "group": "movements",
+      "id": "demo_ball_socket_joint",
+      "kind": "movement",
+      "moving": [],
+      "parts": 2,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_ball_socket_joint/sheet_s.png",
+      "stationary": [
+        "ball_stud",
+        "socket_cup"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "pulleys",
+      "group": "movements",
+      "id": "demo_belt_tensioner",
+      "kind": "movement",
+      "moving": [],
+      "parts": 2,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_belt_tensioner/sheet_s.png",
+      "stationary": [
+        "idler",
+        "tensioner_arm"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "fluid",
+      "group": "movements",
+      "id": "demo_check_valve",
+      "kind": "movement",
+      "moving": [],
+      "parts": 2,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_check_valve/sheet_s.png",
+      "stationary": [
+        "body",
+        "cap"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "joints",
+      "group": "movements",
+      "id": "demo_clevis",
+      "kind": "movement",
+      "moving": [],
+      "parts": 3,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_clevis/sheet_s.png",
+      "stationary": [
+        "eye",
+        "fork",
+        "pin"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "grippers",
+      "group": "movements",
+      "id": "demo_collet_chuck",
+      "kind": "movement",
+      "moving": [],
+      "parts": 3,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_collet_chuck/sheet_s.png",
+      "stationary": [
+        "spindle_nose",
+        "split_collet",
+        "taper_nut"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "ratchets",
+      "group": "movements",
+      "id": "demo_compliant_clutch",
+      "kind": "movement",
+      "moving": [],
+      "parts": 2,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_compliant_clutch/sheet_s.png",
+      "stationary": [
+        "clutch_race",
+        "flexure_hub"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "indexing",
+      "group": "movements",
+      "id": "demo_detent_pair",
+      "kind": "movement",
+      "moving": [],
+      "parts": 3,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_detent_pair/sheet_s.png",
+      "stationary": [
+        "housing",
+        "plunger",
+        "wheel"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "linear",
+      "group": "movements",
+      "id": "demo_differential_screw",
+      "kind": "movement",
+      "moving": [],
+      "parts": 3,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_differential_screw/sheet_s.png",
+      "stationary": [
+        "frame_nut",
+        "moving_nut",
+        "twin_pitch_shaft"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "couplings",
+      "group": "movements",
+      "id": "demo_double_cardan_joint",
+      "kind": "movement",
+      "moving": [],
+      "parts": 5,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_double_cardan_joint/sheet_s.png",
+      "stationary": [
+        "cardan_input_yoke",
+        "cardan_intermediate",
+        "cardan_output_yoke",
+        "cardan_spider_in",
+        "cardan_spider_out"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "chains",
+      "group": "movements",
+      "id": "demo_drag_chain",
+      "kind": "movement",
+      "moving": [],
+      "parts": 24,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_drag_chain/sheet_s.png",
+      "stationary": [
+        "lid_00",
+        "lid_01",
+        "lid_02",
+        "lid_03",
+        "lid_04",
+        "lid_05",
+        "lid_06",
+        "lid_07",
+        "link_00",
+        "link_01",
+        "link_02",
+        "link_03",
+        "link_04",
+        "link_05",
+        "link_06",
+        "link_07",
+        "pin_00",
+        "pin_01",
+        "pin_02",
+        "pin_03",
+        "pin_04",
+        "pin_05",
+        "pin_06",
+        "pin_07"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "chains",
+      "group": "movements",
+      "id": "demo_drag_chain_link",
+      "kind": "movement",
+      "moving": [],
+      "parts": 3,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_drag_chain_link/sheet_s.png",
+      "stationary": [
+        "lid",
+        "link",
+        "pin"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "pulleys",
+      "group": "movements",
+      "id": "demo_eccentric_idler_mount",
+      "kind": "movement",
+      "moving": [],
+      "parts": 2,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_eccentric_idler_mount/sheet_s.png",
+      "stationary": [
+        "bushing",
+        "idler"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "drives",
+      "group": "movements",
+      "id": "demo_flat_worm_pair",
+      "kind": "movement",
+      "moving": [],
+      "parts": 2,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_flat_worm_pair/sheet_s.png",
+      "stationary": [
+        "flat_input_worm",
+        "helical_wheel_band"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "clutches",
+      "group": "movements",
+      "id": "demo_freewheel_clutch",
+      "kind": "movement",
+      "moving": [],
+      "parts": 8,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_freewheel_clutch/sheet_s.png",
+      "stationary": [
+        "inner_hub",
+        "ramp_pocket_ring",
+        "roller_0",
+        "roller_1",
+        "roller_2",
+        "roller_3",
+        "roller_4",
+        "roller_5"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "drives",
+      "group": "movements",
+      "id": "demo_harmonic_drive",
+      "kind": "movement",
+      "moving": [],
+      "parts": 3,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_harmonic_drive/sheet_s.png",
+      "stationary": [
+        "circular_spline",
+        "flex_spline",
+        "wave_generator"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "couplings",
+      "group": "movements",
+      "id": "demo_hirth_coupling",
+      "kind": "movement",
+      "moving": [],
+      "parts": 2,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_hirth_coupling/sheet_s.png",
+      "stationary": [
+        "hub_a",
+        "hub_b"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "pulleys",
+      "group": "movements",
+      "id": "demo_idler_pulley",
+      "kind": "movement",
+      "moving": [],
+      "parts": 2,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_idler_pulley/sheet_s.png",
+      "stationary": [
+        "driver_pulley",
+        "idler"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "indexing",
+      "group": "movements",
+      "id": "demo_intermittent_gear_pair",
+      "kind": "movement",
+      "moving": [],
+      "parts": 2,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_intermittent_gear_pair/sheet_s.png",
+      "stationary": [
+        "mutilated_driver",
+        "notched_driven"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "grippers",
+      "group": "movements",
+      "id": "demo_iris_diaphragm",
+      "kind": "movement",
+      "moving": [],
+      "parts": 9,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_iris_diaphragm/sheet_s.png",
+      "stationary": [
+        "base_ring",
+        "drive_ring",
+        "leaf_0",
+        "leaf_1",
+        "leaf_2",
+        "leaf_3",
+        "leaf_4",
+        "leaf_5",
+        "retainer_cap"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "couplings",
+      "group": "movements",
+      "id": "demo_jaw_coupling",
+      "kind": "movement",
+      "moving": [],
+      "parts": 3,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_jaw_coupling/sheet_s.png",
+      "stationary": [
+        "elastomer_spider",
+        "jaw_hub_a",
+        "jaw_hub_b"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "joints",
+      "group": "movements",
+      "id": "demo_knuckle_hinge",
+      "kind": "movement",
+      "moving": [],
+      "parts": 2,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_knuckle_hinge/sheet_s.png",
+      "stationary": [
+        "hinge_leaf_fixed",
+        "hinge_leaf_swinging"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "linear",
+      "group": "movements",
+      "id": "demo_lead_screw",
+      "kind": "movement",
+      "moving": [],
+      "parts": 2,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_lead_screw/sheet_s.png",
+      "stationary": [
+        "nut",
+        "screw"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "flexures",
+      "group": "movements",
+      "id": "demo_leaf_spring",
+      "kind": "movement",
+      "moving": [],
+      "parts": 4,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_leaf_spring/sheet_s.png",
+      "stationary": [
+        "leaf_1",
+        "leaf_2",
+        "leaf_3",
+        "leaf_clamp"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "guides",
+      "group": "movements",
+      "id": "demo_linear_way",
+      "kind": "movement",
+      "moving": [],
+      "parts": 3,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_linear_way/sheet_s.png",
+      "stationary": [
+        "way_carriage",
+        "way_gib",
+        "way_rail"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "couplings",
+      "group": "movements",
+      "id": "demo_oldham_coupling",
+      "kind": "movement",
+      "moving": [],
+      "parts": 3,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_oldham_coupling/sheet_s.png",
+      "stationary": [
+        "cross_slotted_disc",
+        "tongue_hub_a",
+        "tongue_hub_b"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "fluid",
+      "group": "movements",
+      "id": "demo_peristaltic_pump_head",
+      "kind": "movement",
+      "moving": [],
+      "parts": 3,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_peristaltic_pump_head/sheet_s.png",
+      "stationary": [
+        "peristaltic_body",
+        "peristaltic_cap",
+        "peristaltic_rotor"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "ratchets",
+      "group": "movements",
+      "id": "demo_pip_ratchet",
+      "kind": "movement",
+      "moving": [],
+      "parts": 2,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_pip_ratchet/sheet_s.png",
+      "stationary": [
+        "accordion_hub",
+        "undercut_ring"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "drives",
+      "group": "movements",
+      "id": "demo_planet_stage",
+      "kind": "movement",
+      "moving": [],
+      "parts": 6,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_planet_stage/sheet_s.png",
+      "stationary": [
+        "carrier",
+        "planet_0",
+        "planet_1",
+        "planet_2",
+        "ring",
+        "sun"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "ratchets",
+      "group": "movements",
+      "id": "demo_ratchet_wheel_pawl",
+      "kind": "movement",
+      "moving": [],
+      "parts": 3,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_ratchet_wheel_pawl/sheet_s.png",
+      "stationary": [
+        "pawl",
+        "spring",
+        "wheel"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "chains",
+      "group": "movements",
+      "id": "demo_roller_chain",
+      "kind": "movement",
+      "moving": [],
+      "parts": 10,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_roller_chain/sheet_s.png",
+      "stationary": [
+        "roller_00",
+        "roller_01",
+        "roller_02",
+        "roller_03",
+        "roller_04",
+        "roller_05",
+        "roller_06",
+        "roller_07",
+        "roller_08",
+        "sprocket"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "chains",
+      "group": "movements",
+      "id": "demo_roller_chain_link",
+      "kind": "movement",
+      "moving": [],
+      "parts": 5,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_roller_chain_link/sheet_s.png",
+      "stationary": [
+        "bushing",
+        "inner_plate",
+        "outer_plate",
+        "pin",
+        "roller"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "cams",
+      "group": "movements",
+      "id": "demo_roller_follower",
+      "kind": "movement",
+      "moving": [],
+      "parts": 3,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_roller_follower/sheet_s.png",
+      "stationary": [
+        "arm",
+        "pin",
+        "roller"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "gears",
+      "group": "movements",
+      "id": "demo_roller_sprocket",
+      "kind": "movement",
+      "moving": [],
+      "parts": 2,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_roller_sprocket/sheet_s.png",
+      "stationary": [
+        "pitch_circle_pins",
+        "roller_sprocket"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "linear",
+      "group": "movements",
+      "id": "demo_scroll_drive",
+      "kind": "movement",
+      "moving": [],
+      "parts": 4,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_scroll_drive/sheet_s.png",
+      "stationary": [
+        "scroll_jaw_0",
+        "scroll_jaw_1",
+        "scroll_jaw_2",
+        "scroll_plate"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "flexures",
+      "group": "movements",
+      "id": "demo_spiral_power_spring",
+      "kind": "movement",
+      "moving": [],
+      "parts": 3,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_spiral_power_spring/sheet_s.png",
+      "stationary": [
+        "mainspring_arbor",
+        "mainspring_barrel",
+        "mainspring_strip"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "ratchets",
+      "group": "movements",
+      "id": "demo_spring_cartridge_ratchet",
+      "kind": "movement",
+      "moving": [],
+      "parts": 5,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_spring_cartridge_ratchet/sheet_s.png",
+      "stationary": [
+        "cartridge_hub",
+        "cartridge_ring",
+        "pawl_0",
+        "pawl_1",
+        "pawl_2"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "guides",
+      "group": "movements",
+      "id": "demo_telescoping_stage",
+      "kind": "movement",
+      "moving": [],
+      "parts": 3,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_telescoping_stage/sheet_s.png",
+      "stationary": [
+        "stage_section_0",
+        "stage_section_1",
+        "stage_section_2"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "pulleys",
+      "group": "movements",
+      "id": "demo_timing_pulley",
+      "kind": "movement",
+      "moving": [],
+      "parts": 2,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_timing_pulley/sheet_s.png",
+      "stationary": [
+        "belt_segment",
+        "gt2_pulley"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "clutches",
+      "group": "movements",
+      "id": "demo_torque_limiter",
+      "kind": "movement",
+      "moving": [],
+      "parts": 3,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_torque_limiter/sheet_s.png",
+      "stationary": [
+        "detent_driver",
+        "pocket_driven",
+        "preload_spring"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "couplings",
+      "group": "movements",
+      "id": "demo_universal_joint",
+      "kind": "movement",
+      "moving": [],
+      "parts": 3,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_universal_joint/sheet_s.png",
+      "stationary": [
+        "cross_spider",
+        "fork_yoke_input",
+        "fork_yoke_output"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "pulleys",
+      "group": "movements",
+      "id": "demo_winch_drum",
+      "kind": "movement",
+      "moving": [],
+      "parts": 2,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_winch_drum/sheet_s.png",
+      "stationary": [
+        "cable",
+        "grooved_drum"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "gears",
+      "group": "movements",
+      "id": "demo_worm",
+      "kind": "movement",
+      "moving": [],
+      "parts": 2,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_worm/sheet_s.png",
+      "stationary": [
+        "helical_wheel",
+        "worm"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "drives",
+      "group": "movements",
+      "id": "demo_worm_coupon",
+      "kind": "movement",
+      "moving": [],
+      "parts": 2,
+      "priority": 1,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_worm_coupon/sheet_s.png",
+      "stationary": [
+        "coupon_wheel_band",
+        "coupon_worm"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "couplings",
+      "group": "movements",
+      "id": "demo_beam_coupling",
+      "kind": "movement",
+      "moving": [],
+      "parts": 1,
+      "priority": 2,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_beam_coupling/sheet_s.png",
+      "stationary": [
+        "beam_coupling"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "flexures",
+      "group": "movements",
+      "id": "demo_belleville_washer",
+      "kind": "movement",
+      "moving": [],
+      "parts": 1,
+      "priority": 2,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_belleville_washer/sheet_s.png",
+      "stationary": [
+        "belleville_stack"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "grippers",
+      "group": "movements",
+      "id": "demo_bellows_suction_cup",
+      "kind": "movement",
+      "moving": [],
+      "parts": 1,
+      "priority": 2,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_bellows_suction_cup/sheet_s.png",
+      "stationary": [
+        "bellows_suction_cup"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "flexures",
+      "group": "movements",
+      "id": "demo_bistable_beam",
+      "kind": "movement",
+      "moving": [],
+      "parts": 1,
+      "priority": 2,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_bistable_beam/sheet_s.png",
+      "stationary": [
+        "bistable_switch"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "flexures",
+      "group": "movements",
+      "id": "demo_coil_spring",
+      "kind": "movement",
+      "moving": [],
+      "parts": 1,
+      "priority": 2,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_coil_spring/sheet_s.png",
+      "stationary": [
+        "coil_spring"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "flexures",
+      "group": "movements",
+      "id": "demo_cross_flexure",
+      "kind": "movement",
+      "moving": [],
+      "parts": 1,
+      "priority": 2,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_cross_flexure/sheet_s.png",
+      "stationary": [
+        "cross_flexure_pivot"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "flexures",
+      "group": "movements",
+      "id": "demo_flexure_stage",
+      "kind": "movement",
+      "moving": [],
+      "parts": 1,
+      "priority": 2,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_flexure_stage/sheet_s.png",
+      "stationary": [
+        "flexure_stage"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "drives",
+      "group": "movements",
+      "id": "demo_flywheel",
+      "kind": "movement",
+      "moving": [],
+      "parts": 1,
+      "priority": 2,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_flywheel/sheet_s.png",
+      "stationary": [
+        "flywheel"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "pulleys",
+      "group": "movements",
+      "id": "demo_fusee",
+      "kind": "movement",
+      "moving": [],
+      "parts": 1,
+      "priority": 2,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_fusee/sheet_s.png",
+      "stationary": [
+        "fusee_cone"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "fluid",
+      "group": "movements",
+      "id": "demo_hose_barb",
+      "kind": "movement",
+      "moving": [],
+      "parts": 1,
+      "priority": 2,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_hose_barb/sheet_s.png",
+      "stationary": [
+        "hose_barb"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "drives",
+      "group": "movements",
+      "id": "demo_printed_worm",
+      "kind": "movement",
+      "moving": [],
+      "parts": 1,
+      "priority": 2,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_printed_worm/sheet_s.png",
+      "stationary": [
+        "journalled_worm"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "gears",
+      "group": "movements",
+      "id": "demo_rack_2d",
+      "kind": "movement",
+      "moving": [],
+      "parts": 1,
+      "priority": 2,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_rack_2d/sheet_s.png",
+      "stationary": [
+        "eight_tooth_rack"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "gears",
+      "group": "movements",
+      "id": "demo_ring_gear",
+      "kind": "movement",
+      "moving": [],
+      "parts": 1,
+      "priority": 2,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_ring_gear/sheet_s.png",
+      "stationary": [
+        "internal_ring_gear"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "gears",
+      "group": "movements",
+      "id": "demo_spur_gear_sector",
+      "kind": "movement",
+      "moving": [],
+      "parts": 1,
+      "priority": 2,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_spur_gear_sector/sheet_s.png",
+      "stationary": [
+        "sector_gear"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "indexing",
+      "group": "movements",
+      "id": "demo_star_wheel",
+      "kind": "movement",
+      "moving": [],
+      "parts": 1,
+      "priority": 2,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_star_wheel/sheet_s.png",
+      "stationary": [
+        "star_wheel"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "pulleys",
+      "group": "movements",
+      "id": "demo_v_belt_pulley",
+      "kind": "movement",
+      "moving": [],
+      "parts": 1,
+      "priority": 2,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_v_belt_pulley/sheet_s.png",
+      "stationary": [
+        "v_belt_pulley"
+      ],
+      "verdict": null
+    },
+    {
+      "animated": false,
+      "category": "flexures",
+      "group": "movements",
+      "id": "demo_wave_spring",
+      "kind": "movement",
+      "moving": [],
+      "parts": 1,
+      "priority": 2,
+      "render_error": null,
+      "rendered": true,
+      "reviewed": false,
+      "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_wave_spring/sheet_s.png",
+      "stationary": [
+        "crest_to_crest_spring"
+      ],
+      "verdict": null
+    }
+  ],
+  "updated": "2026-08-13T00:01:11+03:00"
+}

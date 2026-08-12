@@ -1,0 +1,14 @@
+{
+  "bodies_that_look_frozen": [
+    "base",
+    "pin_0"
+  ],
+  "cycle_closes": true,
+  "demo": "demo_bell_crank",
+  "issues": [],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Pink two-arm crank rotates on the fixed base pivot; orange and green links stay pinned to the arms and sweep a full pose cycle without detaching.",
+  "notes": "pose_deg is swept through nearly 360 rather than a limited rocker stroke; that matches the demo param. Ground plate stays put.",
+  "verdict": "pass"
+}

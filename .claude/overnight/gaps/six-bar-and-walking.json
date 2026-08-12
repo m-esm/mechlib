@@ -1,0 +1,138 @@
+{
+  "candidates": [
+    {
+      "already": null,
+      "api_shape": "watt_six_pose(kind='I'|'II', lengths..., crank_angle_deg, branch) / watt_six(...) -> named bars, pins, joints",
+      "fdm": "Six capsule bars (two of them ternary plates with three bores). Stack like four_bar so loops do not occupy one Z slab. All revolute, all flat.",
+      "mechlib_fit": "yes",
+      "name": "watt_six",
+      "priority": "high",
+      "why": "Generic Watt I / Watt II pose+kit. Sewing-machine needle bars, punch-press rams, Watt-II function generators, and any 1-DOF machine that stacks two 4-bar loops on a shared ternary. This is the missing topology, not a walking robot."
+    },
+    {
+      "already": null,
+      "api_shape": "stephenson_pose(kind='I'|'II'|'III', l_*, crank_angle_deg, branch) / stephenson(...) ; kind='III' is the default",
+      "fdm": "Same stacked-bar kit as watt_six. Stephenson III is the most FDM-common (Klann prints).",
+      "mechlib_fit": "yes",
+      "name": "stephenson",
+      "priority": "high",
+      "why": "Generic Stephenson I / II / III pose+kit (4-bar loop plus a dyad on the coupler). Parent of Klann (III), used as function generators and dwell linkages. Without this, every 6-bar walk or press is a one-off."
+    },
+    {
+      "already": null,
+      "api_shape": "klann_pose(unit, crank_angle_deg, branch) / klann_linkage(unit=..., width, thickness, bore_d) pinning patent-scaled lengths (crank=3 in DIY Walkers units)",
+      "fdm": "Hobby FDM staple (Instructables walking robot, laser-cut lobster bots, DIY Walkers). Flat bars, printed pins, one motor. Clearances at the knee/elbow need the same layer_gap treatment as four_bar.",
+      "mechlib_fit": "yes",
+      "name": "klann_linkage",
+      "priority": "high",
+      "why": "Stephenson III walking leg: crank + two grounded rockers + two couplers, foot traces a long nearly-linear stance then lifts. Wheel replacement for stair/curb/soft ground without a servo per joint. Patent coordinates exist (US 6,260,862)."
+    },
+    {
+      "already": null,
+      "api_shape": "jansen_pose(unit, crank_angle_deg) / jansen_leg(unit=..., width, thickness, bore_d) with the Wikipedia a..m ratios as defaults",
+      "fdm": "Widely printed as an educational model (Printables). Eleven bars, all revolute, all flat. Pin count is high but the four_bar stack pattern scales. Scale the 38/41.5/... set by a unit.",
+      "mechlib_fit": "yes",
+      "name": "jansen_leg",
+      "priority": "high",
+      "why": "Theo Jansen 8-bar (11 published segment lengths a..m) 1-DOF walking leg. Rotary crank in, ovoid foot path out. The reusable primitive is one leg, not a Strandbeest."
+    },
+    {
+      "already": "watt_linkage",
+      "api_shape": "watt_parallel_motion(lever_a, lever_b, coupler, copy_len, lever_angle_deg, ...) -> watt bodies plus copy bars and remote tracer",
+      "fdm": "Add three bars (parallelogram) on extra Z slabs. Same pins. Historical and still used wherever a nearly straight line must be delivered away from the 4-bar.",
+      "mechlib_fit": "yes",
+      "name": "watt_parallel_motion",
+      "priority": "high",
+      "why": "The steam-engine mechanism: Watt 4-bar tracer copied by a parallelogram to a remote piston line. Wikipedia's worked Watt six-bar. watt_linkage today is only the 4-bar; the copy stage is missing."
+    },
+    {
+      "already": "four_bar",
+      "api_shape": "walking_beam(l_crank, l_pitman, l_beam_aft, l_beam_fore, horsehead_r, crank_angle_deg, ...)",
+      "fdm": "Flat beam with three bores plus an optional circular horsehead rib. Crank and pitman are ordinary bars. The concrete skid, gearbox, and counterweight stay out.",
+      "mechlib_fit": "yes",
+      "name": "walking_beam",
+      "priority": "med",
+      "why": "Pumpjack / nodder / beam-engine rocker: a long ternary beam, crank + pitman on one side, horsehead arc (or pin) on the other so the hanging rod stays near-vertical. Kinematically a 4-bar with a shaped rocker, not a six-bar, but it is the usual 'walking-beam' request."
+    },
+    {
+      "already": null,
+      "api_shape": "hart_inversor_pose(unit, crank_angle_deg) / hart_inversor(...) ; leave the A-frame 8-bar to the straight-line slice",
+      "fdm": "Antiparallelogram plus two side links. Crossing bars need separate Z slabs (same as anti_parallelogram / chebyshev). Prints flat.",
+      "mechlib_fit": "yes",
+      "name": "hart_inversor",
+      "priority": "med",
+      "why": "Hart's first inversor (6-bar antiparallelogram / W-frame): exact straight line with fewer bars than Peaucellier. Six-bar family member; the straight-line slice should own the deep write-up."
+    },
+    {
+      "already": "chebyshev_linkage",
+      "api_shape": null,
+      "fdm": "Two lambda kits on one crank shaft. Prints, but it is a composition more than a new semi-primitive.",
+      "mechlib_fit": "maybe",
+      "name": "plantigrade_leg",
+      "priority": "low",
+      "why": "Chebyshev plantigrade: two (or more) lambda 4-bars coupled so a foot plants and lifts. The primitive is already chebyshev_linkage. A thin coupler that shares the crank between two lambdas is an assembly, close to a finished walker."
+    },
+    {
+      "already": "sarrus_linkage",
+      "api_shape": null,
+      "fdm": "Covered.",
+      "mechlib_fit": "no",
+      "name": "sarrus_spatial_six_bar",
+      "priority": "low",
+      "why": "Sarrus is a spatial 6-bar (two orthogonal 4-bar hinge chains, exact Z translation). Already sarrus_pose / sarrus_linkage."
+    }
+  ],
+  "id": "six-bar-and-walking",
+  "new_categories": [
+    {
+      "name": "leg_mechanisms",
+      "why": "Walking-leg kits (Klann, Jansen, plantigrade, walking-beam) are a distinct agent job from general bar linkages. four_bar's usecase currently dumps 'walking-robot legs' onto a generic crank-rocker. A movements-group category would let gallery cards and search_use_cases hit the right primitive."
+    }
+  ],
+  "rejected": [
+    {
+      "name": "strandbeest",
+      "why": "Multi-leg Jansen chassis with spine, sails, and gait phasing. Finished kinetic sculpture / walking robot. The reusable part is jansen_leg."
+    },
+    {
+      "name": "klann_walker_chassis",
+      "why": "Paired or hexapod Klann frames (Mondo Spider, lobsterbot). Product. The reusable part is klann_linkage."
+    },
+    {
+      "name": "pumpjack_unit",
+      "why": "Complete oilfield pumping unit (gearbox, counterweight, samson post, concrete base). Product. The reusable part is walking_beam."
+    },
+    {
+      "name": "trotbot_ghassaei",
+      "why": "Later walking sculptures / optimized 8-bar walkers. Either a finished robot or a one-off length set with no textbook status comparable to Klann or Jansen."
+    },
+    {
+      "name": "bicycle_six_bar_suspension",
+      "why": "Horst-link / VPP / similar. Project-bound bicycle geometry, not a reusable FDM kit."
+    },
+    {
+      "name": "stephenson_valve_gear",
+      "why": "Locomotive valve gear. Spatial, product-scale, and historically named after Stephenson without being a clean Stephenson I/II/III planar kit."
+    },
+    {
+      "name": "whippletree",
+      "why": "Force-equalizing bar, not a walking or 6-bar topology. Different family."
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Six-bar_linkage",
+    "https://en.wikipedia.org/wiki/Klann_linkage",
+    "https://en.wikipedia.org/wiki/Jansen%27s_linkage",
+    "https://en.wikipedia.org/wiki/Chebyshev_lambda_linkage",
+    "https://www.diywalkers.com/klanns-linkage-plans.html",
+    "https://www.instructables.com/3D-Printed-Walking-Robot-Klann-Linkage/",
+    "https://www.printables.com/model/1503557-educational-model-of-theo-jansen-mechanism",
+    "https://patents.google.com/patent/US6260862",
+    "McCarthy & Soh, Geometric Design of Linkages, 2nd ed. (Watt / Stephenson topologies)",
+    "Norton, Design of Machinery; Sclater, Mechanisms and Mechanical Devices Sourcebook",
+    "https://www.mdpi.com/2076-3417/14/19/8919",
+    "https://www.firgelliauto.com/blogs/mechanisms/chebyshev-plantigrade-machine"
+  ],
+  "summary": "A 1-DOF planar six-bar is six links and seven joints. There are two distinct chains: Watt (two ternary links share a joint, two 4-bar loops) and Stephenson (ternaries are separated by a binary, one 4-bar loop plus one 5-bar loop). Grounding each chain gives Watt I/II and Stephenson I/II/III. Those five topologies are the reusable kits. Named machines sit on top of them: Klann is a Stephenson III walking leg (Joe Klann 1994, US 6,260,862), Watt's historical parallel motion is a Watt 4-bar plus a parallelogram that copies the tracer to a remote piston line, and Hart's first inversor is a 6-bar antiparallelogram exact straight-line. mechlib has no Watt or Stephenson pose solver. What it does have is four_bar, the Watt 4-bar (watt_linkage, not the six-bar), Chebyshev lambda, Sarrus (a spatial 6-bar with two orthogonal hinge chains), pantograph, lazy-tongs, and Peaucellier (8-bar). Walking is where people usually ask next. A single Klann or Jansen leg is a semi-primitive: one rotary input, a published length set, flat bars, FDM-proven. A multi-leg chassis, Strandbeest, or hexapod is a finished walking robot and stays out. Pumpjack / walking-beam is a 4-bar with a long ternary rocker and a horsehead arc, not a six-bar; the kinematic core is new geometry on four_bar, the skid-and-gearbox unit is a product. Chebyshev's plantigrade machine is an assembly of lambda 4-bars already in-tree. Bicycle rear-suspension 6-bars and TrotBot/Ghassaei sculptures are project-bound or finished machines.",
+  "title": "Six-bar, walking, and animal-motion linkages"
+}

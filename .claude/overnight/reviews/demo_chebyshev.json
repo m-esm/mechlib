@@ -1,0 +1,15 @@
+{
+  "bodies_that_look_frozen": [
+    "ground",
+    "pin_0",
+    "pin_1"
+  ],
+  "cycle_closes": true,
+  "demo": "demo_chebyshev",
+  "issues": [],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Lambda four-bar rocks through a sine stroke: mid poses at 0/180 match, the two extremes pair as 60/120 and 240/300, coupler and orange tracer travel while the blue ground stays put.",
+  "notes": "drive_deg is a closed sine swing about the mid angle, not a full crank turn. Last column sits on the same extreme as 240 and would return to mid at 360. Joints stay assembled; no jumps.",
+  "verdict": "pass"
+}

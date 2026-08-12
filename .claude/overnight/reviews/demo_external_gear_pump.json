@@ -1,0 +1,19 @@
+{
+  "bodies_that_look_frozen": [
+    "body",
+    "cap"
+  ],
+  "cycle_closes": true,
+  "demo": "demo_external_gear_pump",
+  "issues": [
+    {
+      "severity": "low",
+      "what": "Side and front rows are visually identical across phase; mesh rotation is only readable through the iso cap ports. meta.moving is empty because centroid travel is ~0."
+    }
+  ],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Figure-eight body and cap stay put while red and green flashes in the cap ports walk around the holes, showing the two internal gears turning in place.",
+  "notes": "Port flashes repeat every 180 deg (0~180, 60~240, 120~300), consistent with an even-tooth gear spinning. Housing never drifts. Last column continues the port walk.",
+  "verdict": "pass"
+}

@@ -1,0 +1,180 @@
+{
+  "items": [
+    {
+      "candidate_count": 7,
+      "claimed_at": "2026-08-12T23:52:58+03:00",
+      "completed_at": "2026-08-12T23:55:58+03:00",
+      "id": "kinematic-pairs",
+      "new_categories": [],
+      "prompt": "Reuleaux / IFToMM pairs: revolute, prismatic, helical, cylindrical, spherical, planar, plus higher pairs (cam-follower, gear mesh, rolling contact). Which pairs have a mechlib semi-primitive, which are only implied by a larger assembly, and which pair-level generators are missing?",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/kinematic-pairs.json",
+      "status": "done",
+      "title": "Lower and higher kinematic pairs"
+    },
+    {
+      "candidate_count": 12,
+      "claimed_at": "2026-08-12T23:53:36+03:00",
+      "completed_at": "2026-08-12T23:58:09+03:00",
+      "id": "planar-four-bar",
+      "new_categories": [],
+      "prompt": "Crank-rocker, double-crank, double-rocker, parallelogram, deltoid, change-point, Grashof vs non-Grashof, Roberts/Chebyshev cognates, Hoecken. What does four_bar plus the named linkages already cover, and what named 4-bar still needs its own pose+kit?",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/planar-four-bar.json",
+      "status": "done",
+      "title": "Planar four-bar and cognates"
+    },
+    {
+      "candidate_count": 9,
+      "claimed_at": "2026-08-12T23:53:36+03:00",
+      "completed_at": "2026-08-12T23:58:09+03:00",
+      "id": "six-bar-and-walking",
+      "new_categories": [
+        {
+          "name": "leg_mechanisms",
+          "why": "Walking-leg kits (Klann, Jansen, plantigrade, walking-beam) are a distinct agent job from general bar linkages. four_bar's usecase currently dumps 'walking-robot legs' onto a generic crank-rocker. A movements-group category would let gallery cards and search_use_cases hit the right primitive."
+        }
+      ],
+      "prompt": "Watt and Stephenson six-bar topologies, Klann, Theo Jansen, strandbeest-class, walking-beam / pumpjack, plantigrade. These are the usual 'missing from a 4-bar kit' request. Which are semi-primitive enough for mechlib vs a finished walking robot?",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/six-bar-and-walking.json",
+      "status": "done",
+      "title": "Six-bar, walking, and animal-motion linkages"
+    },
+    {
+      "candidate_count": 6,
+      "claimed_at": "2026-08-12T23:56:11+03:00",
+      "completed_at": "2026-08-12T23:57:51+03:00",
+      "id": "straight-line",
+      "new_categories": [],
+      "prompt": "Peaucellier, Hart, Watt, Chebyshev, Scott-Russell, Hoecken, Roberts, Evans, grasshopper, Tusi couple, Cardanic motion, trammel of Archimedes, Sarrus (already spatial). Catalog each; mark exact vs approximate; say which pose APIs exist.",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/straight-line.json",
+      "status": "done",
+      "title": "Straight-line and inversor linkages"
+    },
+    {
+      "claimed_at": "2026-08-13T00:01:06+03:00",
+      "completed_at": null,
+      "id": "spatial-spherical-parallel",
+      "prompt": "Bennett, spherical four-bar, 7R, Agile Eye, delta, Stewart/Gough, 5-bar planar robot, serial RRR arm primitive, roll-pitch-roll wrist, Hoberman / deployable. Filter hard: finished robot chassis is out of scope; a parametric delta-joint kit or spherical 4-bar pose may not be.",
+      "report": null,
+      "status": "in_progress",
+      "title": "Spatial, spherical, and parallel mechanisms"
+    },
+    {
+      "claimed_at": "2026-08-13T00:01:06+03:00",
+      "completed_at": null,
+      "id": "cams-indexing",
+      "prompt": "Plate, face, barrel, heart, snail already exist. Still in the class: globoidal / Ferguson indexing cam, conjugate / desmodromic pairs, inverse cam, linear / wedge cam, cylindrical face-groove, barrel indexer, Geneva variants (internal, spherical), star wheel vs Maltese, intermittent gears, ratchet-index tables.",
+      "report": null,
+      "status": "in_progress",
+      "title": "Cam types and intermittent motion"
+    },
+    {
+      "claimed_at": null,
+      "completed_at": null,
+      "id": "gear-families",
+      "prompt": "Spur, internal, herringbone, bevel, worm, cycloidal, harmonic, rack, sector, planetary already exist. Survey helical (single), face/crown, hypoid, spiroid, crossed-helical, lantern/pin, noncircular/elliptical, magnetic, nutating/wobble, compound trains, automotive differential, sun-and-planet, hypoid-ish printable stand-ins. Which are FDM-real?",
+      "report": null,
+      "status": "pending",
+      "title": "Gear and reduction families"
+    },
+    {
+      "claimed_at": null,
+      "completed_at": null,
+      "id": "clutches-brakes-overrunning",
+      "prompt": "Dog, freewheel, torque limiter, compliant clutch, Hirth exist. Missing class? Cone, multiplate, wrap-spring, sprag, roller-ramp, centrifugal, magnetic, fluid coupling. Brakes as a category: band, shoe, disc/caliper, over-center park. Which are printable semi-primitives vs bought hardware?",
+      "report": null,
+      "status": "pending",
+      "title": "Clutches, brakes, and overrunning"
+    },
+    {
+      "claimed_at": null,
+      "completed_at": null,
+      "id": "couplings-cv",
+      "prompt": "Oldham, jaw, beam, Hooke, double Cardan, tripod exist. Survey Rzeppa/ball CV, Tracta, Thompson, Schmidt, bellows, disc/membrane, grid, chain coupling, homokinetic joints. Note which have pose laws in-module (needed to animate) vs display-only kits.",
+      "report": null,
+      "status": "pending",
+      "title": "Shaft couplings and CV joints"
+    },
+    {
+      "claimed_at": null,
+      "completed_at": null,
+      "id": "screws-linear-actuators",
+      "prompt": "Lead screw, differential screw, screw jack, scroll, archimedes, telescoping stage, linear way exist. Survey ball screw, roller screw, scotch-yoke (have), rack (have), wedge/inclined plane, hydraulic/pneumatic cylinder geometry, voice-coil stand-in, tape measure / constant-force Negator, cable cylinder.",
+      "report": null,
+      "status": "pending",
+      "title": "Screws, jacks, and linear actuators"
+    },
+    {
+      "claimed_at": null,
+      "completed_at": null,
+      "id": "flexure-compliant",
+      "prompt": "Cross flexure, bistable beam, flexure stage, leaf/coil/wave/torsion/spiral springs, kerf, auxetic exist. Survey cartwheel hinge, living hinge as API, lamina emergent, constant-force compliant, contact-aided, ORBITAL / remote-center, notch hinge primitives, split-tube flexure, tape-spring hinge.",
+      "report": null,
+      "status": "pending",
+      "title": "Compliant mechanisms and flexure joints"
+    },
+    {
+      "claimed_at": null,
+      "completed_at": null,
+      "id": "clockwork-escapements",
+      "prompt": "Escapement, fusee, spiral power spring, ratchet exist. Survey deadbeat vs recoil vs detent vs coaxial vs gravity, going barrel, remontoire, maintaining power, count wheel, striking (probably product), stackfreed, constant-force mechanisms, gravity arm.",
+      "report": null,
+      "status": "pending",
+      "title": "Clockwork, escapements, and energy storage"
+    },
+    {
+      "claimed_at": null,
+      "completed_at": null,
+      "id": "pulleys-cables-tackle",
+      "prompt": "Timing, V-belt, idler, tensioner, winch, fusee, grooved drum exist. Survey block-and-tackle, Weston differential pulley, capstan, self-tailing winch, cam/clam cleat, rope clutch, fairlead, turning block, Spanish windlass, belt CVT variable pulley, cable carrier is already drag_chain.",
+      "report": null,
+      "status": "pending",
+      "title": "Pulleys, cables, tackle, and textile hardware"
+    },
+    {
+      "claimed_at": null,
+      "completed_at": null,
+      "id": "fluid-pumps-valves",
+      "prompt": "Gerotor, external gear, peristaltic, spool, check, hose barb exist. Survey vane, lobe, screw, piston/swash (swash_plate exists), diaphragm, centrifugal impeller, needle/ball/gate/butterfly valves, pressure relief, shuttle, manifold block, Tesla valve, pulsatile.",
+      "report": null,
+      "status": "pending",
+      "title": "Pumps, valves, and fluid machines"
+    },
+    {
+      "claimed_at": null,
+      "completed_at": null,
+      "id": "grippers-chucks-workholding",
+      "prompt": "Toggle clamp, eccentric cam clamp, collet, bellows cup, iris, kinematic coupling, dock, leveller exist. Survey parallel jaw gripper as semi-primitive, angular gripper, latch/pawl catch, over-center hood latch, draw latch, vises, soft jaw, magnetic chuck, vacuum cup families, tool-changer plate (if primitive).",
+      "report": null,
+      "status": "pending",
+      "title": "Grippers, chucks, latches, and workholding"
+    },
+    {
+      "claimed_at": null,
+      "completed_at": null,
+      "id": "bearings-ways-seals",
+      "prompt": "Plain bushing, printed ball, thrust, linear way, oring, labyrinth, gasket exist. Survey crossed-roller, dovetail way (ydovetail is a cutter), V-way, air bearing (out?), magnetic bearing (out?), needle roller stand-in, shaft seal / lip, piston ring, wiper.",
+      "report": null,
+      "status": "pending",
+      "title": "Bearings, ways, and seals"
+    },
+    {
+      "claimed_at": null,
+      "completed_at": null,
+      "id": "missing-categories",
+      "prompt": "Look at the live CATEGORIES table and name mechanism classes that are not a current shelf: brakes, dampers/dashpots, differentials, parallel robots, walking, cable/tendon, constant-force, magnetic drives, traction/CVT, brakes vs clutches split, end-effectors vs grippers, tooling/ATC, heat? (out). For each proposed NEW category: is it a real machinery class, FDM-printable, semi-primitive, and not a finished product? Rank the ones that should become a module.",
+      "report": null,
+      "status": "pending",
+      "title": "Whole categories mechlib does not name"
+    },
+    {
+      "claimed_at": null,
+      "completed_at": null,
+      "id": "animate-coverage",
+      "prompt": "Read gallery/build_gallery.py ANIMATE and the 'deliberately left out' comment. For every multi-body movement demo with no animation: is the reason still true, or can a pose law be added so the gallery can play it? Rank the highest-value pose-law additions. Do not propose animating static adjustments (eccentric_idler_mount).",
+      "report": null,
+      "status": "pending",
+      "title": "Mechanisms that exist but cannot play"
+    }
+  ],
+  "updated": "2026-08-13T00:01:06+03:00"
+}
