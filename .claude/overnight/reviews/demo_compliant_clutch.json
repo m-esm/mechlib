@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_compliant_clutch",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: cyan spiral flexure hub seated inside an orange internal-sawtooth race.",
+  "notes": "Non-animated. Flexure tips sit in the teeth; side/front are a flat two-body disc. Sane rest assembly of a torque-limit clutch.",
+  "verdict": "pass"
+}

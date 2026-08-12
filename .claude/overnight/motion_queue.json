@@ -1176,20 +1176,23 @@
       "category": "ratchets",
       "group": "movements",
       "id": "demo_compliant_clutch",
+      "issues": [],
       "kind": "movement",
       "moving": [],
       "parts": 2,
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_at": "2026-08-13T00:41:52+03:00",
       "review_claim": "2026-08-13T00:41:08+03:00",
-      "reviewed": false,
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_compliant_clutch.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_compliant_clutch/sheet_s.png",
       "stationary": [
         "clutch_race",
         "flexure_hub"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": false,
@@ -2276,5 +2279,5 @@
       "verdict": null
     }
   ],
-  "updated": "2026-08-13T00:41:50+03:00"
+  "updated": "2026-08-13T00:41:52+03:00"
 }

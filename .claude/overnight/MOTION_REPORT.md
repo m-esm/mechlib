@@ -666,3 +666,17 @@ Non-animated. Three bodies stacked concentrically. Threads and knurl read; nothi
 
 **Issues**
 - none
+
+## demo_compliant_clutch — pass
+
+- reviewed: 2026-08-13T00:41:52+03:00
+- kind: movement
+- motion: Rest pose: cyan spiral flexure hub seated inside an orange internal-sawtooth race.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Flexure tips sit in the teeth; side/front are a flat two-body disc. Sane rest assembly of a torque-limit clutch.
+
+**Issues**
+- none
