@@ -1862,20 +1862,23 @@
       "category": "gears",
       "group": "movements",
       "id": "demo_roller_sprocket",
+      "issues": [],
       "kind": "movement",
       "moving": [],
       "parts": 2,
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_at": "2026-08-13T01:41:44+03:00",
       "review_claim": "2026-08-13T01:41:12+03:00",
-      "reviewed": false,
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_roller_sprocket.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_roller_sprocket/sheet_s.png",
       "stationary": [
         "pitch_circle_pins",
         "roller_sprocket"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": false,
@@ -2387,5 +2390,5 @@
       "verdict": null
     }
   ],
-  "updated": "2026-08-13T01:41:42+03:00"
+  "updated": "2026-08-13T01:41:44+03:00"
 }

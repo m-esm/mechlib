@@ -1044,3 +1044,17 @@ Non-animated. Roller sits on the pin through the arm; nothing exploded. Sane res
 
 **Issues**
 - none
+
+## demo_roller_sprocket — pass
+
+- reviewed: 2026-08-13T01:41:44+03:00
+- kind: movement
+- motion: Rest pose: blue 14-tooth sprocket with magenta pitch-circle pins seated in the tooth gaps.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Pins sit on the pitch circle as track references; one pin per gap. Sane rest assembly.
+
+**Issues**
+- none

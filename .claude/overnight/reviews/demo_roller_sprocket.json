@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_roller_sprocket",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: blue 14-tooth sprocket with magenta pitch-circle pins seated in the tooth gaps.",
+  "notes": "Non-animated. Pins sit on the pitch circle as track references; one pin per gap. Sane rest assembly.",
+  "verdict": "pass"
+}
