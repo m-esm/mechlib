@@ -918,3 +918,17 @@ Non-animated. Front row shows the stacked leaf thicknesses. Leaves stay nested, 
 
 **Issues**
 - none
+
+## demo_linear_way — pass
+
+- reviewed: 2026-08-13T01:21:46+03:00
+- kind: movement
+- motion: Rest pose: orange carriage on a blue prismatic rail with a red gib setting preload.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Front row shows the dovetail/vee section and mounting holes. Carriage stays on the rail. Sane rest assembly of a gibbed way.
+
+**Issues**
+- none
