@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_v_belt_pulley",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: blue V-belt sheave with a trapezoidal groove, hub, and setscrew boss.",
+  "notes": "Non-animated. One body. Groove and hub read. Sane rest assembly of a wedge-belt pulley.",
+  "verdict": "pass"
+}

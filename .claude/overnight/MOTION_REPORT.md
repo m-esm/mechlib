@@ -1408,3 +1408,17 @@ Non-animated. One body. Pockets are equally spaced. Sane rest assembly.
 
 **Issues**
 - none
+
+## demo_v_belt_pulley — pass
+
+- reviewed: 2026-08-13T02:22:18+03:00
+- kind: movement
+- motion: Rest pose: blue V-belt sheave with a trapezoidal groove, hub, and setscrew boss.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. One body. Groove and hub read. Sane rest assembly of a wedge-belt pulley.
+
+**Issues**
+- none

@@ -2454,19 +2454,22 @@
       "category": "pulleys",
       "group": "movements",
       "id": "demo_v_belt_pulley",
+      "issues": [],
       "kind": "movement",
       "moving": [],
       "parts": 1,
       "priority": 2,
       "render_error": null,
       "rendered": true,
+      "review_at": "2026-08-13T02:22:18+03:00",
       "review_claim": "2026-08-13T02:21:58+03:00",
-      "reviewed": false,
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_v_belt_pulley.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_v_belt_pulley/sheet_s.png",
       "stationary": [
         "v_belt_pulley"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": false,
@@ -2488,5 +2491,5 @@
       "verdict": null
     }
   ],
-  "updated": "2026-08-13T02:22:15+03:00"
+  "updated": "2026-08-13T02:22:18+03:00"
 }
