@@ -680,3 +680,17 @@ Non-animated. Flexure tips sit in the teeth; side/front are a flat two-body disc
 
 **Issues**
 - none
+
+## demo_detent_pair — pass
+
+- reviewed: 2026-08-13T00:41:55+03:00
+- kind: movement
+- motion: Rest pose: green plunger in a blue housing clicking into a notch of the pink dial, coil spring visible in the pocket.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Front row shows the plunger tip in a tooth gap. Housing, plunger, and wheel stay assembled. Sane rest assembly.
+
+**Issues**
+- none
