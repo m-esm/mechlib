@@ -554,3 +554,17 @@ Catalog lists every body stationary because centroid travel is only ~0.6 mm (spi
 
 **Issues**
 - none
+
+## demo_watt — pass
+
+- reviewed: 2026-08-13T00:24:23+03:00
+- kind: animate
+- motion: Pink and green levers rock on the fixed blue ground while the yellow coupler and orange tracer sweep an approximate straight line. Front row keeps the tracer near a level stroke; mid columns show the expected bow at the ends.
+- cycle_closes: False
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Ground and its two cyan pivots stay put. Floating pins travel with the joints. 302.4 deg is folding back toward the 0 pose. No broken joints or explosions.
+
+**Issues**
+- none

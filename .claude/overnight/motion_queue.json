@@ -982,6 +982,7 @@
       "category": "linkages",
       "group": "movements",
       "id": "demo_watt",
+      "issues": [],
       "kind": "animate",
       "moving": [
         "coupler",
@@ -995,14 +996,17 @@
       "priority": 0,
       "render_error": null,
       "rendered": true,
-      "reviewed": false,
+      "review_at": "2026-08-13T00:24:23+03:00",
+      "review_claim": "2026-08-13T00:23:39+03:00",
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_watt.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_watt/sheet_s.png",
       "stationary": [
         "ground_link",
         "pin_0",
         "pin_1"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": false,
@@ -1015,6 +1019,7 @@
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T00:23:39+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_arc_ratchet/sheet_s.png",
       "stationary": [
@@ -1034,6 +1039,7 @@
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T00:23:39+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_archimedes_screw/sheet_s.png",
       "stationary": [
@@ -1053,6 +1059,7 @@
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T00:23:39+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_ball_socket_joint/sheet_s.png",
       "stationary": [
@@ -2242,5 +2249,5 @@
       "verdict": null
     }
   ],
-  "updated": "2026-08-13T00:23:26+03:00"
+  "updated": "2026-08-13T00:24:23+03:00"
 }
