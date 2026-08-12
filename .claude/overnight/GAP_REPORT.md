@@ -370,3 +370,32 @@ FDM reality. Printed rotors leak at the faces; the existing gerotor/gear docs al
 - **gerotor_again** [low] fit=no — Already the internal-gear PD.
 - **external_gear_again** [low] fit=no — Already the meshing two-rotor PD.
 - **peristaltic_again** [low] fit=no — Already the tube-pinch PD.
+
+## grippers-chucks-workholding — Grippers, chucks, latches, and workholding
+
+Holding splits by what is being held and how the force is made. Chucks centre a round part on an axis (scroll, collet, 4-jaw). Workholding clamps a part to a table (toggle, cam, vise, strap/toe). Robot grippers pick a free part (parallel jaw, angular, 3-finger, vacuum, magnetic). Latches hold two panels shut (draw, hood/over-center, slam/pawl, snap). 507 names bench clamps 174/180/381, screw clamp 190, toggle 140. Norton treats vises and chucks as screw-and-wedge. Howell's holding is a compliant tweezer or a living-hinge clip, not a Schunk jaw.
+
+Catalog already covers the clamp/chuck/locate staples and one vacuum cup. Over-center: toggle_clamp (knee linkage, posed), eccentric_cam_clamp (eccentric disc + follower, posed). On-axis chuck: collet_chuck (split taper + nut), scroll_drive (Archimedean rib + three jaws, the self-centering 3-jaw mechanism). Vacuum: bellows_suction_cup. Aperture: iris_diaphragm. Locate: kinematic_coupling, repeatable_dock (usecase already says tool changers), three_point_leveller. Lid snaps: snap_catch / snap_finger. lead_screw's usecase names vices. Grep finds no parallel-jaw gripper, angular gripper, draw latch, hood latch, machine vise, soft-jaw insert, pawl/slam latch, flat vacuum cup, or strap/toe clamp. The grippers shelf blurb is 'Parts that hold, centre, and grip' but the robot 2-finger primitive is missing.
+
+FDM reality. Parallel-jaw gripper is two slides (or a parallelogram) driven by a rack-and-pinion or a leadscrew; the default robot EOAT and the highest-leverage missing kit. Angular gripper is two jaws on pivots (simpler, cheaper, not parallel). 3-finger centric is scroll_drive plus finger bodies, not a new scroll. Draw latch is an over-center hasp that pulls two panels together (chest, case, flight case). Hood latch is a striker hook that goes over-center (car hood, toggle_clamp kinematics on a hook, not a press toe). Machine vise is lead_screw + two jaws + a way; the product handle stays out. Soft jaw is a consumable insert with a part-shaped pocket, the thing people reprint. Pawl / slam latch is a sprung catch that a striker lifts and drops behind. Flat vacuum cup is the non-bellows sibling. Strap/toe clamp is a slotted bar + stud, the mill table default. Magnetic chucks and Bernoulli pads are hardware. A finished Schunk or a Kurt vise is a product.
+
+**New categories**
+- none
+
+**Candidates**
+- **parallel_gripper** [high] fit=yes — Two jaws translate toward a midplane and stay parallel. Pick-and-place, vises that ride a robot, every cobot EOAT request. No current API closes two jaws in parallel. iris and scroll centre; toggle and cam press; none of them is a parallel gripper.
+- **angular_gripper** [high] fit=yes — Pivoting 2-jaw. The other named robot gripper. Wider opening, jaws do not stay parallel. Distinct from toggle_clamp (workholding press) and from parallel_gripper.
+- **draw_latch** [high] fit=yes — Over-center latch that draws two panels together. toggle_clamp presses a part to a table; snap_catch is a lid finger. A draw latch is the missing panel-to-panel lock.
+- **machine_vise** [high] fit=yes — The bench/mill vise. lead_screw's usecase names vices but there is no jaw pair or way. Distinct from a gripper (no robot flange) and from a collet (on-axis).
+- **hood_latch** [med] fit=yes — Over-center hook latch. The prompt listed it. Not a draw (which pulls a hasp) and not a toggle clamp (which presses). Same over-center law, different job.
+- **soft_jaw** [med] fit=yes — Sacrificial vise/chuck insert. The FDM workholding people actually search. A pocket in a brick, not a new mechanism. Still a named primitive so agents stop inventing it from boxc.
+- **pawl_latch** [med] fit=yes — Pawl/slam latch. The prompt listed latch/pawl catch. Distinct from snap_catch (light lid) and from a ratchet (one-way drive).
+- **flat_vacuum_cup** [med] fit=yes — The other vacuum family. Flat cups for smooth sheets; bellows for uneven. Only bellows exists. A kind= on one cup API is enough.
+- **toe_clamp** [med] fit=yes — Strap / toe / step clamp. The workholding that is not a toggle and not a cam. Every mill fixture.
+- **three_finger** [low] fit=maybe — 3-finger centric robot gripper. The mechanism is scroll_drive (usecase already says three-jaw). A finger kit is composition.
+- **c_clamp** [low] fit=maybe — C-clamp. lead_screw plus a frame. After machine_vise, low leverage.
+- **atc_plate** [low] fit=maybe — repeatable_dock's usecase already names tool changers. Do not add a Schunk/ATI clone.
+- **magnetic_chuck** [low] fit=no — Bought magnets or an electromagnet. Same reject as magnetic_gear / magnetic_clutch.
+- **toggle_again** [low] fit=no — Already the over-center workholding knee.
+- **collet_again** [low] fit=no — Already the on-axis concentric grip.
+- **scroll_again** [low] fit=no — Already the self-centering 3-jaw mechanism. 3-finger robot is fingers on this.

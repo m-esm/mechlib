@@ -180,12 +180,14 @@
       "title": "Pumps, valves, and fluid machines"
     },
     {
-      "claimed_at": null,
-      "completed_at": null,
+      "candidate_count": 16,
+      "claimed_at": "2026-08-13T02:15:05+03:00",
+      "completed_at": "2026-08-13T02:16:37+03:00",
       "id": "grippers-chucks-workholding",
+      "new_categories": [],
       "prompt": "Toggle clamp, eccentric cam clamp, collet, bellows cup, iris, kinematic coupling, dock, leveller exist. Survey parallel jaw gripper as semi-primitive, angular gripper, latch/pawl catch, over-center hood latch, draw latch, vises, soft jaw, magnetic chuck, vacuum cup families, tool-changer plate (if primitive).",
-      "report": null,
-      "status": "pending",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/grippers-chucks-workholding.json",
+      "status": "done",
       "title": "Grippers, chucks, latches, and workholding"
     },
     {
@@ -216,5 +218,5 @@
       "title": "Mechanisms that exist but cannot play"
     }
   ],
-  "updated": "2026-08-13T02:14:58+03:00"
+  "updated": "2026-08-13T02:16:37+03:00"
 }
