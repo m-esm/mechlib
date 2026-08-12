@@ -1156,3 +1156,17 @@ Non-animated. Cross is captured in both forks; shafts meet at an angle. Sane res
 
 **Issues**
 - none
+
+## demo_winch_drum — pass
+
+- reviewed: 2026-08-13T01:42:26+03:00
+- kind: movement
+- motion: Rest pose: orange helically grooved drum with the first turns of a blue cable seated in the groove.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Cable follows the helix; flanges contain the wrap. Sane rest assembly of a winch drum.
+
+**Issues**
+- none
