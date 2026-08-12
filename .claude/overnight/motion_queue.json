@@ -1105,20 +1105,23 @@
       "category": "fluid",
       "group": "movements",
       "id": "demo_check_valve",
+      "issues": [],
       "kind": "movement",
       "moving": [],
       "parts": 2,
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_at": "2026-08-13T00:41:45+03:00",
       "review_claim": "2026-08-13T00:41:08+03:00",
-      "reviewed": false,
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_check_valve.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_check_valve/sheet_s.png",
       "stationary": [
         "body",
         "cap"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": false,
@@ -2267,5 +2270,5 @@
       "verdict": null
     }
   ],
-  "updated": "2026-08-13T00:41:42+03:00"
+  "updated": "2026-08-13T00:41:45+03:00"
 }

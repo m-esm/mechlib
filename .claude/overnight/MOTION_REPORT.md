@@ -624,3 +624,17 @@ Non-animated. Idler sits on the arm axis; front row shows the slight curve of th
 
 **Issues**
 - none
+
+## demo_check_valve — pass
+
+- reviewed: 2026-08-13T00:41:45+03:00
+- kind: movement
+- motion: Rest pose: green snap-on cap with a hose barb stacked on a blue body with a matching barb, on one axis.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Ball is a bought part so only body+cap print. Cap seats on the body; barbs on both ports. Sane rest assembly.
+
+**Issues**
+- none
