@@ -88,12 +88,19 @@
       "title": "Gear and reduction families"
     },
     {
-      "claimed_at": null,
-      "completed_at": null,
+      "candidate_count": 18,
+      "claimed_at": "2026-08-13T00:28:05+03:00",
+      "completed_at": "2026-08-13T00:31:47+03:00",
       "id": "clutches-brakes-overrunning",
+      "new_categories": [
+        {
+          "name": "brakes",
+          "why": "A brake grounds a shaft; a clutch joins two shafts. Winch hold, hoist, park, and Prony are a different agent job from dog/freewheel/limiter. Catalog has a clutches shelf and no brakes shelf. Band, expanding-shoe, and parking-pawl would live here; the missing-categories slice can rank the shelf."
+        }
+      ],
       "prompt": "Dog, freewheel, torque limiter, compliant clutch, Hirth exist. Missing class? Cone, multiplate, wrap-spring, sprag, roller-ramp, centrifugal, magnetic, fluid coupling. Brakes as a category: band, shoe, disc/caliper, over-center park. Which are printable semi-primitives vs bought hardware?",
-      "report": null,
-      "status": "pending",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/clutches-brakes-overrunning.json",
+      "status": "done",
       "title": "Clutches, brakes, and overrunning"
     },
     {
@@ -187,5 +194,5 @@
       "title": "Mechanisms that exist but cannot play"
     }
   ],
-  "updated": "2026-08-13T00:09:07+03:00"
+  "updated": "2026-08-13T00:31:47+03:00"
 }
