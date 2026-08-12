@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_spur_gear_pair",
+  "issues": [],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Orange 18-tooth driver and green 28-tooth driven stay in mesh and spin in place. Driver face hatch and both tooth rows advance; contact stays clash-free.",
+  "notes": "Centroids frozen (spin-in-place). 16.8 deg of driver is most of the 20 deg cycle. Driven rotation is slower (18/28) but visible on the green teeth in iso and front.",
+  "verdict": "pass"
+}

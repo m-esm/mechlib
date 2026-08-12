@@ -498,3 +498,17 @@ Centroid travel is ~0 as expected for spin-in-place. Tooth orientation, not cent
 
 **Issues**
 - none
+
+## demo_spur_gear_pair — pass
+
+- reviewed: 2026-08-13T00:23:19+03:00
+- kind: animate
+- motion: Orange 18-tooth driver and green 28-tooth driven stay in mesh and spin in place. Driver face hatch and both tooth rows advance; contact stays clash-free.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Centroids frozen (spin-in-place). 16.8 deg of driver is most of the 20 deg cycle. Driven rotation is slower (18/28) but visible on the green teeth in iso and front.
+
+**Issues**
+- none
