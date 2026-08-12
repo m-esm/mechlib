@@ -1082,19 +1082,23 @@
       "category": "pulleys",
       "group": "movements",
       "id": "demo_belt_tensioner",
+      "issues": [],
       "kind": "movement",
       "moving": [],
       "parts": 2,
       "priority": 1,
       "render_error": null,
       "rendered": true,
-      "reviewed": false,
+      "review_at": "2026-08-13T00:41:42+03:00",
+      "review_claim": "2026-08-13T00:41:08+03:00",
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_belt_tensioner.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_belt_tensioner/sheet_s.png",
       "stationary": [
         "idler",
         "tensioner_arm"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": false,
@@ -1107,6 +1111,7 @@
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T00:41:08+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_check_valve/sheet_s.png",
       "stationary": [
@@ -1126,6 +1131,7 @@
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T00:41:08+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_clevis/sheet_s.png",
       "stationary": [
@@ -1146,6 +1152,7 @@
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T00:41:08+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_collet_chuck/sheet_s.png",
       "stationary": [
@@ -1166,6 +1173,7 @@
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T00:41:08+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_compliant_clutch/sheet_s.png",
       "stationary": [
@@ -1185,6 +1193,7 @@
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T00:41:08+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_detent_pair/sheet_s.png",
       "stationary": [
@@ -2258,5 +2267,5 @@
       "verdict": null
     }
   ],
-  "updated": "2026-08-13T00:24:30+03:00"
+  "updated": "2026-08-13T00:41:42+03:00"
 }

@@ -610,3 +610,17 @@ Non-animated. Side row shows the slots and the lip past the ball equator. Stud i
 
 **Issues**
 - none
+
+## demo_belt_tensioner — pass
+
+- reviewed: 2026-08-13T00:41:42+03:00
+- kind: movement
+- motion: Rest pose: purple cantilever arm with a cyan idler pulley on the tip, mount block at the other end.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Idler sits on the arm axis; front row shows the slight curve of the spring arm. Two bodies, no explode. Sane rest assembly.
+
+**Issues**
+- none
