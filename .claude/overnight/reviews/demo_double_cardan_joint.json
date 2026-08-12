@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_double_cardan_joint",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: two Hooke joints in series, purple yokes and an angled intermediate, green/yellow spiders, cyan output yoke.",
+  "notes": "Non-animated. Intermediate sits at a working angle; both crosses are captured in the forks. No exploded spiders. Sane rest assembly of a double Cardan.",
+  "verdict": "pass"
+}

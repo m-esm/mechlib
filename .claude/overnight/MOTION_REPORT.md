@@ -708,3 +708,17 @@ Non-animated. Shaft threads show at both ends; nuts sit concentric, not exploded
 
 **Issues**
 - none
+
+## demo_double_cardan_joint — pass
+
+- reviewed: 2026-08-13T00:42:22+03:00
+- kind: movement
+- motion: Rest pose: two Hooke joints in series, purple yokes and an angled intermediate, green/yellow spiders, cyan output yoke.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Intermediate sits at a working angle; both crosses are captured in the forks. No exploded spiders. Sane rest assembly of a double Cardan.
+
+**Issues**
+- none
