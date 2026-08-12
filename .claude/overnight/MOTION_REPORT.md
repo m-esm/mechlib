@@ -1170,3 +1170,17 @@ Non-animated. Cable follows the helix; flanges contain the wrap. Sane rest assem
 
 **Issues**
 - none
+
+## demo_worm — pass
+
+- reviewed: 2026-08-13T02:01:45+03:00
+- kind: movement
+- motion: Rest pose: orange helical worm meshing a gold lead-angle-matched wheel at right angles.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Front row is the worm axis; teeth meet at the contact. Sane rest assembly of a worm pair.
+
+**Issues**
+- none

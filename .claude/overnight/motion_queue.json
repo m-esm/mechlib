@@ -2078,19 +2078,23 @@
       "category": "gears",
       "group": "movements",
       "id": "demo_worm",
+      "issues": [],
       "kind": "movement",
       "moving": [],
       "parts": 2,
       "priority": 1,
       "render_error": null,
       "rendered": true,
-      "reviewed": false,
+      "review_at": "2026-08-13T02:01:45+03:00",
+      "review_claim": "2026-08-13T02:01:14+03:00",
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_worm.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_worm/sheet_s.png",
       "stationary": [
         "helical_wheel",
         "worm"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": false,
@@ -2103,6 +2107,7 @@
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T02:01:14+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_worm_coupon/sheet_s.png",
       "stationary": [
@@ -2122,6 +2127,7 @@
       "priority": 2,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T02:01:14+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_beam_coupling/sheet_s.png",
       "stationary": [
@@ -2140,6 +2146,7 @@
       "priority": 2,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T02:01:14+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_belleville_washer/sheet_s.png",
       "stationary": [
@@ -2158,6 +2165,7 @@
       "priority": 2,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T02:01:14+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_bellows_suction_cup/sheet_s.png",
       "stationary": [
@@ -2176,6 +2184,7 @@
       "priority": 2,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T02:01:14+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_bistable_beam/sheet_s.png",
       "stationary": [
@@ -2418,5 +2427,5 @@
       "verdict": null
     }
   ],
-  "updated": "2026-08-13T01:42:26+03:00"
+  "updated": "2026-08-13T02:01:45+03:00"
 }
