@@ -1268,3 +1268,17 @@ Non-animated. One body. Helix is printable, not fused into a tube. Sane rest ass
 
 **Issues**
 - none
+
+## demo_cross_flexure — pass
+
+- reviewed: 2026-08-13T02:02:24+03:00
+- kind: movement
+- motion: Rest pose: two green blocks joined only by crossing thin blades about a common pivot.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. One body. Front row shows the X of the blades. Sane rest assembly of a cross-flexure pivot.
+
+**Issues**
+- none

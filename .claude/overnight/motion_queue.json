@@ -2234,19 +2234,22 @@
       "category": "flexures",
       "group": "movements",
       "id": "demo_cross_flexure",
+      "issues": [],
       "kind": "movement",
       "moving": [],
       "parts": 1,
       "priority": 2,
       "render_error": null,
       "rendered": true,
+      "review_at": "2026-08-13T02:02:24+03:00",
       "review_claim": "2026-08-13T02:01:59+03:00",
-      "reviewed": false,
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_cross_flexure.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_cross_flexure/sheet_s.png",
       "stationary": [
         "cross_flexure_pivot"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": false,
@@ -2449,5 +2452,5 @@
       "verdict": null
     }
   ],
-  "updated": "2026-08-13T02:02:22+03:00"
+  "updated": "2026-08-13T02:02:24+03:00"
 }
