@@ -2212,18 +2212,22 @@
       "category": "flexures",
       "group": "movements",
       "id": "demo_coil_spring",
+      "issues": [],
       "kind": "movement",
       "moving": [],
       "parts": 1,
       "priority": 2,
       "render_error": null,
       "rendered": true,
-      "reviewed": false,
+      "review_at": "2026-08-13T02:02:22+03:00",
+      "review_claim": "2026-08-13T02:01:59+03:00",
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_coil_spring.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_coil_spring/sheet_s.png",
       "stationary": [
         "coil_spring"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": false,
@@ -2236,6 +2240,7 @@
       "priority": 2,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T02:01:59+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_cross_flexure/sheet_s.png",
       "stationary": [
@@ -2254,6 +2259,7 @@
       "priority": 2,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T02:01:59+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_flexure_stage/sheet_s.png",
       "stationary": [
@@ -2272,6 +2278,7 @@
       "priority": 2,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T02:01:59+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_flywheel/sheet_s.png",
       "stationary": [
@@ -2442,5 +2449,5 @@
       "verdict": null
     }
   ],
-  "updated": "2026-08-13T02:01:57+03:00"
+  "updated": "2026-08-13T02:02:22+03:00"
 }

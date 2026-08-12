@@ -1254,3 +1254,17 @@ Non-animated. One body. Beams and shuttle read; print-in-place switch. Sane rest
 
 **Issues**
 - none
+
+## demo_coil_spring — pass
+
+- reviewed: 2026-08-13T02:02:22+03:00
+- kind: movement
+- motion: Rest pose: cyan helical compression spring with closed end coils and open active turns.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. One body. Helix is printable, not fused into a tube. Sane rest assembly.
+
+**Issues**
+- none
