@@ -946,3 +946,17 @@ Non-animated. Disc floats between the hubs; tongues seat in the slots. Sane rest
 
 **Issues**
 - none
+
+## demo_peristaltic_pump_head — pass
+
+- reviewed: 2026-08-13T01:21:50+03:00
+- kind: movement
+- motion: Rest pose: teal cap on a blue race body, rotor posts visible through the windows, tube slots at the rim.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Cap, body, and rotor stay assembled. Tubing is a bought part so not shown. Sane rest assembly of a peristaltic head.
+
+**Issues**
+- none
