@@ -540,3 +540,17 @@ Closed=false; 302.4 deg is heading back toward the upright handle pose of column
 
 **Issues**
 - none
+
+## demo_tripod_cv_joint — pass
+
+- reviewed: 2026-08-13T00:23:26+03:00
+- kind: animate
+- motion: Blue tulip stays fixed at a shaft angle. Orange input shaft and pink crowned barrels rotate inside the three tracks: the shaft cross-hole walks left to front to right, and the barrels progress around the housing.
+- cycle_closes: False
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Catalog lists every body stationary because centroid travel is only ~0.6 mm (spin about a near-center axis plus a little plunge). Orientation, not centroid, shows the CV rotation. Housing does not spin. Last column 302.4 deg is approaching 360.
+
+**Issues**
+- none
