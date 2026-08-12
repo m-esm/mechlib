@@ -834,3 +834,17 @@ Non-animated. Crown on the idler and teeth on the driver both read. Nothing inte
 
 **Issues**
 - none
+
+## demo_intermittent_gear_pair — pass
+
+- reviewed: 2026-08-13T01:02:19+03:00
+- kind: movement
+- motion: Rest pose: blue mutilated driver (locking segment plus a tooth group) meshed with a green notched driven gear.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Driver's plain arc and remaining teeth read; contact is at the tooth group, not exploded. Sane rest assembly of a digit-advance pair.
+
+**Issues**
+- none

@@ -1487,19 +1487,23 @@
       "category": "indexing",
       "group": "movements",
       "id": "demo_intermittent_gear_pair",
+      "issues": [],
       "kind": "movement",
       "moving": [],
       "parts": 2,
       "priority": 1,
       "render_error": null,
       "rendered": true,
-      "reviewed": false,
+      "review_at": "2026-08-13T01:02:19+03:00",
+      "review_claim": "2026-08-13T01:01:55+03:00",
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_intermittent_gear_pair.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_intermittent_gear_pair/sheet_s.png",
       "stationary": [
         "mutilated_driver",
         "notched_driven"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": false,
@@ -1512,6 +1516,7 @@
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T01:01:55+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_iris_diaphragm/sheet_s.png",
       "stationary": [
@@ -1538,6 +1543,7 @@
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T01:01:55+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_jaw_coupling/sheet_s.png",
       "stationary": [
@@ -1558,6 +1564,7 @@
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T01:01:55+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_knuckle_hinge/sheet_s.png",
       "stationary": [
@@ -2322,5 +2329,5 @@
       "verdict": null
     }
   ],
-  "updated": "2026-08-13T01:01:53+03:00"
+  "updated": "2026-08-13T01:02:19+03:00"
 }
