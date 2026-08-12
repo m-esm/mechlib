@@ -202,12 +202,14 @@
       "title": "Bearings, ways, and seals"
     },
     {
-      "claimed_at": null,
-      "completed_at": null,
+      "candidate_count": 15,
+      "claimed_at": "2026-08-13T02:50:44+03:00",
+      "completed_at": "2026-08-13T02:51:59+03:00",
       "id": "missing-categories",
+      "new_categories": [],
       "prompt": "Look at the live CATEGORIES table and name mechanism classes that are not a current shelf: brakes, dampers/dashpots, differentials, parallel robots, walking, cable/tendon, constant-force, magnetic drives, traction/CVT, brakes vs clutches split, end-effectors vs grippers, tooling/ATC, heat? (out). For each proposed NEW category: is it a real machinery class, FDM-printable, semi-primitive, and not a finished product? Rank the ones that should become a module.",
-      "report": null,
-      "status": "pending",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/missing-categories.json",
+      "status": "done",
       "title": "Whole categories mechlib does not name"
     },
     {
@@ -220,5 +222,5 @@
       "title": "Mechanisms that exist but cannot play"
     }
   ],
-  "updated": "2026-08-13T02:50:36+03:00"
+  "updated": "2026-08-13T02:51:59+03:00"
 }

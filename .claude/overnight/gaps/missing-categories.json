@@ -1,0 +1,159 @@
+{
+  "candidates": [
+    {
+      "already": "clutches",
+      "api_shape": "movements shelf; first kits band_brake, expanding_shoe_brake, parking_pawl",
+      "fdm": "Band, shoe, park pawl all print. Working friction is PLA-on-PLA or a bought liner.",
+      "mechlib_fit": "yes",
+      "name": "brakes",
+      "priority": "high",
+      "why": "Shaft-to-ground. Winch hold, hoist, park. Clutches join two shafts and the current blurb does not mention grounding. Three high-fit kits already named. The cleanest split on the prompt list."
+    },
+    {
+      "already": "indexing, ratchets, flexures (spiral_power_spring)",
+      "api_shape": "movements shelf; move escapement here; add lever, verge, gravity, going_barrel, geneva_stop",
+      "fdm": "Two-plate escapements already print and animate. Going barrel is teeth + click on an existing spring.",
+      "mechlib_fit": "yes",
+      "name": "clockwork",
+      "priority": "high",
+      "why": "Feedback oscillator, not intermittent motion. Indexing is crank-in/steps-out (Geneva). Clockwork locks and impulses a resonator. escapement is misfiled today. Five-plus yes kits."
+    },
+    {
+      "already": "flexures, linear, pulleys (fusee)",
+      "api_shape": "movements shelf; Negator, remontoire, constant_force_compliant, gravity arm",
+      "fdm": "Drums print, tape is bought steel or TPU demo. Compliant CF cells print flat.",
+      "mechlib_fit": "yes",
+      "name": "constant_force",
+      "priority": "high",
+      "why": "Flat F or T is a machinery class, not a spring (force rises with x) and not a screw. Cross-cuts three existing shelves, which is why agents miss it. Four named kits."
+    },
+    {
+      "already": "linkages",
+      "api_shape": "movements shelf or a linkages subgroup; Klann, Jansen, walking-beam",
+      "fdm": "Flat bars, published lengths, one rotary input. One leg is a semi-primitive; a chassis is a product.",
+      "mechlib_fit": "yes",
+      "name": "leg_mechanisms",
+      "priority": "med",
+      "why": "Walking is a distinct agent job. four_bar's usecase currently claims walking-robot legs. Search cannot hit Klann if it lives as an anonymous 6-bar. Rank below brakes/clockwork because the kits can also live under linkages if we refuse a 31st shelf."
+    },
+    {
+      "already": "linkages, joints",
+      "api_shape": "movements shelf; Bennett, spherical_four_bar, five_bar, delta_parallelogram, ups_strut",
+      "fdm": "Bars and spherical pairs print. Axis concurrency is the pain, same as a Hooke joint.",
+      "mechlib_fit": "yes",
+      "name": "spatial",
+      "priority": "med",
+      "why": "Not planar and not a robot product. joints currently dumps wrists onto ball_socket and gimbal. A shelf keeps Delta/Stewart products out while naming the cells. Same rank logic as legs: useful, but linkages can absorb the kits."
+    },
+    {
+      "already": null,
+      "api_shape": "movements shelf; orifice_dashpot, rotary_vane_damper",
+      "fdm": "A piston with an orifice, or a rotary vane in a viscous pot. Fluid is bought silicone. Envelope is printable. Eddy/magnetic dampers are hardware.",
+      "mechlib_fit": "yes",
+      "name": "dampers",
+      "priority": "med",
+      "why": "Energy dissipation is a real class (Norton, vehicle suspensions, door closers). Prompt listed it. Thinner than brakes: only two honest FDM kits. Add the shelf when the first kit lands, not before."
+    },
+    {
+      "already": "cutters (oring_groove, labyrinth_seal, gasket_channel)",
+      "api_shape": "elements shelf only if lip_seal / piston_ring / wiper ship as solids",
+      "fdm": "Current seals are cutters. Lip/piston/wiper would be parts.",
+      "mechlib_fit": "maybe",
+      "name": "seals_elements",
+      "priority": "low",
+      "why": "A shelf for three cutters is noise. Promote only after contact-seal solids exist."
+    },
+    {
+      "already": "pulleys, chains (drag_chain)",
+      "api_shape": "grow pulleys (sheave, tackle, cleat, capstan) rather than split",
+      "fdm": "Sheaves and cleats print.",
+      "mechlib_fit": "maybe",
+      "name": "cable_tendon",
+      "priority": "low",
+      "why": "Pulleys blurb already claims cable. Splitting now orphans grooved_drum. Revisit if tackle grows past six APIs."
+    },
+    {
+      "already": "gears, drives",
+      "api_shape": "bevel_differential under gears",
+      "fdm": "Four miters print. The axle is a product.",
+      "mechlib_fit": "no",
+      "name": "differentials_shelf",
+      "priority": "low",
+      "why": "One teaching kit. Not a class. Torsen/LSD/locked diffs are products."
+    },
+    {
+      "already": "linkages, spatial",
+      "api_shape": null,
+      "fdm": "A full Delta or Stewart is a finished machine.",
+      "mechlib_fit": "no",
+      "name": "parallel_robots",
+      "priority": "low",
+      "why": "The prompt listed it. The cells are spatial/linkage primitives. The aisle would fill with products. Do not add."
+    },
+    {
+      "already": null,
+      "api_shape": null,
+      "fdm": "Prints a magnet cage.",
+      "mechlib_fit": "no",
+      "name": "magnetic_drives",
+      "priority": "low",
+      "why": "Rejected on gears, clutches, couplings, bearings, linear. Not a printable working surface."
+    },
+    {
+      "already": "pulleys (belt_cvt_pulley)",
+      "api_shape": null,
+      "fdm": "One variable-pitch V-pulley. Toroidal/ball CVTs are metal.",
+      "mechlib_fit": "no",
+      "name": "traction_cvt_shelf",
+      "priority": "low",
+      "why": "One kit under pulleys. Not a shelf."
+    },
+    {
+      "already": "grippers",
+      "api_shape": null,
+      "fdm": "Covered.",
+      "mechlib_fit": "no",
+      "name": "end_effectors_split",
+      "priority": "low",
+      "why": "grippers already is the holding shelf. Splitting EOAT from clamps is taxonomy theater."
+    },
+    {
+      "already": "fixtures (repeatable_dock)",
+      "api_shape": null,
+      "fdm": "ISO plates are products.",
+      "mechlib_fit": "no",
+      "name": "tooling_atc",
+      "priority": "low",
+      "why": "Dock is the locate primitive. A tooling aisle would be finished ATC products."
+    },
+    {
+      "already": null,
+      "api_shape": null,
+      "fdm": "Out of scope.",
+      "mechlib_fit": "no",
+      "name": "heat",
+      "priority": "low",
+      "why": "Prompt said heat? (out). Correct. Not a mechanism class this library should name."
+    }
+  ],
+  "id": "missing-categories",
+  "new_categories": [],
+  "rejected": [
+    {
+      "name": "springs_split",
+      "why": "flexures already includes coil/leaf/wave/spiral. A 31st shelf to split energy from joints does not earn its keep."
+    },
+    {
+      "name": "pairs_shelf",
+      "why": "joints is the pair shelf. Grow it with revolute_pair / cylindrical_pair / rod_end rather than adding 'pairs'."
+    }
+  ],
+  "sources": [
+    ".claude/overnight/catalog.json categories table (30 shelves)",
+    ".claude/overnight/GAP_REPORT.md new_categories from clutches, screws, clockwork, six-bar, spatial, flexure",
+    "mechlib/usecases.py search_use_cases depends on these names",
+    "https://en.wikipedia.org/wiki/Machine"
+  ],
+  "summary": "A gallery shelf is justified when (1) it is a real machinery class agents search by name, (2) at least three FDM-printable semi-primitives would live there, and (3) those parts are currently misfiled or unshelved. Live CATEGORIES has 30 shelves: movements cover cams, chains, clutches, couplings, drives, flexures, fluid, gears, grippers, guides, indexing, joints, linear, linkages, pulleys, ratchets; elements cover bearings, closures, fasteners, fixtures, mechanisms; blocks cover cutters, lattices, meshutil, packing, patterns, prim, stepio, sweep, text. Overnight slices already proposed brakes, clockwork, constant_force, leg_mechanisms, and spatial. This slice ranks those against the prompt list and against classes nobody named.\n\nWhat is already a shelf under another name. End-effectors are grippers. Cable/tendon is pulleys (blurb already says belt and cable) plus drag_chain. Differentials are one kit (bevel_differential) under gears, not a gearbox aisle. ATC is repeatable_dock under fixtures. Springs live inside flexures. Seals live as cutters (oring, labyrinth, gasket). Traction/CVT is one variable-pitch pulley under pulleys. Parallel robots are kits under linkages/spatial, not a robot aisle.\n\nWhat should become a shelf. brakes: shaft-to-ground, opposite of clutches (shaft-to-shaft); band, expanding-shoe, parking-pawl, disc-pad are real and printable; clutches blurb is 'torque limiting and freewheeling' and has no ground. clockwork: a feedback oscillator (escapement + resonator + going barrel), not indexing (crank in, steps out); escapement is currently misfiled under indexing. constant_force: Negator, remontoire, compliant CF cell, gravity arm; they source a flat F or T, they are not screws or springs. leg_mechanisms: one-leg kits (Klann, Jansen, walking-beam) are a distinct agent job from four_bar; four_bar's usecase currently dumps walking-robot legs onto a crank-rocker. spatial: Bennett, spherical 4-bar, 5-bar, delta forearm, UPS strut; not planar linkages and not a finished robot. dampers: orifice dashpot and rotary vane damper are printable envelopes; viscous/eddy hardware stays out; thinner than brakes but a real class.\n\nWhat must not become a shelf. Magnetic drives, magnetic bearings, magnetic gears: printed cages around bought magnets, rejected on every slice. Heat, thermoelectric, Stirling: out of scope. Finished parallel robots (Delta, Stewart, Agile Eye): products; the cells belong on spatial/linkages. Tooling/ATC products. A springs split from flexures: not enough confusion to pay for a 31st shelf. A seals elements shelf: only if lip/piston/wiper land as solids rather than cutters.",
+  "title": "Whole categories mechlib does not name"
+}
