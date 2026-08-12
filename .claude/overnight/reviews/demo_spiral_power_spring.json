@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_spiral_power_spring",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: purple Archimedean mainspring strip wound on an orange arbor inside a blue barrel.",
+  "notes": "Non-animated. Inner end on the arbor, outer end toward the barrel wall. Sane rest assembly of a clock mainspring.",
+  "verdict": "pass"
+}

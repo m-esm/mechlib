@@ -1072,3 +1072,17 @@ Non-animated. Jaws sit on the spiral rib, equally spaced. Sane rest assembly of 
 
 **Issues**
 - none
+
+## demo_spiral_power_spring — pass
+
+- reviewed: 2026-08-13T01:41:48+03:00
+- kind: movement
+- motion: Rest pose: purple Archimedean mainspring strip wound on an orange arbor inside a blue barrel.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Inner end on the arbor, outer end toward the barrel wall. Sane rest assembly of a clock mainspring.
+
+**Issues**
+- none
