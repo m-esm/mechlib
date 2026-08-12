@@ -1142,3 +1142,17 @@ Non-animated. Faces are gapped so the detents read; still a sane exploded rest, 
 
 **Issues**
 - none
+
+## demo_universal_joint — pass
+
+- reviewed: 2026-08-13T01:42:24+03:00
+- kind: movement
+- motion: Rest pose: purple input yoke and blue output yoke joined by a yellow four-trunnion spider at a working angle.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Cross is captured in both forks; shafts meet at an angle. Sane rest assembly of a Cardan joint.
+
+**Issues**
+- none

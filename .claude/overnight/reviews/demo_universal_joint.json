@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_universal_joint",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: purple input yoke and blue output yoke joined by a yellow four-trunnion spider at a working angle.",
+  "notes": "Non-animated. Cross is captured in both forks; shafts meet at an angle. Sane rest assembly of a Cardan joint.",
+  "verdict": "pass"
+}
