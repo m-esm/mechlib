@@ -1366,3 +1366,17 @@ Non-animated. One body. Front row shows eight teeth. Sane rest assembly of a dis
 
 **Issues**
 - none
+
+## demo_ring_gear — pass
+
+- reviewed: 2026-08-13T02:21:54+03:00
+- kind: movement
+- motion: Rest pose: blue internal involute ring gear, teeth cut inward from the rim.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. One body. Internal teeth and outer rim read. Sane rest assembly of an annular gear.
+
+**Issues**
+- none
