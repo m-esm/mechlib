@@ -1198,3 +1198,17 @@ Non-animated. Coupon parts are shown as a test pair rather than a full gearbox. 
 
 **Issues**
 - none
+
+## demo_beam_coupling — pass
+
+- reviewed: 2026-08-13T02:01:50+03:00
+- kind: movement
+- motion: Rest pose: single purple helical-slit coupling with clamp slots, bore, and set-screw bosses.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. One body. Helical beam and split clamps read. Sane rest assembly of a beam coupling.
+
+**Issues**
+- none

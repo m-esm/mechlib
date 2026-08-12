@@ -2124,19 +2124,22 @@
       "category": "couplings",
       "group": "movements",
       "id": "demo_beam_coupling",
+      "issues": [],
       "kind": "movement",
       "moving": [],
       "parts": 1,
       "priority": 2,
       "render_error": null,
       "rendered": true,
+      "review_at": "2026-08-13T02:01:50+03:00",
       "review_claim": "2026-08-13T02:01:14+03:00",
-      "reviewed": false,
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_beam_coupling.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_beam_coupling/sheet_s.png",
       "stationary": [
         "beam_coupling"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": false,
@@ -2430,5 +2433,5 @@
       "verdict": null
     }
   ],
-  "updated": "2026-08-13T02:01:47+03:00"
+  "updated": "2026-08-13T02:01:50+03:00"
 }
