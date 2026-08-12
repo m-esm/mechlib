@@ -2168,19 +2168,22 @@
       "category": "grippers",
       "group": "movements",
       "id": "demo_bellows_suction_cup",
+      "issues": [],
       "kind": "movement",
       "moving": [],
       "parts": 1,
       "priority": 2,
       "render_error": null,
       "rendered": true,
+      "review_at": "2026-08-13T02:01:54+03:00",
       "review_claim": "2026-08-13T02:01:14+03:00",
-      "reviewed": false,
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_bellows_suction_cup.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_bellows_suction_cup/sheet_s.png",
       "stationary": [
         "bellows_suction_cup"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": false,
@@ -2436,5 +2439,5 @@
       "verdict": null
     }
   ],
-  "updated": "2026-08-13T02:01:52+03:00"
+  "updated": "2026-08-13T02:01:54+03:00"
 }

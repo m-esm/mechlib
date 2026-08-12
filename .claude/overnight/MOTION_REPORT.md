@@ -1226,3 +1226,17 @@ Non-animated. Side row shows the sandwich and the cone flip. Sane rest assembly 
 
 **Issues**
 - none
+
+## demo_bellows_suction_cup — pass
+
+- reviewed: 2026-08-13T02:01:54+03:00
+- kind: movement
+- motion: Rest pose: magenta bellows cup with sealing lip, two compliant folds, and a hose-barb stem.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. One body. Lip, folds, and barb all read. Sane rest assembly of a TPU vacuum cup.
+
+**Issues**
+- none
