@@ -596,3 +596,17 @@ Non-animated. Front row is the trough end-on with the shaft centered. Flight sta
 
 **Issues**
 - none
+
+## demo_ball_socket_joint — pass
+
+- reviewed: 2026-08-13T00:24:30+03:00
+- kind: movement
+- motion: Rest pose: pink ball stud snapped into a blue split-finger socket, stem leaving the mouth at an angle inside the cone.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Side row shows the slots and the lip past the ball equator. Stud is retained, not exploded out of the cup. Sane rest assembly.
+
+**Issues**
+- none
