@@ -1212,3 +1212,17 @@ Non-animated. One body. Helical beam and split clamps read. Sane rest assembly o
 
 **Issues**
 - none
+
+## demo_belleville_washer — pass
+
+- reviewed: 2026-08-13T02:01:52+03:00
+- kind: movement
+- motion: Rest pose: three gold coned disc springs stacked in series with alternating cone direction.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Side row shows the sandwich and the cone flip. Sane rest assembly of a Belleville stack.
+
+**Issues**
+- none
