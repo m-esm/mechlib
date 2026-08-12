@@ -1342,19 +1342,23 @@
       "category": "pulleys",
       "group": "movements",
       "id": "demo_eccentric_idler_mount",
+      "issues": [],
       "kind": "movement",
       "moving": [],
       "parts": 2,
       "priority": 1,
       "render_error": null,
       "rendered": true,
-      "reviewed": false,
+      "review_at": "2026-08-13T01:01:40+03:00",
+      "review_claim": "2026-08-13T01:01:08+03:00",
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_eccentric_idler_mount.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_eccentric_idler_mount/sheet_s.png",
       "stationary": [
         "bushing",
         "idler"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": false,
@@ -1367,6 +1371,7 @@
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T01:01:08+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_flat_worm_pair/sheet_s.png",
       "stationary": [
@@ -1386,6 +1391,7 @@
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T01:01:08+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_freewheel_clutch/sheet_s.png",
       "stationary": [
@@ -1411,6 +1417,7 @@
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T01:01:08+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_harmonic_drive/sheet_s.png",
       "stationary": [
@@ -1431,6 +1438,7 @@
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T01:01:08+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_hirth_coupling/sheet_s.png",
       "stationary": [
@@ -1450,6 +1458,7 @@
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T01:01:08+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_idler_pulley/sheet_s.png",
       "stationary": [
@@ -2298,5 +2307,5 @@
       "verdict": null
     }
   ],
-  "updated": "2026-08-13T00:42:27+03:00"
+  "updated": "2026-08-13T01:01:40+03:00"
 }

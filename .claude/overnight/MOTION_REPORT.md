@@ -750,3 +750,17 @@ Non-animated. Lid caps the cable channel; pin is seated. Sane rest assembly of a
 
 **Issues**
 - none
+
+## demo_eccentric_idler_mount — pass
+
+- reviewed: 2026-08-13T01:01:40+03:00
+- kind: movement
+- motion: Rest pose: blue idler pulley on a green eccentric bushing; offset bore and setscrew boss visible.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Front row shows the eccentric boss sticking out of the pulley axis. Two bodies, no explode. Sane rest assembly.
+
+**Issues**
+- none
