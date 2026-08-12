@@ -932,3 +932,17 @@ Non-animated. Front row shows the dovetail/vee section and mounting holes. Carri
 
 **Issues**
 - none
+
+## demo_oldham_coupling — pass
+
+- reviewed: 2026-08-13T01:21:48+03:00
+- kind: movement
+- motion: Rest pose: orange and blue tongue hubs driving a yellow cross-slotted disc, tongues perpendicular.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Disc floats between the hubs; tongues seat in the slots. Sane rest assembly of an Oldham coupling.
+
+**Issues**
+- none
