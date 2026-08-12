@@ -2007,21 +2007,24 @@
       "category": "clutches",
       "group": "movements",
       "id": "demo_torque_limiter",
+      "issues": [],
       "kind": "movement",
       "moving": [],
       "parts": 3,
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_at": "2026-08-13T01:42:21+03:00",
       "review_claim": "2026-08-13T01:41:55+03:00",
-      "reviewed": false,
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_torque_limiter.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_torque_limiter/sheet_s.png",
       "stationary": [
         "detent_driver",
         "pocket_driven",
         "preload_spring"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": false,
@@ -2409,5 +2412,5 @@
       "verdict": null
     }
   ],
-  "updated": "2026-08-13T01:42:19+03:00"
+  "updated": "2026-08-13T01:42:21+03:00"
 }

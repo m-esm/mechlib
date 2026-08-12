@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_torque_limiter",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: blue detent driver (gold preload spring in the bore) above a green pocket disc with radiused bumps, coaxial.",
+  "notes": "Non-animated. Faces are gapped so the detents read; still a sane exploded rest, not a broken assembly. Sane rest assembly of a slip clutch.",
+  "verdict": "pass"
+}

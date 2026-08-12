@@ -1128,3 +1128,17 @@ Non-animated. Front row shows belt teeth in the pulley spaces. Sane rest assembl
 
 **Issues**
 - none
+
+## demo_torque_limiter — pass
+
+- reviewed: 2026-08-13T01:42:21+03:00
+- kind: movement
+- motion: Rest pose: blue detent driver (gold preload spring in the bore) above a green pocket disc with radiused bumps, coaxial.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Faces are gapped so the detents read; still a sane exploded rest, not a broken assembly. Sane rest assembly of a slip clutch.
+
+**Issues**
+- none
