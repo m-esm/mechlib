@@ -1310,3 +1310,17 @@ Non-animated. One body. Rim is thicker than the web. Sane rest assembly of an in
 
 **Issues**
 - none
+
+## demo_fusee — pass
+
+- reviewed: 2026-08-13T02:21:44+03:00
+- kind: movement
+- motion: Rest pose: gold conical fusee with a helical groove and flanges, radius shrinking along the axis.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. One body. Groove and cone read. Sane rest assembly of a clock fusee.
+
+**Issues**
+- none

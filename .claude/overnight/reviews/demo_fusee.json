@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_fusee",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: gold conical fusee with a helical groove and flanges, radius shrinking along the axis.",
+  "notes": "Non-animated. One body. Groove and cone read. Sane rest assembly of a clock fusee.",
+  "verdict": "pass"
+}

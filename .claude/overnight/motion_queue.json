@@ -2300,18 +2300,22 @@
       "category": "pulleys",
       "group": "movements",
       "id": "demo_fusee",
+      "issues": [],
       "kind": "movement",
       "moving": [],
       "parts": 1,
       "priority": 2,
       "render_error": null,
       "rendered": true,
-      "reviewed": false,
+      "review_at": "2026-08-13T02:21:44+03:00",
+      "review_claim": "2026-08-13T02:21:16+03:00",
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_fusee.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_fusee/sheet_s.png",
       "stationary": [
         "fusee_cone"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": false,
@@ -2324,6 +2328,7 @@
       "priority": 2,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T02:21:16+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_hose_barb/sheet_s.png",
       "stationary": [
@@ -2342,6 +2347,7 @@
       "priority": 2,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T02:21:16+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_printed_worm/sheet_s.png",
       "stationary": [
@@ -2360,6 +2366,7 @@
       "priority": 2,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T02:21:16+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_rack_2d/sheet_s.png",
       "stationary": [
@@ -2378,6 +2385,7 @@
       "priority": 2,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T02:21:16+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_ring_gear/sheet_s.png",
       "stationary": [
@@ -2396,6 +2404,7 @@
       "priority": 2,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T02:21:16+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_spur_gear_sector/sheet_s.png",
       "stationary": [
@@ -2458,5 +2467,5 @@
       "verdict": null
     }
   ],
-  "updated": "2026-08-13T02:02:29+03:00"
+  "updated": "2026-08-13T02:21:44+03:00"
 }
