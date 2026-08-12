@@ -778,3 +778,17 @@ Non-animated. Front row shows worm starts in the wheel teeth. Mesh looks clash-f
 
 **Issues**
 - none
+
+## demo_freewheel_clutch — pass
+
+- reviewed: 2026-08-13T01:01:45+03:00
+- kind: movement
+- motion: Rest pose: six orange rollers in ramped pockets of a blue outer ring around a purple inner hub.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Rollers sit in the wedge pockets, not exploded. Classic sprag/roller freewheel rest. Sane rest assembly.
+
+**Issues**
+- none
