@@ -1184,3 +1184,17 @@ Non-animated. Front row is the worm axis; teeth meet at the contact. Sane rest a
 
 **Issues**
 - none
+
+## demo_worm_coupon — pass
+
+- reviewed: 2026-08-13T02:01:47+03:00
+- kind: movement
+- motion: Rest pose: short green worm coupon beside a spoke wheel-band, print-frame mesh-test pair.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Coupon parts are shown as a test pair rather than a full gearbox. Sane rest assembly.
+
+**Issues**
+- none

@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_worm_coupon",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: short green worm coupon beside a spoke wheel-band, print-frame mesh-test pair.",
+  "notes": "Non-animated. Coupon parts are shown as a test pair rather than a full gearbox. Sane rest assembly.",
+  "verdict": "pass"
+}
