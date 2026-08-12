@@ -694,3 +694,17 @@ Non-animated. Front row shows the plunger tip in a tooth gap. Housing, plunger, 
 
 **Issues**
 - none
+
+## demo_differential_screw — pass
+
+- reviewed: 2026-08-13T00:42:20+03:00
+- kind: movement
+- motion: Rest pose: gold twin-pitch shaft through a purple frame nut and a cyan moving nut stacked on one axis.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Shaft threads show at both ends; nuts sit concentric, not exploded. Sane rest assembly of a differential screw.
+
+**Issues**
+- none
