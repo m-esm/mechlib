@@ -1338,3 +1338,17 @@ Non-animated. One body. Barbs taper on, square off. Sane rest assembly of a hose
 
 **Issues**
 - none
+
+## demo_printed_worm — pass
+
+- reviewed: 2026-08-13T02:21:49+03:00
+- kind: movement
+- motion: Rest pose: cyan journalled worm with runout threads, thrust collars, and keyed journals.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. One body. Helix and journals read. Sane rest assembly of a printed worm.
+
+**Issues**
+- none
