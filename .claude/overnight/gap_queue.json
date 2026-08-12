@@ -104,12 +104,14 @@
       "title": "Clutches, brakes, and overrunning"
     },
     {
-      "claimed_at": null,
-      "completed_at": null,
+      "candidate_count": 16,
+      "claimed_at": "2026-08-13T00:31:53+03:00",
+      "completed_at": "2026-08-13T00:34:12+03:00",
       "id": "couplings-cv",
+      "new_categories": [],
       "prompt": "Oldham, jaw, beam, Hooke, double Cardan, tripod exist. Survey Rzeppa/ball CV, Tracta, Thompson, Schmidt, bellows, disc/membrane, grid, chain coupling, homokinetic joints. Note which have pose laws in-module (needed to animate) vs display-only kits.",
-      "report": null,
-      "status": "pending",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/couplings-cv.json",
+      "status": "done",
       "title": "Shaft couplings and CV joints"
     },
     {
@@ -194,5 +196,5 @@
       "title": "Mechanisms that exist but cannot play"
     }
   ],
-  "updated": "2026-08-13T00:31:47+03:00"
+  "updated": "2026-08-13T00:34:12+03:00"
 }
