@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_ratchet_wheel_pawl",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: green pawl seated in a tooth of the pink sawtooth wheel, cyan spring behind the pawl.",
+  "notes": "Non-animated. Pawl tip is in a valley; spring is attached. Sane rest assembly of a bolt-on ratchet.",
+  "verdict": "pass"
+}

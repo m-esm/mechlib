@@ -988,3 +988,17 @@ Non-animated. Planets mesh both sun and ring; no clash or explode. Sane rest ass
 
 **Issues**
 - none
+
+## demo_ratchet_wheel_pawl — pass
+
+- reviewed: 2026-08-13T01:22:18+03:00
+- kind: movement
+- motion: Rest pose: green pawl seated in a tooth of the pink sawtooth wheel, cyan spring behind the pawl.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Pawl tip is in a valley; spring is attached. Sane rest assembly of a bolt-on ratchet.
+
+**Issues**
+- none
