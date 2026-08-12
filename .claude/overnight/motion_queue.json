@@ -1730,13 +1730,17 @@
       "category": "drives",
       "group": "movements",
       "id": "demo_planet_stage",
+      "issues": [],
       "kind": "movement",
       "moving": [],
       "parts": 6,
       "priority": 1,
       "render_error": null,
       "rendered": true,
-      "reviewed": false,
+      "review_at": "2026-08-13T01:22:15+03:00",
+      "review_claim": "2026-08-13T01:21:55+03:00",
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_planet_stage.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_planet_stage/sheet_s.png",
       "stationary": [
         "carrier",
@@ -1746,7 +1750,7 @@
         "ring",
         "sun"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": false,
@@ -1759,6 +1763,7 @@
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T01:21:55+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_ratchet_wheel_pawl/sheet_s.png",
       "stationary": [
@@ -1779,6 +1784,7 @@
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T01:21:55+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_roller_chain/sheet_s.png",
       "stationary": [
@@ -1806,6 +1812,7 @@
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T01:21:55+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_roller_chain_link/sheet_s.png",
       "stationary": [
@@ -2362,5 +2369,5 @@
       "verdict": null
     }
   ],
-  "updated": "2026-08-13T01:21:53+03:00"
+  "updated": "2026-08-13T01:22:15+03:00"
 }

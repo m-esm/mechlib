@@ -974,3 +974,17 @@ Non-animated. Pawls sit in the ring teeth; side/front are a flat two-body disc. 
 
 **Issues**
 - none
+
+## demo_planet_stage — pass
+
+- reviewed: 2026-08-13T01:22:15+03:00
+- kind: movement
+- motion: Rest pose: yellow sun, three colored planets, and a blue internally toothed ring on a downward hex-output carrier.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Planets mesh both sun and ring; no clash or explode. Sane rest assembly of a 12:9:30 planetary stage.
+
+**Issues**
+- none
