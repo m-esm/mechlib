@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_roller_chain_link",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: one pitch of roller chain \u2014 inner/outer plates, magenta roller, green pin, bushing stacked.",
+  "notes": "Non-animated. Pin through roller and plates; opposite hole empty for the next pitch. Sane rest assembly of a single chain link.",
+  "verdict": "pass"
+}

@@ -1016,3 +1016,17 @@ Non-animated. Each roller sits in a gap with running clearance; unused teeth are
 
 **Issues**
 - none
+
+## demo_roller_chain_link — pass
+
+- reviewed: 2026-08-13T01:22:22+03:00
+- kind: movement
+- motion: Rest pose: one pitch of roller chain — inner/outer plates, magenta roller, green pin, bushing stacked.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Pin through roller and plates; opposite hole empty for the next pitch. Sane rest assembly of a single chain link.
+
+**Issues**
+- none
