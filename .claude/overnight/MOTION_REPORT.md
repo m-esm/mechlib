@@ -764,3 +764,17 @@ Non-animated. Front row shows the eccentric boss sticking out of the pulley axis
 
 **Issues**
 - none
+
+## demo_flat_worm_pair — pass
+
+- reviewed: 2026-08-13T01:01:43+03:00
+- kind: movement
+- motion: Rest pose: orange three-start worm meshing a yellow helical wheel band at crossed axes.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Front row shows worm starts in the wheel teeth. Mesh looks clash-free, nothing floating. Sane rest assembly.
+
+**Issues**
+- none

@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_flat_worm_pair",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: orange three-start worm meshing a yellow helical wheel band at crossed axes.",
+  "notes": "Non-animated. Front row shows worm starts in the wheel teeth. Mesh looks clash-free, nothing floating. Sane rest assembly.",
+  "verdict": "pass"
+}
