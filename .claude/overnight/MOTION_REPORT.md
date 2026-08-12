@@ -1296,3 +1296,17 @@ Non-animated. One body. Front row shows the nested blade pairs. Sane rest assemb
 
 **Issues**
 - none
+
+## demo_flywheel — pass
+
+- reviewed: 2026-08-13T02:02:29+03:00
+- kind: movement
+- motion: Rest pose: orange rim-heavy four-spoke flywheel with a hub bore.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. One body. Rim is thicker than the web. Sane rest assembly of an inertia wheel.
+
+**Issues**
+- none
