@@ -848,3 +848,17 @@ Non-animated. Driver's plain arc and remaining teeth read; contact is at the too
 
 **Issues**
 - none
+
+## demo_iris_diaphragm — pass
+
+- reviewed: 2026-08-13T01:02:21+03:00
+- kind: movement
+- motion: Rest pose: six colored leaves inside a pink drive ring on a blue base, forming a round central aperture.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Leaves stay on their pivot posts; aperture is circular. No exploded leaves. Sane rest assembly of a print-in-place iris.
+
+**Issues**
+- none

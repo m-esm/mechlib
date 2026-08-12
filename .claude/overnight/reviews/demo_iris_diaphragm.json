@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_iris_diaphragm",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: six colored leaves inside a pink drive ring on a blue base, forming a round central aperture.",
+  "notes": "Non-animated. Leaves stay on their pivot posts; aperture is circular. No exploded leaves. Sane rest assembly of a print-in-place iris.",
+  "verdict": "pass"
+}

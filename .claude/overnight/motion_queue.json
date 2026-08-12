@@ -1510,14 +1510,17 @@
       "category": "grippers",
       "group": "movements",
       "id": "demo_iris_diaphragm",
+      "issues": [],
       "kind": "movement",
       "moving": [],
       "parts": 9,
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_at": "2026-08-13T01:02:21+03:00",
       "review_claim": "2026-08-13T01:01:55+03:00",
-      "reviewed": false,
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_iris_diaphragm.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_iris_diaphragm/sheet_s.png",
       "stationary": [
         "base_ring",
@@ -1530,7 +1533,7 @@
         "leaf_5",
         "retainer_cap"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": false,
@@ -2329,5 +2332,5 @@
       "verdict": null
     }
   ],
-  "updated": "2026-08-13T01:02:19+03:00"
+  "updated": "2026-08-13T01:02:21+03:00"
 }
