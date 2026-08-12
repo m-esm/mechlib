@@ -1352,3 +1352,17 @@ Non-animated. One body. Helix and journals read. Sane rest assembly of a printed
 
 **Issues**
 - none
+
+## demo_rack_2d — pass
+
+- reviewed: 2026-08-13T02:21:51+03:00
+- kind: movement
+- motion: Rest pose: gold eight-tooth rack, thin extrusion, trapezoidal teeth on a pitch line.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. One body. Front row shows eight teeth. Sane rest assembly of a display rack.
+
+**Issues**
+- none

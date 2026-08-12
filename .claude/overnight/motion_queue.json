@@ -2366,19 +2366,22 @@
       "category": "gears",
       "group": "movements",
       "id": "demo_rack_2d",
+      "issues": [],
       "kind": "movement",
       "moving": [],
       "parts": 1,
       "priority": 2,
       "render_error": null,
       "rendered": true,
+      "review_at": "2026-08-13T02:21:51+03:00",
       "review_claim": "2026-08-13T02:21:16+03:00",
-      "reviewed": false,
+      "review_path": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/reviews/demo_rack_2d.json",
+      "reviewed": true,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_rack_2d/sheet_s.png",
       "stationary": [
         "eight_tooth_rack"
       ],
-      "verdict": null
+      "verdict": "pass"
     },
     {
       "animated": false,
@@ -2473,5 +2476,5 @@
       "verdict": null
     }
   ],
-  "updated": "2026-08-13T02:21:49+03:00"
+  "updated": "2026-08-13T02:21:51+03:00"
 }
