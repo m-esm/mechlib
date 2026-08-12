@@ -1058,3 +1058,17 @@ Non-animated. Pins sit on the pitch circle as track references; one pin per gap.
 
 **Issues**
 - none
+
+## demo_scroll_drive — pass
+
+- reviewed: 2026-08-13T01:41:46+03:00
+- kind: movement
+- motion: Rest pose: blue Archimedean scroll plate with three colored jaws at 120 deg on a common gripping circle.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Jaws sit on the spiral rib, equally spaced. Sane rest assembly of a 3-jaw chuck scroll.
+
+**Issues**
+- none
