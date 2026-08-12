@@ -169,12 +169,14 @@
       "title": "Pulleys, cables, tackle, and textile hardware"
     },
     {
-      "claimed_at": null,
-      "completed_at": null,
+      "candidate_count": 18,
+      "claimed_at": "2026-08-13T02:13:20+03:00",
+      "completed_at": "2026-08-13T02:14:58+03:00",
       "id": "fluid-pumps-valves",
+      "new_categories": [],
       "prompt": "Gerotor, external gear, peristaltic, spool, check, hose barb exist. Survey vane, lobe, screw, piston/swash (swash_plate exists), diaphragm, centrifugal impeller, needle/ball/gate/butterfly valves, pressure relief, shuttle, manifold block, Tesla valve, pulsatile.",
-      "report": null,
-      "status": "pending",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/fluid-pumps-valves.json",
+      "status": "done",
       "title": "Pumps, valves, and fluid machines"
     },
     {
@@ -214,5 +216,5 @@
       "title": "Mechanisms that exist but cannot play"
     }
   ],
-  "updated": "2026-08-13T01:41:41+03:00"
+  "updated": "2026-08-13T02:14:58+03:00"
 }
