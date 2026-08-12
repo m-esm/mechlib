@@ -158,12 +158,14 @@
       "title": "Clockwork, escapements, and energy storage"
     },
     {
-      "claimed_at": null,
-      "completed_at": null,
+      "candidate_count": 15,
+      "claimed_at": "2026-08-13T01:40:13+03:00",
+      "completed_at": "2026-08-13T01:41:41+03:00",
       "id": "pulleys-cables-tackle",
+      "new_categories": [],
       "prompt": "Timing, V-belt, idler, tensioner, winch, fusee, grooved drum exist. Survey block-and-tackle, Weston differential pulley, capstan, self-tailing winch, cam/clam cleat, rope clutch, fairlead, turning block, Spanish windlass, belt CVT variable pulley, cable carrier is already drag_chain.",
-      "report": null,
-      "status": "pending",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/pulleys-cables-tackle.json",
+      "status": "done",
       "title": "Pulleys, cables, tackle, and textile hardware"
     },
     {
@@ -212,5 +214,5 @@
       "title": "Mechanisms that exist but cannot play"
     }
   ],
-  "updated": "2026-08-13T01:40:08+03:00"
+  "updated": "2026-08-13T01:41:41+03:00"
 }

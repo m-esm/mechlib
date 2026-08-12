@@ -311,3 +311,31 @@ FDM reality. Recoil and deadbeat print as two plates and already animate. The mi
 - **deadbeat_again** [low] fit=no — Already shipped. Prompt listed deadbeat vs recoil; both styles are arguments on escapement().
 - **recoil_again** [low] fit=no — Already shipped as the default anchor.
 - **fusee_again** [low] fit=no — The drum exists. A fusee+chain+barrel assembly is a product built from this drum plus spiral_power_spring.
+
+## pulleys-cables-tackle — Pulleys, cables, tackle, and textile hardware
+
+Wrapping pairs (Reuleaux higher pair: a flexible member on a sheave or drum) split by what they wrap and what they do. Belts (toothed or V) transmit rotary power between fixed centres. Cables and ropes lift, haul, or hold: a sheave redirects, a drum stores, a tackle multiplies, a cleat or clutch locks. 507 is almost a pulley textbook: 1-23 simple and compound tackles, 58-62 differentials, 224 expanding pulley, 243 friction, 255-259 more tackles, Chinese windlass 129 and 352, capstans 412 and 491. Weston (1850s) is the Chinese windlass with an endless chain. Howell barely touches this class (a tape-spring is not a sheave).
+
+Catalog already covers belts and one cable drum. timing_pulley (GT2-style), v_belt_pulley (3L etc.), idler_pulley (crowned), eccentric_idler_mount, belt_tensioner. grooved_drum is the winch/fusee/cone cable drum (winch_drum_demo and fusee_demo share the API). drag_chain is a cable carrier, not a tackle. ratchet_wheel_pawl's usecase mentions winches. Grep finds no sheave, block, tackle, Weston, capstan, windlass, cleat, fairlead, rope clutch, or variable-pitch CVT pulley. The wrapping primitive for rope (a sheave) is missing; everything rope-side is currently a timing belt or a drum.
+
+FDM reality. A sheave is a grooved wheel with a cheek; a turning block is that sheave in a strap with a becket. Block-and-tackle is n sheaves posed on two frames, MA = n or 2n depending on which end is fixed. Weston differential is two different-diameter chain wheels on one shaft plus an endless chain and a moving hook sheave; self-locking, the garage engine hoist. Chinese windlass is the same law on two drum diameters (507 #129). Cam cleat is two sprung cams that bite a rope one way (sailing, the printable lock). Clam cleat is a V with teeth, no moving parts. Fairlead / bullseye is a ring that only redirects. Capstan is a vertical warping drum (507 #412), distinct from a grooved winch drum. Belt CVT is two facing cones whose axial gap sets the pitch radius (Variomatic, scooter, 507 #224 expanding). Self-tailing winch and rope clutch are real but close to products: emit a stripper-jaw cell or a cam-in-slot, not a Harken assembly. Spanish windlass is a bar twisting a loop (no sheave). Cable carrier is already drag_chain.
+
+**New categories**
+- none
+
+**Candidates**
+- **sheave** [high] fit=yes — The wrapping primitive for rope and wire. Every block, tackle, and fairlead starts here. idler_pulley is a crowned belt idler; timing_pulley has teeth; grooved_drum stores many turns. A sheave redirects one part of line.
+- **block_and_tackle** [high] fit=yes — The simple machine after the wedge and the screw. Mechanical advantage from wrapping. No current API poses more than one cable turn on a drum. The agent job when someone says 'pulley system' or 'purchase'.
+- **weston_differential** [high] fit=yes — Weston 1850s chain fall. Evolved from the Chinese windlass by making the rope endless. Distinct from block-and-tackle (equal sheaves, not self-locking) and from grooved_drum (one diameter).
+- **chinese_windlass** [high] fit=yes — Differential windlass. Lift per turn is pi*(D-d). The prompt's Spanish windlass is a different machine (a twisting bar); this is the one 507 actually names. grooved_drum is a single radius_law, not two drums.
+- **cam_cleat** [high] fit=yes — The printable rope lock. No current cleat. Distinct from a ratchet (toothed wheel) and from a rope clutch (cam in a closed slot). First textile-hardware primitive.
+- **belt_cvt_pulley** [high] fit=yes — Variable-pitch V-pulley. v_belt_pulley is a fixed groove. Traction/CVT was named on the missing-categories prompt. The pulley half of a belt CVT is a semi-primitive; the whole scooter transmission is not.
+- **capstan** [med] fit=yes — Warping head: rope is not stored, it slips with a tail. Distinct from grooved_drum (helical storage). Ship, theatre, dock. The wrapping pair whose torque is e^{mu*theta}.
+- **clam_cleat** [med] fit=yes — Zero-moving-part rope lock. Simpler than cam_cleat, lower holding. Both belong; cam is the sprung pair, clam is the toothed V.
+- **fairlead** [med] fit=yes — Redirects a line without a rolling sheave. Bullseye, padeye, turning point on a deck. Too thin to skip once sheave exists; agents ask for it by name.
+- **rope_clutch** [med] fit=yes — Holds a loaded line that must stay aligned (halyard). Cam cleat is open; a clutch is a closed channel. Rank after cam_cleat.
+- **spanish_windlass** [low] fit=maybe — Twisting a bar in a bight to shorten a lashing. Field improvisation, not a machine part. The prompt listed it; the 507 windlass is the Chinese differential, not this.
+- **self_tailing_winch** [low] fit=maybe — Sailing winch that tails itself. The reusable parts are already a drum and a ratchet. A stripper-jaw cell is a maybe after those exist.
+- **timing_again** [low] fit=no — GT2-style already ships.
+- **v_belt_again** [low] fit=no — The missing V-belt piece is the variable-pitch CVT, not a second fixed sheave.
+- **drag_chain_again** [low] fit=no — Prompt said cable carrier is already drag_chain. Correct.

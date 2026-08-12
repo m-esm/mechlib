@@ -1844,6 +1844,7 @@
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T01:41:12+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_roller_follower/sheet_s.png",
       "stationary": [
@@ -1864,6 +1865,7 @@
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T01:41:12+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_roller_sprocket/sheet_s.png",
       "stationary": [
@@ -1883,6 +1885,7 @@
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T01:41:12+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_scroll_drive/sheet_s.png",
       "stationary": [
@@ -1904,6 +1907,7 @@
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T01:41:12+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_spiral_power_spring/sheet_s.png",
       "stationary": [
@@ -1924,6 +1928,7 @@
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T01:41:12+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_spring_cartridge_ratchet/sheet_s.png",
       "stationary": [
@@ -1946,6 +1951,7 @@
       "priority": 1,
       "render_error": null,
       "rendered": true,
+      "review_claim": "2026-08-13T01:41:12+03:00",
       "reviewed": false,
       "sheet": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/renders/demo_telescoping_stage/sheet_s.png",
       "stationary": [
@@ -2378,5 +2384,5 @@
       "verdict": null
     }
   ],
-  "updated": "2026-08-13T01:22:22+03:00"
+  "updated": "2026-08-13T01:41:12+03:00"
 }
