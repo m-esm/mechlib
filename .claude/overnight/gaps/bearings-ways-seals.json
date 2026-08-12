@@ -1,0 +1,143 @@
+{
+  "candidates": [
+    {
+      "already": "printed_ball_bearing, linear_way",
+      "api_shape": "crossed_roller(d, rollers, roller_d, width) rotary, or crossed_roller_way(length, travel) linear. Races + bought needles at alternating 90 deg",
+      "fdm": "Printed V-races, bought needle rollers. Rotary: compact moment-stiff wrist. Linear: two V-rails and a cage, stroke limited (non-recirc). Prints. Wear is the race.",
+      "mechlib_fit": "yes",
+      "name": "crossed_roller",
+      "priority": "high",
+      "why": "Alternating 90-deg rollers carry radial, thrust, and moment in one thin section. Robot wrists, CMMs, rotary tables. Not a ball bearing (point contact, no moment) and not a sliding way. The missing precision rolling pair."
+    },
+    {
+      "already": "linear_way(profile='vee'), idler_pulley",
+      "api_shape": "v_wheel_rail(angle_deg=90, wheel_d, rail_len) -> {rail, wheels, truck}",
+      "fdm": "A V-slot rail (printed or a bought 2020 V-slot stand-in) plus crowned V-wheels. The OpenBuilds / printer-gantry rolling way. Wheels can be printed TPU/PETG or bought Delrin. Most FDM-native rolling guide.",
+      "mechlib_fit": "yes",
+      "name": "v_wheel_rail",
+      "priority": "high",
+      "why": "V-wheel on a V-rail. linear_way vee is a sliding pair that needs hold-down. This rolls. The hobby linear default, and it is not in-tree."
+    },
+    {
+      "already": "plain_bushing, printed_ball_bearing, telescoping_stage",
+      "api_shape": "linear_ball_bushing(shaft_d, balls, circuits) -> {nut, balls} on a round shaft. Teaching analog; balls bought",
+      "fdm": "Printed nut with gothic grooves or recirculating tracks, bought balls, bought or printed shaft. Same honesty as printed_ball_bearing: not a service LM12UU. The printer-axis request.",
+      "mechlib_fit": "yes",
+      "name": "linear_ball_bushing",
+      "priority": "high",
+      "why": "Recirculating balls on a round shaft (Thomson / LM). The other linear rolling family next to crossed-roller and V-wheel. plain_bushing slides; this rolls."
+    },
+    {
+      "already": "oring_groove, labyrinth_seal",
+      "api_shape": "lip_seal(shaft_d, lip_t, housing_d, kind='radial'|'wiper') -> TPU ring or a housing groove for a bought TC seal",
+      "fdm": "A TPU garter-less lip, or a pocket that takes a bought radial shaft seal. labyrinth_seal is non-contact dust; this is the contact oil seal. Print the housing; the lip is elastomer.",
+      "mechlib_fit": "yes",
+      "name": "lip_seal",
+      "priority": "high",
+      "why": "Radial shaft / oil seal. Rotating shaft, grease or oil stays in. oring_groove is a static gland; labyrinth is a comb. The missing dynamic contact seal."
+    },
+    {
+      "already": "oring_groove, hydraulic_cylinder (screws slice)",
+      "api_shape": "piston_ring(bore_d, t, h, gap, n=1) -> split rings + piston grooves",
+      "fdm": "A split (or printed-gap) ring in a piston groove. PETG/TPU. The gap is the leak and the install. Hydraulic cylinder (previous slice) needs this to be honest.",
+      "mechlib_fit": "yes",
+      "name": "piston_ring",
+      "priority": "high",
+      "why": "Reciprocating seal on a piston OD. Engines, compressors, printed syringes. Not an O-ring (which is a static/slow gland) and not a lip (which rides a shaft)."
+    },
+    {
+      "already": "lip_seal, linear_way",
+      "api_shape": "wiper(rod_d or way_section, lip) -> a scraper facing dirt, often stacked with a lip_seal",
+      "fdm": "A TPU lip aimed at incoming dirt, not at the oil. Prints as a cap on a rod or a carriage end. Way covers / bellows are a product.",
+      "mechlib_fit": "yes",
+      "name": "wiper",
+      "priority": "med",
+      "why": "Scraper / dirt wiper. Linear rods and hydraulic rams. Distinct from a lip seal (retains lubricant) by facing the other way. Cheap and named."
+    },
+    {
+      "already": "printed_ball_bearing, freewheel_clutch",
+      "api_shape": "needle_cage(n, needle_d, length, race_d) -> printed cage + bought needles",
+      "fdm": "A printed cage. Needles are bought. Drawn-cup HF one-way cups stay hardware (clockwork/clutches already said so). This is the radial needle stand-in.",
+      "mechlib_fit": "yes",
+      "name": "needle_roller",
+      "priority": "med",
+      "why": "Needle roller: high load, thin section. The prompt listed it. Not a ball and not a sprag. Cage is the printable part."
+    },
+    {
+      "already": "linear_way",
+      "api_shape": "linear_way(profile='box') square-section with a gib on one face",
+      "fdm": "A rectangular rail, carriage wraps three or four faces. Machine-tool box way. After dovetail/vee/tslot, a fourth profile.",
+      "mechlib_fit": "maybe",
+      "name": "box_way",
+      "priority": "low",
+      "why": "Classic mill column way. Capture is from wrap + gib, not an undercut. A profile= argument, not a second module."
+    },
+    {
+      "already": "linear_way(profile='dovetail')",
+      "api_shape": null,
+      "fdm": "Covered. ydovetail is a Y-assembly cutter, not a running way.",
+      "mechlib_fit": "no",
+      "name": "dovetail_way",
+      "priority": "low",
+      "why": "Prompt listed dovetail as missing. It is the default linear_way profile. Do not add a second dovetail."
+    },
+    {
+      "already": "linear_way(profile='vee')",
+      "api_shape": null,
+      "fdm": "Covered as a sliding vee. The rolling cousin is v_wheel_rail.",
+      "mechlib_fit": "no",
+      "name": "vee_way",
+      "priority": "low",
+      "why": "Already a linear_way profile. The gap is the rolling V-wheel, not a second sliding vee."
+    },
+    {
+      "already": null,
+      "api_shape": null,
+      "fdm": "Prints a pocketed pad. Needs a compressor, restrictors, and a lapped surface.",
+      "mechlib_fit": "no",
+      "name": "air_bearing",
+      "priority": "low",
+      "why": "Aerostatic. Out. A printed pad is a fixture around bought hardware."
+    },
+    {
+      "already": null,
+      "api_shape": null,
+      "fdm": "Prints a magnet cage.",
+      "mechlib_fit": "no",
+      "name": "magnetic_bearing",
+      "priority": "low",
+      "why": "Active or passive magnetic. Coils or magnets. Same reject as magnetic_gear / magnetic_clutch."
+    }
+  ],
+  "id": "bearings-ways-seals",
+  "new_categories": [],
+  "rejected": [
+    {
+      "name": "hiwin_profile_rail",
+      "why": "Recirculating ball carriage on a ground profile rail. Product. linear_ball_bushing is the printable teaching analog."
+    },
+    {
+      "name": "tapered_roller_cup",
+      "why": "Timken cone and cup. Ground metal. Crossed-roller is the printable moment-stiff stand-in."
+    },
+    {
+      "name": "pillow_block",
+      "why": "A housing around a bushing or a bought bearing. Product built from plain_bushing + bearing_seat."
+    },
+    {
+      "name": "mechanical_face_seal",
+      "why": "John Crane lapped faces + spring. Product / hardware."
+    }
+  ],
+  "sources": [
+    "https://www.iqsdirectory.com/articles/linear-bearings.html",
+    "https://armoloy.com/linear-bearings-types-selection-failures-fixes/",
+    "https://www.linearmotiontips.com/linear-bearing-seals-types-options-and-applications/",
+    "https://ikont.com/technical-resources/technology-blog/robust-crossed-roller-bearings-with-sealing-and-design-options-2/",
+    "https://pm.nl/differences-in-crossed-roller-guides/",
+    ".claude/overnight/catalog.json category guides + bearings + cutters oring/labyrinth/gasket",
+    "mechlib/bearings.py (plain_bushing, thrust_washer, printed_ball_bearing), mechlib/guides.py (linear_way dovetail/vee/tslot, telescoping_stage), mechlib/cutters.py (oring_groove, labyrinth_seal, gasket_channel, bearing_seat, ydovetail), mechlib/usecases.py"
+  ],
+  "summary": "A bearing constrains relative motion and carries load; a way is a prismatic bearing; a seal keeps fluid or dirt on one side. Reuleaux's rolling higher pair is the rolling bearing; the prismatic lower pair is the way; a seal is not a pair. Norton/Slocum split bearings by contact (plain vs rolling vs fluid-film vs magnetic) and by load (radial, thrust, moment). Linear families are sliding (dovetail, vee, box, t-slot), rolling (recirculating profile rail, ball bushing, crossed-roller non-recirc, V-wheel), and aerostatic. Seals split contact (lip, O-ring, piston ring, wiper, packing) vs non-contact (labyrinth, viscoseal). 507 barely names them (anti-friction rolls 250, 270). Howell's 'bearing' is a flexure pivot, already in-tree.\n\nCatalog already covers the printable staples. Radial plain: plain_bushing (sleeve/flange, grease grooves, lead-in). Radial rolling: printed_ball_bearing (print-in-place truncated races, honest FDM limits, buy a 608 for load). Thrust: thrust_washer (pads/pockets/flat, or pair=True ball-thrust with bought balls). Ways: linear_way already ships profile='dovetail'|'vee'|'tslot' plus a tapered gib. telescoping_stage is keyed square tubes. flexure_stage is the compliant way. Seals: oring_groove (face or bore, squeeze/fill gated), labyrinth_seal (interleaved comb, the printable rotary seal), gasket_channel (non-round cord). Cutters: bearing_seat (608 pocket), ydovetail (assembly tongue, not a running way). The prompt's 'dovetail way' and 'V-way' are therefore not gaps: they are arguments on linear_way. Grep finds no crossed-roller, needle roller, linear ball bushing, V-wheel rail, lip/shaft seal, piston ring, or wiper.\n\nFDM reality. Crossed-roller (rotary or linear) is alternating 90-deg cylinders between V-races: high stiffness, the CMM/robot wrist bearing. Print the races, buy needles. Linear ball bushing (LM on a round shaft) is the printer-axis request; printed balls fail, bought balls in a printed nut is a teaching analog of printed_ball_bearing. V-wheel on a V-rail (OpenBuilds) is the most FDM-native rolling way: printed or bought Delrin wheels, an aluminium V-slot or a printed rail. Needle-roller stand-in is a cage of bought needles in a printed cup, not a drawn HF bearing. Lip / shaft seal is a TPU or bought elastomer ring in a housing groove; labyrinth already covers the non-contact rotary case. Piston ring is a split (or printed-gap) ring on a piston OD. Wiper/scraper is a lip facing dirt on a rod or way. Air and magnetic bearings are out (compressor + restrictors, or coils/magnets). Recirculating Hiwin rails and tapered-roller cups are products / ground metal. A pillow block is a housing around a bushing, a product.",
+  "title": "Bearings, ways, and seals"
+}
