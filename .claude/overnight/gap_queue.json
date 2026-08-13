@@ -238,7 +238,18 @@
       "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/dampers-dashpots.json",
       "status": "done",
       "title": "Dampers, dashpots, and energy sinks"
+    },
+    {
+      "candidate_count": 10,
+      "claimed_at": "2026-08-13T03:59:05+03:00",
+      "completed_at": "2026-08-13T03:59:57+03:00",
+      "id": "governors-regulators",
+      "new_categories": [],
+      "prompt": "Invented first-principles slice. Watt flyball, Porter, Proell, Hartnell, spring/pickering, hit-and-miss, centrifugal (clutch exists), isochronous, dashpot-damped. Survey 507 governors. Which are printable semi-primitives vs engine products?",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/governors-regulators.json",
+      "status": "done",
+      "title": "Governors, speed regulators, and flyballs"
     }
   ],
-  "updated": "2026-08-13T03:26:50+03:00"
+  "updated": "2026-08-13T03:59:57+03:00"
 }

@@ -1,0 +1,116 @@
+{
+  "candidates": [
+    {
+      "already": "flywheel, bell_crank",
+      "api_shape": "watt_governor(arm_len, ball_d, rpm_or_height) -> {spindle, arms, balls, sleeve} plus height(N)",
+      "fdm": "Four printed links, two balls, a sleeve on a spindle. Prints. Pose is sleeve height from the conical-pendulum law (N^2 ~ 1/h). Teaching set. No sleeve load.",
+      "mechlib_fit": "yes",
+      "name": "watt_governor",
+      "priority": "high",
+      "why": "Watt 1788 flyball. The first feedback regulator and the missing conical-pendulum kit. Not a flywheel and not a centrifugal clutch. Steam, hit-and-miss, any shaft that must hold a speed."
+    },
+    {
+      "already": "watt_governor",
+      "api_shape": "watt_governor(..., sleeve_mass=) or porter_governor with a dead weight on the sleeve. Porter 1858",
+      "fdm": "Same kit plus a sliding weight. Faster engines. A mass= argument, not a second topology.",
+      "mechlib_fit": "yes",
+      "name": "porter_governor",
+      "priority": "high",
+      "why": "Dead-weight loaded Watt. More sensitive, higher equilibrium speed. The named lab experiment next to Watt. Do not add a second module if watt_governor can take a sleeve mass."
+    },
+    {
+      "already": "bell_crank, coil_spring",
+      "api_shape": "hartnell_governor(ball_d, crank_len, spring) -> {spindle, bell_cranks, balls, spring, sleeve}",
+      "fdm": "Two bell-cranks, two balls, a coil or leaf on the sleeve. Compact. Prints. Spring rate sets the controlling force; isochronism is a rate choice.",
+      "mechlib_fit": "yes",
+      "name": "hartnell_governor",
+      "priority": "high",
+      "why": "The spring-controlled textbook governor. Compact, high-speed, the one that can be isochronous. Distinct from Watt (no spring, gravity only)."
+    },
+    {
+      "already": "leaf_spring, watt_governor",
+      "api_shape": "pickering_governor(leaves=3, ball_d, leaf_t) -> a hub, three leaf springs, three balls. No pin joints",
+      "fdm": "Balls on mid-span of printed leaf springs. Pickering 1862. The most FDM-native governor: no revolute pairs, just flexure. Prints as one or four pieces.",
+      "mechlib_fit": "yes",
+      "name": "pickering_governor",
+      "priority": "high",
+      "why": "Leaf-spring centrifugal. Small high-speed engines, steam toys. Howell construction, Watt job. Distinct from watt_governor (pins) and from hartnell (bell-cranks)."
+    },
+    {
+      "already": "watt_governor, porter_governor",
+      "api_shape": "porter with balls on downward extensions below the arm joints",
+      "fdm": "Same as Porter plus two downward stubs. Most sensitive of the three dead-weight types.",
+      "mechlib_fit": "yes",
+      "name": "proell_governor",
+      "priority": "med",
+      "why": "Named lab variant. A style= on the Watt/Porter kit, not a fourth module."
+    },
+    {
+      "already": "watt_governor, ratchet_wheel_pawl, plate_cam",
+      "api_shape": "flyballs lift a pawl so it misses the exhaust-valve cam",
+      "fdm": "Composition of watt_governor + a pawl + a cam. Stationary-engine class. Prints.",
+      "mechlib_fit": "yes",
+      "name": "hit_and_miss",
+      "priority": "med",
+      "why": "IC hit-and-miss regulation. The governor does not throttle; it gates a valve event. Real, named, and still a kit once Watt exists."
+    },
+    {
+      "already": null,
+      "api_shape": "507 #147: wings + inclined planes, air drag lifts a sleeve",
+      "fdm": "Prints. Teaching curiosity.",
+      "mechlib_fit": "maybe",
+      "name": "air_fan_governor",
+      "priority": "low",
+      "why": "507's named steam-engine governor. Historical, drag-based. After Watt and Hartnell, low leverage."
+    },
+    {
+      "already": null,
+      "api_shape": "balls respond to angular acceleration, spring-centred",
+      "fdm": "Prints. Hard to balance. Rare in service.",
+      "mechlib_fit": "maybe",
+      "name": "inertia_governor",
+      "priority": "low",
+      "why": "Textbook sibling. Faster response, worse balance. Research extra."
+    },
+    {
+      "already": "centrifugal_clutch (proposed)",
+      "api_shape": null,
+      "fdm": "Covered as a clutch.",
+      "mechlib_fit": "no",
+      "name": "centrifugal_clutch_as_gov",
+      "priority": "low",
+      "why": "Engages a load at a trip rpm. Does not modulate a throttle. Different job."
+    },
+    {
+      "already": "flywheel",
+      "api_shape": null,
+      "fdm": "Covered.",
+      "mechlib_fit": "no",
+      "name": "flywheel_as_gov",
+      "priority": "low",
+      "why": "Stores energy, smooths speed. Does not sense and act. Not a governor."
+    }
+  ],
+  "id": "governors-regulators",
+  "new_categories": [],
+  "rejected": [
+    {
+      "name": "electronic_ecu",
+      "why": "Software + sensors. Out of scope."
+    },
+    {
+      "name": "corliss_engine",
+      "why": "A finished steam engine with a Porter on top. Product. The reusable part is porter_governor."
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Centrifugal_governor",
+    "https://engineering.myindialist.com/2009/lab-manual-watt-and-porter-governor-2/",
+    "https://bvarun.weebly.com/uploads/1/7/7/0/17705033/unit-5_governors.pdf",
+    "https://507movements.com/mm_147.html",
+    "https://507movements.com/toc.html",
+    "mechlib/drives.py flywheel, mechlib/linkages.py bell_crank, .claude/overnight/gaps/clutches-brakes-overrunning.json centrifugal_clutch, .claude/overnight/gaps/dampers-dashpots.json"
+  ],
+  "summary": "A governor is a closed-loop speed regulator: it senses shaft rate and moves a throttle (or a hit-and-miss pawl). Machine-design texts split centrifugal vs inertia. Centrifugal then splits pendulum (Watt conical pendulum, no sleeve load), dead-weight loaded (Porter: weight on the sleeve; Proell: balls on downward extensions), and spring-controlled (Hartnell bell-crank + spring, Hartung, Wilson-Hartnell, Pickering leaf-spring). Inertia governors respond to angular acceleration, not just speed, and are rare. Hit-and-miss is an IC-engine special: a pawl misses the valve when the flyballs lift. Isochronism (zero speed range over the sleeve travel) is a Hartnell spring-rate property, not a kit; a Porter cannot be isochronous. 507 names several: 147 (air-fan + inclined-plane), 161-163, 170, 274, 287, 357.\n\nCatalog has no governor. Grep of mechlib/ and usecases.py for governor, flyball, Hartnell, Pickering, hit-and-miss is empty. Neighbours that are not governors: flywheel (stores energy, does not throttle), centrifugal_clutch (proposed; engages a load when rpm rises, does not modulate a valve), bell_crank (exists; the usual sleeve-to-throttle link), orifice_dashpot (proposed; damps hunting). A Watt governor is four bars + two balls + a sleeve on a spindle, posed by rpm or sleeve height. That is a semi-primitive. A Corliss engine with a Porter on top is a product.\n\nFDM reality. Watt flyball prints as a teaching kit: spindle, four links, two balls, sliding sleeve; pose is sleeve height from the conical-pendulum law. Porter is a sleeve mass on the same kit. Proell moves the balls onto downward arms (most sensitive of the three dead-weight types). Hartnell is two bell-cranks, two balls, a spring on the sleeve; compact, the modern spring governor. Pickering is two or three leaf springs with balls at mid-span, no pin joints, Howell-adjacent and the most FDM-native. Hit-and-miss is a flyball plus a pawl that misses a cam; composition. Air-fan 507 #147 is a historical curiosity (wings + inclined plane). Inertia governors and electronic ECUs are out. Do not file centrifugal_clutch as a governor.",
+  "title": "Governors, speed regulators, and flyballs"
+}

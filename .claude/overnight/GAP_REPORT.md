@@ -512,3 +512,26 @@ FDM reality. orifice_dashpot is a piston with a hole in a closed cylinder; fluid
 - **eddy_damper** [low] fit=no — Field device. Same reject as magnetic_gear / magnetic_bearing.
 - **hydraulic_shock_product** [low] fit=no — Fox / Bilstein / Koni. The reusable part is orifice_dashpot. The shock is a finished absorber.
 - **brake_as_damper** [low] fit=no — A brake grounds a shaft to stop it. A damper is a two-terminal rate. Do not merge the shelves.
+
+## governors-regulators — Governors, speed regulators, and flyballs
+
+A governor is a closed-loop speed regulator: it senses shaft rate and moves a throttle (or a hit-and-miss pawl). Machine-design texts split centrifugal vs inertia. Centrifugal then splits pendulum (Watt conical pendulum, no sleeve load), dead-weight loaded (Porter: weight on the sleeve; Proell: balls on downward extensions), and spring-controlled (Hartnell bell-crank + spring, Hartung, Wilson-Hartnell, Pickering leaf-spring). Inertia governors respond to angular acceleration, not just speed, and are rare. Hit-and-miss is an IC-engine special: a pawl misses the valve when the flyballs lift. Isochronism (zero speed range over the sleeve travel) is a Hartnell spring-rate property, not a kit; a Porter cannot be isochronous. 507 names several: 147 (air-fan + inclined-plane), 161-163, 170, 274, 287, 357.
+
+Catalog has no governor. Grep of mechlib/ and usecases.py for governor, flyball, Hartnell, Pickering, hit-and-miss is empty. Neighbours that are not governors: flywheel (stores energy, does not throttle), centrifugal_clutch (proposed; engages a load when rpm rises, does not modulate a valve), bell_crank (exists; the usual sleeve-to-throttle link), orifice_dashpot (proposed; damps hunting). A Watt governor is four bars + two balls + a sleeve on a spindle, posed by rpm or sleeve height. That is a semi-primitive. A Corliss engine with a Porter on top is a product.
+
+FDM reality. Watt flyball prints as a teaching kit: spindle, four links, two balls, sliding sleeve; pose is sleeve height from the conical-pendulum law. Porter is a sleeve mass on the same kit. Proell moves the balls onto downward arms (most sensitive of the three dead-weight types). Hartnell is two bell-cranks, two balls, a spring on the sleeve; compact, the modern spring governor. Pickering is two or three leaf springs with balls at mid-span, no pin joints, Howell-adjacent and the most FDM-native. Hit-and-miss is a flyball plus a pawl that misses a cam; composition. Air-fan 507 #147 is a historical curiosity (wings + inclined plane). Inertia governors and electronic ECUs are out. Do not file centrifugal_clutch as a governor.
+
+**New categories**
+- none
+
+**Candidates**
+- **watt_governor** [high] fit=yes — Watt 1788 flyball. The first feedback regulator and the missing conical-pendulum kit. Not a flywheel and not a centrifugal clutch. Steam, hit-and-miss, any shaft that must hold a speed.
+- **porter_governor** [high] fit=yes — Dead-weight loaded Watt. More sensitive, higher equilibrium speed. The named lab experiment next to Watt. Do not add a second module if watt_governor can take a sleeve mass.
+- **hartnell_governor** [high] fit=yes — The spring-controlled textbook governor. Compact, high-speed, the one that can be isochronous. Distinct from Watt (no spring, gravity only).
+- **pickering_governor** [high] fit=yes — Leaf-spring centrifugal. Small high-speed engines, steam toys. Howell construction, Watt job. Distinct from watt_governor (pins) and from hartnell (bell-cranks).
+- **proell_governor** [med] fit=yes — Named lab variant. A style= on the Watt/Porter kit, not a fourth module.
+- **hit_and_miss** [med] fit=yes — IC hit-and-miss regulation. The governor does not throttle; it gates a valve event. Real, named, and still a kit once Watt exists.
+- **air_fan_governor** [low] fit=maybe — 507's named steam-engine governor. Historical, drag-based. After Watt and Hartnell, low leverage.
+- **inertia_governor** [low] fit=maybe — Textbook sibling. Faster response, worse balance. Research extra.
+- **centrifugal_clutch_as_gov** [low] fit=no — Engages a load at a trip rpm. Does not modulate a throttle. Different job.
+- **flywheel_as_gov** [low] fit=no — Stores energy, smooths speed. Does not sense and act. Not a governor.
