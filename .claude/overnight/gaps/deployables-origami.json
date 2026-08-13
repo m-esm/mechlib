@@ -1,0 +1,116 @@
+{
+  "candidates": [
+    {
+      "already": "auxetic_panel, lazy_tongs, kerf_bend_cutter",
+      "api_shape": "miura_cell(a, b, gamma_deg, fold_deg) -> four parallelogram plates + hinges, 1 DoF",
+      "fdm": "Four plates, living_hinge or LET at the creases. Prints flat. Pose is fold angle. Tile n x m for a sheet; the tile is the primitive, the wing is a product.",
+      "mechlib_fit": "yes",
+      "name": "miura_cell",
+      "priority": "high",
+      "why": "Miura-ori, 1970 / map fold. Rigid-foldable degree-4 vertex, one DoF, packs a sheet into a stack. Solar arrays, folding maps, sandwich cores. auxetic_panel is a hole lattice, not a crease pose. The missing origami cell."
+    },
+    {
+      "already": "bistable_beam, sarrus_linkage",
+      "api_shape": "kresling_cell(n_sides, height, twist_deg) -> a triangulated cylinder, often bistable",
+      "fdm": "A tube of triangles, living hinges on the creases. Prints as a net or standing. Twist-compress is the pose. Bistable if the geometry says so.",
+      "mechlib_fit": "yes",
+      "name": "kresling_cell",
+      "priority": "high",
+      "why": "Kresling twist-buckle. Non-rigid origami, the named origami actuator / bellows. Distinct from sarrus (bar fold, exact line) and from bistable_beam (planar snap). Deployable booms, crawling robots, pumps."
+    },
+    {
+      "already": "kresling_cell",
+      "api_shape": "yoshimura_cell(n, diamond) -> a diamond-tube that flattens",
+      "fdm": "Prints as a net of diamonds. Structural boom, crash tube. Less of an actuator than Kresling.",
+      "mechlib_fit": "yes",
+      "name": "yoshimura_cell",
+      "priority": "med",
+      "why": "Yoshimura diamond pattern. The other named origami tube. Packs flat, carries load. After Miura and Kresling, the third tessellation people search."
+    },
+    {
+      "already": "miura_cell",
+      "api_shape": "waterbomb_vertex(r, fold_deg) -> a 6-crease vertex that bumps out of plane",
+      "fdm": "Six sectors, living hinges. Prints flat. Used as a gripper bump or a tessellated surface.",
+      "mechlib_fit": "yes",
+      "name": "waterbomb_vertex",
+      "priority": "med",
+      "why": "Waterbomb / balloon vertex. Not rigid-foldable the same way as Miura. Soft-robot and texture cell."
+    },
+    {
+      "already": "tape_spring_hinge (proposed)",
+      "api_shape": "stem_boom(r, slit, coil_r) -> a slit tube that coils on a drum and locks when straight",
+      "fdm": "PETG/TPU thin wall, or a bought steel tape. Pose is pay-out. tape_spring is the hinge; STEM is the boom.",
+      "mechlib_fit": "yes",
+      "name": "stem_boom",
+      "priority": "med",
+      "why": "Storable tubular extendible member. Coilable boom, the deployable cousin of Negator (which wants to coil) and tape-spring (which wants to stay straight). Antenna / camera masts."
+    },
+    {
+      "already": "miura_cell",
+      "api_shape": "a radial sector of a flasher; a full flasher is a product",
+      "fdm": "Prints as a net. Compact wrap of a disc.",
+      "mechlib_fit": "maybe",
+      "name": "flasher_sector",
+      "priority": "low",
+      "why": "Flasher origami. One sector is a cell; wrapping a whole solar disc is a product. After Miura."
+    },
+    {
+      "already": "bricard_6r (proposed)",
+      "api_shape": "a ring of 6+ tetrahedra, Bricard inversion",
+      "fdm": "Prints as tetrahedra with hinges. Toy / teaching.",
+      "mechlib_fit": "maybe",
+      "name": "kaleidocycle",
+      "priority": "low",
+      "why": "Named Bricard ring. After bricard_6r, a style, not a second topology."
+    },
+    {
+      "already": "angulated_scissor (proposed), lazy_tongs",
+      "api_shape": null,
+      "fdm": "A closed scissor polyhedron. Product.",
+      "mechlib_fit": "no",
+      "name": "hoberman_sphere",
+      "priority": "low",
+      "why": "Spatial slice already rejected this. The cell is angulated_scissor. lazy_tongs is the straight special case."
+    },
+    {
+      "already": "lazy_tongs",
+      "api_shape": null,
+      "fdm": "Covered and animated.",
+      "mechlib_fit": "no",
+      "name": "lazy_tongs_again",
+      "priority": "low",
+      "why": "Straight scissor. Not a crease pattern."
+    },
+    {
+      "already": "auxetic_panel",
+      "api_shape": null,
+      "fdm": "Covered as a hole lattice.",
+      "mechlib_fit": "no",
+      "name": "auxetic_as_miura",
+      "priority": "low",
+      "why": "Reentrant metamaterial, not a rigid-origami pose. Keep both."
+    }
+  ],
+  "id": "deployables-origami",
+  "new_categories": [],
+  "rejected": [
+    {
+      "name": "inflatable_deployable",
+      "why": "Gas + bladder. Hardware / product."
+    },
+    {
+      "name": "satellite_solar_wing",
+      "why": "A tiled Miura plus a spacecraft. Product. miura_cell is the primitive."
+    }
+  ],
+  "sources": [
+    "https://www.firgelliauto.com/blogs/mechanisms/miura-fold-deployable-mechanism",
+    "https://en.wikipedia.org/wiki/Miura_fold",
+    "https://en.wikipedia.org/wiki/Kresling_pattern",
+    ".claude/overnight/gaps/spatial-spherical-parallel.json angulated_scissor / bricard_6r",
+    ".claude/overnight/gaps/flexure-compliant.json let_joint / tape_spring_hinge",
+    "mechlib/linkages.py lazy_tongs sarrus, mechlib/lattices.py auxetic_panel kerf_bend_cutter, mechlib/grippers.py iris_diaphragm"
+  ],
+  "summary": "A deployable is a 1-DoF (or few-DoF) mechanism that packs small and opens large. Two families: bar-and-scissor (Hoberman, lazy-tongs, Bennett/Bricard rings) and origami tessellations (rigid-foldable sheets: Miura, flasher, Yoshimura; non-rigid: Kresling, waterbomb). Pellegrino/You treat the reusable object as a unit cell; the sphere, canopy, or satellite is a product. Spatial slice already named angulated_scissor (Hoberman kinked cell) and Bennett/Bricard rings. Flexure slice named LET and tape-spring. This slice owns the crease-pattern cells that are not those.\n\nCatalog already has the bar special cases and two sheet tricks. lazy_tongs is the straight-scissor (kink=180). sarrus is a spatial fold that makes a line, not a pack. iris_diaphragm is an aperture of blades, not a crease pattern. auxetic_panel is a metamaterial lattice (reentrant), related in spirit to Miura but not a rigid-origami pose. kerf_bend_cutter is a living-hinge slit lattice. Grep finds no Miura, Kresling, Yoshimura, flasher, waterbomb, STEM boom, or kaleidocycle.\n\nFDM reality. Miura-ori unit (four parallelograms, one mountain and three valleys at a degree-4 vertex) is rigid-foldable, 1 DoF, prints as four plates plus living hinges or LET joints; pose is the fold angle. That is the solar-array / map-fold cell. Kresling is a twist-buckled cylinder, non-rigid, often bistable, prints as a tube of triangles; the named origami actuator. Yoshimura is a diamond-tube that flattens; structural boom cell. Flasher wraps a disc into a compact spiral; one cell is a radial sector, a full flasher is getting product-shaped. Waterbomb is a 6-crease vertex, used as a bump / gripper cell. STEM / CTM coilable boom is a tape-spring cousin (slit tube that coils on a drum). Kaleidocycle is a Bricard ring of tetrahedra; after bricard_6r, a named toy cell. A Hoberman sphere or a Miura solar wing is a product. Inflatable deployables are out.",
+  "title": "Deployables, origami, and foldable cells"
+}

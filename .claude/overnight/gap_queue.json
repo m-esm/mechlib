@@ -249,7 +249,18 @@
       "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/governors-regulators.json",
       "status": "done",
       "title": "Governors, speed regulators, and flyballs"
+    },
+    {
+      "candidate_count": 10,
+      "claimed_at": "2026-08-13T04:00:11+03:00",
+      "completed_at": "2026-08-13T04:00:56+03:00",
+      "id": "deployables-origami",
+      "new_categories": [],
+      "prompt": "Invented first-principles slice. Spatial already named Hoberman angulated-scissor and Bennett/Bricard rings. Flexure named LET and tape-spring. Survey Miura-ori, waterbomb, flasher, Yoshimura, Kresling, scissor rings, STEM/CTM coilable booms, kaleidocycle. Semi-primitive cells only, not finished canopies or satellites.",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/deployables-origami.json",
+      "status": "done",
+      "title": "Deployables, origami, and foldable cells"
     }
   ],
-  "updated": "2026-08-13T03:59:57+03:00"
+  "updated": "2026-08-13T04:00:56+03:00"
 }

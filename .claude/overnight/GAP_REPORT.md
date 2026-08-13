@@ -535,3 +535,26 @@ FDM reality. Watt flyball prints as a teaching kit: spindle, four links, two bal
 - **inertia_governor** [low] fit=maybe — Textbook sibling. Faster response, worse balance. Research extra.
 - **centrifugal_clutch_as_gov** [low] fit=no — Engages a load at a trip rpm. Does not modulate a throttle. Different job.
 - **flywheel_as_gov** [low] fit=no — Stores energy, smooths speed. Does not sense and act. Not a governor.
+
+## deployables-origami — Deployables, origami, and foldable cells
+
+A deployable is a 1-DoF (or few-DoF) mechanism that packs small and opens large. Two families: bar-and-scissor (Hoberman, lazy-tongs, Bennett/Bricard rings) and origami tessellations (rigid-foldable sheets: Miura, flasher, Yoshimura; non-rigid: Kresling, waterbomb). Pellegrino/You treat the reusable object as a unit cell; the sphere, canopy, or satellite is a product. Spatial slice already named angulated_scissor (Hoberman kinked cell) and Bennett/Bricard rings. Flexure slice named LET and tape-spring. This slice owns the crease-pattern cells that are not those.
+
+Catalog already has the bar special cases and two sheet tricks. lazy_tongs is the straight-scissor (kink=180). sarrus is a spatial fold that makes a line, not a pack. iris_diaphragm is an aperture of blades, not a crease pattern. auxetic_panel is a metamaterial lattice (reentrant), related in spirit to Miura but not a rigid-origami pose. kerf_bend_cutter is a living-hinge slit lattice. Grep finds no Miura, Kresling, Yoshimura, flasher, waterbomb, STEM boom, or kaleidocycle.
+
+FDM reality. Miura-ori unit (four parallelograms, one mountain and three valleys at a degree-4 vertex) is rigid-foldable, 1 DoF, prints as four plates plus living hinges or LET joints; pose is the fold angle. That is the solar-array / map-fold cell. Kresling is a twist-buckled cylinder, non-rigid, often bistable, prints as a tube of triangles; the named origami actuator. Yoshimura is a diamond-tube that flattens; structural boom cell. Flasher wraps a disc into a compact spiral; one cell is a radial sector, a full flasher is getting product-shaped. Waterbomb is a 6-crease vertex, used as a bump / gripper cell. STEM / CTM coilable boom is a tape-spring cousin (slit tube that coils on a drum). Kaleidocycle is a Bricard ring of tetrahedra; after bricard_6r, a named toy cell. A Hoberman sphere or a Miura solar wing is a product. Inflatable deployables are out.
+
+**New categories**
+- none
+
+**Candidates**
+- **miura_cell** [high] fit=yes — Miura-ori, 1970 / map fold. Rigid-foldable degree-4 vertex, one DoF, packs a sheet into a stack. Solar arrays, folding maps, sandwich cores. auxetic_panel is a hole lattice, not a crease pose. The missing origami cell.
+- **kresling_cell** [high] fit=yes — Kresling twist-buckle. Non-rigid origami, the named origami actuator / bellows. Distinct from sarrus (bar fold, exact line) and from bistable_beam (planar snap). Deployable booms, crawling robots, pumps.
+- **yoshimura_cell** [med] fit=yes — Yoshimura diamond pattern. The other named origami tube. Packs flat, carries load. After Miura and Kresling, the third tessellation people search.
+- **waterbomb_vertex** [med] fit=yes — Waterbomb / balloon vertex. Not rigid-foldable the same way as Miura. Soft-robot and texture cell.
+- **stem_boom** [med] fit=yes — Storable tubular extendible member. Coilable boom, the deployable cousin of Negator (which wants to coil) and tape-spring (which wants to stay straight). Antenna / camera masts.
+- **flasher_sector** [low] fit=maybe — Flasher origami. One sector is a cell; wrapping a whole solar disc is a product. After Miura.
+- **kaleidocycle** [low] fit=maybe — Named Bricard ring. After bricard_6r, a style, not a second topology.
+- **hoberman_sphere** [low] fit=no — Spatial slice already rejected this. The cell is angulated_scissor. lazy_tongs is the straight special case.
+- **lazy_tongs_again** [low] fit=no — Straight scissor. Not a crease pattern.
+- **auxetic_as_miura** [low] fit=no — Reentrant metamaterial, not a rigid-origami pose. Keep both.
