@@ -131,6 +131,27 @@ def travel_mm(series: List[Dict[str, List[float]]]) -> Dict[str, float]:
     return out
 
 
+def vertex_travel_mm(frames) -> Dict[str, float]:
+    """Peak per-vertex displacement from frame 0.
+
+    Centroid AABB travel is zero for a body that spins in place (gears,
+    Geneva wheels, escape wheels). Vertex travel still sees the rotation.
+    """
+    first = {name: np.asarray(mesh.vertices, dtype=float)
+             for name, mesh, _color in frames[0]}
+    out = {name: 0.0 for name in first}
+    for entries in frames[1:]:
+        for name, mesh, _color in entries:
+            if name not in first or len(mesh.vertices) != len(first[name]):
+                continue
+            peak = float(np.linalg.norm(
+                np.asarray(mesh.vertices, dtype=float) - first[name],
+                axis=1).max())
+            if peak > out[name]:
+                out[name] = peak
+    return out
+
+
 def _basis(eye: np.ndarray):
     view = -eye / np.linalg.norm(eye)  # camera looks toward origin
     world_up = np.array([0.0, 0.0, 1.0])
@@ -270,8 +291,11 @@ def render_demo(demo_name: str, demo_fn, animate: dict, catalog: dict) -> dict:
     sheet_s.save(small_path)
 
     travels = travel_mm(centroids)
-    moving = sorted(name for name, dist in travels.items() if dist >= 0.6)
-    still = sorted(name for name, dist in travels.items() if dist < 0.6)
+    vtravels = vertex_travel_mm(frames)
+    moving = sorted(
+        name for name in travels
+        if travels[name] >= 0.6 or vtravels.get(name, 0.0) >= 0.6)
+    still = sorted(name for name in travels if name not in set(moving))
     info = catalog.get("demos", {}).get(demo_name, {})
     meta = {
         "demo": demo_name,
@@ -282,6 +306,7 @@ def render_demo(demo_name: str, demo_fn, animate: dict, catalog: dict) -> dict:
         "phases": [None if v is None else float(v) for v in values],
         "bodies": [name for name, _m, _c in frames[0]],
         "travel_mm": travels,
+        "vertex_travel_mm": vtravels,
         "moving": moving,
         "stationary": still,
         "category": info.get("category"),

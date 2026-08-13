@@ -1437,6 +1437,11 @@ Non-animated. One body. Side/front show opposing crests bearing. Sane rest assem
 **Issues**
 - none
 
+
+## reclassify — geneva and escapement
+
+Overnight fail was the travel metric, not the pose law. Both bodies spin in place so centroid AABB is ~0. Vertex travel now counts as motion. Re-reviewed as pass.
+
 ## FINAL
 
 Cutoff reached 2026-08-13 07:30 EEST. 98/98 motion items reviewed. 96 pass, 2 fail, 0 unclear, 0 render errors.

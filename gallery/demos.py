@@ -49,11 +49,14 @@ from mechlib.chains import (
 )
 from mechlib.clutches import dog_clutch, freewheel_clutch, torque_limiter
 from mechlib.couplings import (
+    _hooke_spider_matrix,
     double_cardan_joint,
     hirth_coupling,
     jaw_coupling,
     oldham_coupling,
+    oldham_pose,
     tripod_cv_joint,
+    hooke_pose,
     universal_joint,
 )
 from mechlib.cutters import (
@@ -633,12 +636,14 @@ PLAY: dict = {
         "turns": (2, 6, 1),
     },
     "demo_oldham_coupling": {
+        "phase_deg": (0.0, 360.0, 5.0),
         "misalign": (0.0, 5.0, 0.5),
         "explode": (0.0, 12.0, 1.0),
         "clearance": (0.15, 0.4, 0.05),
         "sections": (24, 64, 8),
     },
     "demo_universal_joint": {
+        "phase_deg": (0.0, 360.0, 5.0),
         "bend_deg": (0.0, 35.0, 5.0),
         "clearance": (0.2, 0.5, 0.05),
         "sections": (24, 64, 8),
@@ -2288,35 +2293,50 @@ def demo_archimedes_screw(lead: float = 14.0, turns: float = 4.0) -> MeshList:
 
 
 def demo_oldham_coupling(
+    phase_deg: float = 0.0,
     misalign: float = 3.0,
     explode: float = 6.0,
     clearance: float = 0.25,
     sections: int = 64,
 ) -> MeshList:
     parts = oldham_coupling(clearance=clearance, sections=sections)
-    hub_a = parts["hub_a"]
+    pose = oldham_pose(phase_deg=phase_deg, offset=misalign)
+    hub_a = _spin(parts["hub_a"], pose["hub_a_deg"])
     hub_a.apply_translation((0.0, 0.0, -explode))
-    hub_b = parts["hub_b"]
+    disc = _spin(parts["disc"], pose["disc_deg"])
+    disc.apply_translation((pose["disc_xy"][0], pose["disc_xy"][1], 0.0))
     # Hub B's tongue runs along Y, so its free sliding direction is Y.
+    hub_b = parts["hub_b"].copy()
     hub_b.apply_translation((0.0, misalign, explode))
+    hub_b = _spin(hub_b, pose["hub_b_deg"], center=(0.0, misalign, 0.0))
     return [
         ("tongue_hub_a", hub_a, PALETTE[0]),
-        ("cross_slotted_disc", parts["disc"], PALETTE[5]),
+        ("cross_slotted_disc", disc, PALETTE[5]),
         ("tongue_hub_b", hub_b, PALETTE[1]),
     ]
 
 
 def demo_universal_joint(
+    phase_deg: float = 0.0,
     bend_deg: float = 20.0,
     clearance: float = 0.3,
     sections: int = 64,
 ) -> MeshList:
     parts = universal_joint(
         bend_deg=bend_deg, clearance=clearance, sections=sections)
+    pose = hooke_pose(bend_deg=bend_deg, phase_deg=phase_deg)
+    yoke_a = _spin(parts["yoke_a"], pose["input_deg"])
+    spider = parts["spider"].copy()
+    if phase_deg:
+        spider.apply_transform(_hooke_spider_matrix(bend_deg, phase_deg))
+    yoke_b = parts["yoke_b"].copy()
+    if phase_deg:
+        yoke_b.apply_transform(trimesh.transformations.rotation_matrix(
+            math.radians(pose["output_deg"]), pose["output_axis"]))
     return [
-        ("fork_yoke_input", parts["yoke_a"], PALETTE[7]),
-        ("cross_spider", parts["spider"], PALETTE[5]),
-        ("fork_yoke_output", parts["yoke_b"], PALETTE[3]),
+        ("fork_yoke_input", yoke_a, PALETTE[7]),
+        ("cross_spider", spider, PALETTE[5]),
+        ("fork_yoke_output", yoke_b, PALETTE[3]),
     ]
 
 

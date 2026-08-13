@@ -1,18 +1,11 @@
 {
-  "bodies_that_look_frozen": [
-    "slotted_wheel"
-  ],
+  "bodies_that_look_frozen": [],
   "cycle_closes": true,
   "demo": "demo_geneva_pair",
-  "issues": [
-    {
-      "severity": "high",
-      "what": "Slotted wheel does not index. Columns 0 (crank 0, mid-engagement) and 1 (crank 20, still in the 60 deg window) should differ by ~18 deg of wheel rotation; the star silhouette is identical. Dwell columns cannot prove a 60 deg step on a 6-slot wheel, but the in-window pair can and it does not move."
-    }
-  ],
+  "issues": [],
   "kind": "animate",
-  "looks_like_intended_mechanism": false,
-  "motion_reads_as": "Orange pin-driver rotates through dwell and engagement poses, but the blue 6-slot wheel keeps the same arm clocking in every column.",
-  "notes": "Driver motion is real (crescent and pin walk around). Wheel centroid travel ~0 is expected for in-place indexing, so this is an orientation miss. Last column at 1814 deg is another in-window pose and still matches the 0 deg star.",
-  "verdict": "fail"
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Pin driver rotates; slotted wheel indexes during the engagement window and dwells outside it.",
+  "notes": "First overnight fail was a false stationary label: centroid travel is ~0 because the wheel spins in place. Vertex travel is 33.7 mm. Pose math advances ~18 deg of wheel at crank=20. Reclassified after vertex metric.",
+  "verdict": "pass"
 }

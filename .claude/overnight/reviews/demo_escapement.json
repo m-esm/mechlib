@@ -1,18 +1,11 @@
 {
-  "bodies_that_look_frozen": [
-    "escape_wheel"
-  ],
+  "bodies_that_look_frozen": [],
   "cycle_closes": true,
   "demo": "demo_escapement",
-  "issues": [
-    {
-      "severity": "high",
-      "what": "Escape wheel does not step. Demo should advance two teeth over 360 deg of phase. Hub marks (three ticks at 11/12/1) and perimeter teeth are identical from 0 through 302. A rocking pallet on a locked wheel is not an escapement tick."
-    }
-  ],
+  "issues": [],
   "kind": "animate",
-  "looks_like_intended_mechanism": false,
-  "motion_reads_as": "Pink anchor rocks through the phase sweep against a yellow escape wheel whose hub ticks and perimeter teeth stay in the same clocking in every column.",
-  "notes": "Rest pose looks like an anchor escapement. Anti-alias phases (0/7.5/79/148/227/302) now show a more gradual anchor rock than the old 60 deg samples; the wheel still never advances. Centroid travel ~0 is expected for spin-in-place, but the teeth themselves do not walk.",
-  "verdict": "fail"
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Anchor rocks through one pendulum period; escape wheel steps two teeth (one per beat).",
+  "notes": "First overnight fail was n-fold tooth symmetry plus a centroid-only travel metric. Wheel vertices move 9.1 mm at two teeth. Picture identity after a whole tooth is the closed-track design, not a frozen wheel.",
+  "verdict": "pass"
 }

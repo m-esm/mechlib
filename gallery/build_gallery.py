@@ -565,6 +565,13 @@ ANIMATE = {
     # 30 deg cap). A drive tab on the input shaft stops the eccentric from
     # aliasing (bare shaft scored ~45% apparent motion).
     "demo_cycloidal_drive":  ("phase_deg",       3960.0, 144, False),
+    # Oldham: both hubs and the disc turn 1:1; the disc centre orbits at
+    # 2-omega. One input turn returns every transform. 36 frames keep the
+    # disc's 20 deg orbit step well under the 30 deg cap.
+    "demo_oldham_coupling":  ("phase_deg",        360.0,  36, False),
+    # Hooke: input and output both close after one turn (Cardan tangent
+    # relation). 36 frames keep the spider's two-axis step readable.
+    "demo_universal_joint":  ("phase_deg",        360.0,  36, False),
 }
 
 # Mechanisms deliberately left out, and why. Each was measured, not assumed.
@@ -596,13 +603,12 @@ ANIMATE = {
 #                          segment through the notch: an invented motion.
 #   escapement             Animated: escapement_pose gives the stepped wheel
 #                          + swinging anchor law; listed in ANIMATE.
-#   oldham_coupling,       Their POSE laws (the disc's 2-omega orbit, the
-#   universal_joint,       Cardan tangent relation) are textbook but are not in
-#   double_cardan_joint    the module, so baking them would mean authoring one.
-#                          v0.8.0 added cv_velocity_ratio, which is the SPEED
-#                          relation only: it still does not place a spider.
-#                          tripod_cv_joint is the exception and does animate,
-#                          because tripod_pose returns the actual pose.
+#   oldham_coupling,       Animated: oldham_pose gives the 2-omega disc orbit
+#   universal_joint        and hooke_pose gives the Cardan tangent relation.
+#                          Listed in ANIMATE.
+#   double_cardan_joint    Two Hooke joints in series; the intermediate shaft
+#                          pose is still not in the module (cv_velocity_ratio
+#                          is the SPEED relation only).
 #   iris_diaphragm,        Bounded out-and-back travels, which a single linear
 #   knuckle_hinge,         phase ramp cannot express, and with a hard stop in
 #   ball_socket_joint      the way there is no 360 to ramp through instead.
