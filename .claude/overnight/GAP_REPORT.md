@@ -489,3 +489,26 @@ Still true. demo_worm has no measurable conjugate contact (overlap 0). harmonic_
 - **eccentric_idler** [low] fit=no — Prompt said do not propose this. Correct. Animating it claims the part spins in service.
 - **deforming_kits** [low] fit=no — Still true. Not a pose-law gap.
 - **worm_display** [low] fit=no — Still true. Drive sense cannot be recovered from the geometry.
+
+## dampers-dashpots — Dampers, dashpots, and energy sinks
+
+A damper turns organised motion into heat. Norton and machine-design texts split by the dissipation law: viscous (F = c*v, dashpot / rotary vane in a pot), friction (F = mu*N, Coulomb snubber / interleaf), hysteretic / elastomer (loss in the solid), fluid-dynamic (orifice, shock), and field (eddy, MR). Smith 2002 added the inerter (F = b*a_rel), a two-terminal inertia that is not a damper but lives on the same shelf because every textbook now draws C-K-B networks. 507 barely names dissipation (friction brake 242, dynamometer 244, friction test 373). Howell's lossy flexure is a viscoelastic hinge, not a pot. Reuleaux has no damper pair.
+
+Catalog has zero damper APIs. Grep of mechlib/ for damper, dashpot, snubber, inerter, orifice, shock is empty. Neighbours that are not dampers: flywheel (stores, does not dissipate), coil/leaf/wave/belleville (return force rises with x), band_brake (clutches slice, grounds a shaft, not a rate element), linear_way (friction is parasitic). missing-categories already ranked a dampers shelf as med: add it when the first kit lands.
+
+FDM reality. orifice_dashpot is a piston with a hole in a closed cylinder; fluid is bought oil or air; the envelope is tube+piston+rod, cousin of hydraulic_cylinder, but the hole and the sealed volume are the point. rotary_vane_damper is a vane in a silicone-filled pot (cabinet door, toilet seat, steering); prints as a pot + vane + bought grease. friction_snubber is two pads and a preload (Coulomb); prints. elastomer_bumper is a TPU puck or bellows, the cheapest printed sink. inerter is a rack (or leadscrew) spinning a flywheel between two terminals; rack_pinion + flywheel already exist, the kit is the two-terminal packaging. A TMD is mass + spring + dashpot: composition, close to a product once you add the building. Hydraulic monotube shocks, eddy plates, and MR fluid are hardware. Do not file a brake as a damper.
+
+**New categories**
+- **dampers** — Energy dissipation is a machinery class. No current shelf. First kits: orifice_dashpot, rotary_vane_damper, friction_snubber, inerter. Brakes ground a shaft; dampers are two-terminal rate elements.
+
+**Candidates**
+- **orifice_dashpot** [high] fit=yes — The viscous linear primitive. Door closers, instrument settling, recoil buffers. hydraulic_cylinder is a force source (ports, pressure). This is a rate sink (a hole, no pump). Distinct.
+- **rotary_vane_damper** [high] fit=yes — The viscous rotary primitive. No current API dissipates rotation. Not a wrap-spring (locks) and not a brake (grounds). Soft-close lids are the agent job.
+- **friction_snubber** [high] fit=yes — Dry friction as a designed sink, not a parasitic way. band_brake grounds a shaft; this is a two-terminal pad pair on a rod or a leaf.
+- **inerter** [high] fit=yes — Not a damper (no heat) but every modern network draws it next to C and K. Vehicle suspensions, TMDIs. Agents searching inerter currently get nothing. Composition of existing parts, still a named primitive.
+- **elastomer_bumper** [med] fit=yes — End-stop / snubber pad. Not a spring (the point is hysteresis and a hard stop). Fine as a one-body kit so agents stop inventing it from cyl.
+- **tuned_mass_damper** [low] fit=maybe — Named, real, and agents will ask. After dashpot and a mass exist, it is three parts on a plate. Close to a product. Rank after the primitives.
+- **air_cushion** [low] fit=maybe — A parameter on the dashpot (fluid=air, plus a check), not a second kit.
+- **eddy_damper** [low] fit=no — Field device. Same reject as magnetic_gear / magnetic_bearing.
+- **hydraulic_shock_product** [low] fit=no — Fox / Bilstein / Koni. The reusable part is orifice_dashpot. The shock is a finished absorber.
+- **brake_as_damper** [low] fit=no — A brake grounds a shaft to stop it. A damper is a two-terminal rate. Do not merge the shelves.

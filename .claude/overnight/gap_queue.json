@@ -222,7 +222,23 @@
       "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/animate-coverage.json",
       "status": "done",
       "title": "Mechanisms that exist but cannot play"
+    },
+    {
+      "candidate_count": 10,
+      "claimed_at": "2026-08-13T03:26:01+03:00",
+      "completed_at": "2026-08-13T03:26:50+03:00",
+      "id": "dampers-dashpots",
+      "new_categories": [
+        {
+          "name": "dampers",
+          "why": "Energy dissipation is a machinery class. No current shelf. First kits: orifice_dashpot, rotary_vane_damper, friction_snubber, inerter. Brakes ground a shaft; dampers are two-terminal rate elements."
+        }
+      ],
+      "prompt": "First-principles slice invented after the original 18 queued. Survey viscous dashpot, rotary vane damper, friction snubber, inerter, tuned-mass damper, elastomer bumper, eddy/magnetic (out?), hydraulic shock product. Which are printable semi-primitives vs bought hardware?",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/dampers-dashpots.json",
+      "status": "done",
+      "title": "Dampers, dashpots, and energy sinks"
     }
   ],
-  "updated": "2026-08-13T03:25:41+03:00"
+  "updated": "2026-08-13T03:26:50+03:00"
 }
