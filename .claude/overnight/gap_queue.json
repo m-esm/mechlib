@@ -326,7 +326,21 @@
       "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/metrology-drawing.json",
       "status": "done",
       "title": "Drawing instruments and kinematic tracers"
+    },
+    {
+      "claimed_at": "2026-08-13T06:20:15+03:00",
+      "id": "wheels-casters-omni",
+      "prompt": "Invented first-principles slice. water-wind-wheels owns prime-mover rotors. flywheel stores energy. Survey Mecanum/Ilon, omni/poly (Grabowiecki), swivel caster with trail, ball-transfer, Killough pair, continuous-track shoe. Semi-primitive wheels only, not a chassis or a swerve module.",
+      "status": "in_progress",
+      "title": "Wheels, casters, and omnidirectional rolling"
+    },
+    {
+      "claimed_at": "2026-08-13T06:20:15+03:00",
+      "id": "toggles-presses",
+      "prompt": "Invented first-principles slice. 507 toggle 140, knee-lever 164, presses 105/132/133. toggle_clamp exists; scissor_jack and draw/hood latch already proposed. Survey generic toggle_joint, knuckle-joint press, double-toggle, flying/screw stamp, disk-bar press. Semi-primitive cells only, not a punch-press product.",
+      "status": "in_progress",
+      "title": "Toggle joints, over-center, and press cells"
     }
   ],
-  "updated": "2026-08-13T05:45:28+03:00"
+  "updated": "2026-08-13T06:20:15+03:00"
 }
