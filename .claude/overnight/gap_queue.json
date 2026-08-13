@@ -260,7 +260,18 @@
       "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/deployables-origami.json",
       "status": "done",
       "title": "Deployables, origami, and foldable cells"
+    },
+    {
+      "candidate_count": 11,
+      "claimed_at": "2026-08-13T04:33:53+03:00",
+      "completed_at": "2026-08-13T04:34:47+03:00",
+      "id": "valve-gear",
+      "new_categories": [],
+      "prompt": "Invented first-principles slice. 507 is thick on steam valve gear (Stephenson, Walschaerts, Joy, Hackworth, gab, slip eccentric, link motion). rotary_spool_valve and plate_cam exist. Which valve-motion cells are printable semi-primitives vs locomotive products?",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/valve-gear.json",
+      "status": "done",
+      "title": "Valve gear, eccentrics, and reversing motions"
     }
   ],
-  "updated": "2026-08-13T04:00:56+03:00"
+  "updated": "2026-08-13T04:34:47+03:00"
 }

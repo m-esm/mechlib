@@ -558,3 +558,27 @@ FDM reality. Miura-ori unit (four parallelograms, one mountain and three valleys
 - **hoberman_sphere** [low] fit=no — Spatial slice already rejected this. The cell is angulated_scissor. lazy_tongs is the straight special case.
 - **lazy_tongs_again** [low] fit=no — Straight scissor. Not a crease pattern.
 - **auxetic_as_miura** [low] fit=no — Reentrant metamaterial, not a rigid-origami pose. Keep both.
+
+## valve-gear — Valve gear, eccentrics, and reversing motions
+
+Valve gear turns crank rotation into a valve travel that can reverse and can be notched up (shorten the cutoff). Wikipedia splits it by how the two components (lap+lead vs travel) are made: dual-eccentric + expansion link (Stephenson 1842), constant-lead Walschaerts-type (one return crank + combination lever + expansion link, 1844), lever-and-link with no slide (Baker), and radial gears that derive the motion from the conrod (Hackworth, Joy). Slip-eccentric and gab are the cheap reverse. Corliss is a wrist-plate special. Poppet/Caprotti is cams, not bars. 507 is a valve-gear textbook: eccentrics 89-91, 135, 137; link motion 171, 185; a long run of gears at 181-189, 286, 418.
+
+Catalog has the neighbours, not the gear. slider_crank is the piston. plate_cam / face_cam can time a valve but cannot reverse or notch. rotary_spool_valve is a plug, not a motion. eccentric_cam_clamp and eccentric_idler_mount are a clamp and a belt take-up, not a strap eccentric. bell_crank exists (Baker uses several). Grep finds no Walschaerts, Stephenson link, Joy, Hackworth, gab, slip eccentric, expansion link, or a generic eccentric sheave.
+
+FDM reality. The missing primitive under every named gear is the eccentric: a disc whose centre is offset, a strap (or a rod on a pin), travel = 2e. That is not a plate_cam and not an idler bush. The second primitive is the expansion link + die block: a curved slotted link that mixes two motions and reverses by flipping which end drives. Combination lever (Walschaerts) adds lap+lead from the crosshead. A posed Walschaerts cell (return crank, eccentric rod, expansion link, radius rod, combination lever, union link) is a semi-primitive; a locomotive with cylinders and a boiler is a product. Stephenson is two eccentrics + one link. Baker replaces the slot with bell-cranks (no sliding). Joy/Hackworth hang off the conrod. Slip-eccentric is one eccentric that rotates to the reverse position. Do not emit a 2-8-0.
+
+**New categories**
+- none
+
+**Candidates**
+- **eccentric** [high] fit=yes — The primitive under Stephenson, Walschaerts (return crank is an eccentric), pumps, and many 507 motions. plate_cam is a programmed lift. eccentric_idler is a lock-once take-up. Missing the running strap eccentric.
+- **expansion_link** [high] fit=yes — The notch-up / reverse primitive. Stephenson and Walschaerts both hang on this. quick_return is a straight slot on a crank; this is a curved mixer. pin_in_slot is the pair; this is the named valve-gear part.
+- **walschaerts_cell** [high] fit=yes — The named 1-DoF valve motion with reverse and cutoff. A locomotive is a product; this cell is not. Teaching set and live-steam hobby default.
+- **stephenson_link** [high] fit=yes — Dual-eccentric + link. The other named gear. Inside-frame historically; the cell is still two eccentrics and a slot.
+- **combination_lever** [med] fit=yes — The constant-lead trick. If walschaerts_cell ships, this is a named part of it, not a second module.
+- **baker_gear** [med] fit=yes — Walschaerts without a slot. Named, printable, and the prompt of anyone who hates sliding dies.
+- **joy_hackworth** [med] fit=yes — The no-eccentric family. Compact. A cell hanging on slider_crank, not a new crank.
+- **slip_eccentric** [med] fit=yes — The model-engineer reverse. Not a full link motion. An argument on eccentric.
+- **corliss_wrist** [low] fit=maybe — Separate admission/exhaust. Famous, but the engine is a product. After eccentric + dashpot exist.
+- **caprotti_poppet** [low] fit=maybe — Cam valve gear. Do not add a locomotive cam box; use plate_cam.
+- **locomotive_product** [low] fit=no — Cylinders, boiler, frames. Product. The cell is walschaerts_cell.
