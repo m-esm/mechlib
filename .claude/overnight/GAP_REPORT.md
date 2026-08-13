@@ -628,3 +628,26 @@ FDM reality. rotary_hook is a 2:1 spinning hook around a stationary bobbin case;
 - **feed_dog** [low] fit=maybe — Fabric feed. Real, but the law is two cams. After rotary_hook exists.
 - **sewing_machine_product** [low] fit=no — Bed, arm, motor, tensioners. Product. The cells are hook + take-up + needle bar.
 - **loom_product** [low] fit=no — Frame, warp beam, cloth beam. Product.
+
+## water-wind-wheels — Water wheels, turbines, and wind rotors
+
+Prime-mover rotors extract work from a fluid. Water wheels split by where the stream hits: undershot (blades, low head), breast, overshot (buckets, high head). Modern hydro splits impulse (Pelton, Turgo, cross-flow) vs reaction (Francis mixed-flow, Kaplan axial). Wind splits drag (Savonius) vs lift (Darrieus VAWT, propeller HAWT). 507 is thick: water wheels 430-438, Barker's mill 438, windmills 485-486, paddles 487/489. Fluid slice already proposed centrifugal_impeller as a pump/fan; this slice owns the prime-mover rotors that are not that impeller.
+
+Catalog has no wheel or turbine rotor. Grep of mechlib/ for Pelton, Savonius, Darrieus, overshot, water wheel, turbine, windmill, impeller is empty. Neighbours: archimedes_screw (conveyor helix, also used as a low-head turbine), flywheel (stores, does not extract), proposed centrifugal_impeller (dynamic pump). A mill building is a product. A Pelton bucket wheel is a semi-primitive.
+
+FDM reality. overshot_wheel is a rim of buckets, prints as a disc + buckets, the teaching water wheel. undershot is flat or curved blades on a rim. Pelton is a disc of double-cusp buckets around a pitch circle; the jet is not printed. Savonius is two (or three) half-cylinders on a vertical shaft, the most FDM-native wind rotor. Darrieus is two or three airfoils on a vertical shaft (troposkein or H-rotor). A propeller / HAWT blade is an airfoil loft; one blade is a primitive, a 3-blade turbine on a tower is a product. Francis and Kaplan need a scroll case and a draft tube; the runner can print as a teaching cutaway, the plant cannot. Barker's mill is a reaction sprinkler (Hero / lawn). Do not emit a dam.
+
+**New categories**
+- none
+
+**Candidates**
+- **overshot_wheel** [high] fit=yes — The gravity water wheel. Overshot buckets, undershot blades, breast in between. Not an Archimedes conveyor and not a Pelton. The missing 507 water-wheel kit.
+- **pelton_wheel** [high] fit=yes — Pelton 1870s. Splitter-ridge buckets, atmospheric runner. Distinct from an overshot (gravity, no jet) and from a centrifugal impeller (enclosed, reaction).
+- **savonius_rotor** [high] fit=yes — Savonius 1922. Vertical-axis drag. Not a Darrieus (lift) and not a propeller. Anemometers, small chargers, teaching.
+- **darrieus_rotor** [high] fit=yes — Darrieus 1931. The lift vertical-axis. Distinct from Savonius. H-rotor is the easy print; eggbeater is the classic.
+- **propeller_blade** [med] fit=yes — Horizontal-axis lift rotor. The other wind family. centrifugal_impeller is a radial pump/fan; this is an axial propeller.
+- **barker_mill** [med] fit=yes — Barker's mill. The named 507 reaction wheel. Teaching, not a plant.
+- **francis_runner** [low] fit=maybe — Francis 1849. The common hydro runner. After impeller + Pelton. Do not emit a powerhouse.
+- **kaplan_runner** [low] fit=maybe — Kaplan. A propeller with adjustable blades. The blade is propeller_blade; the hub actuator is a product.
+- **windmill_product** [low] fit=no — 507 #485-486 are finished mills. The rotor is the primitive.
+- **hydro_plant** [low] fit=no — Out of scope.

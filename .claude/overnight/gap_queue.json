@@ -293,7 +293,18 @@
       "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/textile-sewing.json",
       "status": "done",
       "title": "Sewing, weaving, and textile mechanisms"
+    },
+    {
+      "candidate_count": 10,
+      "claimed_at": "2026-08-13T05:09:57+03:00",
+      "completed_at": "2026-08-13T05:10:37+03:00",
+      "id": "water-wind-wheels",
+      "new_categories": [],
+      "prompt": "Invented first-principles slice. 507 water wheels 430-438, Barker 438, windmills 485-486. fluid slice proposed centrifugal_impeller. Survey undershot/overshot/breast, Pelton, Francis, Savonius, Darrieus, propeller. Semi-primitive rotors only, not power plants.",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/water-wind-wheels.json",
+      "status": "done",
+      "title": "Water wheels, turbines, and wind rotors"
     }
   ],
-  "updated": "2026-08-13T05:09:46+03:00"
+  "updated": "2026-08-13T05:10:37+03:00"
 }
