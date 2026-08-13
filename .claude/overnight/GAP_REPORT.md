@@ -741,3 +741,26 @@ FDM reality. toggle_joint is two bars and a driven knee, ram on the far pin; pos
 - **scissor_jack_again** [low] fit=no — A screw shortens an X. Different law from a toggle (no over-center lock). Ship it under linear.
 - **draw_hood_latch_again** [low] fit=no — Panel locks on the toggle law. Other slice owns them.
 - **punch_press_product** [low] fit=no — A finished machine. The cell is knuckle_press or slider_crank.
+
+## analog-computing-counters — Analog computers, integrators, and mechanical counters
+
+Mechanical computation splits into digital counters (discrete teeth, carry) and analog integrators (a rolling pair whose output angle is the integral of a product). 507 is thick on the digital side: revolution-counters and meters 63-71 (jumping pawl + star, worm, mutilated gear). The analog side is later: Amsler polar planimeter 1854 (Green's theorem as a measuring wheel on a two-bar), Thomson/Kelvin ball-and-disk integrator (output omega ~ r * omega_disk), Bush differential analyzer (many integrators). Digital adders sit on Leibniz's stepped drum (1673, Staffelwalze: teeth of increasing length so a slider picks 0-9) and Odhner's pinwheel (variable protruding pins). IFToMM treats these as function generators, not as machines.
+
+Catalog already covers the indexer cousins, not the compute cells. geneva_pair is a film/turret step (usecase: projectors, indexing tables). star_wheel is a bottle/can pocket wheel (usecase: filling and capping). intermittent_gear_pair is a mutilated lock. Grep of mechlib/ and usecases.py finds no Leibniz, pinwheel, planimeter, integrator, or odometer decade. usecases.py 'mechanical counters' is a geneva line. metrology-drawing owns tracers (helicograph, pantograph), not integrators. A Curta, a Pascaline cabinet, or a room-sized differential analyzer is a product.
+
+FDM reality. leibniz_wheel is a cylinder with nine tooth-lengths; a sliding pinion meshes 0-9 teeth per turn; prints as a stepped drum + a pinion on a spline. pinwheel is a disk of radially sliding pins set by a cam or a lever; the Odhner/Curta cell. planimeter is two bars, a pole weight, a tracer, and a measuring wheel that rolls/skids; prints; pose is the tracer path, output is wheel angle ~ area. ball_disk_integrator is a spinning disk, a ball (or two) at radius r, a cylinder that takes the integral; prints oversized for teaching; r is the second input. decade_counter is a 10-tooth wheel plus a 2-tooth carry pinion (odometer); geneva can fake it but the named cell is a 10:1 carry. Do not emit a calculator or a tide-predicting machine.
+
+**New categories**
+- none
+
+**Candidates**
+- **leibniz_wheel** [high] fit=yes — Variable tooth count in one revolution. Not a sector (fixed teeth) and not a mutilated gear (lock + gap). Every printed calculator demo invents this drum.
+- **pinwheel** [high] fit=yes — The other variable-tooth primitive. Pins in, pins out. Distinct from Leibniz (axial steps) and from a detent (no count).
+- **planimeter** [high] fit=yes — Green's theorem as a kit. Not a pantograph (scale) and not a helicograph (spiral). The analog area cell. Linear variant is the same wheel on a rolling carriage.
+- **ball_disk_integrator** [high] fit=yes — The analog multiply-and-integrate cell. Bombsights, tide machines, Bush analyzers. Not a planimeter (area, not time integral) and not a ball bearing (no output shaft).
+- **decade_counter** [med] fit=yes — 10:1 carry. geneva is a turret step with dwell; this is a continuous-input decade. star_wheel pockets bottles, it does not carry tens.
+- **pascaline_sautoir** [med] fit=yes — Gravity carry, not a 2-tooth pinion. The other digital-carry cell. After decade_counter, this is the historical sibling.
+- **harmonic_analyzer** [low] fit=maybe — Fourier as an assembly of integrators. Ship ball_disk_integrator first. Do not emit a tide predictor.
+- **geneva_as_counter** [low] fit=no — An indexer with dwell. usecase already names mechanical counters. Do not file it here.
+- **star_wheel_as_counter** [low] fit=no — A packaging pocket wheel. Not a decade and not an integrator.
+- **curta_product** [low] fit=no — Curta / Pascaline / arithmometer cabinets. Product. The cell is the drum or the pinwheel.

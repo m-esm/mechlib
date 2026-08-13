@@ -1,0 +1,117 @@
+{
+  "candidates": [
+    {
+      "already": "spur_gear, intermittent_gear_pair",
+      "api_shape": "leibniz_wheel(module, steps=9, face) -> {drum, pinion} pinion_z slides to pick 0..steps teeth",
+      "fdm": "A cylinder with 1..9 tooth lengths, a sliding pinion. Prints. 1673 Staffelwalze. The digital multiply cell.",
+      "mechlib_fit": "yes",
+      "name": "leibniz_wheel",
+      "priority": "high",
+      "why": "Variable tooth count in one revolution. Not a sector (fixed teeth) and not a mutilated gear (lock + gap). Every printed calculator demo invents this drum."
+    },
+    {
+      "already": "leibniz_wheel, detent_pair",
+      "api_shape": "pinwheel(n=9, set_k) -> disk of radial pins, k protruding",
+      "fdm": "A disk, n sliding pins, a setting cam or a face plate. Prints. Odhner / Curta cell. Compact vs a drum.",
+      "mechlib_fit": "yes",
+      "name": "pinwheel",
+      "priority": "high",
+      "why": "The other variable-tooth primitive. Pins in, pins out. Distinct from Leibniz (axial steps) and from a detent (no count)."
+    },
+    {
+      "already": "pantograph_linkage, four_bar",
+      "api_shape": "planimeter(arm_a, arm_b, wheel_d) -> {pole, arms, tracer, wheel} wheel_angle ~ area",
+      "fdm": "Two bars, a pole weight, a tracer, a measuring wheel that rolls or skids. Prints. Amsler 1854 polar.",
+      "mechlib_fit": "yes",
+      "name": "planimeter",
+      "priority": "high",
+      "why": "Green's theorem as a kit. Not a pantograph (scale) and not a helicograph (spiral). The analog area cell. Linear variant is the same wheel on a rolling carriage."
+    },
+    {
+      "already": "printed_ball_bearing, rolling_pair (proposed)",
+      "api_shape": "ball_disk_integrator(disk_d, ball_d, cyl_d, r_frac) -> {disk, ball, cylinder} omega_out = k*r*omega_disk",
+      "fdm": "A disk, one or two balls, a cylinder. Prints oversized. Thomson/Kelvin. r is a second input (slider).",
+      "mechlib_fit": "yes",
+      "name": "ball_disk_integrator",
+      "priority": "high",
+      "why": "The analog multiply-and-integrate cell. Bombsights, tide machines, Bush analyzers. Not a planimeter (area, not time integral) and not a ball bearing (no output shaft)."
+    },
+    {
+      "already": "geneva_pair, star_wheel",
+      "api_shape": "decade_counter(module, digits=1) -> 10-tooth wheel + 2-tooth carry pinion",
+      "fdm": "Two gears, a 2-tooth carry. Prints. Odometer / gas-meter decade. Stack n for a register.",
+      "mechlib_fit": "yes",
+      "name": "decade_counter",
+      "priority": "med",
+      "why": "10:1 carry. geneva is a turret step with dwell; this is a continuous-input decade. star_wheel pockets bottles, it does not carry tens."
+    },
+    {
+      "already": "decade_counter, ratchet_wheel_pawl",
+      "api_shape": "a falling sautoir that adds one to the next decade on 9->0",
+      "fdm": "A weighted finger and a 10-tooth wheel. Prints. Pascal 1642 carry.",
+      "mechlib_fit": "yes",
+      "name": "pascaline_sautoir",
+      "priority": "med",
+      "why": "Gravity carry, not a 2-tooth pinion. The other digital-carry cell. After decade_counter, this is the historical sibling."
+    },
+    {
+      "already": "ball_disk_integrator",
+      "api_shape": "n integrators + a summer",
+      "fdm": "A composition. Kelvin / Michelson-Stratton. The machine is a product.",
+      "mechlib_fit": "maybe",
+      "name": "harmonic_analyzer",
+      "priority": "low",
+      "why": "Fourier as an assembly of integrators. Ship ball_disk_integrator first. Do not emit a tide predictor."
+    },
+    {
+      "already": "geneva_pair",
+      "api_shape": null,
+      "fdm": "Covered.",
+      "mechlib_fit": "no",
+      "name": "geneva_as_counter",
+      "priority": "low",
+      "why": "An indexer with dwell. usecase already names mechanical counters. Do not file it here."
+    },
+    {
+      "already": "star_wheel",
+      "api_shape": null,
+      "fdm": "Covered.",
+      "mechlib_fit": "no",
+      "name": "star_wheel_as_counter",
+      "priority": "low",
+      "why": "A packaging pocket wheel. Not a decade and not an integrator."
+    },
+    {
+      "already": "leibniz_wheel, pinwheel",
+      "api_shape": null,
+      "fdm": "A finished calculator.",
+      "mechlib_fit": "no",
+      "name": "curta_product",
+      "priority": "low",
+      "why": "Curta / Pascaline / arithmometer cabinets. Product. The cell is the drum or the pinwheel."
+    }
+  ],
+  "id": "analog-computing-counters",
+  "new_categories": [],
+  "rejected": [
+    {
+      "name": "differential_analyzer",
+      "why": "Bush / Kelvin room machine. Product of many ball_disk_integrator cells plus shafts."
+    },
+    {
+      "name": "slide_rule",
+      "why": "Logs on sticks. Not a mechanism with pairs. Out of scope."
+    }
+  ],
+  "sources": [
+    "https://507movements.com/mm_063.html",
+    "https://507movements.com/toc.html",
+    "https://en.wikipedia.org/wiki/Planimeter",
+    "https://en.wikipedia.org/wiki/Stepped_reckoner",
+    "https://en.wikipedia.org/wiki/Ball-and-disk_integrator",
+    "https://en.wikipedia.org/wiki/Analog_computer",
+    "mechlib/indexing.py geneva_pair star_wheel intermittent_gear_pair, mechlib/usecases.py geneva_pair star_wheel, .claude/overnight/gaps/metrology-drawing.json, .claude/overnight/gaps/cams-indexing.json"
+  ],
+  "summary": "Mechanical computation splits into digital counters (discrete teeth, carry) and analog integrators (a rolling pair whose output angle is the integral of a product). 507 is thick on the digital side: revolution-counters and meters 63-71 (jumping pawl + star, worm, mutilated gear). The analog side is later: Amsler polar planimeter 1854 (Green's theorem as a measuring wheel on a two-bar), Thomson/Kelvin ball-and-disk integrator (output omega ~ r * omega_disk), Bush differential analyzer (many integrators). Digital adders sit on Leibniz's stepped drum (1673, Staffelwalze: teeth of increasing length so a slider picks 0-9) and Odhner's pinwheel (variable protruding pins). IFToMM treats these as function generators, not as machines.\n\nCatalog already covers the indexer cousins, not the compute cells. geneva_pair is a film/turret step (usecase: projectors, indexing tables). star_wheel is a bottle/can pocket wheel (usecase: filling and capping). intermittent_gear_pair is a mutilated lock. Grep of mechlib/ and usecases.py finds no Leibniz, pinwheel, planimeter, integrator, or odometer decade. usecases.py 'mechanical counters' is a geneva line. metrology-drawing owns tracers (helicograph, pantograph), not integrators. A Curta, a Pascaline cabinet, or a room-sized differential analyzer is a product.\n\nFDM reality. leibniz_wheel is a cylinder with nine tooth-lengths; a sliding pinion meshes 0-9 teeth per turn; prints as a stepped drum + a pinion on a spline. pinwheel is a disk of radially sliding pins set by a cam or a lever; the Odhner/Curta cell. planimeter is two bars, a pole weight, a tracer, and a measuring wheel that rolls/skids; prints; pose is the tracer path, output is wheel angle ~ area. ball_disk_integrator is a spinning disk, a ball (or two) at radius r, a cylinder that takes the integral; prints oversized for teaching; r is the second input. decade_counter is a 10-tooth wheel plus a 2-tooth carry pinion (odometer); geneva can fake it but the named cell is a 10:1 carry. Do not emit a calculator or a tide-predicting machine.",
+  "title": "Analog computers, integrators, and mechanical counters"
+}
