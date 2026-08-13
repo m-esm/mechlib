@@ -282,7 +282,18 @@
       "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/chain-families.json",
       "status": "done",
       "title": "Chain types beyond roller and drag"
+    },
+    {
+      "candidate_count": 10,
+      "claimed_at": "2026-08-13T05:08:57+03:00",
+      "completed_at": "2026-08-13T05:09:46+03:00",
+      "id": "textile-sewing",
+      "new_categories": [],
+      "prompt": "Invented first-principles slice. 507 has shuttle 397, warp-dressing 383, spinning throstle 496. Survey lock-stitch (needle + shuttle/hook), needle bar, take-up, heddle, reed, rapier, Jacquard hook. Semi-primitive cells only, not a sewing machine or a loom.",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/textile-sewing.json",
+      "status": "done",
+      "title": "Sewing, weaving, and textile mechanisms"
     }
   ],
-  "updated": "2026-08-13T04:35:42+03:00"
+  "updated": "2026-08-13T05:09:46+03:00"
 }

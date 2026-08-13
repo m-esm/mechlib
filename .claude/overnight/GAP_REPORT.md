@@ -605,3 +605,26 @@ FDM reality. Silent / inverted-tooth is a stack of toothed plates that engage a 
 - **modular_plastic_belt** [low] fit=no — Injection-moulded conveyor belt. Finished product. Not a mechlib chain.
 - **roller_again** [low] fit=no — Already the default drive chain. Do not add a second roller.
 - **drag_again** [low] fit=no — Cable carrier, not a drive chain.
+
+## textile-sewing — Sewing, weaving, and textile mechanisms
+
+Textile machines make a stitch or a shed. Lock-stitch (Howe 1846, Singer rotary hook later) is needle + hook/shuttle + take-up: the needle leaves a loop, the hook carries it around a bobbin, the take-up sets the knot. Weaving is shed (heddles lift warp), pick (shuttle or rapier carries weft), beat-up (reed). Jacquard is a hook that chooses which warp lifts. 507 names shuttle motion 397, warp-dressing 383, spinning throstle 496. Heart-cam's usecase already mentions sewing-machine take-up; barrel_cam mentions textile traverse. No other textile API exists.
+
+Catalog has the motion neighbours, not the textile cells. slider_crank / watt_six (proposed) can drive a needle bar. heart_cam and plate_cam can time take-up. geneva and cams can index a feed. iris is not a reed. Grep finds no rotary hook, bobbin case, needle bar, heddle, reed, rapier, or Jacquard hook.
+
+FDM reality. rotary_hook is a 2:1 spinning hook around a stationary bobbin case; prints as two pieces, the Singer cell, and it is the missing stitch primitive. Oscillating shuttle is the older Howe cell (a boat that rocks). take_up_lever is a cam-driven or four-bar eye that pulls slack; heart_cam already claims the job, so a named lever on that cam is enough. needle_bar is a guided prismatic plus a needle; composition of linear_way + a bar. heddle is an eye in a frame, the warp-lift cell. reed is a comb that beats weft. Jacquard hook is a lifted hook that catches a knife; the card/computer is a product. A sewing machine or a loom is a finished product. Rapier and projectile looms are products built on a pick cell.
+
+**New categories**
+- none
+
+**Candidates**
+- **rotary_hook** [high] fit=yes — The stitch primitive. Needle leaves a loop, hook carries it around the bobbin. Not a cam and not a slider-crank. Every printed sewing demo invents this from a cylinder.
+- **oscillating_shuttle** [high] fit=yes — The other lock-stitch cell. 507's named shuttle motion. Distinct from rotary_hook (continuous spin vs rock).
+- **heddle** [high] fit=yes — Weaving shed. Every warp thread through an eye. Not a needle and not a reed. The missing loom primitive.
+- **reed** [med] fit=yes — The other weaving cell. Heddles shed, the reed beats. A comb, not a gear.
+- **take_up_lever** [med] fit=yes — Pulls slack after the hook. The motion is a cam; the part is an eyed lever. Do not add a second cam.
+- **needle_bar** [med] fit=yes — The needle's prismatic. Agents invent it from cyl. A named bar on slider_crank / linear_way, not a new pair.
+- **jacquard_hook** [med] fit=yes — Jacquard 1804. Binary lift of one warp. Distinct from a heddle (always on a harness) and from a detent.
+- **feed_dog** [low] fit=maybe — Fabric feed. Real, but the law is two cams. After rotary_hook exists.
+- **sewing_machine_product** [low] fit=no — Bed, arm, motor, tensioners. Product. The cells are hook + take-up + needle bar.
+- **loom_product** [low] fit=no — Frame, warp beam, cloth beam. Product.
