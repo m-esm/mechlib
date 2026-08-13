@@ -304,7 +304,18 @@
       "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/water-wind-wheels.json",
       "status": "done",
       "title": "Water wheels, turbines, and wind rotors"
+    },
+    {
+      "candidate_count": 9,
+      "claimed_at": "2026-08-13T05:44:02+03:00",
+      "completed_at": "2026-08-13T05:44:42+03:00",
+      "id": "locks-keys",
+      "new_categories": [],
+      "prompt": "Invented first-principles slice. Survey pin tumbler, warded, wafer, disc detainer, lever tumbler, combination (disc pack), padlock shackle, sidebar. Semi-primitive cells only, not a finished lockset or safe.",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/locks-keys.json",
+      "status": "done",
+      "title": "Locks, keys, and combination mechanisms"
     }
   ],
-  "updated": "2026-08-13T05:10:37+03:00"
+  "updated": "2026-08-13T05:44:42+03:00"
 }

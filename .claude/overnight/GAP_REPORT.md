@@ -651,3 +651,25 @@ FDM reality. overshot_wheel is a rim of buckets, prints as a disc + buckets, the
 - **kaplan_runner** [low] fit=maybe — Kaplan. A propeller with adjustable blades. The blade is propeller_blade; the hub actuator is a product.
 - **windmill_product** [low] fit=no — 507 #485-486 are finished mills. The rotor is the primitive.
 - **hydro_plant** [low] fit=no — Out of scope.
+
+## locks-keys — Locks, keys, and combination mechanisms
+
+A lock is a constraint that a coded input (key, discs, or word) lifts. The usual taxonomy is by the obstacle: wards (the key must miss them), lever tumblers (gates must line up on a stump), pin tumblers (Yale: pin stack splits at a shear line), wafers (flat pins), disc detainers (Abloy: rotating discs, a sidebar drops into gates), and combination packs (discs with gates, no key). Padlock shackles add locking balls or a claw. 507 barely names locks. Reuleaux does not. Howell's 'lock' is a snap or a bistable, already in-tree as snap_catch / bistable_beam.
+
+Catalog has no tumbler, ward, or combination pack. Neighbours: detent_pair (a click, not a coded shear), shaft_key (DIN machine key, not a lock key), pawl_latch (proposed, slam catch), geneva_stop (winding limit), dog_clutch (positive drive). Grep of usecases.py hits 'lock' only as self-locking screws, folding-leg clicks, and over-center clamps.
+
+FDM reality. pin_tumbler is a cylinder, a plug, n pin stacks (key pin + driver + spring), and a shear line; prints oversized for teaching (Thingiverse cutaways). lever_tumbler is a stack of flat levers with gates and a bolt stump; Chubb cell, prints flat. combination_pack is n discs with a gate and a fence; the padlock/safe cell. disc_detainer is rotating discs plus a sidebar. warded is a keyway with obstacles, the oldest and the weakest. wafer is a flat pin tumbler. A lockset, a mortise body, or a safe is a product. Magnetic and electronic locks are hardware.
+
+**New categories**
+- none
+
+**Candidates**
+- **pin_tumbler** [high] fit=yes — Yale pin tumbler. The coded shear-line cell. Not a detent (no code) and not a shaft_key (no tumblers). The missing lock primitive.
+- **lever_tumbler** [high] fit=yes — Lever lock. Gates must align for the stump to pass. Distinct from pin tumbler (no plug, no shear line). British furniture and safe-deposit default.
+- **combination_pack** [high] fit=yes — Coded discs, no key. The combination primitive. detent_pair is a single click, not a pack of gates.
+- **disc_detainer** [med] fit=yes — Disc detainer. Sidebar, not a shear line and not a fence on a bolt. The other rotating-disc lock.
+- **warded_keyway** [med] fit=yes — Wards. The key must miss obstacles. No tumblers. Teaching / antique.
+- **wafer_tumbler** [med] fit=yes — Wafer lock. Same shear-line idea, flat tumblers. Do not add a second module if pin_tumbler can emit wafers.
+- **padlock_shackle** [low] fit=maybe — Shackle + balls. The padlock is a product around a tumbler. A thin shackle kit after the cell exists.
+- **lockset_product** [low] fit=no — A door lockset. The reusable part is pin_tumbler.
+- **detent_as_lock** [low] fit=no — A positional click, not a coded constraint.
