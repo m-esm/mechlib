@@ -328,10 +328,19 @@
       "title": "Drawing instruments and kinematic tracers"
     },
     {
+      "candidate_count": 10,
       "claimed_at": "2026-08-13T06:20:15+03:00",
+      "completed_at": "2026-08-13T06:21:40+03:00",
       "id": "wheels-casters-omni",
+      "new_categories": [
+        {
+          "name": "wheels",
+          "why": "Ground-contact rolling cells (caster, Mecanum, omni, ball-transfer) are a machinery class. pulleys are belt sheaves, chains are sprocket trains, water-wind is prime-mover rotors, flywheel is inertia. Agents looking up 'caster' or 'mecanum' currently hit nothing. A movements shelf keeps chassis products out."
+        }
+      ],
       "prompt": "Invented first-principles slice. water-wind-wheels owns prime-mover rotors. flywheel stores energy. Survey Mecanum/Ilon, omni/poly (Grabowiecki), swivel caster with trail, ball-transfer, Killough pair, continuous-track shoe. Semi-primitive wheels only, not a chassis or a swerve module.",
-      "status": "in_progress",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/wheels-casters-omni.json",
+      "status": "done",
       "title": "Wheels, casters, and omnidirectional rolling"
     },
     {
@@ -342,5 +351,5 @@
       "title": "Toggle joints, over-center, and press cells"
     }
   ],
-  "updated": "2026-08-13T06:20:15+03:00"
+  "updated": "2026-08-13T06:21:40+03:00"
 }

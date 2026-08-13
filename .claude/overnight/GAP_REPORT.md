@@ -694,3 +694,26 @@ FDM reality. helicograph is a wheel that rolls around a fixed point while slidin
 - **pantograph_again** [low] fit=no — Already the scaling tracer.
 - **beam_compass** [low] fit=maybe — A large compass. After proportional_dividers, skip.
 - **cmm_plotter** [low] fit=no — CMM / plotter / drafting machine. Product. The cells are ways and tracers.
+
+## wheels-casters-omni — Wheels, casters, and omnidirectional rolling
+
+A ground wheel is a rolling pair that carries a vehicle or a load. The class splits first by how many directions it can roll without slipping the tire: a conventional wheel is 1-DoF (roll plus spin about the axle), a swivel caster adds a vertical kingpin and a trail so the fork self-aligns, and an omnidirectional wheel (omni 90 deg, Mecanum 45 deg, spherical / ball-transfer) can slide sideways. Siegwart/Nourbakhsh and IFToMM mobile-robot taxonomies treat these as distinct kinematic primitives. 507 never names a Mecanum; the closest historical cells are oblique rollers 204 (skew-shaft rolling contact) and 365 (a rod between two oblique rollers that both translates and spins). Water-wind-wheels already owns prime-mover rotors (Pelton, Savonius). flywheel stores energy. roller_sprocket and idler_pulley are chain and belt sheaves, not ground contact.
+
+Catalog has no caster, Mecanum, omni, or ball-transfer. Grep of mechlib/ and usecases.py is empty for those names. Neighbours: printed_ball_bearing (a radial race, balls trapped between rings), rolling_pair (proposed, cylinder-on-plane contact, not a hub), idler_pulley (belt), flywheel (inertia), roller_sprocket (chain). A chassis, a swerve module, or a shopping cart is a product.
+
+FDM reality. mecanum_wheel is a hub plus n barrel rollers at 45 deg (Ilon 1973, US 3876255); every FTC/VEX print is this cell. omni_wheel is the 90 deg sibling (Grabowiecki 1919, US 1305535; Blumrich 1972); rollers print as barrels on axles, two or three staggered rows hide the gaps. swivel_caster is a fork, a wheel, a kingpin, and a trail offset; without trail it will not self-align. ball_transfer is a large sphere in a cup of small balls (Autoset 1958); printed_ball_bearing is a radial shaft support, this is an omnidirectional load ball. killough_pair is two conventional wheels at 90 deg in a cage (Killough 1994), holonomic without true omni rollers. track_shoe is one grousered plate plus two pins, the continuous-track cell; a tank is a product. Do not emit a robot base or a forklift.
+
+**New categories**
+- **wheels** — Ground-contact rolling cells (caster, Mecanum, omni, ball-transfer) are a machinery class. pulleys are belt sheaves, chains are sprocket trains, water-wind is prime-mover rotors, flywheel is inertia. Agents looking up 'caster' or 'mecanum' currently hit nothing. A movements shelf keeps chassis products out.
+
+**Candidates**
+- **mecanum_wheel** [high] fit=yes — Ilon 1973 Swedish wheel. 45 deg rollers, force along the frame diagonal. Not an omni (90 deg) and not a caster (no kingpin). The missing holonomic drive cell.
+- **omni_wheel** [high] fit=yes — 90 deg poly wheel. Kiwi drive, H-drive, Robocup. Distinct from Mecanum (45 deg, four-wheel X) and from a caster (passive).
+- **swivel_caster** [high] fit=yes — The self-aligning undriven wheel. Trail is the kinematic primitive. Carts, chairs, robot trailing wheels. Not a Mecanum (driven, no kingpin) and not a ball transfer (no trail).
+- **ball_transfer** [high] fit=yes — Omnidirectional load sphere. Luggage tables, cargo decks. printed_ball_bearing is a shaft race; this is a cargo ball. Casters need trail; this does not.
+- **killough_pair** [med] fit=yes — The other holonomic cell. No small rollers to print or jam. After omni_wheel, this is the no-roller stand-in.
+- **track_shoe** [med] fit=yes — Continuous-track cell. roller_chain is a roller-and-bushing drive chain, not a grouser. One shoe is the primitive.
+- **rigid_caster** [low] fit=maybe — Shopping-cart rear. After swivel_caster, emit it as trail=0 / lock=True, not a second kit.
+- **swerve_module** [low] fit=no — FRC swerve. Product. The wheel is the primitive; the two-motor pod is a project.
+- **flywheel_as_wheel** [low] fit=no — Inertia store, not ground contact. Do not file it here.
+- **water_wheel_again** [low] fit=no — Prime-mover rotor. Already ranked. This slice is ground rolling.
