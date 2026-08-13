@@ -1436,3 +1436,15 @@ Non-animated. One body. Side/front show opposing crests bearing. Sane rest assem
 
 **Issues**
 - none
+
+## FINAL
+
+Cutoff reached 2026-08-13 07:30 EEST. 98/98 motion items reviewed. 96 pass, 2 fail, 0 unclear, 0 render errors.
+
+**Fails (motion law, not sheet aliasing)**
+- demo_escapement — escape wheel does not step; hub ticks look identical across the cycle.
+- demo_geneva_pair — driver turns, 6-slot wheel does not (in-window silhouettes match).
+
+Everything else in ANIMATE plus the rest of the movement-group queue read as the intended mechanism or a sane rest assembly. Bevel gears were a false fail on the first aliased sheet and passed after resample.
+
+Reports: `.claude/overnight/reviews/*.json`
