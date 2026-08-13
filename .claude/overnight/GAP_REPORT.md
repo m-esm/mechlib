@@ -454,3 +454,38 @@ What must not become a shelf. Magnetic drives, magnetic bearings, magnetic gears
 - **end_effectors_split** [low] fit=no — grippers already is the holding shelf. Splitting EOAT from clamps is taxonomy theater.
 - **tooling_atc** [low] fit=no — Dock is the locate primitive. A tooling aisle would be finished ATC products.
 - **heat** [low] fit=no — Prompt said heat? (out). Correct. Not a mechanism class this library should name.
+
+## animate-coverage — Mechanisms that exist but cannot play
+
+ANIMATE is 36 entries. catalog lists 80 multi-body movement demos; 45 of them do not play. The left-out comment in gallery/build_gallery.py was measured, but several reasons are stale: the same file already sine/cosine-maps bounded travels onto a 360 deg drive_deg for peaucellier, watt, sarrus, lazy_tongs, screw_jack, rack_pinion, and dog_clutch. That pattern unlocks iris, knuckle, telescoping, linear_way, lead_screw, and check_valve without a new theory. A second bucket is missing pose laws that the couplings and cams slices already named (oldham, Hooke, double Cardan, intermittent gears). A third is rigid rotation that is visible (helical flight, peristaltic rotor, scroll plate) and only needs a phase kwarg. Do not animate static adjustments (eccentric_idler_mount) or all-bodies-together spins (jaw, hirth, timing_pulley, idler). Do not claim deformation (harmonic cup, collet, flexure springs, kerf) until the rigid-recovery gate changes.
+
+Stale reasons. iris_diaphragm already takes close_pct; knuckle_hinge already takes open_deg; telescoping_stage already takes extend. All three are the exact out-and-back the comment said a linear ramp cannot express, and the gallery already solved that with a sine. linear_way has no travel param yet; adding one and cosine-mapping it is the screw_jack pattern. lead_screw / differential_screw / scroll_drive have closed-form travels (lead, p1-p2, spiral_pitch) and only need a phase. roller_follower already has pose_deg and is not in ANIMATE. peristaltic_pump_head's rotor is a rigid body; one turn closes. archimedes_screw's flight is a helix, so spinning it is not a camera move.
+
+Still true. demo_worm has no measurable conjugate contact (overlap 0). harmonic_drive deforms the cup every frame (bake residual ~0.15 mm). planet_stage is feasible at 2520 deg / 252 frames if the D-flat is dropped for the bake, but the current demo's 1-fold sun makes the short track illegal. intermittent_gear_pair still has no engagement law. collet, leaf/coil/wave/spiral springs, auxetic/kerf deform. jaw_coupling, hirth, timing_pulley, idler_pulley, freewheel (as currently posed) are rigid rotations of the whole assembly. eccentric_idler_mount is a lock-once adjustment.
+
+**New categories**
+- none
+
+**Candidates**
+- **oldham_pose** [high] fit=yes — Left-out comment names this law and refuses to invent it. Textbook. Highest-value coupling play. Couplings slice already ranked it high.
+- **hooke_pose** [high] fit=yes — cv_velocity_ratio is speed only. The gallery said so. Unlocks Hooke and is the block for double_cardan_pose.
+- **iris_play** [high] fit=yes — Nine bodies, the iris actually opening. The demo already has close_pct. Wire it.
+- **knuckle_play** [high] fit=yes — Same stale 'bounded travel' reason. The hinge swinging is the point of the demo.
+- **telescoping_play** [high] fit=yes — Left-out said the cycle does not close. screw_jack already closed an open lift with a cosine. Same trick.
+- **lead_screw_play** [high] fit=yes — The rotary-to-linear primitive does not play. screw_jack already does. lead_screw and differential_screw are the same law.
+- **scroll_pose** [high] fit=yes — Three jaws walking a spiral is the picture people want. Demo is static at face_r.
+- **intermittent_gear_pose** [high] fit=yes — Left-out is still true and is a real gap. Same class as geneva_wheel_angle / escapement_pose.
+- **peristaltic_play** [high] fit=yes — A pump demo that does not turn. Trivial rigid repose. Rollers are 3-fold; a 120 deg closed track may work.
+- **double_cardan_pose** [med] fit=yes — Five-body CV. Depends on hooke_pose. Intermediate still fluctuates; that is the teaching point.
+- **linear_way_play** [med] fit=yes — Same stale open-interval reason as telescoping. Needs a new demo kwarg; the kit already poses the carriage centred.
+- **roller_follower_play** [med] fit=yes — The follower demo is not wired. Not a cam pair (plate_cam already plays); it is the arm+roller kit rocking.
+- **archimedes_play** [med] fit=yes — A screw that does not turn. Distinct from timing_pulley (a toothless spin of a symmetric sheave).
+- **ratchet_pose** [med] fit=yes — Four ratchet demos sit still. One law plays all of them. detent_pair is the plunger cousin.
+- **drag_chain_play** [med] fit=yes — A cable carrier that does not articulate. bend_deg is already a demo param.
+- **planet_stage_roundbore** [low] fit=maybe — Left-out is still true of the current demo. A round-bore bake demo is a demo change, not a new law. Feasible, previously judged not worth 252 frames.
+- **flat_worm_play** [low] fit=maybe — demo_worm is still invalid (no contact). printed/flat worms exist specifically to mesh. If the coupon pair contacts, it can play; do not assert a drive sense.
+- **harmonic_play** [low] fit=no — Still true. A spinning wave generator with a frozen cup lies about the ratio.
+- **jaw_hirth_timing_spin** [low] fit=no — Left-out still true. freewheel rollers walking the ramps would be a different demo.
+- **eccentric_idler** [low] fit=no — Prompt said do not propose this. Correct. Animating it claims the part spins in service.
+- **deforming_kits** [low] fit=no — Still true. Not a pose-law gap.
+- **worm_display** [low] fit=no — Still true. Drive sense cannot be recovered from the geometry.

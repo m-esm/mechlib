@@ -213,14 +213,16 @@
       "title": "Whole categories mechlib does not name"
     },
     {
-      "claimed_at": null,
-      "completed_at": null,
+      "candidate_count": 22,
+      "claimed_at": "2026-08-13T03:23:31+03:00",
+      "completed_at": "2026-08-13T03:25:41+03:00",
       "id": "animate-coverage",
+      "new_categories": [],
       "prompt": "Read gallery/build_gallery.py ANIMATE and the 'deliberately left out' comment. For every multi-body movement demo with no animation: is the reason still true, or can a pose law be added so the gallery can play it? Rank the highest-value pose-law additions. Do not propose animating static adjustments (eccentric_idler_mount).",
-      "report": null,
-      "status": "pending",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/animate-coverage.json",
+      "status": "done",
       "title": "Mechanisms that exist but cannot play"
     }
   ],
-  "updated": "2026-08-13T02:51:59+03:00"
+  "updated": "2026-08-13T03:25:41+03:00"
 }
