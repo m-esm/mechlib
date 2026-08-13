@@ -344,12 +344,16 @@
       "title": "Wheels, casters, and omnidirectional rolling"
     },
     {
+      "candidate_count": 11,
       "claimed_at": "2026-08-13T06:20:15+03:00",
+      "completed_at": "2026-08-13T06:21:43+03:00",
       "id": "toggles-presses",
+      "new_categories": [],
       "prompt": "Invented first-principles slice. 507 toggle 140, knee-lever 164, presses 105/132/133. toggle_clamp exists; scissor_jack and draw/hood latch already proposed. Survey generic toggle_joint, knuckle-joint press, double-toggle, flying/screw stamp, disk-bar press. Semi-primitive cells only, not a punch-press product.",
-      "status": "in_progress",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/toggles-presses.json",
+      "status": "done",
       "title": "Toggle joints, over-center, and press cells"
     }
   ],
-  "updated": "2026-08-13T06:21:40+03:00"
+  "updated": "2026-08-13T06:21:43+03:00"
 }

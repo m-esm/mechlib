@@ -717,3 +717,27 @@ FDM reality. mecanum_wheel is a hub plus n barrel rollers at 45 deg (Ilon 1973, 
 - **swerve_module** [low] fit=no — FRC swerve. Product. The wheel is the primitive; the two-motor pod is a project.
 - **flywheel_as_wheel** [low] fit=no — Inertia store, not ground contact. Do not file it here.
 - **water_wheel_again** [low] fit=no — Prime-mover rotor. Already ranked. This slice is ground rolling.
+
+## toggles-presses — Toggle joints, over-center, and press cells
+
+A toggle is two bars sharing a knee that is driven toward colinearity. Mechanical advantage goes to infinity as the knee straightens; past dead centre the cell locks (over-center). 507 names the toggle-joint as a punching machine (140) and a knee-lever press (164). Norton and every press-builder split mechanical presses by the last joint: crank/slider (slider_crank already), knuckle/toggle (missing), screw (lead_screw / screw_jack), and hydraulic (product). Schuler's knuckle-joint press is a crank that drives a two-bar toggle into the ram, giving a long dwell and a huge force near BDC. 507 #132 is a different cell: two oblique bars between disks that go upright when the top disk turns. #105 is a screw stamp. #133 is a pinion-and-sector platen.
+
+Catalog already has one over-center product-shaped kit: toggle_clamp (welding hold-down, posed). grippers already proposed draw_latch and hood_latch (panel locks on the same law). screws-linear already proposed scissor_jack (screw shortens an X). bistable_beam is a compliant snap-through, not a bar toggle. lazy_tongs is a rhomb chain that extends, not a force amplifier. Grep of mechlib/ finds no toggle_joint, knuckle_press, or knee_lever. A punch-press frame, a fly press with a ball, or a vise-grip plier is a product.
+
+FDM reality. toggle_joint is two bars and a driven knee, ram on the far pin; pose is knee angle, MA = 1/tan(theta). Prints flat. This is the missing primitive under toggle_clamp. knuckle_press is a crank + connecting rod + two rockers + two push rods + ram (the usual Schuler inversion); pose is crank angle, ram z and a dwell near BDC. knee_lever is 507 #164, a horizontal lever that lifts the knee, a one-shot stamp. disk_bar_press is 507 #132, two (or more) bars between a grounded disk and a turning disk; unique, not a four_bar. double_toggle is two toggles in series or in parallel, the coining-press default. Do not re-rank toggle_clamp, scissor_jack, or the latches. Do not emit a C-frame press.
+
+**New categories**
+- none
+
+**Candidates**
+- **toggle_joint** [high] fit=yes — The generic over-center cell. toggle_clamp is a hold-down with a handle and a toe. This is the force-amplifier agents reinvent for presses, locks, and folding legs.
+- **knuckle_press** [high] fit=yes — The named press drive. slider_crank is a punch without the force spike. toggle_joint is the last two bars. This is the whole 1-DoF cell, not a C-frame machine.
+- **knee_lever** [med] fit=yes — 507's other named toggle. Hand-driven, not crank-driven. Distinct from knuckle_press (continuous rotation) and from toggle_clamp (clamps, does not stamp).
+- **disk_bar_press** [med] fit=yes — Oblique bars between disks. Not a planar toggle and not a screw. Named 507 press, unused elsewhere in the survey.
+- **double_toggle** [med] fit=yes — Two knees, more MA, more dwell. Useful as a named kit once toggle_joint exists; do not ship it first.
+- **sector_press** [low] fit=maybe — A sector and a connecting rod. No new pair. Skip unless someone wants the named 507 demo.
+- **screw_stamp** [low] fit=maybe — Flying / screw stamp. The primitives exist. A named kit is optional teaching only.
+- **toggle_clamp_again** [low] fit=no — Already the over-center workholding knee. Do not claim it twice.
+- **scissor_jack_again** [low] fit=no — A screw shortens an X. Different law from a toggle (no over-center lock). Ship it under linear.
+- **draw_hood_latch_again** [low] fit=no — Panel locks on the toggle law. Other slice owns them.
+- **punch_press_product** [low] fit=no — A finished machine. The cell is knuckle_press or slider_crank.
