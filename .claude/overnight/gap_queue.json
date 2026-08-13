@@ -271,7 +271,18 @@
       "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/valve-gear.json",
       "status": "done",
       "title": "Valve gear, eccentrics, and reversing motions"
+    },
+    {
+      "candidate_count": 10,
+      "claimed_at": "2026-08-13T04:35:04+03:00",
+      "completed_at": "2026-08-13T04:35:42+03:00",
+      "id": "chain-families",
+      "new_categories": [],
+      "prompt": "Invented first-principles slice. roller_chain, roller_sprocket, drag_chain exist. Survey silent/inverted-tooth, leaf, block/pintle, engineering class, hollow-pin, ball chain, modular plastic belt. Which are printable semi-primitives vs bought hardware?",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/chain-families.json",
+      "status": "done",
+      "title": "Chain types beyond roller and drag"
     }
   ],
-  "updated": "2026-08-13T04:34:47+03:00"
+  "updated": "2026-08-13T04:35:42+03:00"
 }

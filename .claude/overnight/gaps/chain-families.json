@@ -1,0 +1,115 @@
+{
+  "candidates": [
+    {
+      "already": "roller_chain, roller_sprocket_2d",
+      "api_shape": "silent_chain_link(pitch, plates) + silent_sprocket(teeth, flank='straight'|'involute')",
+      "fdm": "Toothed plates laced on pins. Prints. Sprocket is a new profile (inverted tooth), not a roller envelope. Hy-Vo rocker pin is an optional joint, not a second kit.",
+      "mechlib_fit": "yes",
+      "name": "silent_chain",
+      "priority": "high",
+      "why": "Inverted-tooth / silent chain. High speed, quiet, camshafts, transfers. Distinct from roller_chain (round rollers) and from a gear (the chain flexes around). The missing power-chain family."
+    },
+    {
+      "already": "roller_chain_link, sheave (proposed)",
+      "api_shape": "leaf_chain_link(pitch, lacing, plate_t) running on a sheave, not a sprocket",
+      "fdm": "Interleaved plates, no rollers. Prints. Forklift masts, counterweights. The sheave is the pulleys primitive.",
+      "mechlib_fit": "yes",
+      "name": "leaf_chain",
+      "priority": "high",
+      "why": "BL / AL leaf chain. No sprocket, only a sheave. The other named lifting chain. Not a roller and not a drag_chain."
+    },
+    {
+      "already": "roller_chain_link",
+      "api_shape": "pintle_link(pitch, hook) open hook-and-bar, coarse, dirty",
+      "fdm": "An open hook into the next bar. Extremely FDM-friendly. Agricultural, sewage, lumber. Attachments weld or print on the bar.",
+      "mechlib_fit": "yes",
+      "name": "pintle_chain",
+      "priority": "high",
+      "why": "Block / pintle / 400-class. The open-joint cousin of roller chain. Prints as one piece per link. The farm-machine request."
+    },
+    {
+      "already": "roller_chain_link",
+      "api_shape": "roller_chain_link(..., pin='hollow') so attachments drop through",
+      "fdm": "A tube instead of a solid pin. Argument, not a second module.",
+      "mechlib_fit": "yes",
+      "name": "hollow_pin",
+      "priority": "med",
+      "why": "Conveyor attachments. Named, but it is a pin option on the existing link."
+    },
+    {
+      "already": null,
+      "api_shape": "ball_chain(ball_d, wire, n) + a pocket sprocket or a keyway pull",
+      "fdm": "Spheres and wire, or printed beads on a string. Pulls, does not transmit real power. Key fobs, blinds, cheap indexing.",
+      "mechlib_fit": "yes",
+      "name": "ball_chain",
+      "priority": "med",
+      "why": "The cheap pull chain. Not a drive. A bead + pocket wheel is a thin kit so agents stop inventing it from cyl."
+    },
+    {
+      "already": "pintle_chain, roller_chain",
+      "api_shape": "a pintle or roller with a flat slat on top",
+      "fdm": "Prints. Bottle conveyors. Getting product-shaped (the slat table).",
+      "mechlib_fit": "maybe",
+      "name": "flat_top_chain",
+      "priority": "low",
+      "why": "Table-top / slat chain. An attachment on pintle or hollow-pin, not a new joint."
+    },
+    {
+      "already": "silent_chain",
+      "api_shape": "two-piece rocker pin inside a silent chain",
+      "fdm": "Tiny, steel in service. A joint option on silent_chain.",
+      "mechlib_fit": "maybe",
+      "name": "hyvo_rocker",
+      "priority": "low",
+      "why": "Morse Hy-Vo. After silent_chain exists. Do not claim Borg-Warner conjugacy."
+    },
+    {
+      "already": null,
+      "api_shape": null,
+      "fdm": "Habasit / Intralox modules. A product family.",
+      "mechlib_fit": "no",
+      "name": "modular_plastic_belt",
+      "priority": "low",
+      "why": "Injection-moulded conveyor belt. Finished product. Not a mechlib chain."
+    },
+    {
+      "already": "roller_chain, roller_chain_link, roller_sprocket_2d",
+      "api_shape": null,
+      "fdm": "Covered, plus three layout posers.",
+      "mechlib_fit": "no",
+      "name": "roller_again",
+      "priority": "low",
+      "why": "Already the default drive chain. Do not add a second roller."
+    },
+    {
+      "already": "drag_chain",
+      "api_shape": null,
+      "fdm": "Covered.",
+      "mechlib_fit": "no",
+      "name": "drag_again",
+      "priority": "low",
+      "why": "Cable carrier, not a drive chain."
+    }
+  ],
+  "id": "chain-families",
+  "new_categories": [],
+  "rejected": [
+    {
+      "name": "engineering_class_scale",
+      "why": "Offset-sidebar / 81X is a large dirty roller. Scale + clearance on roller_chain_link, not a new joint."
+    },
+    {
+      "name": "oring_chain",
+      "why": "Sealed motorcycle chain. Bought O-rings on a roller. Hardware."
+    }
+  ],
+  "sources": [
+    "https://fractory.com/chain-drives/",
+    "http://chain-guide.com/applications/1-6-3-inverted-tooth-chain.html",
+    "https://www.cycleworld.com/driving-the-camshafts-roller-chain-silent-chain-morse-hy-vo-chain/",
+    "https://507movements.com/toc.html",
+    "mechlib/chains.py roller_chain roller_chain_link drag_chain chain_reverse chain_s_wrap chain_dual_output, mechlib/gears.py roller_sprocket_2d"
+  ],
+  "summary": "A chain is a wrapping pair made of discrete links. Fractory / Tsubaki split power-transmission chains by joint: roller (bush + roller on a pin), silent / inverted-tooth (toothed plates, no roller), leaf (stacked plates, no sprocket, a sheave), and engineering/offset-sidebar (large, dirty). Conveyor cousins are pintle/block, hollow-pin, flat-top, and modular plastic belt. Ball chain is a cheap pull. 507 names chain pulleys 227-229 and a sprocket 254.\n\nCatalog already covers the roller family and the cable-carrier. roller_chain_link / roller_chain, roller_sprocket_2d, plus layout posers chain_reverse, chain_s_wrap, chain_dual_output. drag_chain / drag_chain_link is an energy chain, not a drive. Grep finds no silent chain, inverted tooth, leaf chain, pintle, block chain, hollow-pin, or ball chain.\n\nFDM reality. Silent / inverted-tooth is a stack of toothed plates that engage a sprocket with straight or involute flanks (Morse Hy-Vo is the rocker-pin high-speed cousin). Prints as plates + pins; the sprocket is a new tooth, not roller_sprocket_2d. Leaf chain is a forklift/mast chain: interleaved plates, no rollers, runs on a sheave not a sprocket; the sheave (pulleys slice) plus a plate stack is the kit. Pintle / block is an open hook-and-bar agricultural/sewage chain, very FDM-friendly, coarse pitch. Hollow-pin is a roller chain whose pins are tubes for attachments; an argument on roller_chain_link. Ball chain is spheres and wire, a pull not a drive. Modular plastic belt (Habasit/Intralox) is a product. Engineering class is a scaled dirty roller. Do not add a second roller_chain.",
+  "title": "Chain types beyond roller and drag"
+}

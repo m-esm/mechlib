@@ -582,3 +582,26 @@ FDM reality. The missing primitive under every named gear is the eccentric: a di
 - **corliss_wrist** [low] fit=maybe — Separate admission/exhaust. Famous, but the engine is a product. After eccentric + dashpot exist.
 - **caprotti_poppet** [low] fit=maybe — Cam valve gear. Do not add a locomotive cam box; use plate_cam.
 - **locomotive_product** [low] fit=no — Cylinders, boiler, frames. Product. The cell is walschaerts_cell.
+
+## chain-families — Chain types beyond roller and drag
+
+A chain is a wrapping pair made of discrete links. Fractory / Tsubaki split power-transmission chains by joint: roller (bush + roller on a pin), silent / inverted-tooth (toothed plates, no roller), leaf (stacked plates, no sprocket, a sheave), and engineering/offset-sidebar (large, dirty). Conveyor cousins are pintle/block, hollow-pin, flat-top, and modular plastic belt. Ball chain is a cheap pull. 507 names chain pulleys 227-229 and a sprocket 254.
+
+Catalog already covers the roller family and the cable-carrier. roller_chain_link / roller_chain, roller_sprocket_2d, plus layout posers chain_reverse, chain_s_wrap, chain_dual_output. drag_chain / drag_chain_link is an energy chain, not a drive. Grep finds no silent chain, inverted tooth, leaf chain, pintle, block chain, hollow-pin, or ball chain.
+
+FDM reality. Silent / inverted-tooth is a stack of toothed plates that engage a sprocket with straight or involute flanks (Morse Hy-Vo is the rocker-pin high-speed cousin). Prints as plates + pins; the sprocket is a new tooth, not roller_sprocket_2d. Leaf chain is a forklift/mast chain: interleaved plates, no rollers, runs on a sheave not a sprocket; the sheave (pulleys slice) plus a plate stack is the kit. Pintle / block is an open hook-and-bar agricultural/sewage chain, very FDM-friendly, coarse pitch. Hollow-pin is a roller chain whose pins are tubes for attachments; an argument on roller_chain_link. Ball chain is spheres and wire, a pull not a drive. Modular plastic belt (Habasit/Intralox) is a product. Engineering class is a scaled dirty roller. Do not add a second roller_chain.
+
+**New categories**
+- none
+
+**Candidates**
+- **silent_chain** [high] fit=yes — Inverted-tooth / silent chain. High speed, quiet, camshafts, transfers. Distinct from roller_chain (round rollers) and from a gear (the chain flexes around). The missing power-chain family.
+- **leaf_chain** [high] fit=yes — BL / AL leaf chain. No sprocket, only a sheave. The other named lifting chain. Not a roller and not a drag_chain.
+- **pintle_chain** [high] fit=yes — Block / pintle / 400-class. The open-joint cousin of roller chain. Prints as one piece per link. The farm-machine request.
+- **hollow_pin** [med] fit=yes — Conveyor attachments. Named, but it is a pin option on the existing link.
+- **ball_chain** [med] fit=yes — The cheap pull chain. Not a drive. A bead + pocket wheel is a thin kit so agents stop inventing it from cyl.
+- **flat_top_chain** [low] fit=maybe — Table-top / slat chain. An attachment on pintle or hollow-pin, not a new joint.
+- **hyvo_rocker** [low] fit=maybe — Morse Hy-Vo. After silent_chain exists. Do not claim Borg-Warner conjugacy.
+- **modular_plastic_belt** [low] fit=no — Injection-moulded conveyor belt. Finished product. Not a mechlib chain.
+- **roller_again** [low] fit=no — Already the default drive chain. Do not add a second roller.
+- **drag_again** [low] fit=no — Cable carrier, not a drive chain.
