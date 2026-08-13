@@ -673,3 +673,24 @@ FDM reality. pin_tumbler is a cylinder, a plug, n pin stacks (key pin + driver +
 - **padlock_shackle** [low] fit=maybe — Shackle + balls. The padlock is a product around a tumbler. A thin shackle kit after the cell exists.
 - **lockset_product** [low] fit=no — A door lockset. The reusable part is pin_tumbler.
 - **detent_as_lock** [low] fit=no — A positional click, not a coded constraint.
+
+## metrology-drawing — Drawing instruments and kinematic tracers
+
+A drawing instrument is a 1-DoF (or 2-DoF) linkage whose coupler traces a named curve. 507 is an instrument shelf: ellipsograph 152, helicograph 384, cyclograph 403-404, proportion compasses 405, parabola instrument 406, centrolinead 408, bisecting gauge 410. IFToMM treats these as function generators. A CMM or a plotter is a product.
+
+Catalog already has the scaling tracer: pantograph_pose / pantograph_linkage. straight-line already proposed trammel (Archimedes ellipsograph / double-slider) as fit=yes. four_bar_coupler_point (proposed) traces a general coupler curve, not a named instrument. Grep finds no helicograph, centrolinead, proportional dividers, or cyclograph.
+
+FDM reality. helicograph is a wheel that rolls around a fixed point while sliding on a radial arm, tracing an Archimedean spiral (507 #384); prints as an arm + a rolling wheel. proportional_dividers are two legs with an adjustable pivot, similar triangles; prints, the instrument version of a pantograph ratio. centrolinead is two rulers plus a T that draws lines through a hidden vanishing point (perspective). cyclograph is a rolling circle that draws a cycloid. trammel is already claimed on the straight-line slice; do not re-rank it as a new discovery. A beam compass is two rods and a pivot, too thin. Do not emit a drafting machine or a CNC plotter.
+
+**New categories**
+- none
+
+**Candidates**
+- **helicograph** [high] fit=yes — The spiral tracer. 507's named helicograph. Not a pantograph (scale) and not a mainspring (energy). Teaching + a printable volute generator.
+- **proportional_dividers** [high] fit=yes — Similar-triangles scaler. The pocket pantograph. Distinct from pantograph_linkage (a parallelogram that copies a path).
+- **centrolinead** [med] fit=yes — Draws lines through an inaccessible point. Named 507 instrument. Niche but a real cell.
+- **cyclograph** [med] fit=yes — Rolling-circle curve. tusi_couple is the 2:1 hypocycloid line; this is the general rolling tracer.
+- **trammel_again** [low] fit=no — Archimedes ellipsograph / double-slider. 507 #152. Do not claim it twice. Ship it under straight-line.
+- **pantograph_again** [low] fit=no — Already the scaling tracer.
+- **beam_compass** [low] fit=maybe — A large compass. After proportional_dividers, skip.
+- **cmm_plotter** [low] fit=no — CMM / plotter / drafting machine. Product. The cells are ways and tracers.

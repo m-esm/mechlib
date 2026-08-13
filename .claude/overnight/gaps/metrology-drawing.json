@@ -1,0 +1,93 @@
+{
+  "candidates": [
+    {
+      "already": "pantograph_linkage, spiral_power_spring",
+      "api_shape": "helicograph(arm_len, wheel_d, phase_deg) -> {arm, wheel, tracer} Archimedean spiral, 507 #384",
+      "fdm": "A radial arm, a rolling wheel that also slides. Prints. Pose is wheel angle; r = k*theta.",
+      "mechlib_fit": "yes",
+      "name": "helicograph",
+      "priority": "high",
+      "why": "The spiral tracer. 507's named helicograph. Not a pantograph (scale) and not a mainspring (energy). Teaching + a printable volute generator."
+    },
+    {
+      "already": "pantograph_linkage",
+      "api_shape": "proportional_dividers(leg_len, pivot_frac) -> two crossed legs, ratio = pivot_frac",
+      "fdm": "Two bars, one sliding pivot. Prints flat. 507 #405 proportion compasses.",
+      "mechlib_fit": "yes",
+      "name": "proportional_dividers",
+      "priority": "high",
+      "why": "Similar-triangles scaler. The pocket pantograph. Distinct from pantograph_linkage (a parallelogram that copies a path)."
+    },
+    {
+      "already": null,
+      "api_shape": "centrolinead(arm_a, arm_b) -> two rulers + a T that aims at a hidden vanishing point, 507 #408",
+      "fdm": "Three bars. Prints. Perspective drawing cell.",
+      "mechlib_fit": "yes",
+      "name": "centrolinead",
+      "priority": "med",
+      "why": "Draws lines through an inaccessible point. Named 507 instrument. Niche but a real cell."
+    },
+    {
+      "already": "tusi_couple (proposed), rack_pinion",
+      "api_shape": "a rolling circle with a tracer, 507 #403-404",
+      "fdm": "A disc that rolls on a line or a circle. Prints. Cycloid / hypocycloid tracer.",
+      "mechlib_fit": "yes",
+      "name": "cyclograph",
+      "priority": "med",
+      "why": "Rolling-circle curve. tusi_couple is the 2:1 hypocycloid line; this is the general rolling tracer."
+    },
+    {
+      "already": "trammel (straight-line slice)",
+      "api_shape": null,
+      "fdm": "Already ranked fit=yes there.",
+      "mechlib_fit": "no",
+      "name": "trammel_again",
+      "priority": "low",
+      "why": "Archimedes ellipsograph / double-slider. 507 #152. Do not claim it twice. Ship it under straight-line."
+    },
+    {
+      "already": "pantograph_linkage",
+      "api_shape": null,
+      "fdm": "Covered and animated.",
+      "mechlib_fit": "no",
+      "name": "pantograph_again",
+      "priority": "low",
+      "why": "Already the scaling tracer."
+    },
+    {
+      "already": "proportional_dividers",
+      "api_shape": "a bar with two points, one a pivot",
+      "fdm": "Too thin. Two pins on a bar.",
+      "mechlib_fit": "maybe",
+      "name": "beam_compass",
+      "priority": "low",
+      "why": "A large compass. After proportional_dividers, skip."
+    },
+    {
+      "already": "linear_way, five_bar (proposed)",
+      "api_shape": null,
+      "fdm": "A finished machine.",
+      "mechlib_fit": "no",
+      "name": "cmm_plotter",
+      "priority": "low",
+      "why": "CMM / plotter / drafting machine. Product. The cells are ways and tracers."
+    }
+  ],
+  "id": "metrology-drawing",
+  "new_categories": [],
+  "rejected": [
+    {
+      "name": "chebyshev_plantigrade_as_instrument",
+      "why": "A walking machine, not a drawing instrument. Already on the six-bar slice."
+    }
+  ],
+  "sources": [
+    "https://507movements.com/mm_384.html",
+    "https://507movements.com/toc.html",
+    "https://en.wikipedia.org/wiki/Ellipsograph",
+    "https://en.wikipedia.org/wiki/Pantograph",
+    "mechlib/linkages.py pantograph_pose pantograph_linkage, .claude/overnight/gaps/straight-line.json trammel, .claude/overnight/gaps/planar-four-bar.json four_bar_coupler_point"
+  ],
+  "summary": "A drawing instrument is a 1-DoF (or 2-DoF) linkage whose coupler traces a named curve. 507 is an instrument shelf: ellipsograph 152, helicograph 384, cyclograph 403-404, proportion compasses 405, parabola instrument 406, centrolinead 408, bisecting gauge 410. IFToMM treats these as function generators. A CMM or a plotter is a product.\n\nCatalog already has the scaling tracer: pantograph_pose / pantograph_linkage. straight-line already proposed trammel (Archimedes ellipsograph / double-slider) as fit=yes. four_bar_coupler_point (proposed) traces a general coupler curve, not a named instrument. Grep finds no helicograph, centrolinead, proportional dividers, or cyclograph.\n\nFDM reality. helicograph is a wheel that rolls around a fixed point while sliding on a radial arm, tracing an Archimedean spiral (507 #384); prints as an arm + a rolling wheel. proportional_dividers are two legs with an adjustable pivot, similar triangles; prints, the instrument version of a pantograph ratio. centrolinead is two rulers plus a T that draws lines through a hidden vanishing point (perspective). cyclograph is a rolling circle that draws a cycloid. trammel is already claimed on the straight-line slice; do not re-rank it as a new discovery. A beam compass is two rods and a pivot, too thin. Do not emit a drafting machine or a CNC plotter.",
+  "title": "Drawing instruments and kinematic tracers"
+}

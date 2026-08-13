@@ -315,7 +315,18 @@
       "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/locks-keys.json",
       "status": "done",
       "title": "Locks, keys, and combination mechanisms"
+    },
+    {
+      "candidate_count": 8,
+      "claimed_at": "2026-08-13T05:44:59+03:00",
+      "completed_at": "2026-08-13T05:45:28+03:00",
+      "id": "metrology-drawing",
+      "new_categories": [],
+      "prompt": "Invented first-principles slice. pantograph exists; trammel proposed in straight-line. Survey 507 helicograph 384, ellipsograph 152, cyclograph 403-404, centrolinead 408, proportion compasses 405. Semi-primitive tracers, not a CMM or a plotter.",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/metrology-drawing.json",
+      "status": "done",
+      "title": "Drawing instruments and kinematic tracers"
     }
   ],
-  "updated": "2026-08-13T05:44:42+03:00"
+  "updated": "2026-08-13T05:45:28+03:00"
 }
