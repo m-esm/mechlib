@@ -787,3 +787,47 @@ FDM reality. tilt_hammer is a pivoted helve, a head, and a wiper wheel (n lobes)
 - **slider_crank_punch** [low] fit=no — Constrained punch. No free flight. Presses own it.
 - **steam_hammer_product** [low] fit=no — 507 steam hammer 47 is a finished machine. The cell would be a double-acting cylinder, already rejected as a product on the fluid slice.
 - **forge_product** [low] fit=no — A smithy. The reusable part is tilt_hammer.
+
+## FINAL
+
+Cutoff reached 2026-08-13 07:28 EEST. 31 slices done, 0 pending. 229 fit=yes, 63 maybe, 101 no. 122 of the yeses are high. Seven new shelves named: brakes, clockwork, constant_force, dampers, wheels, spatial, leg_mechanisms. spatial and leg_mechanisms can stay under linkages if a 31st gallery group is refused.
+
+This is research, not an API list. Build the pair and pose holes first. Historical 507 names wait.
+
+**Ship first (agents invent these from boxes today)**
+
+1. **revolute_pair**, **pin_in_slot**, **cylindrical_pair**, **rod_end** — the missing pair primitives. Every printed linkage currently rolls its own pin and slot.
+2. **four_bar_coupler_point** — unlocks Roberts, Hoecken tracer, and cognates without a new topology.
+3. **toggle_joint** — the generic over-center. toggle_clamp is a hold-down, not the cell.
+4. **sheave** + **block_and_tackle** — wrapping simple machine. idler_pulley is a belt.
+5. **parallel_gripper** — cobot EOAT default. iris and scroll centre; nothing closes two parallel jaws.
+6. **wedge** — the missing simple machine. Every power screw is a wrapped wedge.
+7. **notch_hinge** + **living_hinge** — atomic flexure and the named PP hinge. knuckle_hinge is a pin.
+8. **grooved_plate_cam** — form-closed plate. plate_cam still needs a spring.
+9. **lantern_pinion** + **face_gear** — clock pinion and the printable 90-deg that is not a bevel.
+10. **v_wheel_rail** — hobby linear default. linear_way slides.
+11. **hooke_pose** + **oldham_pose** — solids exist, gallery left them static. Highest-value play.
+12. **watt_six** + **stephenson** — the two 6-bar topologies. Klann and Jansen sit on Stephenson III.
+13. **band_brake** — first brake. Clutches join shafts; nothing grounds one.
+14. **orifice_dashpot** — first damper. hydraulic_cylinder is a force source.
+15. **mecanum_wheel** + **swivel_caster** — holonomic drive and the self-aligning undriven wheel.
+
+**Next wave (named kits, still semi-primitive)**
+
+hart_inversor, tusi_couple, spherical_four_bar, bennett, five_bar, delta_parallelogram, geneva_internal, conjugate_cam_pair, wrap_spring_clutch, scissor_jack, hydraulic_cylinder, negator_spring, lever_escapement, going_barrel, centrifugal_impeller, vane_pump, crossed_roller, watt_governor, miura_cell, eccentric, silent_chain, pin_tumbler, planimeter, ball_disk_integrator.
+
+**New shelves, ranked**
+
+1. **brakes** — three high kits already (band, shoe, park pawl). Cleanest split from clutches.
+2. **clockwork** — escapement is misfiled under indexing. Lever, verge, gravity, going barrel.
+3. **constant_force** — Negator, remontoire, gravity arm. Cross-cuts flexure, linear, and clockwork.
+4. **dampers** — orifice, rotary vane, snubber, inerter. Two-terminal rate, not a brake.
+5. **wheels** — Mecanum, omni, caster, ball-transfer. Not pulleys, not water wheels.
+
+**Do not build**
+
+Finished products: Delta robot, Stewart hexapod, Strandbeest, punch-press C-frame, lockset, Curta, differential analyzer, forge, hydro plant, swerve module, sewing machine, loom. Those are assemblies of the cells above.
+
+**Animate before adding solids**
+
+oldham_pose, hooke_pose, iris_play, knuckle_play, telescoping_play, lead_screw_play, scroll_pose, intermittent_gear_pose, peristaltic_play. The geometry is already in-tree.
