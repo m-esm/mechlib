@@ -764,3 +764,26 @@ FDM reality. leibniz_wheel is a cylinder with nine tooth-lengths; a sliding pini
 - **geneva_as_counter** [low] fit=no — An indexer with dwell. usecase already names mechanical counters. Do not file it here.
 - **star_wheel_as_counter** [low] fit=no — A packaging pocket wheel. Not a decade and not an integrator.
 - **curta_product** [low] fit=no — Curta / Pascaline / arithmometer cabinets. Product. The cell is the drum or the pinwheel.
+
+## hammers-drops-stamps — Trip hammers, drops, and impact cells
+
+An impact cell stores energy (gravity or a spring) and dumps it in one stroke. 507 splits the family by how the mass is lifted and how it is released: tilt/trip hammer 72 (wiper cam lifts a third-order helve, gravity drops it), 353 (same cam, first-order helve), drop/stamp 85 (two wipers lift a vertical rod, the rod falls), pile-driver releasing-hook 251 (hooks open at the top of a slot). Norton and forge practice add the board-drop (friction boards lift the ram; a clutch dumps it) and the steam/air hammer (a piston, a product). Reuleaux's wrapping/cam higher pair is the lift; the drop is a free prismatic. This is not a press (toggles-presses: force without flight) and not a cam profile (the cam is already in-tree).
+
+Catalog already has the lift cam, not the hammer. snail_cam usecase names trip hammers; the solid is a drop-off plate, no helve. plate_cam / roller_follower can lift; they do not fall. cams-indexing proposed linear_cam as a trip-hammer form (the translating wedge), still no hammer. Grep of mechlib/ finds no tilt_hammer, drop_stamp, or pile_release. Neighbours: slider_crank (constrained punch), toggle_joint (proposed, force lock), ratchet (holds, does not drop). A forge, a steam hammer, or a pile-driving rig is a product.
+
+FDM reality. tilt_hammer is a pivoted helve, a head, and a wiper wheel (n lobes); pose is cam angle, the head flies after the lobe lets go. Prints as bars + a cam. drop_stamp is a vertical ram in a way, two wipers, gravity return; 507 #85 ore stamper. pile_release is a pair of hooks that a slot squeezes open at TDC; the mass falls; the lift can be a winch already in-tree. board_drop is two boards, a ram, a friction clutch; prints as a teaching analog (TPU pads). Do not emit a Nasmyth steam hammer or a smithy.
+
+**New categories**
+- none
+
+**Candidates**
+- **tilt_hammer** [high] fit=yes — The trip-hammer primitive. snail_cam is a drop-off plate with no helve. slider_crank is constrained. This is lift-then-fall.
+- **drop_stamp** [high] fit=yes — Vertical gravity stamp. Not a tilt (no helve) and not a press (the ram flies). 507's named ore-stamper.
+- **pile_release** [high] fit=yes — Automatic release at height. Not a cam (no lobe) and not a tilt. Pile-driver / drop-weight cell. The rig is a product.
+- **trip_hammer_first_order** [med] fit=yes — 507's other named helve. Distinct pivot. Do not ship a second name if tilt_hammer can take order=1|3.
+- **board_drop** [med] fit=yes — Friction lift, no cam. The other industrial drop. Distinct from drop_stamp (wipers) and from pile_release (hooks).
+- **snail_as_hammer** [low] fit=no — A drop-off plate. usecase already names trip hammers. The missing part is the helve, not a second snail.
+- **linear_cam_as_hammer** [low] fit=no — A translating wedge. The lift, not the falling mass. Do not claim it twice.
+- **slider_crank_punch** [low] fit=no — Constrained punch. No free flight. Presses own it.
+- **steam_hammer_product** [low] fit=no — 507 steam hammer 47 is a finished machine. The cell would be a double-acting cylinder, already rejected as a product on the fluid slice.
+- **forge_product** [low] fit=no — A smithy. The reusable part is tilt_hammer.

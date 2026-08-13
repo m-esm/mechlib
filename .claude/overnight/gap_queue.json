@@ -366,12 +366,16 @@
       "title": "Analog computers, integrators, and mechanical counters"
     },
     {
+      "candidate_count": 10,
       "claimed_at": "2026-08-13T06:53:41+03:00",
+      "completed_at": "2026-08-13T06:55:00+03:00",
       "id": "hammers-drops-stamps",
+      "new_categories": [],
       "prompt": "Invented first-principles slice. 507 tilt-hammer 72, drop/stamp 85, trip 353, pile 251. snail_cam usecase names trip hammers. Survey tilt/trip hammer, drop stamp, pile-driver release, board-drop. Semi-primitive cells only, not a forge or a steam hammer.",
-      "status": "in_progress",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/hammers-drops-stamps.json",
+      "status": "done",
       "title": "Trip hammers, drops, and impact cells"
     }
   ],
-  "updated": "2026-08-13T06:54:58+03:00"
+  "updated": "2026-08-13T06:55:00+03:00"
 }
