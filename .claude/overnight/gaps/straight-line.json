@@ -1,0 +1,123 @@
+{
+  "candidates": [
+    {
+      "already": null,
+      "api_shape": "hart_inversor(long_len, short_len, crank_angle_deg) -> {bars..., tracer, joints} plus hart_pose(...) returning the inversor points and the line",
+      "fdm": "Flat bars stacked like peaucellier_linkage. No slideway. Pose is one crank or cell angle; tracer Q is exact on a line. W-frame first (6 bars); A-frame is a variant, not a second API.",
+      "mechlib_fit": "yes",
+      "name": "hart_inversor",
+      "priority": "high",
+      "why": "Exact planar straight line with six bars and only revolute joints. The name people look up after Peaucellier. Used in instruments and as a compact inversor cell. Hart's first form is the W-frame (antiparallelogram); the A-frame is the second."
+    },
+    {
+      "already": null,
+      "api_shape": "tusi_couple(ring_teeth, module, pin_phase_deg) -> {ring, planet, pin} plus tusi_pose(phase_deg) -> pin on a diameter",
+      "fdm": "ring_gear plus a half-tooth planet, pin on the pitch circle, optional slider that the pin drives. Print gears flat. Pose: planet spin = -2 * orbit; pin (x,y) collapses to a diameter.",
+      "mechlib_fit": "yes",
+      "name": "tusi_couple",
+      "priority": "high",
+      "why": "Exact straight diameter from a planet rolling inside a ring of twice the pitch. Cardanic motion; Murray hypocycloidal engines; any point on the planet pitch circle reciprocates on a diameter. Distinct from ring_gear_mesh (ratio drive) and from scotch_yoke (slot inversion of the same law)."
+    },
+    {
+      "already": "four_bar (lengths only; no T, no error)",
+      "api_shape": "hoecken_pose(unit, crank_angle_deg) -> {O1,O2,A,B,T}; hoecken_linkage(...) -> kit plus max_error and velocity_ratio",
+      "fdm": "Same stacked-bar kit as four_bar, with coupler_ext as a first-class tracer and a max_error like chebyshev_linkage. Prints flat.",
+      "mechlib_fit": "yes",
+      "name": "hoecken_linkage",
+      "priority": "high",
+      "why": "The approximate 4-bar whose coupler point holds a long, nearly constant-velocity straight line. Walking feet, pick-and-place, film transports. four_bar defaults are Hoecken lengths but four_bar_pose does not return the tracer or measure path error."
+    },
+    {
+      "already": null,
+      "api_shape": "trammel(a, b, bar_len, phase_deg) -> {rail_x, rail_y, slider_x, slider_y, bar} plus trammel_pose -> ellipse point",
+      "fdm": "Two short linear ways at 90 degrees plus a bar with two sliding pins. oldham_coupling and scotch_yoke are inversions, not this generator. Pose is one crank or slider coordinate.",
+      "mechlib_fit": "yes",
+      "name": "trammel",
+      "priority": "med",
+      "why": "Archimedes ellipsograph / double-slider: two prismatic joints on perpendicular axes, a rod through both sliders. Any point on the rod traces an ellipse; the sliders themselves are the straight constraints. Used as an ellipse generator and as the Baker-Cross / inverted-Oldham engine core."
+    },
+    {
+      "already": "four_bar (can be dialed in if you know the lengths and coupler point)",
+      "api_shape": "roberts_pose(unit, crank_angle_deg) -> {O1,O2,A,B,T}; roberts_linkage(...) kit plus max_error",
+      "fdm": "Same as four_bar plus a named tracer. Worth a pose helper so agents do not invent proportions.",
+      "mechlib_fit": "yes",
+      "name": "roberts_linkage",
+      "priority": "med",
+      "why": "Named isosceles 4-bar whose coupler point traces a long approximate straight line (different curve from Watt and Chebyshev). Teaching set and one of the five UC Davis four-bar straight-line examples."
+    },
+    {
+      "already": "four_bar",
+      "api_shape": "evans_pose(unit, crank_angle_deg) -> joints plus T, or leave as a four_bar recipe",
+      "fdm": "Prints as bars. Low leverage next to Hoecken and Roberts, which cover the same job with better-known proportions.",
+      "mechlib_fit": "maybe",
+      "name": "evans_grasshopper",
+      "priority": "low",
+      "why": "Evans 1801 approximate straight-line, the grasshopper beam-engine motion. Historical more than reused. A 4-bar with a long coupler extension."
+    }
+  ],
+  "id": "straight-line",
+  "new_categories": [],
+  "rejected": [
+    {
+      "name": "peaucellier_linkage",
+      "why": "Already peaucellier_pose + peaucellier_linkage. Exact 7-bar inversor."
+    },
+    {
+      "name": "sarrus_linkage",
+      "why": "Already sarrus_pose + sarrus_linkage. Exact spatial straight line."
+    },
+    {
+      "name": "scott_russell_linkage",
+      "why": "Already scott_russell_pose + scott_russell_linkage. Exact, spends one P pair."
+    },
+    {
+      "name": "watt_linkage",
+      "why": "Already watt_pose + watt_linkage with measured error."
+    },
+    {
+      "name": "chebyshev_linkage",
+      "why": "Already chebyshev_pose + chebyshev_linkage (lambda form). The non-lambda Chebyshev is a cognate; do not ship both kits."
+    },
+    {
+      "name": "watt_parallel_motion",
+      "why": "Compound of Watt plus a pantograph. Both parts exist. A glued product, not a new primitive."
+    },
+    {
+      "name": "scotch_yoke_as_straight_line",
+      "why": "Already scotch_yoke. It is a Tusi inversion used as a yoke, not a missing generator."
+    },
+    {
+      "name": "oldham_as_trammel",
+      "why": "Already oldham_coupling. Same Cardanic family, different job (misaligned shafts)."
+    },
+    {
+      "name": "kempe_bricard_perrolatz_quadruplanar",
+      "why": "Exact inversors with more bars or unstable positions. Hart is the one 6-bar to add first. The rest are gallery trivia."
+    },
+    {
+      "name": "horse_head_jib",
+      "why": "Level-luffing crane product, not a pair/kit."
+    },
+    {
+      "name": "multifaze_stiller_smith",
+      "why": "Finished engine using trammel/Tusi. Out of scope."
+    },
+    {
+      "name": "flexure_stage",
+      "why": "Already the compliant straight line. Not missing."
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Straight-line_mechanism",
+    "https://en.wikipedia.org/wiki/Hart%27s_inversors",
+    "https://en.wikipedia.org/wiki/Tusi_couple",
+    "https://en.wikipedia.org/wiki/Trammel_of_Archimedes",
+    "https://www.firgelliauto.com/blogs/mechanisms/hart-s-w-frame",
+    "https://www.firgelliauto.com/blogs/mechanisms/hart-s-a-frame",
+    "https://iel.ucdavis.edu/design/fourbar/fourbarStraight.html",
+    "Kempe, A.B. How to Draw a Straight Line, Macmillan 1877",
+    "https://synthetica.eng.uci.edu/mechanicaldesign101/Kempe-Straight-Line.pdf"
+  ],
+  "summary": "A straight-line mechanism turns rotation or rocking into a stroke of definite length. Four-bars can only approximate a line (Watt 1784); exact planar lines need either a prismatic pair or an inversor cell that inverts a circle through a point into a line. Mechlib already covers the main teaching set with pose APIs: peaucellier_pose/linkage (exact 7-bar inversor), sarrus_pose/linkage (exact spatial, first perfect line, 1853), scott_russell_pose/linkage (exact half-length inversor that spends one P pair), watt_pose/linkage (approximate, error measured), and chebyshev_pose/linkage (lambda, 4:5:2, error measured). four_bar defaults claim Hoecken proportions and mention the coupler passing under O1, but four_bar_pose returns only O1/O2/A/B: no tracer T, no path-error metric, no named hoecken_* API. scotch_yoke and oldham_coupling are Tusi/Cardanic inversions used as a yoke and a coupling, not as a straight-line generator. flexure_stage is the compliant straight line. Missing exact generators that still earn a kit: Hart's W-frame (6-bar inversor, two bars fewer than Peaucellier, the next name after Peaucellier in every textbook) and a Tusi couple (internal ring of twice the planet pitch, a point on the planet pitch circle traces a diameter). Missing named approximate kits: Hoecken (constant-velocity walking/pick-and-place line), Roberts (isosceles 4-bar), and Evans grasshopper. Trammel of Archimedes is an ellipsograph / double-slider; it shares kinematics with Oldham and Scotch yoke but is not those products. Rejected as already covered: a second Peaucellier, Watt, Chebyshev lambda, Scott-Russell, or Sarrus. Rejected as teaching-only extras: Kempe kites, Bricard, Perrolatz, Sylvester-Kempe and Kumara-Kampling quadruplanar inversors (Hart first). Rejected as products: horse-head crane jibs, Chebyshev tables, MultiFAZE/Stiller-Smith engines, Watt parallel-motion as a compound Watt+pantograph product (both parts already exist).",
+  "title": "Straight-line and inversor linkages"
+}

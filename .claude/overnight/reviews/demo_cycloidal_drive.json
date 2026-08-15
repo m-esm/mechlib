@@ -1,0 +1,18 @@
+{
+  "bodies_that_look_frozen": [
+    "housing_ring"
+  ],
+  "cycle_closes": true,
+  "demo": "demo_cycloidal_drive",
+  "issues": [
+    {
+      "severity": "low",
+      "what": "Output-plate spin is not visually confirmable: 6-hole symmetry plus a weak landmark on the green plate. Disc-to-pin walk is the readable motion."
+    }
+  ],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Red cycloidal disc walks and precesses around the fixed blue pin ring while the gold eccentric orbits; housing stays put across the 3960 deg input sweep.",
+  "notes": "meta lists output_plate stationary with ~0 centroid travel, expected for spin-in-place. Last column at 3326 deg is still approaching 3960=0. Red showing through output holes is designed pin-hole contact.",
+  "verdict": "pass"
+}

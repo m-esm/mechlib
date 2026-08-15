@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_linear_way",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: orange carriage on a blue prismatic rail with a red gib setting preload.",
+  "notes": "Non-animated. Front row shows the dovetail/vee section and mounting holes. Carriage stays on the rail. Sane rest assembly of a gibbed way.",
+  "verdict": "pass"
+}

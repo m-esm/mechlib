@@ -1,0 +1,15 @@
+{
+  "bodies_that_look_frozen": [
+    "base_plate",
+    "hinge_pin_0",
+    "hinge_pin_1"
+  ],
+  "cycle_closes": true,
+  "demo": "demo_sarrus",
+  "issues": [],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Purple base stays put. Orthogonal yellow/pink hinge chains fold and the cyan platform rises (0-148 deg, bars near vertical) then drops (227-302 deg) with no visible twist or sideways drift.",
+  "notes": "Side and front rows confirm pure vertical travel. 302 deg is still low, consistent with rising again toward the mid-height 0 deg pose.",
+  "verdict": "pass"
+}

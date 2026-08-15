@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_differential_screw",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: gold twin-pitch shaft through a purple frame nut and a cyan moving nut stacked on one axis.",
+  "notes": "Non-animated. Shaft threads show at both ends; nuts sit concentric, not exploded. Sane rest assembly of a differential screw.",
+  "verdict": "pass"
+}

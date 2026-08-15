@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_printed_worm",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: cyan journalled worm with runout threads, thrust collars, and keyed journals.",
+  "notes": "Non-animated. One body. Helix and journals read. Sane rest assembly of a printed worm.",
+  "verdict": "pass"
+}

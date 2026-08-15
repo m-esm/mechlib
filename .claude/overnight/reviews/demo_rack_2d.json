@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_rack_2d",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: gold eight-tooth rack, thin extrusion, trapezoidal teeth on a pitch line.",
+  "notes": "Non-animated. One body. Front row shows eight teeth. Sane rest assembly of a display rack.",
+  "verdict": "pass"
+}

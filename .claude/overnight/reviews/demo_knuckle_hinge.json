@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_knuckle_hinge",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: blue fixed leaf and green swinging leaf interleaved on one pin, opened to the stop.",
+  "notes": "Non-animated. Barrels nest; side row shows the knuckle and stop flanks. Sane rest assembly of a print-in-place butt hinge.",
+  "verdict": "pass"
+}

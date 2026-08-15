@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_archimedes_screw",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: cyan helical flight on a shaft lying in a teal half-pipe trough, inclined.",
+  "notes": "Non-animated. Front row is the trough end-on with the shaft centered. Flight stays inside the trough; no detached bodies. Sane rest assembly of a water/grain screw.",
+  "verdict": "pass"
+}

@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_spur_gear_mesh",
+  "issues": [],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Single 20-tooth involute gear spins in place. Top-face hatch and tooth silhouettes advance clockwise across the 18 deg pitch cycle.",
+  "notes": "Centroid travel is ~0 as expected for spin-in-place. Tooth orientation, not centroid, shows the rotation. Last column 15.1 deg is approaching the 18 deg close. Face hatching is a render alias, not a mesh defect.",
+  "verdict": "pass"
+}

@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_winch_drum",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: orange helically grooved drum with the first turns of a blue cable seated in the groove.",
+  "notes": "Non-animated. Cable follows the helix; flanges contain the wrap. Sane rest assembly of a winch drum.",
+  "verdict": "pass"
+}

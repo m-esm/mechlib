@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_geneva_pair",
+  "issues": [],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Pin driver rotates; slotted wheel indexes during the engagement window and dwells outside it.",
+  "notes": "First overnight fail was a false stationary label: centroid travel is ~0 because the wheel spins in place. Vertex travel is 33.7 mm. Pose math advances ~18 deg of wheel at crank=20. Reclassified after vertex metric.",
+  "verdict": "pass"
+}

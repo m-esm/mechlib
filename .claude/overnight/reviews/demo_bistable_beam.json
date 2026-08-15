@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_bistable_beam",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: green frame with two pre-curved cosine beams and a central shuttle, one stable side.",
+  "notes": "Non-animated. One body. Beams and shuttle read; print-in-place switch. Sane rest assembly.",
+  "verdict": "pass"
+}

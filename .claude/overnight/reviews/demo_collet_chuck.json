@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_collet_chuck",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: green knurled taper nut on a blue threaded spindle nose, orange collet bore visible on axis.",
+  "notes": "Non-animated. Three bodies stacked concentrically. Threads and knurl read; nothing floating off-axis. Sane rest assembly of an ER-style chuck.",
+  "verdict": "pass"
+}

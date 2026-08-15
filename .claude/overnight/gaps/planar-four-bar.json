@@ -1,0 +1,158 @@
+{
+  "candidates": [
+    {
+      "already": null,
+      "api_shape": "four_bar_pose(..., coupler_s=0, coupler_h=0) -> joints including P; four_bar(...) builds a triangular coupler when |h|>0",
+      "fdm": "Same stacked capsule bars as four_bar, plus a triangular coupler plate or a short stub at (s, h) in the coupler frame. Flat-printable, pin-bored.",
+      "mechlib_fit": "yes",
+      "name": "four_bar_coupler_point",
+      "priority": "high",
+      "why": "Path-generation four-bars (Roberts, general coupler curves, Burmester points) need a tracer in the coupler plane, not just coupler_ext along AB. This is the missing pose primitive under four_bar."
+    },
+    {
+      "already": null,
+      "api_shape": "roberts_cognates(l_ground, l_crank, l_coupler, l_rocker, coupler_s, coupler_h) -> three {ground, crank, coupler, rocker, P} dicts (Cayley / similar-triangle construction)",
+      "fdm": "Returns lengths and coupler coordinates, not a sculpture. Feed each triple into four_bar. Printable if the consumer prints the chosen cognate.",
+      "mechlib_fit": "yes",
+      "name": "roberts_cognates",
+      "priority": "high",
+      "why": "Roberts-Chebyshev theorem: every 4R coupler curve is drawn by three distinct four-bars. Designers pick the cognate whose ground, transmission angle, or crank type actually fits the machine. Hoecken and the Chebyshev table are cognates of the lambda already in-tree."
+    },
+    {
+      "already": null,
+      "api_shape": "roberts_pose(unit, crank_or_rocker_deg, branch) / roberts_linkage(unit=..., coupler triangle built-in)",
+      "fdm": "One triangular coupler plate plus three capsule bars. All flat. Same pin stack as four_bar.",
+      "mechlib_fit": "yes",
+      "name": "roberts_linkage",
+      "priority": "high",
+      "why": "Richard Roberts' isosceles straight-line 4-bar: coupler is a triangle (sides a,a,b), ground 2b, side links a. Tracer is the apex. Used as an approximate linear guide and as the namesake of the cognate theorem. Cannot be posed with today's collinear coupler_ext."
+    },
+    {
+      "already": null,
+      "api_shape": "grashof_class(l_ground, l_crank, l_coupler, l_rocker) -> {type, crank_links, change_point, s, l}; four_bar_limits(...) -> reachable input angle span",
+      "fdm": "Pure classification, no mesh. Unblocks honest rocker-driven poses.",
+      "mechlib_fit": "yes",
+      "name": "grashof_class",
+      "priority": "med",
+      "why": "Tells an agent whether a length set is crank-rocker, drag-link, Grashof double-rocker, triple-rocker, or change-point, and which link is the crank. four_bar currently accepts any positive lengths and only fails when a requested angle is unreachable."
+    },
+    {
+      "already": "four_bar_pose",
+      "api_shape": "four_bar_pose(..., input='crank'|'rocker', angle_deg=...) raises past dead centers; or four_bar_rocker_pose(l_*, rocker_angle_deg)",
+      "fdm": "Same kit as four_bar. Only the pose argument changes.",
+      "mechlib_fit": "yes",
+      "name": "four_bar_input",
+      "priority": "med",
+      "why": "Non-Grashof and Grashof double-rockers have no 360 deg crank. Driving them with crank_angle_deg invents motion. Need a rocker-angle (or coupler-angle) input plus reported dead-center limits."
+    },
+    {
+      "already": null,
+      "api_shape": "anti_parallelogram_pose(long, short, crank_angle_deg) / anti_parallelogram(...) with crossed-layer stack",
+      "fdm": "Same bars as four_bar. Must stack the crossing pair on different Z slabs (chebyshev already does this). Prints flat.",
+      "mechlib_fit": "yes",
+      "name": "anti_parallelogram",
+      "priority": "med",
+      "why": "Crossed isosceles four-bar (opposite sides equal, branch=-1). Coupler rotation is 2:1 Cardan / elliptical. Used in drafters, elliptical gears, Hart's antiparallelogram, and some folding frames. four_bar(branch=-1) can assemble one pose but does not expose the 2-omega law or keep the links from occupying one plane as they cross."
+    },
+    {
+      "already": null,
+      "api_shape": "evans_pose(unit, angle_deg, branch) / evans_linkage(...) pinning textbook side-link and coupler-point ratios",
+      "fdm": "Four flat bars plus a coupler stub. Prints the same way as watt_linkage.",
+      "mechlib_fit": "yes",
+      "name": "evans_linkage",
+      "priority": "med",
+      "why": "Named approximate straight-line 4-bar used on grasshopper beam engines. Distinct proportions and coupler point from Watt, Chebyshev, Roberts, and Hoecken. The beam-engine itself is a product; the 4-bar is not."
+    },
+    {
+      "already": "four_bar",
+      "api_shape": null,
+      "fdm": "Already prints. Textbook 1:2.5:2.5:2 is just different arguments to four_bar.",
+      "mechlib_fit": "no",
+      "name": "hoecken_linkage",
+      "priority": "low",
+      "why": "Approximate straight-line crank-rocker, cognate of Chebyshev. Gallery and tests already treat four_bar defaults as Hoecken (1:2:2:2, full rotation, coupler_ext tracer)."
+    },
+    {
+      "already": "four_bar",
+      "api_shape": null,
+      "fdm": "Covered.",
+      "mechlib_fit": "no",
+      "name": "crank_rocker",
+      "priority": "low",
+      "why": "Default four_bar (shortest link is the crank, Grashof). Windshield wipers, hobby legs, any oscillating output from a rotating input."
+    },
+    {
+      "already": "four_bar",
+      "api_shape": null,
+      "fdm": "Covered as a length choice.",
+      "mechlib_fit": "no",
+      "name": "double_crank",
+      "priority": "low",
+      "why": "Drag-link: ground is shortest Grashof link. Both sides fully rotate. Used as a shaft coupling with non-parallel cranks. Just four_bar with those lengths."
+    },
+    {
+      "already": "chebyshev_linkage",
+      "api_shape": null,
+      "fdm": "Covered.",
+      "mechlib_fit": "no",
+      "name": "chebyshev_lambda",
+      "priority": "low",
+      "why": "Already shipped as chebyshev_pose / chebyshev_linkage (ground:rocker:coupler = 4:5:2, midpoint tracer)."
+    },
+    {
+      "already": "watt_linkage",
+      "api_shape": null,
+      "fdm": "Covered.",
+      "mechlib_fit": "no",
+      "name": "watt_four_bar",
+      "priority": "low",
+      "why": "Watt's 1784 parallel motion (two rockers + coupler, tracer at inverse lever ratio) is watt_pose / watt_linkage. The six-bar copy that remote-places the piston line belongs in the six-bar slice."
+    }
+  ],
+  "id": "planar-four-bar",
+  "new_categories": [],
+  "rejected": [
+    {
+      "name": "parallelogram_four_bar",
+      "why": "Locomotive coupling rods and parallel-crank drives are four_bar with opposite sides equal and branch=+1. Coupler stays parallel to ground. No extra joints or tracer law. pantograph_linkage already uses the parallelogram as a scaling chain."
+    },
+    {
+      "name": "deltoid_kite",
+      "why": "Two adjacent sides equal. A special length set, not a different machine job. Change-point when s+l=p+q is a flag on grashof_class, not a kit."
+    },
+    {
+      "name": "change_point_linkage",
+      "why": "Grashof equality (folding parallelogram / anti-parallelogram lock). Pose is already reachable (h2=0). Branch flip at the collinear pose is an analysis note, not new geometry."
+    },
+    {
+      "name": "wittgenstein_rod",
+      "why": "Generalization of Hoecken. Textbook curiosity, not a reused machine element."
+    },
+    {
+      "name": "grasshopper_beam_engine",
+      "why": "Finished product (Evans 4-bar plus a long overhead beam, cylinder, and house). The reusable primitive is evans_linkage."
+    },
+    {
+      "name": "burmester_synthesis",
+      "why": "3-5 precision-position algebraic synthesis. A solver, not a printable semi-primitive. Out of mechlib scope unless someone later wants a thin wrapper that emits four_bar lengths."
+    },
+    {
+      "name": "chebyshev_table_linkage",
+      "why": "The non-lambda Chebyshev cognate. Should come out of roberts_cognates applied to chebyshev_linkage rather than a third named kit."
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Cognate_linkage",
+    "https://en.wikipedia.org/wiki/Hoecken_linkage",
+    "https://en.wikipedia.org/wiki/Roberts_linkage",
+    "https://en.wikipedia.org/wiki/Chebyshev_lambda_linkage",
+    "https://dynref.engr.illinois.edu/aml.html",
+    "http://www.digimat.in/nptel/courses/video/112106270/lec23.pdf",
+    "Hartenberg & Denavit, Kinematic Synthesis of Linkages (1964), ch. on Roberts-Chebyshev / Cayley diagram",
+    "Norton, Design of Machinery; Erdman, Sandor & Kota, Mechanism Design",
+    "Barker, A complete classification of planar four-bar linkages",
+    "Hoecken, Werkstattstechnik (1926); gallery four_bar origin line"
+  ],
+  "summary": "The planar four-bar is the smallest 1-DOF closed chain (four links, four revolute joints). Grashof class (s+l ? p+q) decides whether a side fully rotates, and which link is shortest decides crank-rocker, drag-link/double-crank, or Grashof double-rocker. Non-Grashof is a triple-rocker. Equality is the change-point (folding/parallelogram) case. mechlib already ships a general RRRR solver and kit (four_bar_pose / four_bar, open or crossed branch, coupler_ext along AB). Defaults are a fully rotatable 1:2:2:2 crank-rocker that the tests and gallery call Hoecken, plus named kits for the Chebyshev lambda (4:5:2, midpoint tracer), Watt parallel-motion 4-bar (tracer at the inverse lever ratio), slider-crank, Scotch yoke, slotted quick-return, toggle clamp, and a parallelogram pantograph. That covers every Grashof type as a length choice, and it covers Hoecken-style straight-line walk as four_bar plus coupler_ext. What it does not cover is a coupler point off the AB line. Roberts' isosceles straight-line 4-bar, general path generation, and the Cayley/Roberts-Chebyshev cognate construction all need a triangular coupler, not a collinear boss. four_bar_pose also takes only a crank angle, so a non-Grashof or rocker-driven pose has no honest input and no reported swing limits. Rejected as separate kits: parallelogram, deltoid/kite, change-point, and named drag-link, because they are four_bar with special lengths (or branch=-1). Wittgenstein's rod is an obscure Hoecken generalization. Grasshopper beam engines and locomotive coupling-rod sets are finished machines. Evans and the Chebyshev table linkage are named 4-bars worth pinning only after a coupler-point primitive exists. Burmester 3-5 position synthesis is a solver, not a printable kit.",
+  "title": "Planar four-bar and cognates"
+}

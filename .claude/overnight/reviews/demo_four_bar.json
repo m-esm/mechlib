@@ -1,0 +1,15 @@
+{
+  "bodies_that_look_frozen": [
+    "ground_link",
+    "pin_0",
+    "pin_1"
+  ],
+  "cycle_closes": true,
+  "demo": "demo_four_bar",
+  "issues": [],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Pink crank rotates on the fixed blue ground; yellow coupler and green rocker follow without breaking joints, tracer sweeping a coupler curve.",
+  "notes": "Sample starts at 60 deg and ends at 360 (=0), so last column is not a visual match to first but is the next step back toward 60. Ground bar stays put.",
+  "verdict": "pass"
+}

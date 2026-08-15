@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_arc_ratchet",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: cyan hub with three trailing arc flexures seated inside a pink internally toothed ring.",
+  "notes": "Non-animated. Arms trail in the self-energising direction and sit in the undercut teeth. Side/front show a flat two-body disc. Sane rest assembly.",
+  "verdict": "pass"
+}

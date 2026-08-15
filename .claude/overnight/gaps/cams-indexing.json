@@ -1,0 +1,203 @@
+{
+  "candidates": [
+    {
+      "already": "geneva_pair",
+      "api_shape": "geneva_internal(slots, crank_r, pin_d, thickness, ...) -> {driver, wheel} plus geneva_internal_angle(slots, crank_r) -> wheel_angle(theta)",
+      "fdm": "Two flat plates, same pin-and-crescent construction as geneva_pair. The wheel is an annulus. Prints flat. Need a sweep-clear check like _geneva_sweep_clear.",
+      "mechlib_fit": "yes",
+      "name": "geneva_internal",
+      "priority": "high",
+      "why": "Driver lives inside the slotted wheel. Motion occupies more than 180 deg of crank, so dwell is the short part (opposite of external). Textbook sibling of geneva_pair; same closed-form layout with inverted centres. Film, turrets, any index that wants a long move and a short lock."
+    },
+    {
+      "already": "plate_cam, cam_profile_2d",
+      "api_shape": "grooved_plate_cam(base_r, segments, groove_w, thickness, roller_r, pin_phase_deg) -> {cam, pin}",
+      "fdm": "Extrude the pitch curve as a slot of groove_w through a disc. Same motion-law segments. Print flat. Pin or roller sits in the groove, same as barrel_cam's pin.",
+      "mechlib_fit": "yes",
+      "name": "grooved_plate_cam",
+      "priority": "high",
+      "why": "Box / track / closed plate cam: a slot in the plate captures a roller so the follower is form-closed. plate_cam is force-closed (needs roller_follower + spring). Positive drive is the usual request once people have hit follower bounce."
+    },
+    {
+      "already": null,
+      "api_shape": "linear_cam(length, lift, segments_or_wedge, thickness, travel) -> {cam, follower}; linear_cam_lift(s)",
+      "fdm": "A flat plate or a triangular wedge, optional groove. Prints flat. Pose is travel along the guide. Pair with roller_follower or a sliding pin.",
+      "mechlib_fit": "yes",
+      "name": "linear_cam",
+      "priority": "high",
+      "why": "Translating / wedge cam: the cam body strokes in a straight line, follower rides a 2D profile or a wedge. Key duplicators, trip hammers, lock pins, any time the prime mover is already linear. Not a rotary plate_cam with a different argument."
+    },
+    {
+      "already": "plate_cam, cam_profile_2d",
+      "api_shape": "conjugate_cam_pair(base_r, segments, yoke_c, roller_r, clearance, thickness, phase_deg) -> {cam_rise, cam_return, yoke, rollers}",
+      "fdm": "Two plates keyed in phase plus a yoke and two rollers. All print flat. Running clearance is a parameter (FDM wants 0.2-0.4 mm, not the metal 20 um). Same MOTION_LAWS as plate_cam.",
+      "mechlib_fit": "yes",
+      "name": "conjugate_cam_pair",
+      "priority": "high",
+      "why": "Two complementary plate profiles on one shaft, yoke with two rollers, r1(theta)+r2(theta)=C-2R-delta. Desmodromic / positive-return without a groove. Weaving, cartoners, parallel-index guts, Ducati-style close. Cannot be faked by calling plate_cam twice: the second profile is determined by the first."
+    },
+    {
+      "already": "plate_cam",
+      "api_shape": "constant_breadth_cam(breadth, segments, thickness, ...) -> {cam, yoke}",
+      "fdm": "One flat plate, constant-width profile, prints on its face. Yoke is two flats or two rollers at fixed separation.",
+      "mechlib_fit": "yes",
+      "name": "constant_breadth_cam",
+      "priority": "med",
+      "why": "One plate of constant width between two parallel flats (Reuleaux / two-circular-arc family). A single-body desmodromic: the yoke cannot lose contact. Teaching set and a cheap positive-return when you do not want two cams."
+    },
+    {
+      "already": "barrel_cam, geneva_pair, swash_plate",
+      "api_shape": "globoidal_index_cam(stops, cam_r, roller_d, index_deg, dwell_frac, phase_deg) -> {cam, turret, rollers} plus globoidal_index_angle(phase)",
+      "fdm": "Coarse FDM can print the globoid as a lofted rib and the turret as a hub of roller pins (Thingiverse 'scroll cam box' / Grahovski GrabCAD). Not a 5-axis ground metal cam; clearance will be sloppy. Still a valid semi-primitive if the generator emits cam + turret + rollers posed at one index, plus an angle law.",
+      "mechlib_fit": "yes",
+      "name": "globoidal_index_cam",
+      "priority": "med",
+      "why": "Ferguson / roller-gear / globoidal indexer: a concave globoid rib (or groove) drives rollers on a turret whose axis is at 90 deg. Sankyo/CAMCO class. The 3D analog of Geneva with programmable accel and a long dwell. Distinct from barrel_cam (cylinder + one axial pin) and from geneva_pair (planar pin-in-slot)."
+    },
+    {
+      "already": "barrel_cam",
+      "api_shape": "barrel_indexer(stops, radius, length, roller_d, dwell_frac, phase_deg) -> {barrel, turret, rollers} plus barrel_index_angle(phase)",
+      "fdm": "Reuse barrel_cam's groove loft, add a turret of roller pins around a perpendicular (or parallel-end) axis. Print barrel standing, turret flat. Thingiverse scroll-cam boxes are this kit.",
+      "mechlib_fit": "yes",
+      "name": "barrel_indexer",
+      "priority": "med",
+      "why": "Cylindrical indexing cam: a barrel groove (or ridge) drives a ring of rollers on a turret, not a single translating pin. Nolte/Sankyo 'barrel cam indexer'. barrel_cam already programs one pin in z(theta); this programs theta_out(theta_in) with dwells. Same relationship geneva_pair has to a random slotted disc."
+    },
+    {
+      "already": "geneva_pair",
+      "api_shape": "spherical_geneva(slots, sphere_r, pin_d, thickness) -> {driver, wheel} plus spherical_geneva_angle",
+      "fdm": "Two printed spherical sectors or thick discs with a pin. Axis concurrency is the same pain as spherical_four_bar. Educational and compact-indexer use.",
+      "mechlib_fit": "yes",
+      "name": "spherical_geneva",
+      "priority": "med",
+      "why": "Geneva on a sphere: pin and slots live on concentric spheres, axes concurrent. Wikipedia's third variant. Compact right-angle index. Not internal/external planar Geneva and not globoidal (globoidal is a cam-and-roller, not a pin-in-slot)."
+    },
+    {
+      "already": "face_cam, barrel_cam",
+      "api_shape": "grooved_face_cam(radius, segments, groove_w, groove_d, pin_phase_deg) -> {cam, pin}",
+      "fdm": "Disc with a milled-style slot of groove_w, prints on its back. Pin sits in the groove. Closed curve required so the slot does not run off the disc.",
+      "mechlib_fit": "yes",
+      "name": "grooved_face_cam",
+      "priority": "med",
+      "why": "Slot in the face of a disc, follower moves radially (Wikipedia face-cam, grooved heart). face_cam in-tree is an axial hill, spring-held. barrel_cam is a groove on the cylinder wall. The radial face-groove is the remaining textbook plate."
+    },
+    {
+      "already": null,
+      "api_shape": "compose conjugate_cam_pair with a turret, or parallel_index_cam(stops, ...)",
+      "fdm": "Two flat cams and a turret of rollers. Prints. Commercial CF3 indexers are housed products.",
+      "mechlib_fit": "maybe",
+      "name": "parallel_index_cam",
+      "priority": "low",
+      "why": "Two conjugate plate cams + a roller turret, input and output shafts parallel. After conjugate_cam_pair exists this is mostly that pair plus a turret pose. A thin kit is useful; a second full surface generator is not."
+    },
+    {
+      "already": "plate_cam",
+      "api_shape": "inverse_cam(profile_or_segments, stroke, ...) -> {cam, driver}; theta = f(stroke)",
+      "fdm": "Same plate, plus a linear driver. Prints.",
+      "mechlib_fit": "maybe",
+      "name": "inverse_cam",
+      "priority": "low",
+      "why": "Reuleaux inversion: the 'follower' is driven, the cam plate is the output. Useful when the prime mover is a cylinder or solenoid. The profile is the same geometry read backwards; a pose wrapper around plate_cam plus a sliding driver may be enough."
+    },
+    {
+      "already": "MOTION_LAWS, cam_lift",
+      "api_shape": "add names to MOTION_LAWS",
+      "fdm": "No mesh.",
+      "mechlib_fit": "maybe",
+      "name": "polynomial_motion_laws",
+      "priority": "low",
+      "why": "3-4-5, 4-5-6-7, modified trapezoid, harmonic combinants. Extensions of MOTION_LAWS / cam_lift, not a new solid. Worth doing when a globoidal or conjugate kit needs finite jerk; not a part on its own."
+    },
+    {
+      "already": "geneva_pair",
+      "api_shape": null,
+      "fdm": "Covered.",
+      "mechlib_fit": "no",
+      "name": "maltese_cross",
+      "priority": "low",
+      "why": "Alias of a 4-slot external Geneva. geneva_pair(slots=4) is the Maltese cross. Do not ship a second name."
+    },
+    {
+      "already": "star_wheel, geneva_pair",
+      "api_shape": null,
+      "fdm": "Covered as two different kits.",
+      "mechlib_fit": "no",
+      "name": "star_wheel_geneva",
+      "priority": "low",
+      "why": "star_wheel in-tree is a packaging pocket wheel for bottles/cans, not a Geneva star. The Geneva star is geneva_pair."
+    },
+    {
+      "already": "intermittent_gear_pair",
+      "api_shape": "missing: intermittent_gear_angle, not a new mesh",
+      "fdm": "Covered.",
+      "mechlib_fit": "no",
+      "name": "intermittent_gears",
+      "priority": "low",
+      "why": "Already intermittent_gear_pair (mutilated gear + locking segment). left_out_notes: no engagement pose law. That is an animate-coverage problem, not a missing solid."
+    },
+    {
+      "already": "ratchet_wheel_pawl, detent_pair, handwheel",
+      "api_shape": null,
+      "fdm": "The table plate is a project part.",
+      "mechlib_fit": "no",
+      "name": "ratchet_index_table",
+      "priority": "low",
+      "why": "Rotary table with a ratchet and a detent. Product assembled from ratchet_wheel_pawl + detent_pair + a frame. The two primitives already exist."
+    },
+    {
+      "already": "plate_cam, face_cam, barrel_cam, heart_cam, snail_cam",
+      "api_shape": null,
+      "fdm": "Covered and animated.",
+      "mechlib_fit": "no",
+      "name": "plate_face_barrel_heart_snail",
+      "priority": "low",
+      "why": "Already plate_cam, face_cam, barrel_cam, heart_cam, snail_cam, cam_lift, cam_profile_2d, roller_follower, swash_plate, eccentric_cam_clamp."
+    }
+  ],
+  "id": "cams-indexing",
+  "new_categories": [],
+  "rejected": [
+    {
+      "name": "camco_ferguson_housing",
+      "why": "Commercial globoidal indexer gearbox (CAMCO RGD, Sankyo roller-gear). Product. The reusable part is globoidal_index_cam."
+    },
+    {
+      "name": "rotary_index_table_machine",
+      "why": "Housed assembly table with cam box, output flange, and station plate. Product."
+    },
+    {
+      "name": "dividing_head",
+      "why": "Machine-tool accessory. Product."
+    },
+    {
+      "name": "desmodromic_engine",
+      "why": "Ducati valve train as a whole engine. The reusable part is conjugate_cam_pair."
+    },
+    {
+      "name": "geneva_stop",
+      "why": "Watch stop-work / count wheel. Clockwork slice, not a cam/indexer kit."
+    },
+    {
+      "name": "knife_flat_followers",
+      "why": "Follower *styles* on plate_cam (roller_r=0 is already the knife/flat pitch curve). Not separate solids; roller_follower covers the pivoted roller."
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Cam_(mechanism)",
+    "https://en.wikipedia.org/wiki/Geneva_drive",
+    "https://www.cs.cmu.edu/~rapidproto/mechanisms/chpt6.html",
+    "https://www.firgelliauto.com/blogs/mechanisms/conjugate-cam",
+    "https://www.firgelliauto.com/blogs/mechanisms/inverse-cam",
+    "http://mechdesigner.support/md-step-globoidal-indexing-cam.htm",
+    "https://nolte-nc-kurventechnik.hier-im-netz.de/en/Indexers/Globoidal_Indexing_Cams.html",
+    "https://nolte-nc-kurventechnik.hier-im-netz.de/en/Indexers/Cylindrical_Indexing_Cams.html",
+    "https://www.tallman-robotics.com/globoidal-cam-indexers/",
+    "https://www.sankyo-seisakusho.co.jp/english/glossary/i.html",
+    "https://www.thingiverse.com/thing:277159",
+    "https://www.firgelliauto.com/blogs/mechanisms/geneva-drive-internal",
+    ".claude/overnight/catalog.json public_api (plate_cam, snail_cam, heart_cam, barrel_cam, face_cam, roller_follower, swash_plate, geneva_pair, geneva_wheel_angle, escapement, intermittent_gear_pair, detent_pair, star_wheel, ratchet_wheel_pawl) + categories cams/indexing + animate demo_*cam/demo_geneva_pair + left_out_notes on intermittent_gear_pair",
+    "mechlib/cams.py, mechlib/indexing.py, mechlib/ratchets.py, mechlib/usecases.py"
+  ],
+  "summary": "A cam is a higher pair that programs a follower from a displacement diagram. Textbooks (Rothbart, Norton, CMU ch.6, Wikipedia) split the family first by the moving surface, then by how the follower is kept on it. Shape class: plate/disc/radial (exists as plate_cam + cam_profile_2d + MOTION_LAWS dwell/linear/shm/cycloidal), face/end/crown (exists as face_cam: raised axial track, spring-held pin), barrel/cylindrical (exists as barrel_cam: closed groove on the drum wall, positive-drive pin), heart (exists, constant-velocity / reset cam), snail/drop (exists), swash plate (exists, spatial analog), linear/translating/wedge (missing: input is a stroke, not a turn; key-duplicator and trip-hammer form), grooved/box/track plate (missing: a slot in the plate so the follower is form-closed, no spring), grooved face (missing: radial slot in a disc face; Wikipedia's 'most common face cam'; distinct from face_cam's axial hill), conjugate/desmodromic pair (missing: two complementary plates on one shaft, yoke captured, r1+r2=C; Ducati/Sulzer/Bosch; also the guts of a parallel indexer), constant-breadth / Reuleaux (missing: one plate of constant width between two flats, a cheap desmodromic), inverse cam (missing: Reuleaux inversion, follower drives, cam is the output), globoidal/Ferguson/roller-gear (missing: concave globoid rib + turret rollers, right-angle indexer), barrel indexer (missing: barrel_cam groove driving a roller turret rather than one translating pin), parallel-index cam (missing: two conjugate plates + turret, shafts parallel). Follower class already has roller_follower; knife and flat-face are arguments, not kits. Motion-law extras (3-4-5 polynomial, modified trapezoid, 4-5-6-7) are segment types for cam_lift, not parts.\n\nIntermittent / indexing is the other half of this slice. External Geneva / Maltese cross is geneva_pair + geneva_wheel_angle (animated; usecase already says 'indexing tables'). star_wheel is a packaging pocket wheel, not a Geneva. intermittent_gear_pair is the mutilated-gear + lock-segment pair (no engagement law in-tree). escapement / escapement_pose is the clock form (animated). detent_pair and ratchet_wheel_pawl cover click-in and one-way click. Missing Geneva variants: internal (driver inside the wheel, motion >180 deg of crank, dwell shorter than motion) and spherical (axes meet, 3D Maltese). Geneva stop / count-wheel is clockwork (other slice). A ratchet-index *table* is a product assembled from ratchet + detent + frame.\n\nCatalog categories already name cams and indexing. Animate covers plate/face/barrel/heart/snail, geneva_pair, swash_plate, eccentric_cam_clamp. left_out_notes call out intermittent_gear_pair as having no pose law (unlike geneva_wheel_angle). Grep of mechlib/cams.py, indexing.py, ratchets.py, usecases.py finds no globoidal, Ferguson, desmodromic, conjugate cam, inverse cam, wedge/linear cam, internal Geneva, or spherical Geneva.",
+  "title": "Cam types and intermittent motion"
+}

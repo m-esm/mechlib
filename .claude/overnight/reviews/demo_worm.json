@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_worm",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: orange helical worm meshing a gold lead-angle-matched wheel at right angles.",
+  "notes": "Non-animated. Front row is the worm axis; teeth meet at the contact. Sane rest assembly of a worm pair.",
+  "verdict": "pass"
+}

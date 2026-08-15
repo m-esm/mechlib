@@ -1,0 +1,1455 @@
+# Overnight motion review
+
+Visual confirmation of gallery mechanisms. Generated overnight; not a hand-maintained registry.
+
+Cutoff: 2026-08-13 07:30 EEST.
+
+## demo_barrel_cam — pass
+
+- reviewed: 2026-08-12T23:54:18+03:00
+- kind: animate
+- motion: Follower pin and blue guide orbit the stationary barrel while the pin stays seated in the helical groove and climbs/descends with the groove program.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: barrel_cam
+
+Barrel is correctly stationary; pin_phase_deg walks the follower around. Last column at 340 deg continues toward the 40 deg start.
+
+**Issues**
+- none
+
+## demo_bell_crank — pass
+
+- reviewed: 2026-08-12T23:54:18+03:00
+- kind: animate
+- motion: Pink two-arm crank rotates on the fixed base pivot; orange and green links stay pinned to the arms and sweep a full pose cycle without detaching.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: base, pin_0
+
+pose_deg is swept through nearly 360 rather than a limited rocker stroke; that matches the demo param. Ground plate stays put.
+
+**Issues**
+- none
+
+## demo_bevel_gear_pair — fail
+
+- reviewed: 2026-08-12T23:54:18+03:00
+- kind: animate
+- motion: A 90-degree bevel pair is posed correctly but tooth orientation is identical across drive_deg 0 through 900; neither wheel rotates.
+- cycle_closes: True
+- looks_like_intended: False
+- frozen_that_should_move: bevel_gear, bevel_pinion
+
+Rest pose looks like a Tredgold bevel pair. Animation is the failure. meta.moving is empty and both bodies are listed stationary.
+
+**Issues**
+- **high**: drive_deg advances 0/180/360/540/720/900 but both gears are visually frozen; mesh does not turn. Centroid travel is ~0 as expected for spin-in-place, so this is a real animation miss not a travel-metric artifact.
+
+## demo_face_cam — pass
+
+- reviewed: 2026-08-12T23:54:56+03:00
+- kind: animate
+- motion: Brown follower pin walks around the stationary pink face disc and rises then falls on the axial track, tallest near 180 deg and lowest near 0/300.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: cam
+
+Cam disc stays put; pin_phase_deg is the moving coordinate. Front row makes the lift program obvious.
+
+**Issues**
+- none
+
+## demo_four_bar — pass
+
+- reviewed: 2026-08-12T23:54:56+03:00
+- kind: animate
+- motion: Pink crank rotates on the fixed blue ground; yellow coupler and green rocker follow without breaking joints, tracer sweeping a coupler curve.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: ground_link, pin_0, pin_1
+
+Sample starts at 60 deg and ends at 360 (=0), so last column is not a visual match to first but is the next step back toward 60. Ground bar stays put.
+
+**Issues**
+- none
+
+## demo_chebyshev — pass
+
+- reviewed: 2026-08-12T23:58:06+03:00
+- kind: animate
+- motion: Lambda four-bar rocks through a sine stroke: mid poses at 0/180 match, the two extremes pair as 60/120 and 240/300, coupler and orange tracer travel while the blue ground stays put.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: ground, pin_0, pin_1
+
+drive_deg is a closed sine swing about the mid angle, not a full crank turn. Last column sits on the same extreme as 240 and would return to mid at 360. Joints stay assembled; no jumps.
+
+**Issues**
+- none
+
+## demo_cycloidal_drive — pass
+
+- reviewed: 2026-08-12T23:58:06+03:00
+- kind: animate
+- motion: Red cycloidal disc walks and precesses around the fixed blue pin ring while the yellow eccentric orbits; housing stays put across the 3960 deg input sweep.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: housing_ring
+
+meta lists output_plate stationary with ~0 centroid travel, which is expected for spin-in-place. 3300 deg last column is still approaching 3960=0, not a snap-back. Red showing through output holes is designed pin-hole contact.
+
+**Issues**
+- **low**: Output-plate spin is not visually confirmable: 6-hole symmetry matches the 60 deg output step per column, and no unique landmark on the green plate walks. Disc-to-pin walk is the readable motion.
+
+## demo_dog_clutch — pass
+
+- reviewed: 2026-08-12T23:58:06+03:00
+- kind: animate
+- motion: Green hub_b slides axially onto the fixed magenta hub: stack is tallest at 0/300 (withdrawn) and shortest at 180 (dogs fully nested), then opens again.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: hub_a
+
+drive_deg is a cosine engage_frac (0 withdrawn, 180 seated). 300 continues toward the withdrawn start. Hubs stay coaxial; no relative spin through locked dogs.
+
+**Issues**
+- **low**: Mid-engagement columns (120-240) show a mushy sawtooth band at the dog interface, likely z-fighting as the teeth nest, not parts flying apart.
+
+## demo_eccentric_cam_clamp — pass
+
+- reviewed: 2026-08-12T23:58:06+03:00
+- kind: animate
+- motion: Red eccentric handle turns a full circle on the fixed orange pivot; the green follower is pressed and released as the offset disc sweeps past, blue base stays put.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: clamp_base, pivot_pin
+
+Handle clock: ~1 o'clock at 0, then 11, 9, 7, 4, 3, heading back to 1. 180 is the clamp-overlap pose. Last column continues the rotation.
+
+**Issues**
+- none
+
+## demo_escapement — fail
+
+- reviewed: 2026-08-12T23:58:06+03:00
+- kind: animate
+- motion: Pink anchor rocks a few degrees (mostly 180 to 240/300) against a yellow escape wheel whose teeth and hub marks stay in the same clocking in every column.
+- cycle_closes: True
+- looks_like_intended: False
+- frozen_that_should_move: escape_wheel
+
+Rest pose looks like an anchor escapement. meta.stationary lists the wheel and centroid travel is ~0 (spin-in-place would also read 0), but the teeth themselves do not walk. Last column is still the rocked pose, so the sequence would close on the return to 360=0.
+
+**Issues**
+- **high**: Escape wheel does not step. Demo is supposed to advance two teeth over 360 deg of phase (~24 deg, ~20 deg by the last column). Hub marks and perimeter teeth are identical from 0 through 300. A rocking pallet on a locked wheel is not an escapement tick.
+- **med**: Anchor motion is lumped into the last two columns; 0/60/120/180 look nearly the same rest pose rather than a beat-and-beat swing.
+
+## demo_external_gear_pump — pass
+
+- reviewed: 2026-08-12T23:58:06+03:00
+- kind: animate
+- motion: Figure-eight body and cap stay put while red and green flashes in the cap ports walk around the holes, showing the two internal gears turning in place.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: body, cap
+
+Port flashes repeat every 180 deg (0~180, 60~240, 120~300), consistent with an even-tooth gear spinning. Housing never drifts. Last column continues the port walk.
+
+**Issues**
+- **low**: Side and front rows are visually identical across phase; mesh rotation is only readable through the iso cap ports. meta.moving is empty because centroid travel is ~0.
+
+## note — phase aliasing
+
+First bevel_gear_pair fail was a sheet bug: equal cycle/N samples hit tooth-pitch identity (180 deg on a 16-tooth pinion). Sheets were rebuilt with a one-frame step plus uneven fractions. Gear-family reviews were queued again.
+
+## demo_herringbone_gear — pass
+
+- reviewed: 2026-08-13T00:04:28+03:00
+- kind: animate
+- motion: Orange driver and blue driven herringbone pair stay in mesh while tooth and spoke highlights rotate across drive_deg 0/5/79/148/227/302. Centroids stay put as expected for spin-in-place gears.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Anti-alias resample: 0 vs 5 deg are nearly identical (5 deg of mesh) and later columns show clear chevron rotation on both wheels. Not a frozen-from-symmetry miss. Remaining 58 deg would return toward the 0 pose.
+
+**Issues**
+- none
+
+## demo_lazy_tongs — pass
+
+- reviewed: 2026-08-13T00:04:28+03:00
+- kind: animate
+- motion: Red frame stays put. Yellow scissor bars fold from an open zigzag into a compact stack around 80-150 deg, then flatten and shoot the blue output yoke out along the axis by 300 deg.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: frame, pin_0
+
+Nuremberg-scissors stroke: retract then extend in one 360 drive. Front row shows the stack thinning as the rhombs flatten. Pins travel with the joints; nothing detaches.
+
+**Issues**
+- none
+
+## demo_pantograph — pass
+
+- reviewed: 2026-08-13T00:04:28+03:00
+- kind: animate
+- motion: Blue base pad stays fixed. Orange pivot bar, yellow/purple/green parallelogram, stylus pin and output point sweep a closed pose cycle while the parallelogram stays closed.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: base_pad, pin_f
+
+Last column at 302 deg is already near the 0 deg pose (orange bar left, output toward the pad). Scale-copy geometry holds; no broken pins.
+
+**Issues**
+- none
+
+## demo_peaucellier — pass
+
+- reviewed: 2026-08-13T00:04:28+03:00
+- kind: animate
+- motion: Green ground stays put. Orange crank orbits, purple rhombus opens and folds, red/yellow anchor links rock, and the tracer end travels as the inversor works through the drive.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: ground_link, pin_c, pin_o
+
+Cell stays assembled across 0-302 deg. Side row shows the orange crank walking left-right while the rhombus inverts. Last column is still opening, consistent with 58 deg left in the cycle.
+
+**Issues**
+- none
+
+## demo_plate_cam — pass
+
+- reviewed: 2026-08-13T00:04:28+03:00
+- kind: animate
+- motion: Blue plate cam spins in place while the orange roller stays on the profile and the green follower stem walks clockwise around the cam with changing lift (short at 60 deg, longer at 139 deg).
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Demo param is follower_deg starting at 60. Follower orbits rather than sliding on a fixed axis: kinematic inversion of a radial cam, lift still reads off the stem length. Last column at 362.4 continues clockwise toward the 60 deg start.
+
+**Issues**
+- none
+
+## demo_quick_return — pass
+
+- reviewed: 2026-08-13T00:04:28+03:00
+- kind: animate
+- motion: Yellow crank pin rides the orange disc and slides along the green slotted lever. Lever stays nearly flat through 40-188 deg, then rocks up sharply by 267 deg and starts back down at 342 deg (quick return).
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: base, pin_crank, pin_lever
+
+Crank disc is a featureless orange circle so rotation is read from the pin orbit, not disc markings. Blue base and both ground pins stay put. Last column at 342 deg is heading back toward the 40 deg start.
+
+**Issues**
+- none
+
+## demo_rack_pinion — pass
+
+- reviewed: 2026-08-13T00:05:40+03:00
+- kind: animate
+- motion: Red pinion spins in place (tooth orientation walks) and the green rack translates along the pitch line, staying in mesh. Rack left end walks toward the pinion from 0 to 302 deg.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Pinion centroid is fixed as expected. 0 vs 10 deg are close; later columns show both rotation and ~17 mm of rack travel. Last column still short of a full turn back to 0.
+
+**Issues**
+- none
+
+## demo_ring_gear_mesh — pass
+
+- reviewed: 2026-08-13T00:05:40+03:00
+- kind: animate
+- motion: Orange pinion stays centered on the left of the blue internal ring and its face spokes rotate through drive_deg 0/7.5/158/295/454/605. Mesh at the ring ID holds. Ring teeth walk slowly (high ratio).
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Anti-alias resample: 0 vs 7.5 deg look nearly identical; later columns are not a frozen copy. Cycle is 720 deg so last column at 605 is still short of close. Both listed stationary because travel is spin-in-place.
+
+**Issues**
+- none
+
+## demo_rotary_spool_valve — pass
+
+- reviewed: 2026-08-13T00:05:40+03:00
+- kind: animate
+- motion: Blue body and orange cap stay put. Brown plug rotates in the bore: hex socket walks, the stem slot appears and disappears in the side row, and the L-passage lines up with the body port around 227 deg (see-through in the side view).
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: spool_valve_body, spool_valve_cap
+
+Centroids are all ~0 as expected for a rotary valve. Plug_deg 0-302 is a partial turn; last column is heading back toward the 0 hex pose.
+
+**Issues**
+- none
+
+## demo_sarrus — pass
+
+- reviewed: 2026-08-13T00:05:40+03:00
+- kind: animate
+- motion: Purple base stays put. Orthogonal yellow/pink hinge chains fold and the cyan platform rises (0-148 deg, bars near vertical) then drops (227-302 deg) with no visible twist or sideways drift.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: base_plate, hinge_pin_0, hinge_pin_1
+
+Side and front rows confirm pure vertical travel. 302 deg is still low, consistent with rising again toward the mid-height 0 deg pose.
+
+**Issues**
+- none
+
+## demo_bevel_gear_pair — pass
+
+- reviewed: 2026-08-13T00:06:44+03:00
+- kind: animate
+- motion: Blue pinion and green crown rotate in place on 90-degree axes; tooth clocking and the pinion hole pattern walk across drive_deg 0 / 7.5 / 238 / 443 / 680 / 907.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Prior fail was 180 deg aliasing on a 16/24 pair. Anti-alias phases make the mesh turn obvious in iso and front. Centroid travel stays ~0 as expected for spin-in-place.
+
+**Issues**
+- none
+
+## demo_cycloidal_drive — pass
+
+- reviewed: 2026-08-13T00:06:44+03:00
+- kind: animate
+- motion: Red cycloidal disc walks and precesses around the fixed blue pin ring while the gold eccentric orbits; housing stays put across the 3960 deg input sweep.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: housing_ring
+
+meta lists output_plate stationary with ~0 centroid travel, expected for spin-in-place. Last column at 3326 deg is still approaching 3960=0. Red showing through output holes is designed pin-hole contact.
+
+**Issues**
+- **low**: Output-plate spin is not visually confirmable: 6-hole symmetry plus a weak landmark on the green plate. Disc-to-pin walk is the readable motion.
+
+## demo_escapement — fail
+
+- reviewed: 2026-08-13T00:06:44+03:00
+- kind: animate
+- motion: Pink anchor rocks through the phase sweep against a yellow escape wheel whose hub ticks and perimeter teeth stay in the same clocking in every column.
+- cycle_closes: True
+- looks_like_intended: False
+- frozen_that_should_move: escape_wheel
+
+Rest pose looks like an anchor escapement. Anti-alias phases (0/7.5/79/148/227/302) now show a more gradual anchor rock than the old 60 deg samples; the wheel still never advances. Centroid travel ~0 is expected for spin-in-place, but the teeth themselves do not walk.
+
+**Issues**
+- **high**: Escape wheel does not step. Demo should advance two teeth over 360 deg of phase. Hub marks (three ticks at 11/12/1) and perimeter teeth are identical from 0 through 302. A rocking pallet on a locked wheel is not an escapement tick.
+
+## demo_external_gear_pump — pass
+
+- reviewed: 2026-08-13T00:06:44+03:00
+- kind: animate
+- motion: Figure-eight body and cap stay put while red and green flashes in the cap ports walk around the holes, showing the two internal gears turning in place.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: body, cap
+
+Port flashes walk continuously across 0/7.5/79/148/227/302, consistent with gears spinning in the bore. Housing never drifts. Last column continues the port walk toward 360=0.
+
+**Issues**
+- **low**: Side and front rows are visually identical across phase; mesh rotation is only readable through the iso cap ports. meta.moving is empty because centroid travel is ~0.
+
+## demo_geneva_pair — fail
+
+- reviewed: 2026-08-13T00:06:44+03:00
+- kind: animate
+- motion: Orange pin-driver rotates through dwell and engagement poses, but the blue 6-slot wheel keeps the same arm clocking in every column.
+- cycle_closes: True
+- looks_like_intended: False
+- frozen_that_should_move: slotted_wheel
+
+Driver motion is real (crescent and pin walk around). Wheel centroid travel ~0 is expected for in-place indexing, so this is an orientation miss. Last column at 1814 deg is another in-window pose and still matches the 0 deg star.
+
+**Issues**
+- **high**: Slotted wheel does not index. Columns 0 (crank 0, mid-engagement) and 1 (crank 20, still in the 60 deg window) should differ by ~18 deg of wheel rotation; the star silhouette is identical. Dwell columns cannot prove a 60 deg step on a 6-slot wheel, but the in-window pair can and it does not move.
+
+## demo_gerotor_pump — pass
+
+- reviewed: 2026-08-13T00:06:44+03:00
+- kind: animate
+- motion: Housing and kidney-port cap stay put while red/green/yellow lobe flashes walk along both ports, showing the inner and outer rotors turning in place through the 60 deg pitch cycle.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: gerotor_housing, gerotor_port_cap
+
+Side and front rows hide the rotors, same as the external gear pump. Iso port colors at 50.4 deg are returning toward the 0 deg pattern, as expected for a 60 deg closed cycle. Centroid travel ~0 is spin-in-place.
+
+**Issues**
+- none
+
+## demo_gimbal_rings — pass
+
+- reviewed: 2026-08-13T00:06:44+03:00
+- kind: animate
+- motion: Blue outer ring stays level while the red middle ring swings from nearly flat through vertical and back, and the pink inner ring rides its trunnions through the same tilt_deg sweep.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: gimbal_ring_0
+
+Single-parameter tilt swings the nested rings rather than holding a payload level against a moving frame; that matches tilt_deg on a fixed outer ring. Last column at 322 deg is heading back toward the 20 deg start pose. Near-zero centroid travel is rotation about the trunnion axes.
+
+**Issues**
+- none
+
+## demo_heart_cam — pass
+
+- reviewed: 2026-08-13T00:06:44+03:00
+- kind: animate
+- motion: Green follower stem and orange roller orbit the stationary pink heart disc, staying on the rim while radial reach grows near 180 deg and shrinks toward 0/360.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: heart_cam
+
+Same stationary-cam / walking-follower convention as barrel_cam and face_cam. Heart outline reads almost circular at this scale; the lift program is the changing stem length, longest near follower_deg 169 and shortest near 32/90. Last column at 392=32 continues toward the 90 deg start.
+
+**Issues**
+- none
+
+## demo_scotch_yoke — pass
+
+- reviewed: 2026-08-13T00:08:37+03:00
+- kind: animate
+- motion: Gold crank pin orbits on the orange disc while the blue slotted yoke reciprocates in the purple rails, long at 35/337 deg and shortest near 183 deg.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: crank_disc, rail_a, rail_b
+
+Front row makes the SHM stroke obvious. Disc has no orientation landmark so spin-with-pin is not confirmable; the pin orbit is the driving motion. Last column at 337 deg continues toward the 35 deg start.
+
+**Issues**
+- none
+
+## demo_scott_russell — pass
+
+- reviewed: 2026-08-13T00:08:37+03:00
+- kind: animate
+- motion: Green inversor bar rocks on the yellow crank while the slider rides the base slot and the orange tracer stays on the guide line through the sine-mapped swing.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: base, pin_0
+
+drive_deg is a closed sine around mid-angle, not a full crank turn, so the bar rocks rather than windmills. Joints stay pinned. Last column at 302 deg is heading back toward the 0 deg pose.
+
+**Issues**
+- none
+
+## demo_screw_jack — pass
+
+- reviewed: 2026-08-13T00:08:38+03:00
+- kind: animate
+- motion: Orange pad rides the pink screw from down at 0/15 deg to full height near 148/227 deg and back down by 302 deg; blue base stays put.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: base, screw
+
+Demo is a cosine lift_frac out-and-back so the cycle can close (0=down, 180=up). Screw does not spin; the pad translates on the thread. That matches the demo, not a missed rotation.
+
+**Issues**
+- none
+
+## demo_slider_crank — pass
+
+- reviewed: 2026-08-13T00:08:38+03:00
+- kind: animate
+- motion: Orange crank pin orbits the red disc; green conrod stays pinned and the cyan slider reciprocates in the base slot, inboard near 183 deg and outboard near 35/337 deg.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: base, pin_0
+
+Front row is the readable piston stroke. Crank disc has little landmark and ~0 centroid travel; the pin orbit carries the rotation. Last column at 337 deg continues toward the 35 deg start.
+
+**Issues**
+- none
+
+## demo_snail_cam — pass
+
+- reviewed: 2026-08-13T00:23:14+03:00
+- kind: animate
+- motion: Yellow snail stays put while the orange roller and green stem orbit it, riding a slow Archimedean rise then jumping inward at the radial drop face.
+- cycle_closes: False
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Kinematic inversion: follower_deg walks the stem around a fixed cam. Drop-face jump at mid phases is expected and not a fail. Sample ends at 552.4 deg, still closing toward 610 (=250+360).
+
+**Issues**
+- none
+
+## demo_spur_gear_mesh — pass
+
+- reviewed: 2026-08-13T00:23:16+03:00
+- kind: animate
+- motion: Single 20-tooth involute gear spins in place. Top-face hatch and tooth silhouettes advance clockwise across the 18 deg pitch cycle.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Centroid travel is ~0 as expected for spin-in-place. Tooth orientation, not centroid, shows the rotation. Last column 15.1 deg is approaching the 18 deg close. Face hatching is a render alias, not a mesh defect.
+
+**Issues**
+- none
+
+## demo_spur_gear_pair — pass
+
+- reviewed: 2026-08-13T00:23:19+03:00
+- kind: animate
+- motion: Orange 18-tooth driver and green 28-tooth driven stay in mesh and spin in place. Driver face hatch and both tooth rows advance; contact stays clash-free.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Centroids frozen (spin-in-place). 16.8 deg of driver is most of the 20 deg cycle. Driven rotation is slower (18/28) but visible on the green teeth in iso and front.
+
+**Issues**
+- none
+
+## demo_swash_plate — pass
+
+- reviewed: 2026-08-13T00:23:21+03:00
+- kind: animate
+- motion: Tilted pink plate spins under four colored shoes. Shoes stay on their angular stations and stroke axially, high side walking around the plate as phase advances.
+- cycle_closes: False
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Shaft stays on axis. Plate is catalog-stationary because its centroid barely translates; the tilt orientation rotating is the intended spin. Last column 302.4 deg is approaching the 360 start. Shoe heights at 0 vs 302 are consistent with a continuing cycle.
+
+**Issues**
+- none
+
+## demo_toggle_clamp — pass
+
+- reviewed: 2026-08-13T00:23:24+03:00
+- kind: animate
+- motion: Pink handle folds over the yellow connecting link, the knee pin travels, and the brown clamp arm rises then settles as the toggle goes through and past center. Blue base and its two fixed pins stay put.
+- cycle_closes: False
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Closed=false; 302.4 deg is heading back toward the upright handle pose of column 0. Compact travels (~5-8 mm) match the short links. Mid columns (147-226) sit near the flattened/locked pose.
+
+**Issues**
+- none
+
+## demo_tripod_cv_joint — pass
+
+- reviewed: 2026-08-13T00:23:26+03:00
+- kind: animate
+- motion: Blue tulip stays fixed at a shaft angle. Orange input shaft and pink crowned barrels rotate inside the three tracks: the shaft cross-hole walks left to front to right, and the barrels progress around the housing.
+- cycle_closes: False
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Catalog lists every body stationary because centroid travel is only ~0.6 mm (spin about a near-center axis plus a little plunge). Orientation, not centroid, shows the CV rotation. Housing does not spin. Last column 302.4 deg is approaching 360.
+
+**Issues**
+- none
+
+## demo_watt — pass
+
+- reviewed: 2026-08-13T00:24:23+03:00
+- kind: animate
+- motion: Pink and green levers rock on the fixed blue ground while the yellow coupler and orange tracer sweep an approximate straight line. Front row keeps the tracer near a level stroke; mid columns show the expected bow at the ends.
+- cycle_closes: False
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Ground and its two cyan pivots stay put. Floating pins travel with the joints. 302.4 deg is folding back toward the 0 pose. No broken joints or explosions.
+
+**Issues**
+- none
+
+## demo_arc_ratchet — pass
+
+- reviewed: 2026-08-13T00:24:25+03:00
+- kind: movement
+- motion: Rest pose: cyan hub with three trailing arc flexures seated inside a pink internally toothed ring.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Arms trail in the self-energising direction and sit in the undercut teeth. Side/front show a flat two-body disc. Sane rest assembly.
+
+**Issues**
+- none
+
+## demo_archimedes_screw — pass
+
+- reviewed: 2026-08-13T00:24:28+03:00
+- kind: movement
+- motion: Rest pose: cyan helical flight on a shaft lying in a teal half-pipe trough, inclined.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Front row is the trough end-on with the shaft centered. Flight stays inside the trough; no detached bodies. Sane rest assembly of a water/grain screw.
+
+**Issues**
+- none
+
+## demo_ball_socket_joint — pass
+
+- reviewed: 2026-08-13T00:24:30+03:00
+- kind: movement
+- motion: Rest pose: pink ball stud snapped into a blue split-finger socket, stem leaving the mouth at an angle inside the cone.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Side row shows the slots and the lip past the ball equator. Stud is retained, not exploded out of the cup. Sane rest assembly.
+
+**Issues**
+- none
+
+## demo_belt_tensioner — pass
+
+- reviewed: 2026-08-13T00:41:42+03:00
+- kind: movement
+- motion: Rest pose: purple cantilever arm with a cyan idler pulley on the tip, mount block at the other end.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Idler sits on the arm axis; front row shows the slight curve of the spring arm. Two bodies, no explode. Sane rest assembly.
+
+**Issues**
+- none
+
+## demo_check_valve — pass
+
+- reviewed: 2026-08-13T00:41:45+03:00
+- kind: movement
+- motion: Rest pose: green snap-on cap with a hose barb stacked on a blue body with a matching barb, on one axis.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Ball is a bought part so only body+cap print. Cap seats on the body; barbs on both ports. Sane rest assembly.
+
+**Issues**
+- none
+
+## demo_clevis — pass
+
+- reviewed: 2026-08-13T00:41:47+03:00
+- kind: movement
+- motion: Rest pose: magenta U-fork, green eye between the ears, cyan pin through all three.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Side row is the pin axis; front is the fork face. Clearance looks designed, not exploded. Sane rest assembly of a pin joint.
+
+**Issues**
+- none
+
+## demo_collet_chuck — pass
+
+- reviewed: 2026-08-13T00:41:50+03:00
+- kind: movement
+- motion: Rest pose: green knurled taper nut on a blue threaded spindle nose, orange collet bore visible on axis.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Three bodies stacked concentrically. Threads and knurl read; nothing floating off-axis. Sane rest assembly of an ER-style chuck.
+
+**Issues**
+- none
+
+## demo_compliant_clutch — pass
+
+- reviewed: 2026-08-13T00:41:52+03:00
+- kind: movement
+- motion: Rest pose: cyan spiral flexure hub seated inside an orange internal-sawtooth race.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Flexure tips sit in the teeth; side/front are a flat two-body disc. Sane rest assembly of a torque-limit clutch.
+
+**Issues**
+- none
+
+## demo_detent_pair — pass
+
+- reviewed: 2026-08-13T00:41:55+03:00
+- kind: movement
+- motion: Rest pose: green plunger in a blue housing clicking into a notch of the pink dial, coil spring visible in the pocket.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Front row shows the plunger tip in a tooth gap. Housing, plunger, and wheel stay assembled. Sane rest assembly.
+
+**Issues**
+- none
+
+## demo_differential_screw — pass
+
+- reviewed: 2026-08-13T00:42:20+03:00
+- kind: movement
+- motion: Rest pose: gold twin-pitch shaft through a purple frame nut and a cyan moving nut stacked on one axis.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Shaft threads show at both ends; nuts sit concentric, not exploded. Sane rest assembly of a differential screw.
+
+**Issues**
+- none
+
+## demo_double_cardan_joint — pass
+
+- reviewed: 2026-08-13T00:42:22+03:00
+- kind: movement
+- motion: Rest pose: two Hooke joints in series, purple yokes and an angled intermediate, green/yellow spiders, cyan output yoke.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Intermediate sits at a working angle; both crosses are captured in the forks. No exploded spiders. Sane rest assembly of a double Cardan.
+
+**Issues**
+- none
+
+## demo_drag_chain — pass
+
+- reviewed: 2026-08-13T00:42:25+03:00
+- kind: movement
+- motion: Rest pose: eight-link cable carrier with a straight run and a U-bend to the designed min radius, lids on, pins in.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Links stay chained; bend is one-way as designed. Side/front show the trough and lids. Sane rest assembly of an energy-chain run.
+
+**Issues**
+- none
+
+## demo_drag_chain_link — pass
+
+- reviewed: 2026-08-13T00:42:27+03:00
+- kind: movement
+- motion: Rest pose: one trough link with a press-fit lid and a red pivot pin in the male boss.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Lid caps the cable channel; pin is seated. Sane rest assembly of a single energy-chain link.
+
+**Issues**
+- none
+
+## demo_eccentric_idler_mount — pass
+
+- reviewed: 2026-08-13T01:01:40+03:00
+- kind: movement
+- motion: Rest pose: blue idler pulley on a green eccentric bushing; offset bore and setscrew boss visible.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Front row shows the eccentric boss sticking out of the pulley axis. Two bodies, no explode. Sane rest assembly.
+
+**Issues**
+- none
+
+## demo_flat_worm_pair — pass
+
+- reviewed: 2026-08-13T01:01:43+03:00
+- kind: movement
+- motion: Rest pose: orange three-start worm meshing a yellow helical wheel band at crossed axes.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Front row shows worm starts in the wheel teeth. Mesh looks clash-free, nothing floating. Sane rest assembly.
+
+**Issues**
+- none
+
+## demo_freewheel_clutch — pass
+
+- reviewed: 2026-08-13T01:01:45+03:00
+- kind: movement
+- motion: Rest pose: six orange rollers in ramped pockets of a blue outer ring around a purple inner hub.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Rollers sit in the wedge pockets, not exploded. Classic sprag/roller freewheel rest. Sane rest assembly.
+
+**Issues**
+- none
+
+## demo_harmonic_drive — pass
+
+- reviewed: 2026-08-13T01:01:48+03:00
+- kind: movement
+- motion: Rest pose: orange flex spline and wave generator nested in a blue internally toothed circular spline.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Concentric stack, teeth around the rim. Ellipse of the wave generator is subtle at this scale but the three bodies are assembled, not exploded. Sane rest assembly.
+
+**Issues**
+- none
+
+## demo_hirth_coupling — pass
+
+- reviewed: 2026-08-13T01:01:50+03:00
+- kind: movement
+- motion: Rest pose: green and magenta hubs face-to-face with radial V-teeth seated in each other's valleys.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Tooth interface is continuous around the joint; hubs stay coaxial. Sane rest assembly of a Hirth face coupling.
+
+**Issues**
+- none
+
+## demo_idler_pulley — pass
+
+- reviewed: 2026-08-13T01:01:53+03:00
+- kind: movement
+- motion: Rest pose: cyan crowned idler facing an orange GT2 timing pulley, two free-spinning wheels on parallel axes.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Crown on the idler and teeth on the driver both read. Nothing interpenetrates or floats. Sane rest assembly.
+
+**Issues**
+- none
+
+## demo_intermittent_gear_pair — pass
+
+- reviewed: 2026-08-13T01:02:19+03:00
+- kind: movement
+- motion: Rest pose: blue mutilated driver (locking segment plus a tooth group) meshed with a green notched driven gear.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Driver's plain arc and remaining teeth read; contact is at the tooth group, not exploded. Sane rest assembly of a digit-advance pair.
+
+**Issues**
+- none
+
+## demo_iris_diaphragm — pass
+
+- reviewed: 2026-08-13T01:02:21+03:00
+- kind: movement
+- motion: Rest pose: six colored leaves inside a pink drive ring on a blue base, forming a round central aperture.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Leaves stay on their pivot posts; aperture is circular. No exploded leaves. Sane rest assembly of a print-in-place iris.
+
+**Issues**
+- none
+
+## demo_jaw_coupling — pass
+
+- reviewed: 2026-08-13T01:02:24+03:00
+- kind: movement
+- motion: Rest pose: two teal/green jaw hubs interleaved through a magenta lobed spider.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Spider lobes sit in the jaw pockets; hubs coaxial. Sane rest assembly of a Lovejoy-style coupling.
+
+**Issues**
+- none
+
+## demo_knuckle_hinge — pass
+
+- reviewed: 2026-08-13T01:02:26+03:00
+- kind: movement
+- motion: Rest pose: blue fixed leaf and green swinging leaf interleaved on one pin, opened to the stop.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Barrels nest; side row shows the knuckle and stop flanks. Sane rest assembly of a print-in-place butt hinge.
+
+**Issues**
+- none
+
+## demo_lead_screw — pass
+
+- reviewed: 2026-08-13T01:21:41+03:00
+- kind: movement
+- motion: Rest pose: pink trapezoidal screw through a green nut, threads visible on both sides of the nut.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Nut sits concentric on the screw; no explode. Sane rest assembly of a Tr power screw.
+
+**Issues**
+- none
+
+## demo_leaf_spring — pass
+
+- reviewed: 2026-08-13T01:21:43+03:00
+- kind: movement
+- motion: Rest pose: three stacked cambered leaves under a crown clamp, longest leaf with rolled eyes at both ends.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Front row shows the stacked leaf thicknesses. Leaves stay nested, not exploded. Sane rest assembly of a semi-elliptic spring.
+
+**Issues**
+- none
+
+## demo_linear_way — pass
+
+- reviewed: 2026-08-13T01:21:46+03:00
+- kind: movement
+- motion: Rest pose: orange carriage on a blue prismatic rail with a red gib setting preload.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Front row shows the dovetail/vee section and mounting holes. Carriage stays on the rail. Sane rest assembly of a gibbed way.
+
+**Issues**
+- none
+
+## demo_oldham_coupling — pass
+
+- reviewed: 2026-08-13T01:21:48+03:00
+- kind: movement
+- motion: Rest pose: orange and blue tongue hubs driving a yellow cross-slotted disc, tongues perpendicular.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Disc floats between the hubs; tongues seat in the slots. Sane rest assembly of an Oldham coupling.
+
+**Issues**
+- none
+
+## demo_peristaltic_pump_head — pass
+
+- reviewed: 2026-08-13T01:21:50+03:00
+- kind: movement
+- motion: Rest pose: teal cap on a blue race body, rotor posts visible through the windows, tube slots at the rim.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Cap, body, and rotor stay assembled. Tubing is a bought part so not shown. Sane rest assembly of a peristaltic head.
+
+**Issues**
+- none
+
+## demo_pip_ratchet — pass
+
+- reviewed: 2026-08-13T01:21:53+03:00
+- kind: movement
+- motion: Rest pose: purple accordion hub with three captive pawls seated inside a green undercut ring.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Pawls sit in the ring teeth; side/front are a flat two-body disc. Sane rest assembly of a print-in-place ratchet.
+
+**Issues**
+- none
+
+## demo_planet_stage — pass
+
+- reviewed: 2026-08-13T01:22:15+03:00
+- kind: movement
+- motion: Rest pose: yellow sun, three colored planets, and a blue internally toothed ring on a downward hex-output carrier.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Planets mesh both sun and ring; no clash or explode. Sane rest assembly of a 12:9:30 planetary stage.
+
+**Issues**
+- none
+
+## demo_ratchet_wheel_pawl — pass
+
+- reviewed: 2026-08-13T01:22:18+03:00
+- kind: movement
+- motion: Rest pose: green pawl seated in a tooth of the pink sawtooth wheel, cyan spring behind the pawl.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Pawl tip is in a valley; spring is attached. Sane rest assembly of a bolt-on ratchet.
+
+**Issues**
+- none
+
+## demo_roller_chain — pass
+
+- reviewed: 2026-08-13T01:22:20+03:00
+- kind: movement
+- motion: Rest pose: nine magenta rollers seated in the tooth gaps of a blue sprocket over about 200 degrees of wrap.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Each roller sits in a gap with running clearance; unused teeth are empty. Sane rest assembly proving sprocket/roller fit.
+
+**Issues**
+- none
+
+## demo_roller_chain_link — pass
+
+- reviewed: 2026-08-13T01:22:22+03:00
+- kind: movement
+- motion: Rest pose: one pitch of roller chain — inner/outer plates, magenta roller, green pin, bushing stacked.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Pin through roller and plates; opposite hole empty for the next pitch. Sane rest assembly of a single chain link.
+
+**Issues**
+- none
+
+## demo_roller_follower — pass
+
+- reviewed: 2026-08-13T01:41:42+03:00
+- kind: movement
+- motion: Rest pose: pink pivoted arm, green roller on a blue pin at the tip, pivot hole at the other end.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Roller sits on the pin through the arm; nothing exploded. Sane rest assembly of a cam follower lever.
+
+**Issues**
+- none
+
+## demo_roller_sprocket — pass
+
+- reviewed: 2026-08-13T01:41:44+03:00
+- kind: movement
+- motion: Rest pose: blue 14-tooth sprocket with magenta pitch-circle pins seated in the tooth gaps.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Pins sit on the pitch circle as track references; one pin per gap. Sane rest assembly.
+
+**Issues**
+- none
+
+## demo_scroll_drive — pass
+
+- reviewed: 2026-08-13T01:41:46+03:00
+- kind: movement
+- motion: Rest pose: blue Archimedean scroll plate with three colored jaws at 120 deg on a common gripping circle.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Jaws sit on the spiral rib, equally spaced. Sane rest assembly of a 3-jaw chuck scroll.
+
+**Issues**
+- none
+
+## demo_spiral_power_spring — pass
+
+- reviewed: 2026-08-13T01:41:48+03:00
+- kind: movement
+- motion: Rest pose: purple Archimedean mainspring strip wound on an orange arbor inside a blue barrel.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Inner end on the arbor, outer end toward the barrel wall. Sane rest assembly of a clock mainspring.
+
+**Issues**
+- none
+
+## demo_spring_cartridge_ratchet — pass
+
+- reviewed: 2026-08-13T01:41:51+03:00
+- kind: movement
+- motion: Rest pose: three orange rigid pawls in a slotted blue hub inside a green self-energising ring.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Pawls sit in the hub slots and engage the ring. Sane rest assembly of a serviceable cartridge ratchet.
+
+**Issues**
+- none
+
+## demo_telescoping_stage — pass
+
+- reviewed: 2026-08-13T01:41:53+03:00
+- kind: movement
+- motion: Rest pose: three nested square tubes (blue, green, gold) partially extended, collars and lips visible.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Sections stay nested, not pulled apart. Sane rest assembly of a telescoping boom.
+
+**Issues**
+- none
+
+## demo_timing_pulley — pass
+
+- reviewed: 2026-08-13T01:42:19+03:00
+- kind: movement
+- motion: Rest pose: blue flanged GT2 pulley with hub and setscrew boss, red toothed belt segment meshed around the teeth.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Front row shows belt teeth in the pulley spaces. Sane rest assembly of a timing pulley.
+
+**Issues**
+- none
+
+## demo_torque_limiter — pass
+
+- reviewed: 2026-08-13T01:42:21+03:00
+- kind: movement
+- motion: Rest pose: blue detent driver (gold preload spring in the bore) above a green pocket disc with radiused bumps, coaxial.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Faces are gapped so the detents read; still a sane exploded rest, not a broken assembly. Sane rest assembly of a slip clutch.
+
+**Issues**
+- none
+
+## demo_universal_joint — pass
+
+- reviewed: 2026-08-13T01:42:24+03:00
+- kind: movement
+- motion: Rest pose: purple input yoke and blue output yoke joined by a yellow four-trunnion spider at a working angle.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Cross is captured in both forks; shafts meet at an angle. Sane rest assembly of a Cardan joint.
+
+**Issues**
+- none
+
+## demo_winch_drum — pass
+
+- reviewed: 2026-08-13T01:42:26+03:00
+- kind: movement
+- motion: Rest pose: orange helically grooved drum with the first turns of a blue cable seated in the groove.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Cable follows the helix; flanges contain the wrap. Sane rest assembly of a winch drum.
+
+**Issues**
+- none
+
+## demo_worm — pass
+
+- reviewed: 2026-08-13T02:01:45+03:00
+- kind: movement
+- motion: Rest pose: orange helical worm meshing a gold lead-angle-matched wheel at right angles.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Front row is the worm axis; teeth meet at the contact. Sane rest assembly of a worm pair.
+
+**Issues**
+- none
+
+## demo_worm_coupon — pass
+
+- reviewed: 2026-08-13T02:01:47+03:00
+- kind: movement
+- motion: Rest pose: short green worm coupon beside a spoke wheel-band, print-frame mesh-test pair.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Coupon parts are shown as a test pair rather than a full gearbox. Sane rest assembly.
+
+**Issues**
+- none
+
+## demo_beam_coupling — pass
+
+- reviewed: 2026-08-13T02:01:50+03:00
+- kind: movement
+- motion: Rest pose: single purple helical-slit coupling with clamp slots, bore, and set-screw bosses.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. One body. Helical beam and split clamps read. Sane rest assembly of a beam coupling.
+
+**Issues**
+- none
+
+## demo_belleville_washer — pass
+
+- reviewed: 2026-08-13T02:01:52+03:00
+- kind: movement
+- motion: Rest pose: three gold coned disc springs stacked in series with alternating cone direction.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. Side row shows the sandwich and the cone flip. Sane rest assembly of a Belleville stack.
+
+**Issues**
+- none
+
+## demo_bellows_suction_cup — pass
+
+- reviewed: 2026-08-13T02:01:54+03:00
+- kind: movement
+- motion: Rest pose: magenta bellows cup with sealing lip, two compliant folds, and a hose-barb stem.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. One body. Lip, folds, and barb all read. Sane rest assembly of a TPU vacuum cup.
+
+**Issues**
+- none
+
+## demo_bistable_beam — pass
+
+- reviewed: 2026-08-13T02:01:57+03:00
+- kind: movement
+- motion: Rest pose: green frame with two pre-curved cosine beams and a central shuttle, one stable side.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. One body. Beams and shuttle read; print-in-place switch. Sane rest assembly.
+
+**Issues**
+- none
+
+## demo_coil_spring — pass
+
+- reviewed: 2026-08-13T02:02:22+03:00
+- kind: movement
+- motion: Rest pose: cyan helical compression spring with closed end coils and open active turns.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. One body. Helix is printable, not fused into a tube. Sane rest assembly.
+
+**Issues**
+- none
+
+## demo_cross_flexure — pass
+
+- reviewed: 2026-08-13T02:02:24+03:00
+- kind: movement
+- motion: Rest pose: two green blocks joined only by crossing thin blades about a common pivot.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. One body. Front row shows the X of the blades. Sane rest assembly of a cross-flexure pivot.
+
+**Issues**
+- none
+
+## demo_flexure_stage — pass
+
+- reviewed: 2026-08-13T02:02:27+03:00
+- kind: movement
+- motion: Rest pose: cyan compound parallelogram with outer blades, secondary bar, inner blades, and a central motion stage.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. One body. Front row shows the nested blade pairs. Sane rest assembly of a flexure stage.
+
+**Issues**
+- none
+
+## demo_flywheel — pass
+
+- reviewed: 2026-08-13T02:02:29+03:00
+- kind: movement
+- motion: Rest pose: orange rim-heavy four-spoke flywheel with a hub bore.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. One body. Rim is thicker than the web. Sane rest assembly of an inertia wheel.
+
+**Issues**
+- none
+
+## demo_fusee — pass
+
+- reviewed: 2026-08-13T02:21:44+03:00
+- kind: movement
+- motion: Rest pose: gold conical fusee with a helical groove and flanges, radius shrinking along the axis.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. One body. Groove and cone read. Sane rest assembly of a clock fusee.
+
+**Issues**
+- none
+
+## demo_hose_barb — pass
+
+- reviewed: 2026-08-13T02:21:47+03:00
+- kind: movement
+- motion: Rest pose: gold hose tail with stacked sawtooth barbs, stop boss, and mounting flange.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. One body. Barbs taper on, square off. Sane rest assembly of a hose barb.
+
+**Issues**
+- none
+
+## demo_printed_worm — pass
+
+- reviewed: 2026-08-13T02:21:49+03:00
+- kind: movement
+- motion: Rest pose: cyan journalled worm with runout threads, thrust collars, and keyed journals.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. One body. Helix and journals read. Sane rest assembly of a printed worm.
+
+**Issues**
+- none
+
+## demo_rack_2d — pass
+
+- reviewed: 2026-08-13T02:21:51+03:00
+- kind: movement
+- motion: Rest pose: gold eight-tooth rack, thin extrusion, trapezoidal teeth on a pitch line.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. One body. Front row shows eight teeth. Sane rest assembly of a display rack.
+
+**Issues**
+- none
+
+## demo_ring_gear — pass
+
+- reviewed: 2026-08-13T02:21:54+03:00
+- kind: movement
+- motion: Rest pose: blue internal involute ring gear, teeth cut inward from the rim.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. One body. Internal teeth and outer rim read. Sane rest assembly of an annular gear.
+
+**Issues**
+- none
+
+## demo_spur_gear_sector — pass
+
+- reviewed: 2026-08-13T02:21:56+03:00
+- kind: movement
+- motion: Rest pose: green involute sector with a hub and bore, teeth on one arc only.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. One body. Sector, hub, and teeth read. Sane rest assembly of a sector gear.
+
+**Issues**
+- none
+
+## demo_star_wheel — pass
+
+- reviewed: 2026-08-13T02:22:15+03:00
+- kind: movement
+- motion: Rest pose: gold disc with six concave pockets and a hub bore, packaging-industry star wheel.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. One body. Pockets are equally spaced. Sane rest assembly.
+
+**Issues**
+- none
+
+## demo_v_belt_pulley — pass
+
+- reviewed: 2026-08-13T02:22:18+03:00
+- kind: movement
+- motion: Rest pose: blue V-belt sheave with a trapezoidal groove, hub, and setscrew boss.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. One body. Groove and hub read. Sane rest assembly of a wedge-belt pulley.
+
+**Issues**
+- none
+
+## demo_wave_spring — pass
+
+- reviewed: 2026-08-13T02:22:20+03:00
+- kind: movement
+- motion: Rest pose: purple crest-to-crest wave spring, two wavy rings stacked half a wave apart.
+- cycle_closes: True
+- looks_like_intended: True
+- frozen_that_should_move: none
+
+Non-animated. One body. Side/front show opposing crests bearing. Sane rest assembly.
+
+**Issues**
+- none
+
+
+## reclassify — geneva and escapement
+
+Overnight fail was the travel metric, not the pose law. Both bodies spin in place so centroid AABB is ~0. Vertex travel now counts as motion. Re-reviewed as pass.
+
+## FINAL
+
+Cutoff reached 2026-08-13 07:30 EEST. 98/98 motion items reviewed. 96 pass, 2 fail, 0 unclear, 0 render errors.
+
+**Fails (motion law, not sheet aliasing)**
+- demo_escapement — escape wheel does not step; hub ticks look identical across the cycle.
+- demo_geneva_pair — driver turns, 6-slot wheel does not (in-window silhouettes match).
+
+Everything else in ANIMATE plus the rest of the movement-group queue read as the intended mechanism or a sane rest assembly. Bevel gears were a false fail on the first aliased sheet and passed after resample.
+
+Reports: `.claude/overnight/reviews/*.json`

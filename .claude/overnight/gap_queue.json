@@ -1,0 +1,381 @@
+{
+  "items": [
+    {
+      "candidate_count": 7,
+      "claimed_at": "2026-08-12T23:52:58+03:00",
+      "completed_at": "2026-08-12T23:55:58+03:00",
+      "id": "kinematic-pairs",
+      "new_categories": [],
+      "prompt": "Reuleaux / IFToMM pairs: revolute, prismatic, helical, cylindrical, spherical, planar, plus higher pairs (cam-follower, gear mesh, rolling contact). Which pairs have a mechlib semi-primitive, which are only implied by a larger assembly, and which pair-level generators are missing?",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/kinematic-pairs.json",
+      "status": "done",
+      "title": "Lower and higher kinematic pairs"
+    },
+    {
+      "candidate_count": 12,
+      "claimed_at": "2026-08-12T23:53:36+03:00",
+      "completed_at": "2026-08-12T23:58:09+03:00",
+      "id": "planar-four-bar",
+      "new_categories": [],
+      "prompt": "Crank-rocker, double-crank, double-rocker, parallelogram, deltoid, change-point, Grashof vs non-Grashof, Roberts/Chebyshev cognates, Hoecken. What does four_bar plus the named linkages already cover, and what named 4-bar still needs its own pose+kit?",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/planar-four-bar.json",
+      "status": "done",
+      "title": "Planar four-bar and cognates"
+    },
+    {
+      "candidate_count": 9,
+      "claimed_at": "2026-08-12T23:53:36+03:00",
+      "completed_at": "2026-08-12T23:58:09+03:00",
+      "id": "six-bar-and-walking",
+      "new_categories": [
+        {
+          "name": "leg_mechanisms",
+          "why": "Walking-leg kits (Klann, Jansen, plantigrade, walking-beam) are a distinct agent job from general bar linkages. four_bar's usecase currently dumps 'walking-robot legs' onto a generic crank-rocker. A movements-group category would let gallery cards and search_use_cases hit the right primitive."
+        }
+      ],
+      "prompt": "Watt and Stephenson six-bar topologies, Klann, Theo Jansen, strandbeest-class, walking-beam / pumpjack, plantigrade. These are the usual 'missing from a 4-bar kit' request. Which are semi-primitive enough for mechlib vs a finished walking robot?",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/six-bar-and-walking.json",
+      "status": "done",
+      "title": "Six-bar, walking, and animal-motion linkages"
+    },
+    {
+      "candidate_count": 6,
+      "claimed_at": "2026-08-12T23:56:11+03:00",
+      "completed_at": "2026-08-12T23:57:51+03:00",
+      "id": "straight-line",
+      "new_categories": [],
+      "prompt": "Peaucellier, Hart, Watt, Chebyshev, Scott-Russell, Hoecken, Roberts, Evans, grasshopper, Tusi couple, Cardanic motion, trammel of Archimedes, Sarrus (already spatial). Catalog each; mark exact vs approximate; say which pose APIs exist.",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/straight-line.json",
+      "status": "done",
+      "title": "Straight-line and inversor linkages"
+    },
+    {
+      "candidate_count": 21,
+      "claimed_at": "2026-08-13T00:01:06+03:00",
+      "completed_at": "2026-08-13T00:06:58+03:00",
+      "id": "spatial-spherical-parallel",
+      "new_categories": [
+        {
+          "name": "spatial",
+          "why": "Bennett, spherical 4-bar, 5-bar, delta forearm, and UPS strut are a different agent job from planar bar linkages and from hinge/ball joints. four_bar's usecase does not mention concurrent axes or overconstrained spatial loops; joints currently dumps wrists onto ball_socket_joint and gimbal_rings. A movements-group shelf lets search_use_cases hit the right primitive without implying a finished robot."
+        }
+      ],
+      "prompt": "Bennett, spherical four-bar, 7R, Agile Eye, delta, Stewart/Gough, 5-bar planar robot, serial RRR arm primitive, roll-pitch-roll wrist, Hoberman / deployable. Filter hard: finished robot chassis is out of scope; a parametric delta-joint kit or spherical 4-bar pose may not be.",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/spatial-spherical-parallel.json",
+      "status": "done",
+      "title": "Spatial, spherical, and parallel mechanisms"
+    },
+    {
+      "candidate_count": 17,
+      "claimed_at": "2026-08-13T00:01:06+03:00",
+      "completed_at": "2026-08-13T00:06:58+03:00",
+      "id": "cams-indexing",
+      "new_categories": [],
+      "prompt": "Plate, face, barrel, heart, snail already exist. Still in the class: globoidal / Ferguson indexing cam, conjugate / desmodromic pairs, inverse cam, linear / wedge cam, cylindrical face-groove, barrel indexer, Geneva variants (internal, spherical), star wheel vs Maltese, intermittent gears, ratchet-index tables.",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/cams-indexing.json",
+      "status": "done",
+      "title": "Cam types and intermittent motion"
+    },
+    {
+      "candidate_count": 16,
+      "claimed_at": "2026-08-13T00:07:14+03:00",
+      "completed_at": "2026-08-13T00:09:07+03:00",
+      "id": "gear-families",
+      "new_categories": [],
+      "prompt": "Spur, internal, herringbone, bevel, worm, cycloidal, harmonic, rack, sector, planetary already exist. Survey helical (single), face/crown, hypoid, spiroid, crossed-helical, lantern/pin, noncircular/elliptical, magnetic, nutating/wobble, compound trains, automotive differential, sun-and-planet, hypoid-ish printable stand-ins. Which are FDM-real?",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/gear-families.json",
+      "status": "done",
+      "title": "Gear and reduction families"
+    },
+    {
+      "candidate_count": 18,
+      "claimed_at": "2026-08-13T00:28:05+03:00",
+      "completed_at": "2026-08-13T00:31:47+03:00",
+      "id": "clutches-brakes-overrunning",
+      "new_categories": [
+        {
+          "name": "brakes",
+          "why": "A brake grounds a shaft; a clutch joins two shafts. Winch hold, hoist, park, and Prony are a different agent job from dog/freewheel/limiter. Catalog has a clutches shelf and no brakes shelf. Band, expanding-shoe, and parking-pawl would live here; the missing-categories slice can rank the shelf."
+        }
+      ],
+      "prompt": "Dog, freewheel, torque limiter, compliant clutch, Hirth exist. Missing class? Cone, multiplate, wrap-spring, sprag, roller-ramp, centrifugal, magnetic, fluid coupling. Brakes as a category: band, shoe, disc/caliper, over-center park. Which are printable semi-primitives vs bought hardware?",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/clutches-brakes-overrunning.json",
+      "status": "done",
+      "title": "Clutches, brakes, and overrunning"
+    },
+    {
+      "candidate_count": 16,
+      "claimed_at": "2026-08-13T00:31:53+03:00",
+      "completed_at": "2026-08-13T00:34:12+03:00",
+      "id": "couplings-cv",
+      "new_categories": [],
+      "prompt": "Oldham, jaw, beam, Hooke, double Cardan, tripod exist. Survey Rzeppa/ball CV, Tracta, Thompson, Schmidt, bellows, disc/membrane, grid, chain coupling, homokinetic joints. Note which have pose laws in-module (needed to animate) vs display-only kits.",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/couplings-cv.json",
+      "status": "done",
+      "title": "Shaft couplings and CV joints"
+    },
+    {
+      "candidate_count": 15,
+      "claimed_at": "2026-08-13T01:03:09+03:00",
+      "completed_at": "2026-08-13T01:05:16+03:00",
+      "id": "screws-linear-actuators",
+      "new_categories": [
+        {
+          "name": "constant_force",
+          "why": "Negator tape, constant-force flexures, and gravity arms are a machinery class of their own: they source a flat force/torque, they are not a screw. The flexure and clockwork slices will name the compliant and horological members; this slice owns the tape-on-drum actuator. missing-categories can rank the shelf."
+        }
+      ],
+      "prompt": "Lead screw, differential screw, screw jack, scroll, archimedes, telescoping stage, linear way exist. Survey ball screw, roller screw, scotch-yoke (have), rack (have), wedge/inclined plane, hydraulic/pneumatic cylinder geometry, voice-coil stand-in, tape measure / constant-force Negator, cable cylinder.",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/screws-linear-actuators.json",
+      "status": "done",
+      "title": "Screws, jacks, and linear actuators"
+    },
+    {
+      "candidate_count": 14,
+      "claimed_at": "2026-08-13T01:05:22+03:00",
+      "completed_at": "2026-08-13T01:07:00+03:00",
+      "id": "flexure-compliant",
+      "new_categories": [],
+      "prompt": "Cross flexure, bistable beam, flexure stage, leaf/coil/wave/torsion/spiral springs, kerf, auxetic exist. Survey cartwheel hinge, living hinge as API, lamina emergent, constant-force compliant, contact-aided, ORBITAL / remote-center, notch hinge primitives, split-tube flexure, tape-spring hinge.",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/flexure-compliant.json",
+      "status": "done",
+      "title": "Compliant mechanisms and flexure joints"
+    },
+    {
+      "candidate_count": 15,
+      "claimed_at": "2026-08-13T01:38:14+03:00",
+      "completed_at": "2026-08-13T01:40:08+03:00",
+      "id": "clockwork-escapements",
+      "new_categories": [
+        {
+          "name": "clockwork",
+          "why": "Escapements, going barrels, remontoires, and stop-work are a machinery class. Indexing (geneva, star wheel) is intermittent motion from a continuous crank; clockwork is a feedback oscillator. The gallery currently files escapement under indexing. missing-categories can rank the shelf."
+        }
+      ],
+      "prompt": "Escapement, fusee, spiral power spring, ratchet exist. Survey deadbeat vs recoil vs detent vs coaxial vs gravity, going barrel, remontoire, maintaining power, count wheel, striking (probably product), stackfreed, constant-force mechanisms, gravity arm.",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/clockwork-escapements.json",
+      "status": "done",
+      "title": "Clockwork, escapements, and energy storage"
+    },
+    {
+      "candidate_count": 15,
+      "claimed_at": "2026-08-13T01:40:13+03:00",
+      "completed_at": "2026-08-13T01:41:41+03:00",
+      "id": "pulleys-cables-tackle",
+      "new_categories": [],
+      "prompt": "Timing, V-belt, idler, tensioner, winch, fusee, grooved drum exist. Survey block-and-tackle, Weston differential pulley, capstan, self-tailing winch, cam/clam cleat, rope clutch, fairlead, turning block, Spanish windlass, belt CVT variable pulley, cable carrier is already drag_chain.",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/pulleys-cables-tackle.json",
+      "status": "done",
+      "title": "Pulleys, cables, tackle, and textile hardware"
+    },
+    {
+      "candidate_count": 18,
+      "claimed_at": "2026-08-13T02:13:20+03:00",
+      "completed_at": "2026-08-13T02:14:58+03:00",
+      "id": "fluid-pumps-valves",
+      "new_categories": [],
+      "prompt": "Gerotor, external gear, peristaltic, spool, check, hose barb exist. Survey vane, lobe, screw, piston/swash (swash_plate exists), diaphragm, centrifugal impeller, needle/ball/gate/butterfly valves, pressure relief, shuttle, manifold block, Tesla valve, pulsatile.",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/fluid-pumps-valves.json",
+      "status": "done",
+      "title": "Pumps, valves, and fluid machines"
+    },
+    {
+      "candidate_count": 16,
+      "claimed_at": "2026-08-13T02:15:05+03:00",
+      "completed_at": "2026-08-13T02:16:37+03:00",
+      "id": "grippers-chucks-workholding",
+      "new_categories": [],
+      "prompt": "Toggle clamp, eccentric cam clamp, collet, bellows cup, iris, kinematic coupling, dock, leveller exist. Survey parallel jaw gripper as semi-primitive, angular gripper, latch/pawl catch, over-center hood latch, draw latch, vises, soft jaw, magnetic chuck, vacuum cup families, tool-changer plate (if primitive).",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/grippers-chucks-workholding.json",
+      "status": "done",
+      "title": "Grippers, chucks, latches, and workholding"
+    },
+    {
+      "candidate_count": 12,
+      "claimed_at": "2026-08-13T02:48:31+03:00",
+      "completed_at": "2026-08-13T02:50:36+03:00",
+      "id": "bearings-ways-seals",
+      "new_categories": [],
+      "prompt": "Plain bushing, printed ball, thrust, linear way, oring, labyrinth, gasket exist. Survey crossed-roller, dovetail way (ydovetail is a cutter), V-way, air bearing (out?), magnetic bearing (out?), needle roller stand-in, shaft seal / lip, piston ring, wiper.",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/bearings-ways-seals.json",
+      "status": "done",
+      "title": "Bearings, ways, and seals"
+    },
+    {
+      "candidate_count": 15,
+      "claimed_at": "2026-08-13T02:50:44+03:00",
+      "completed_at": "2026-08-13T02:51:59+03:00",
+      "id": "missing-categories",
+      "new_categories": [],
+      "prompt": "Look at the live CATEGORIES table and name mechanism classes that are not a current shelf: brakes, dampers/dashpots, differentials, parallel robots, walking, cable/tendon, constant-force, magnetic drives, traction/CVT, brakes vs clutches split, end-effectors vs grippers, tooling/ATC, heat? (out). For each proposed NEW category: is it a real machinery class, FDM-printable, semi-primitive, and not a finished product? Rank the ones that should become a module.",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/missing-categories.json",
+      "status": "done",
+      "title": "Whole categories mechlib does not name"
+    },
+    {
+      "candidate_count": 22,
+      "claimed_at": "2026-08-13T03:23:31+03:00",
+      "completed_at": "2026-08-13T03:25:41+03:00",
+      "id": "animate-coverage",
+      "new_categories": [],
+      "prompt": "Read gallery/build_gallery.py ANIMATE and the 'deliberately left out' comment. For every multi-body movement demo with no animation: is the reason still true, or can a pose law be added so the gallery can play it? Rank the highest-value pose-law additions. Do not propose animating static adjustments (eccentric_idler_mount).",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/animate-coverage.json",
+      "status": "done",
+      "title": "Mechanisms that exist but cannot play"
+    },
+    {
+      "candidate_count": 10,
+      "claimed_at": "2026-08-13T03:26:01+03:00",
+      "completed_at": "2026-08-13T03:26:50+03:00",
+      "id": "dampers-dashpots",
+      "new_categories": [
+        {
+          "name": "dampers",
+          "why": "Energy dissipation is a machinery class. No current shelf. First kits: orifice_dashpot, rotary_vane_damper, friction_snubber, inerter. Brakes ground a shaft; dampers are two-terminal rate elements."
+        }
+      ],
+      "prompt": "First-principles slice invented after the original 18 queued. Survey viscous dashpot, rotary vane damper, friction snubber, inerter, tuned-mass damper, elastomer bumper, eddy/magnetic (out?), hydraulic shock product. Which are printable semi-primitives vs bought hardware?",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/dampers-dashpots.json",
+      "status": "done",
+      "title": "Dampers, dashpots, and energy sinks"
+    },
+    {
+      "candidate_count": 10,
+      "claimed_at": "2026-08-13T03:59:05+03:00",
+      "completed_at": "2026-08-13T03:59:57+03:00",
+      "id": "governors-regulators",
+      "new_categories": [],
+      "prompt": "Invented first-principles slice. Watt flyball, Porter, Proell, Hartnell, spring/pickering, hit-and-miss, centrifugal (clutch exists), isochronous, dashpot-damped. Survey 507 governors. Which are printable semi-primitives vs engine products?",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/governors-regulators.json",
+      "status": "done",
+      "title": "Governors, speed regulators, and flyballs"
+    },
+    {
+      "candidate_count": 10,
+      "claimed_at": "2026-08-13T04:00:11+03:00",
+      "completed_at": "2026-08-13T04:00:56+03:00",
+      "id": "deployables-origami",
+      "new_categories": [],
+      "prompt": "Invented first-principles slice. Spatial already named Hoberman angulated-scissor and Bennett/Bricard rings. Flexure named LET and tape-spring. Survey Miura-ori, waterbomb, flasher, Yoshimura, Kresling, scissor rings, STEM/CTM coilable booms, kaleidocycle. Semi-primitive cells only, not finished canopies or satellites.",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/deployables-origami.json",
+      "status": "done",
+      "title": "Deployables, origami, and foldable cells"
+    },
+    {
+      "candidate_count": 11,
+      "claimed_at": "2026-08-13T04:33:53+03:00",
+      "completed_at": "2026-08-13T04:34:47+03:00",
+      "id": "valve-gear",
+      "new_categories": [],
+      "prompt": "Invented first-principles slice. 507 is thick on steam valve gear (Stephenson, Walschaerts, Joy, Hackworth, gab, slip eccentric, link motion). rotary_spool_valve and plate_cam exist. Which valve-motion cells are printable semi-primitives vs locomotive products?",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/valve-gear.json",
+      "status": "done",
+      "title": "Valve gear, eccentrics, and reversing motions"
+    },
+    {
+      "candidate_count": 10,
+      "claimed_at": "2026-08-13T04:35:04+03:00",
+      "completed_at": "2026-08-13T04:35:42+03:00",
+      "id": "chain-families",
+      "new_categories": [],
+      "prompt": "Invented first-principles slice. roller_chain, roller_sprocket, drag_chain exist. Survey silent/inverted-tooth, leaf, block/pintle, engineering class, hollow-pin, ball chain, modular plastic belt. Which are printable semi-primitives vs bought hardware?",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/chain-families.json",
+      "status": "done",
+      "title": "Chain types beyond roller and drag"
+    },
+    {
+      "candidate_count": 10,
+      "claimed_at": "2026-08-13T05:08:57+03:00",
+      "completed_at": "2026-08-13T05:09:46+03:00",
+      "id": "textile-sewing",
+      "new_categories": [],
+      "prompt": "Invented first-principles slice. 507 has shuttle 397, warp-dressing 383, spinning throstle 496. Survey lock-stitch (needle + shuttle/hook), needle bar, take-up, heddle, reed, rapier, Jacquard hook. Semi-primitive cells only, not a sewing machine or a loom.",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/textile-sewing.json",
+      "status": "done",
+      "title": "Sewing, weaving, and textile mechanisms"
+    },
+    {
+      "candidate_count": 10,
+      "claimed_at": "2026-08-13T05:09:57+03:00",
+      "completed_at": "2026-08-13T05:10:37+03:00",
+      "id": "water-wind-wheels",
+      "new_categories": [],
+      "prompt": "Invented first-principles slice. 507 water wheels 430-438, Barker 438, windmills 485-486. fluid slice proposed centrifugal_impeller. Survey undershot/overshot/breast, Pelton, Francis, Savonius, Darrieus, propeller. Semi-primitive rotors only, not power plants.",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/water-wind-wheels.json",
+      "status": "done",
+      "title": "Water wheels, turbines, and wind rotors"
+    },
+    {
+      "candidate_count": 9,
+      "claimed_at": "2026-08-13T05:44:02+03:00",
+      "completed_at": "2026-08-13T05:44:42+03:00",
+      "id": "locks-keys",
+      "new_categories": [],
+      "prompt": "Invented first-principles slice. Survey pin tumbler, warded, wafer, disc detainer, lever tumbler, combination (disc pack), padlock shackle, sidebar. Semi-primitive cells only, not a finished lockset or safe.",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/locks-keys.json",
+      "status": "done",
+      "title": "Locks, keys, and combination mechanisms"
+    },
+    {
+      "candidate_count": 8,
+      "claimed_at": "2026-08-13T05:44:59+03:00",
+      "completed_at": "2026-08-13T05:45:28+03:00",
+      "id": "metrology-drawing",
+      "new_categories": [],
+      "prompt": "Invented first-principles slice. pantograph exists; trammel proposed in straight-line. Survey 507 helicograph 384, ellipsograph 152, cyclograph 403-404, centrolinead 408, proportion compasses 405. Semi-primitive tracers, not a CMM or a plotter.",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/metrology-drawing.json",
+      "status": "done",
+      "title": "Drawing instruments and kinematic tracers"
+    },
+    {
+      "candidate_count": 10,
+      "claimed_at": "2026-08-13T06:20:15+03:00",
+      "completed_at": "2026-08-13T06:21:40+03:00",
+      "id": "wheels-casters-omni",
+      "new_categories": [
+        {
+          "name": "wheels",
+          "why": "Ground-contact rolling cells (caster, Mecanum, omni, ball-transfer) are a machinery class. pulleys are belt sheaves, chains are sprocket trains, water-wind is prime-mover rotors, flywheel is inertia. Agents looking up 'caster' or 'mecanum' currently hit nothing. A movements shelf keeps chassis products out."
+        }
+      ],
+      "prompt": "Invented first-principles slice. water-wind-wheels owns prime-mover rotors. flywheel stores energy. Survey Mecanum/Ilon, omni/poly (Grabowiecki), swivel caster with trail, ball-transfer, Killough pair, continuous-track shoe. Semi-primitive wheels only, not a chassis or a swerve module.",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/wheels-casters-omni.json",
+      "status": "done",
+      "title": "Wheels, casters, and omnidirectional rolling"
+    },
+    {
+      "candidate_count": 11,
+      "claimed_at": "2026-08-13T06:20:15+03:00",
+      "completed_at": "2026-08-13T06:21:43+03:00",
+      "id": "toggles-presses",
+      "new_categories": [],
+      "prompt": "Invented first-principles slice. 507 toggle 140, knee-lever 164, presses 105/132/133. toggle_clamp exists; scissor_jack and draw/hood latch already proposed. Survey generic toggle_joint, knuckle-joint press, double-toggle, flying/screw stamp, disk-bar press. Semi-primitive cells only, not a punch-press product.",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/toggles-presses.json",
+      "status": "done",
+      "title": "Toggle joints, over-center, and press cells"
+    },
+    {
+      "candidate_count": 10,
+      "claimed_at": "2026-08-13T06:53:41+03:00",
+      "completed_at": "2026-08-13T06:54:58+03:00",
+      "id": "analog-computing-counters",
+      "new_categories": [],
+      "prompt": "Invented first-principles slice. 507 counters 63-71. geneva and star_wheel exist as indexers. Survey Leibniz wheel, pinwheel, planimeter, ball-and-disk integrator, harmonic analyzer, odometer decade, Pascaline. Semi-primitive cells only, not a Curta or a differential analyzer.",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/analog-computing-counters.json",
+      "status": "done",
+      "title": "Analog computers, integrators, and mechanical counters"
+    },
+    {
+      "candidate_count": 10,
+      "claimed_at": "2026-08-13T06:53:41+03:00",
+      "completed_at": "2026-08-13T06:55:00+03:00",
+      "id": "hammers-drops-stamps",
+      "new_categories": [],
+      "prompt": "Invented first-principles slice. 507 tilt-hammer 72, drop/stamp 85, trip 353, pile 251. snail_cam usecase names trip hammers. Survey tilt/trip hammer, drop stamp, pile-driver release, board-drop. Semi-primitive cells only, not a forge or a steam hammer.",
+      "report": "/Users/moshe/Desktop/myprojects/mechlib/.claude/overnight/gaps/hammers-drops-stamps.json",
+      "status": "done",
+      "title": "Trip hammers, drops, and impact cells"
+    }
+  ],
+  "updated": "2026-08-13T06:55:00+03:00"
+}

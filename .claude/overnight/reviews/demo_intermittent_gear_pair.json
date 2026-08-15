@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_intermittent_gear_pair",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: blue mutilated driver (locking segment plus a tooth group) meshed with a green notched driven gear.",
+  "notes": "Non-animated. Driver's plain arc and remaining teeth read; contact is at the tooth group, not exploded. Sane rest assembly of a digit-advance pair.",
+  "verdict": "pass"
+}

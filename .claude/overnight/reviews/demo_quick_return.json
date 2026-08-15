@@ -1,0 +1,15 @@
+{
+  "bodies_that_look_frozen": [
+    "base",
+    "pin_crank",
+    "pin_lever"
+  ],
+  "cycle_closes": true,
+  "demo": "demo_quick_return",
+  "issues": [],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Yellow crank pin rides the orange disc and slides along the green slotted lever. Lever stays nearly flat through 40-188 deg, then rocks up sharply by 267 deg and starts back down at 342 deg (quick return).",
+  "notes": "Crank disc is a featureless orange circle so rotation is read from the pin orbit, not disc markings. Blue base and both ground pins stay put. Last column at 342 deg is heading back toward the 40 deg start.",
+  "verdict": "pass"
+}

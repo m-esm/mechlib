@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_bevel_gear_pair",
+  "issues": [],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Blue pinion and green crown rotate in place on 90-degree axes; tooth clocking and the pinion hole pattern walk across drive_deg 0 / 7.5 / 238 / 443 / 680 / 907.",
+  "notes": "Prior fail was 180 deg aliasing on a 16/24 pair. Anti-alias phases make the mesh turn obvious in iso and front. Centroid travel stays ~0 as expected for spin-in-place.",
+  "verdict": "pass"
+}

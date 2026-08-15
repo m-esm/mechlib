@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_planet_stage",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: yellow sun, three colored planets, and a blue internally toothed ring on a downward hex-output carrier.",
+  "notes": "Non-animated. Planets mesh both sun and ring; no clash or explode. Sane rest assembly of a 12:9:30 planetary stage.",
+  "verdict": "pass"
+}

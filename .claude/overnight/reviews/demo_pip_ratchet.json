@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_pip_ratchet",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: purple accordion hub with three captive pawls seated inside a green undercut ring.",
+  "notes": "Non-animated. Pawls sit in the ring teeth; side/front are a flat two-body disc. Sane rest assembly of a print-in-place ratchet.",
+  "verdict": "pass"
+}

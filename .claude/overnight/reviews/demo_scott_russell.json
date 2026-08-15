@@ -1,0 +1,14 @@
+{
+  "bodies_that_look_frozen": [
+    "base",
+    "pin_0"
+  ],
+  "cycle_closes": true,
+  "demo": "demo_scott_russell",
+  "issues": [],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Green inversor bar rocks on the yellow crank while the slider rides the base slot and the orange tracer stays on the guide line through the sine-mapped swing.",
+  "notes": "drive_deg is a closed sine around mid-angle, not a full crank turn, so the bar rocks rather than windmills. Joints stay pinned. Last column at 302 deg is heading back toward the 0 deg pose.",
+  "verdict": "pass"
+}

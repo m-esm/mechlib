@@ -5,3 +5,7 @@ dist/
 gallery/out/
 .DS_Store
 .playwright-mcp/
+.claude/overnight/renders/
+.claude/overnight/*.lock
+.claude/overnight/*.tmp
+.claude/overnight/STOP

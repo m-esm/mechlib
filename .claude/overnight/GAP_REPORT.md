@@ -1,0 +1,833 @@
+# Overnight missing-mechanism survey
+
+First-principles gap research against the live mechlib catalog. Generated overnight; not a hand-maintained registry.
+
+Cutoff: 2026-08-13 07:30 EEST.
+
+## kinematic-pairs — Lower and higher kinematic pairs
+
+Reuleaux and IFToMM treat a machine as links joined by six lower pairs (surface contact: revolute R, prismatic P, helical H, cylindrical C, spherical S, planar E) plus higher pairs (point or line contact: cam-follower, gear mesh, rolling, wrapping). Mechlib already ships named forms of five of the six lower pairs and of every standard higher-pair family, but almost always as a product-shaped kit rather than as the pair itself. Revolute is knuckle_hinge (print-in-place leaf hinge with stop), clevis (fork+eye+pin), gimbal_rings (stacked R), and the hidden pins inside every linkage; there is no generic two-eye pin joint. Prismatic is linear_way (dovetail/vee/tslot plus gib) and telescoping_stage (square tubes keyed against spin). Helical is lead_screw (trapezoidal screw+nut), plus screw_jack and differential_screw. Spherical is ball_socket_joint (snap stud+split cup). Universal (two intersecting R, not a Reuleaux primitive) is universal_joint, double_cardan_joint, and gimbal_rings. Higher pairs are covered as assemblies: plate/face/barrel/snail/heart cams plus roller_follower; spur/bevel/worm/internal/rack meshes; printed_ball_bearing and idler_pulley for rolling; pulleys, belts, and chains for wrapping; kinematic_coupling for six-point contact. The one missing lower pair is cylindrical C (coaxial slide plus spin). The other real gaps are pair-level generators that consumers currently invent from cyl and slot_neg: a generic revolute_pair, a pin-in-slot (the planar higher pair inside quick_return and every slotted lever), a rod-end form of S (through-bored ball in a shanked housing, not a snap stud), and a sliding spline (torque-transmitting P). Planar E is textbook-complete and unused as an unconstrained printed pair; a three-pad-on-plate generator would close the set but is low leverage. Rejected as already covered: a second helical_pair (lead_screw), a second prismatic_pair (linear_way), a second spherical_pair that is just ball_socket_joint, Pa parallelogram (four_bar with equal sides), and engine crossheads (slider_crank rails). Joints is already the gallery shelf; it should grow pair primitives, not a new category.
+
+**New categories**
+- none
+
+**Candidates**
+- **revolute_pair** [high] fit=yes — The default machine joint: two links share an axis and one rotation. Every printed linkage, lever, and crank currently invents pin plus two bosses from cyl.
+- **pin_in_slot** [high] fit=yes — Planar higher pair (slide along a slot plus spin). Whitworth/quick-return, slotted conrods, adjustable levers, lock-stitch, and every pin-in-obround that is not a Scotch yoke.
+- **cylindrical_pair** [high] fit=yes — The only Reuleaux lower pair with no generator. Coaxial translation plus rotation: telescoping drive shafts, hydraulic rods that may spin, steering columns, some robot wrists, piston-in-bore without a key.
+- **rod_end** [high] fit=yes — Machine-design form of the spherical pair: a through-bored ball captured in a shanked housing. Control rods, suspension links, actuator ends, RC steering. Distinct from ball_socket_joint (snap stud, no through-bore) and from clevis (revolute, not spherical).
+- **sliding_spline** [med] fit=yes — Prismatic pair that also carries torque: PTO shafts, telescoping drives, sliding hubs. shaft_key is a fixed keyway kit; swept_keyed_bore is a limited-angle cutter, not a running pair.
+- **rolling_pair** [med] fit=yes — Higher pair of a cylinder on a plane or on another cylinder. Cam tracks, conveyor rollers, linear roller ways. roller_follower is a lever assembly; printed_ball_bearing is a radial race, not a rolling contact pair.
+- **planar_pair** [low] fit=maybe — The sixth Reuleaux lower pair: two planes stay in contact (2 translations + 1 rotation). Completes the textbook set. Rare as an unconstrained printed joint; machines usually build E from R and P.
+
+## straight-line — Straight-line and inversor linkages
+
+A straight-line mechanism turns rotation or rocking into a stroke of definite length. Four-bars can only approximate a line (Watt 1784); exact planar lines need either a prismatic pair or an inversor cell that inverts a circle through a point into a line. Mechlib already covers the main teaching set with pose APIs: peaucellier_pose/linkage (exact 7-bar inversor), sarrus_pose/linkage (exact spatial, first perfect line, 1853), scott_russell_pose/linkage (exact half-length inversor that spends one P pair), watt_pose/linkage (approximate, error measured), and chebyshev_pose/linkage (lambda, 4:5:2, error measured). four_bar defaults claim Hoecken proportions and mention the coupler passing under O1, but four_bar_pose returns only O1/O2/A/B: no tracer T, no path-error metric, no named hoecken_* API. scotch_yoke and oldham_coupling are Tusi/Cardanic inversions used as a yoke and a coupling, not as a straight-line generator. flexure_stage is the compliant straight line. Missing exact generators that still earn a kit: Hart's W-frame (6-bar inversor, two bars fewer than Peaucellier, the next name after Peaucellier in every textbook) and a Tusi couple (internal ring of twice the planet pitch, a point on the planet pitch circle traces a diameter). Missing named approximate kits: Hoecken (constant-velocity walking/pick-and-place line), Roberts (isosceles 4-bar), and Evans grasshopper. Trammel of Archimedes is an ellipsograph / double-slider; it shares kinematics with Oldham and Scotch yoke but is not those products. Rejected as already covered: a second Peaucellier, Watt, Chebyshev lambda, Scott-Russell, or Sarrus. Rejected as teaching-only extras: Kempe kites, Bricard, Perrolatz, Sylvester-Kempe and Kumara-Kampling quadruplanar inversors (Hart first). Rejected as products: horse-head crane jibs, Chebyshev tables, MultiFAZE/Stiller-Smith engines, Watt parallel-motion as a compound Watt+pantograph product (both parts already exist).
+
+**New categories**
+- none
+
+**Candidates**
+- **hart_inversor** [high] fit=yes — Exact planar straight line with six bars and only revolute joints. The name people look up after Peaucellier. Used in instruments and as a compact inversor cell. Hart's first form is the W-frame (antiparallelogram); the A-frame is the second.
+- **tusi_couple** [high] fit=yes — Exact straight diameter from a planet rolling inside a ring of twice the pitch. Cardanic motion; Murray hypocycloidal engines; any point on the planet pitch circle reciprocates on a diameter. Distinct from ring_gear_mesh (ratio drive) and from scotch_yoke (slot inversion of the same law).
+- **hoecken_linkage** [high] fit=yes — The approximate 4-bar whose coupler point holds a long, nearly constant-velocity straight line. Walking feet, pick-and-place, film transports. four_bar defaults are Hoecken lengths but four_bar_pose does not return the tracer or measure path error.
+- **trammel** [med] fit=yes — Archimedes ellipsograph / double-slider: two prismatic joints on perpendicular axes, a rod through both sliders. Any point on the rod traces an ellipse; the sliders themselves are the straight constraints. Used as an ellipse generator and as the Baker-Cross / inverted-Oldham engine core.
+- **roberts_linkage** [med] fit=yes — Named isosceles 4-bar whose coupler point traces a long approximate straight line (different curve from Watt and Chebyshev). Teaching set and one of the five UC Davis four-bar straight-line examples.
+- **evans_grasshopper** [low] fit=maybe — Evans 1801 approximate straight-line, the grasshopper beam-engine motion. Historical more than reused. A 4-bar with a long coupler extension.
+
+## planar-four-bar — Planar four-bar and cognates
+
+The planar four-bar is the smallest 1-DOF closed chain (four links, four revolute joints). Grashof class (s+l ? p+q) decides whether a side fully rotates, and which link is shortest decides crank-rocker, drag-link/double-crank, or Grashof double-rocker. Non-Grashof is a triple-rocker. Equality is the change-point (folding/parallelogram) case. mechlib already ships a general RRRR solver and kit (four_bar_pose / four_bar, open or crossed branch, coupler_ext along AB). Defaults are a fully rotatable 1:2:2:2 crank-rocker that the tests and gallery call Hoecken, plus named kits for the Chebyshev lambda (4:5:2, midpoint tracer), Watt parallel-motion 4-bar (tracer at the inverse lever ratio), slider-crank, Scotch yoke, slotted quick-return, toggle clamp, and a parallelogram pantograph. That covers every Grashof type as a length choice, and it covers Hoecken-style straight-line walk as four_bar plus coupler_ext. What it does not cover is a coupler point off the AB line. Roberts' isosceles straight-line 4-bar, general path generation, and the Cayley/Roberts-Chebyshev cognate construction all need a triangular coupler, not a collinear boss. four_bar_pose also takes only a crank angle, so a non-Grashof or rocker-driven pose has no honest input and no reported swing limits. Rejected as separate kits: parallelogram, deltoid/kite, change-point, and named drag-link, because they are four_bar with special lengths (or branch=-1). Wittgenstein's rod is an obscure Hoecken generalization. Grasshopper beam engines and locomotive coupling-rod sets are finished machines. Evans and the Chebyshev table linkage are named 4-bars worth pinning only after a coupler-point primitive exists. Burmester 3-5 position synthesis is a solver, not a printable kit.
+
+**New categories**
+- none
+
+**Candidates**
+- **four_bar_coupler_point** [high] fit=yes — Path-generation four-bars (Roberts, general coupler curves, Burmester points) need a tracer in the coupler plane, not just coupler_ext along AB. This is the missing pose primitive under four_bar.
+- **roberts_cognates** [high] fit=yes — Roberts-Chebyshev theorem: every 4R coupler curve is drawn by three distinct four-bars. Designers pick the cognate whose ground, transmission angle, or crank type actually fits the machine. Hoecken and the Chebyshev table are cognates of the lambda already in-tree.
+- **roberts_linkage** [high] fit=yes — Richard Roberts' isosceles straight-line 4-bar: coupler is a triangle (sides a,a,b), ground 2b, side links a. Tracer is the apex. Used as an approximate linear guide and as the namesake of the cognate theorem. Cannot be posed with today's collinear coupler_ext.
+- **grashof_class** [med] fit=yes — Tells an agent whether a length set is crank-rocker, drag-link, Grashof double-rocker, triple-rocker, or change-point, and which link is the crank. four_bar currently accepts any positive lengths and only fails when a requested angle is unreachable.
+- **four_bar_input** [med] fit=yes — Non-Grashof and Grashof double-rockers have no 360 deg crank. Driving them with crank_angle_deg invents motion. Need a rocker-angle (or coupler-angle) input plus reported dead-center limits.
+- **anti_parallelogram** [med] fit=yes — Crossed isosceles four-bar (opposite sides equal, branch=-1). Coupler rotation is 2:1 Cardan / elliptical. Used in drafters, elliptical gears, Hart's antiparallelogram, and some folding frames. four_bar(branch=-1) can assemble one pose but does not expose the 2-omega law or keep the links from occupying one plane as they cross.
+- **evans_linkage** [med] fit=yes — Named approximate straight-line 4-bar used on grasshopper beam engines. Distinct proportions and coupler point from Watt, Chebyshev, Roberts, and Hoecken. The beam-engine itself is a product; the 4-bar is not.
+- **hoecken_linkage** [low] fit=no — Approximate straight-line crank-rocker, cognate of Chebyshev. Gallery and tests already treat four_bar defaults as Hoecken (1:2:2:2, full rotation, coupler_ext tracer).
+- **crank_rocker** [low] fit=no — Default four_bar (shortest link is the crank, Grashof). Windshield wipers, hobby legs, any oscillating output from a rotating input.
+- **double_crank** [low] fit=no — Drag-link: ground is shortest Grashof link. Both sides fully rotate. Used as a shaft coupling with non-parallel cranks. Just four_bar with those lengths.
+- **chebyshev_lambda** [low] fit=no — Already shipped as chebyshev_pose / chebyshev_linkage (ground:rocker:coupler = 4:5:2, midpoint tracer).
+- **watt_four_bar** [low] fit=no — Watt's 1784 parallel motion (two rockers + coupler, tracer at inverse lever ratio) is watt_pose / watt_linkage. The six-bar copy that remote-places the piston line belongs in the six-bar slice.
+
+## six-bar-and-walking — Six-bar, walking, and animal-motion linkages
+
+A 1-DOF planar six-bar is six links and seven joints. There are two distinct chains: Watt (two ternary links share a joint, two 4-bar loops) and Stephenson (ternaries are separated by a binary, one 4-bar loop plus one 5-bar loop). Grounding each chain gives Watt I/II and Stephenson I/II/III. Those five topologies are the reusable kits. Named machines sit on top of them: Klann is a Stephenson III walking leg (Joe Klann 1994, US 6,260,862), Watt's historical parallel motion is a Watt 4-bar plus a parallelogram that copies the tracer to a remote piston line, and Hart's first inversor is a 6-bar antiparallelogram exact straight-line. mechlib has no Watt or Stephenson pose solver. What it does have is four_bar, the Watt 4-bar (watt_linkage, not the six-bar), Chebyshev lambda, Sarrus (a spatial 6-bar with two orthogonal hinge chains), pantograph, lazy-tongs, and Peaucellier (8-bar). Walking is where people usually ask next. A single Klann or Jansen leg is a semi-primitive: one rotary input, a published length set, flat bars, FDM-proven. A multi-leg chassis, Strandbeest, or hexapod is a finished walking robot and stays out. Pumpjack / walking-beam is a 4-bar with a long ternary rocker and a horsehead arc, not a six-bar; the kinematic core is new geometry on four_bar, the skid-and-gearbox unit is a product. Chebyshev's plantigrade machine is an assembly of lambda 4-bars already in-tree. Bicycle rear-suspension 6-bars and TrotBot/Ghassaei sculptures are project-bound or finished machines.
+
+**New categories**
+- **leg_mechanisms** — Walking-leg kits (Klann, Jansen, plantigrade, walking-beam) are a distinct agent job from general bar linkages. four_bar's usecase currently dumps 'walking-robot legs' onto a generic crank-rocker. A movements-group category would let gallery cards and search_use_cases hit the right primitive.
+
+**Candidates**
+- **watt_six** [high] fit=yes — Generic Watt I / Watt II pose+kit. Sewing-machine needle bars, punch-press rams, Watt-II function generators, and any 1-DOF machine that stacks two 4-bar loops on a shared ternary. This is the missing topology, not a walking robot.
+- **stephenson** [high] fit=yes — Generic Stephenson I / II / III pose+kit (4-bar loop plus a dyad on the coupler). Parent of Klann (III), used as function generators and dwell linkages. Without this, every 6-bar walk or press is a one-off.
+- **klann_linkage** [high] fit=yes — Stephenson III walking leg: crank + two grounded rockers + two couplers, foot traces a long nearly-linear stance then lifts. Wheel replacement for stair/curb/soft ground without a servo per joint. Patent coordinates exist (US 6,260,862).
+- **jansen_leg** [high] fit=yes — Theo Jansen 8-bar (11 published segment lengths a..m) 1-DOF walking leg. Rotary crank in, ovoid foot path out. The reusable primitive is one leg, not a Strandbeest.
+- **watt_parallel_motion** [high] fit=yes — The steam-engine mechanism: Watt 4-bar tracer copied by a parallelogram to a remote piston line. Wikipedia's worked Watt six-bar. watt_linkage today is only the 4-bar; the copy stage is missing.
+- **walking_beam** [med] fit=yes — Pumpjack / nodder / beam-engine rocker: a long ternary beam, crank + pitman on one side, horsehead arc (or pin) on the other so the hanging rod stays near-vertical. Kinematically a 4-bar with a shaped rocker, not a six-bar, but it is the usual 'walking-beam' request.
+- **hart_inversor** [med] fit=yes — Hart's first inversor (6-bar antiparallelogram / W-frame): exact straight line with fewer bars than Peaucellier. Six-bar family member; the straight-line slice should own the deep write-up.
+- **plantigrade_leg** [low] fit=maybe — Chebyshev plantigrade: two (or more) lambda 4-bars coupled so a foot plants and lifts. The primitive is already chebyshev_linkage. A thin coupler that shares the crank between two lambdas is an assembly, close to a finished walker.
+- **sarrus_spatial_six_bar** [low] fit=no — Sarrus is a spatial 6-bar (two orthogonal 4-bar hinge chains, exact Z translation). Already sarrus_pose / sarrus_linkage.
+
+## spatial-spherical-parallel — Spatial, spherical, and parallel mechanisms
+
+Kutzbach says a generic spatial 4R is immobile (M=-2) and a generic spatial 6R is a structure (M=0). The exceptions are the overconstrained loops: Bennett 1903 (4R, opposite lengths and twists equal, sin(alpha)/a = sin(beta)/b, zero offsets, axes skew on a hyperboloid), Bricard 1897 (six 6R types; line-symmetric, plane-symmetric, trihedral), Schatz/Turbula (one Bricard specialisation used as a mixer), Goldberg 5R/6R and Myard 5R (Bennett-derived). Spherical chains are the other exception: four (or more) revolute axes concurrent at one point, links live on a sphere, 'length' is an arc angle, spherical Grashof and a spherical Freudenstein equation apply. A Hooke/Cardan joint is the 90-90-90 spherical 4-bar; Agile Eye (Gosselin, Laval) is three spherical 4-bar / 3-RRR limbs sharing that point. Parallel robots are several limbs on one platform: planar 5-bar (2-R RR, 2-DoF), planar 3-RRR / 3-RPR, Clavel Delta (3-RRPaR, parallelogram forearms), Hunt 3-RPS, Tsai 3-UPU, Stewart-Gough 6-UPS/6-SPS and its 6-PUS / 6-RUS cousins, plus hybrids (Tricept, Exechon, Orthoglide). Serial primitives in the same class are the planar RRR arm, the intersecting-axis spherical wrist (roll-pitch-roll or roll-pitch-yaw), and the general 6R/7R open chain. Deployables sit on the same shelf: Hoberman angulated-scissor unit (kinked bars that keep a constant subtended angle, You-Pellegrino 1997), Bennett-cell rings, Bricard rings, lazy-tongs / iris already in-tree.
+
+Catalog public_api already covers the planar and a few spatial cousins: four_bar / four_bar_pose (planar RRRR), sarrus_pose / sarrus_linkage (spatial 6-bar, two orthogonal hinge chains, exact Z translation, animated), lazy_tongs (straight scissor, not angulated), iris_diaphragm, pantograph, gimbal_rings (nested concentric R, animated), ball_socket_joint, knuckle_hinge, clevis, universal_joint, double_cardan_joint, tripod_cv_joint (animated), flexure_stage. usecases.py mentions robotic wrists only under ball_socket_joint and gimbal_rings. Nothing named Bennett, spherical four-bar, 5-bar, Delta, Stewart, Hoberman, RRR arm, or RPR wrist. left_out_notes are about animation period, not these families.
+
+Filter: a finished robot chassis, hexapod motion base, 6-axis arm, Agile Eye camera mount, Hoberman sphere toy, or Strandbeest-class walker is a product. A pose+kit that is one loop or one limb is a semi-primitive, same as four_bar and sarrus. FDM is proven for Bennett (Printables 4R, print two link types twice), spherical 4-bar (printed hinges, axis-concurrency is the hard tolerance), 5-bar and RRR (flat bars, same stack as four_bar), Delta parallelograms (printed rod-ends or magnetic balls; full Delta frames are everywhere on Printables), and Hoberman units (many pins). Bennett and Bricard bind if the dimensional condition is off by ~0.2 percent; printed clearance can fake mobility and then wear, so a generator must emit the exact DH table, not a 'looks spatial' sculpture.
+
+**New categories**
+- **spatial** — Bennett, spherical 4-bar, 5-bar, delta forearm, and UPS strut are a different agent job from planar bar linkages and from hinge/ball joints. four_bar's usecase does not mention concurrent axes or overconstrained spatial loops; joints currently dumps wrists onto ball_socket_joint and gimbal_rings. A movements-group shelf lets search_use_cases hit the right primitive without implying a finished robot.
+
+**Candidates**
+- **spherical_four_bar** [high] fit=yes — RRRR with four concurrent revolute axes; link lengths are arc angles; spherical Grashof + Freudenstein. The spherical counterpart of four_bar. Used as angled-shaft couplings, loom heald oscillators, Agile Eye limbs, and RCM wrists. universal_joint is the special 90-90-90 case, not the general solver.
+- **bennett** [high] fit=yes — The only 1-DoF spatial 4R. Opposite lengths a,a and b,b, opposite twists alpha,alpha and beta,beta, offsets zero, sin(alpha)/a = sin(beta)/b. Parent of Goldberg/Myard and of Bennett-cell deployable rings. Sarrus is a different overconstrained loop (visible parallelism). four_bar cannot emit skew axes.
+- **five_bar** [high] fit=yes — Planar 2-DoF parallel: two grounded cranks, two couplers, one floating vertex. The smallest parallel robot that is still a bar kit. Pick-and-place, planar plotters, teaching 2R inverse kinematics. Not a 4-bar (two inputs) and not a serial RRR.
+- **delta_parallelogram** [high] fit=yes — Clavel's reusable cell: a parallelogram forearm with spherical (or universal) pairs at both ends that keeps the platform facing. The full 3-arm + base + platform robot is a product; one posed forearm plus its ball/U joints is the primitive consumers reinvent for every printed Delta.
+- **bricard_6r** [med] fit=yes — Canonical overconstrained spatial 6R (line / plane / trihedral). Kutzbach M=0, symmetry opens 1 DoF. Deployable rings, kaleidocycle cells, mixer-adjacent Schatz is a specialisation. Same role Bennett plays for 4R. Not Sarrus (Sarrus is two planar 4-bar chains, already shipped).
+- **rrr_arm** [med] fit=yes — Serial planar 3R: three link_bar in a chain plus FK/IK. The serial counterpart of five_bar. Teaching arms, SCARA-minus-prism, any planar reach that is not a closed loop. Consumers currently chain link_bar by hand with no pose solver.
+- **roll_pitch_roll_wrist** [med] fit=yes — Three serial revolutes with concurrent axes (Euler / spherical wrist). Distinct from gimbal_rings (nested concentric rings, no serial yokes) and from ball_socket_joint (one S pair). Used as the last three axes of a 6R arm and as a pan-tilt-roll camera wrist. The kit is three yokes + pins, not a robot.
+- **angulated_scissor** [med] fit=yes — Hoberman unit cell: two kinked bars, three pins, constant subtended angle (You-Pellegrino). lazy_tongs is the straight-scissor special case (kink=180). The sphere, iris, or canopy assembled from many units is a product.
+- **ups_strut** [med] fit=yes — One Stewart/Gough limb: universal + prismatic + spherical (or SPS). Variable-length strut with ball/U ends. Six of them plus plates is a hexapod product; the strut is the reusable primitive, same argument as delta_parallelogram.
+- **rssr_four_bar** [low] fit=maybe — Generic spatial four-bar that actually moves without a Bennett condition: R-S-S-R. Mobility 2, one of them idle coupler spin. Used as 3D function generators. Less of a named kit than Bennett; can be composed from revolute_pair + rod_end once those exist.
+- **schatz_turbula** [low] fit=maybe — Schatz 1929 6R, a Bricard specialisation, used as the Turbula mixer inversion (container tumbles through all octants). Named machine more than a new topology if bricard_6r ships.
+- **spherical_five_bar** [low] fit=maybe — 2-DoF spherical parallel (two grounded arcs + two couplers on a sphere). Surgical RCM wrists and some camera gimbals. After spherical_four_bar, this is the spherical cousin of five_bar. Smaller demand than the 4-bar.
+- **rcm_parallelogram** [low] fit=maybe — Double parallelogram that forces a remote centre (trocar, laparoscopy). Semi-primitive, but it is a composition of two four_bar parallelograms plus a grounded frame. Close to a surgical product once you add the tool tube.
+- **canfield_joint** [low] fit=maybe — 3-DoF constant-velocity wrist (Canfield). Research-grade, few FDM reprints, overlaps rpr_wrist and spherical 3-RRR.
+- **planar_3rrr** [low] fit=maybe — Three 5-bar-like limbs on one platform (planar 3-DoF parallel). The limb is five_bar; the 3-limb + platform assembly is getting product-shaped.
+- **agile_eye** [low] fit=no — Gosselin 3-RRR spherical parallel camera wrist. The limb is spherical_four_bar. The 3-limb + camera platform is a finished orienting robot.
+- **delta_robot** [low] fit=no — Full Clavel machine: base, three actuated arms, three parallelograms, platform, optional rotary 4th axis. Product. The reusable part is delta_parallelogram.
+- **stewart_gough** [low] fit=no — 6-UPS hexapod: two plates and six struts. Flight simulators, telescope mounts, machine-tool heads. Product. The reusable part is ups_strut.
+- **serial_7r** [low] fit=no — General 6-DoF or redundant 7R open chain. That is a robot arm. rrr_arm + rpr_wrist already cover the two reusable pieces.
+- **hoberman_sphere** [low] fit=no — Closed scissor polyhedron. Toy / architectural product. The reusable part is angulated_scissor.
+- **sarrus_spatial** [low] fit=no — Already sarrus_pose / sarrus_linkage. Spatial 6-bar, exact translation, animated.
+
+## cams-indexing — Cam types and intermittent motion
+
+A cam is a higher pair that programs a follower from a displacement diagram. Textbooks (Rothbart, Norton, CMU ch.6, Wikipedia) split the family first by the moving surface, then by how the follower is kept on it. Shape class: plate/disc/radial (exists as plate_cam + cam_profile_2d + MOTION_LAWS dwell/linear/shm/cycloidal), face/end/crown (exists as face_cam: raised axial track, spring-held pin), barrel/cylindrical (exists as barrel_cam: closed groove on the drum wall, positive-drive pin), heart (exists, constant-velocity / reset cam), snail/drop (exists), swash plate (exists, spatial analog), linear/translating/wedge (missing: input is a stroke, not a turn; key-duplicator and trip-hammer form), grooved/box/track plate (missing: a slot in the plate so the follower is form-closed, no spring), grooved face (missing: radial slot in a disc face; Wikipedia's 'most common face cam'; distinct from face_cam's axial hill), conjugate/desmodromic pair (missing: two complementary plates on one shaft, yoke captured, r1+r2=C; Ducati/Sulzer/Bosch; also the guts of a parallel indexer), constant-breadth / Reuleaux (missing: one plate of constant width between two flats, a cheap desmodromic), inverse cam (missing: Reuleaux inversion, follower drives, cam is the output), globoidal/Ferguson/roller-gear (missing: concave globoid rib + turret rollers, right-angle indexer), barrel indexer (missing: barrel_cam groove driving a roller turret rather than one translating pin), parallel-index cam (missing: two conjugate plates + turret, shafts parallel). Follower class already has roller_follower; knife and flat-face are arguments, not kits. Motion-law extras (3-4-5 polynomial, modified trapezoid, 4-5-6-7) are segment types for cam_lift, not parts.
+
+Intermittent / indexing is the other half of this slice. External Geneva / Maltese cross is geneva_pair + geneva_wheel_angle (animated; usecase already says 'indexing tables'). star_wheel is a packaging pocket wheel, not a Geneva. intermittent_gear_pair is the mutilated-gear + lock-segment pair (no engagement law in-tree). escapement / escapement_pose is the clock form (animated). detent_pair and ratchet_wheel_pawl cover click-in and one-way click. Missing Geneva variants: internal (driver inside the wheel, motion >180 deg of crank, dwell shorter than motion) and spherical (axes meet, 3D Maltese). Geneva stop / count-wheel is clockwork (other slice). A ratchet-index *table* is a product assembled from ratchet + detent + frame.
+
+Catalog categories already name cams and indexing. Animate covers plate/face/barrel/heart/snail, geneva_pair, swash_plate, eccentric_cam_clamp. left_out_notes call out intermittent_gear_pair as having no pose law (unlike geneva_wheel_angle). Grep of mechlib/cams.py, indexing.py, ratchets.py, usecases.py finds no globoidal, Ferguson, desmodromic, conjugate cam, inverse cam, wedge/linear cam, internal Geneva, or spherical Geneva.
+
+**New categories**
+- none
+
+**Candidates**
+- **geneva_internal** [high] fit=yes — Driver lives inside the slotted wheel. Motion occupies more than 180 deg of crank, so dwell is the short part (opposite of external). Textbook sibling of geneva_pair; same closed-form layout with inverted centres. Film, turrets, any index that wants a long move and a short lock.
+- **grooved_plate_cam** [high] fit=yes — Box / track / closed plate cam: a slot in the plate captures a roller so the follower is form-closed. plate_cam is force-closed (needs roller_follower + spring). Positive drive is the usual request once people have hit follower bounce.
+- **linear_cam** [high] fit=yes — Translating / wedge cam: the cam body strokes in a straight line, follower rides a 2D profile or a wedge. Key duplicators, trip hammers, lock pins, any time the prime mover is already linear. Not a rotary plate_cam with a different argument.
+- **conjugate_cam_pair** [high] fit=yes — Two complementary plate profiles on one shaft, yoke with two rollers, r1(theta)+r2(theta)=C-2R-delta. Desmodromic / positive-return without a groove. Weaving, cartoners, parallel-index guts, Ducati-style close. Cannot be faked by calling plate_cam twice: the second profile is determined by the first.
+- **constant_breadth_cam** [med] fit=yes — One plate of constant width between two parallel flats (Reuleaux / two-circular-arc family). A single-body desmodromic: the yoke cannot lose contact. Teaching set and a cheap positive-return when you do not want two cams.
+- **globoidal_index_cam** [med] fit=yes — Ferguson / roller-gear / globoidal indexer: a concave globoid rib (or groove) drives rollers on a turret whose axis is at 90 deg. Sankyo/CAMCO class. The 3D analog of Geneva with programmable accel and a long dwell. Distinct from barrel_cam (cylinder + one axial pin) and from geneva_pair (planar pin-in-slot).
+- **barrel_indexer** [med] fit=yes — Cylindrical indexing cam: a barrel groove (or ridge) drives a ring of rollers on a turret, not a single translating pin. Nolte/Sankyo 'barrel cam indexer'. barrel_cam already programs one pin in z(theta); this programs theta_out(theta_in) with dwells. Same relationship geneva_pair has to a random slotted disc.
+- **spherical_geneva** [med] fit=yes — Geneva on a sphere: pin and slots live on concentric spheres, axes concurrent. Wikipedia's third variant. Compact right-angle index. Not internal/external planar Geneva and not globoidal (globoidal is a cam-and-roller, not a pin-in-slot).
+- **grooved_face_cam** [med] fit=yes — Slot in the face of a disc, follower moves radially (Wikipedia face-cam, grooved heart). face_cam in-tree is an axial hill, spring-held. barrel_cam is a groove on the cylinder wall. The radial face-groove is the remaining textbook plate.
+- **parallel_index_cam** [low] fit=maybe — Two conjugate plate cams + a roller turret, input and output shafts parallel. After conjugate_cam_pair exists this is mostly that pair plus a turret pose. A thin kit is useful; a second full surface generator is not.
+- **inverse_cam** [low] fit=maybe — Reuleaux inversion: the 'follower' is driven, the cam plate is the output. Useful when the prime mover is a cylinder or solenoid. The profile is the same geometry read backwards; a pose wrapper around plate_cam plus a sliding driver may be enough.
+- **polynomial_motion_laws** [low] fit=maybe — 3-4-5, 4-5-6-7, modified trapezoid, harmonic combinants. Extensions of MOTION_LAWS / cam_lift, not a new solid. Worth doing when a globoidal or conjugate kit needs finite jerk; not a part on its own.
+- **maltese_cross** [low] fit=no — Alias of a 4-slot external Geneva. geneva_pair(slots=4) is the Maltese cross. Do not ship a second name.
+- **star_wheel_geneva** [low] fit=no — star_wheel in-tree is a packaging pocket wheel for bottles/cans, not a Geneva star. The Geneva star is geneva_pair.
+- **intermittent_gears** [low] fit=no — Already intermittent_gear_pair (mutilated gear + locking segment). left_out_notes: no engagement pose law. That is an animate-coverage problem, not a missing solid.
+- **ratchet_index_table** [low] fit=no — Rotary table with a ratchet and a detent. Product assembled from ratchet_wheel_pawl + detent_pair + a frame. The two primitives already exist.
+- **plate_face_barrel_heart_snail** [low] fit=no — Already plate_cam, face_cam, barrel_cam, heart_cam, snail_cam, cam_lift, cam_profile_2d, roller_follower, swash_plate, eccentric_cam_clamp.
+
+## gear-families — Gear and reduction families
+
+Gears split first by shaft layout, then by tooth line, then by train. Parallel: spur, helical, herringbone/double-helical, internal/ring, rack, sector. Intersecting: straight / spiral / zerol bevel, miter (1:1 bevel), crown/face (planar pitch + pinion). Skew: worm, crossed-helical/screw gears, hypoid (offset spiral bevel), spiroid/helicon (face-type worm). Special profiles: cycloidal pin drive, harmonic/strain-wave, lantern/cage/pin pinion, noncircular/elliptical. Trains: simple pair, compound (two pairs on a shared shaft), planetary/epicyclic, Watt sun-and-planet (planet on a rod, no ring), bevel/hypoid automotive differential, Ravigneaux, nutating/pericyclic/wobble (typically four bevels, one nutates).
+
+Catalog already ships the FDM staples. Parallel: spur_gear_2d / spur_gear / spur_gear_mesh (spur_gear already takes helix_deg and sector_deg — single helical and sector are arguments, not missing solids), herringbone_gear, rack_2d / rack_pinion, internal_gear_2d / ring_gear / ring_gear_mesh. Intersecting: bevel_gear_pair (straight, 90 deg only, Tredgold back-cone). Skew: worm, printed_worm, flat_worm, worm_wheel_band, worm_coupon. Special: cycloidal_drive / cycloidal_pose, harmonic_drive, trochoid_profile_2d. Trains: planet_stage (fixed-ring epicyclic). roller_sprocket_2d is a chain wheel, not a gear. usecases.py maps spur_gear to steering sectors. Animate includes demo_bevel_gear_pair, demo_cycloidal_drive, demo_herringbone_gear, demo_planet_stage, demo_ring_gear_mesh, demo_spur_gear_mesh, demo_worm / demo_printed_worm / demo_flat_worm_pair, demo_harmonic_drive (left_out: harmonic deforms, worm pose is display-only). Grep of gears.py / drives.py / usecases.py finds no lantern, face/crown gear, hypoid, spiroid, crossed-helical pair, elliptical/noncircular, nutating, sun-and-planet, or differential kit.
+
+FDM reality: herringbone is the preferred printed parallel gear (cancels thrust, self-aligns; HowToMechatronics / Retsetman). Single helical prints (spur_gear helix_deg) but needs a thrust bearing. Lantern pinions are the clock default and print as a cage of dowels or printed pins. Face/crown is the easy printed right-angle when you do not want a bevel loft. Crossed-helicals are two helix_deg gears on skew shafts, low load, easy. Elliptical pairs are a popular demo (MakerWorld). True hypoid and spiroid envelopes want 5-axis grinding; Otvinta ships a finger-spun hypoid STL as a stand-in, not a conjugate generator. Nutating boxes print as four bevels (Thingiverse 6682195 / Retsetman) — composition, not a new tooth. Magnetic gears are magnet rings, not teeth. A bevel open-differential (four miters + two sides) is the teaching analog of planet_stage; the axle housing is a product.
+
+**New categories**
+- none
+
+**Candidates**
+- **lantern_pinion** [high] fit=yes — Cage / pin pinion: cylindrical rods on a circle mesh a wheel whose teeth are cycloidal or circular-arc sockets. Clock trains, wooden mills, any printed clock that should not use involute pinions under 8 teeth. Distinct from roller_sprocket_2d (chain) and from spur_gear.
+- **face_gear** [high] fit=yes — Crown / face gear: a disc with teeth on its face meshed by a spur or helical pinion, shafts at 90 deg, pinion axis in the disc plane. Wikipedia face gear. The printable right-angle that is not a bevel loft and not a worm. Used as crown wheels, rotary-table drives, and cheap 90-deg prints.
+- **crossed_helical_pair** [high] fit=yes — Two helical gears on skew (usually 90 deg) non-intersecting shafts. Screw gears. Point contact, low load, easy 90-deg when you already have helix_deg. Not a worm (worm wraps) and not a bevel (axes miss).
+- **noncircular_gear_pair** [med] fit=yes — Elliptical and other noncircular conjugate pairs. Variable ratio, axle-displacement oscillation, printing-press and textile function generation. Hirnschall and MakerWorld show FDM is routine. Not a round spur with a different argument.
+- **bevel_differential** [med] fit=yes — Open bevel differential: two side gears + two (or four) spider miters in a carrier. The teaching analog of planet_stage for intersecting axes. Automotive axle, robot yaw split, any 1-in 2-out torque split. The housing and hypoid ring are the product; the four-bevel kit is not.
+- **helical_pair** [med] fit=yes — Named posed pair of opposite-hand single helicals on parallel shafts. spur_gear(helix_deg) already builds one blank; there is no mesh kit, no opposite-hand helper, and no thrust-bearing note. FDM people usually want herringbone instead, but helical is what they search.
+- **sun_and_planet** [med] fit=yes — Watt's sun-and-planet: a planet pinned to a rod, walking around a fixed or driven sun, no ring. Converts reciprocating steam to rotation without a slider-crank patent. Distinct from planet_stage (which is a modern epicyclic with a ring). Historical and still the name people use.
+- **angular_bevel** [low] fit=maybe — Straight bevels whose shaft angle is not 90 deg. bevel_gear_pair hard-codes delta1+delta2=90. Useful, but it is a parameter on the existing loft, not a new family.
+- **hypoid_standin** [low] fit=maybe — Offset spiral bevel. True conjugate hypoid is a face-hobbed envelope. Otvinta's printable model is a stand-in. A cheap FDM version is face_gear_pair(offset=...) or a skewed bevel loft. Do not claim Gleason conjugacy.
+- **spiroid** [low] fit=maybe — Face-type worm / helicon: a tapered worm meshing a face gear. Compact right-angle high ratio. Almost no honest FDM generators; McNeel thread is people asking how to model one. After face_gear + worm exist, a spiroid is a research extra.
+- **nutating_drive** [low] fit=maybe — Pericyclic / wobble: typically four bevels, one nutates, huge ratio. Thingiverse/Retsetman printed boxes exist. The tooth primitive is bevel_gear_pair. The wobble gearbox is an assembly close to a product.
+- **compound_train** [low] fit=maybe — Two or more pairs sharing a shaft. A layout helper, not a tooth. Agents can already place two spur_gear_mesh. A thin compound_pair(z1,z2,z3,z4) poser would stop people inventing centre distances.
+- **magnetic_gear** [low] fit=no — Pole-pair magnet rings, coaxial or concentric. Not a printable tooth. The printed part is a magnet holder, which is a project fixture.
+- **single_helical_blank** [low] fit=no — Already spur_gear(..., helix_deg=). Do not add helical_gear as a second blank.
+- **sector_gear** [low] fit=no — Already spur_gear(sector_deg=) and spur_gear_2d(sector=). Gallery even has spur_gear_sector_demo. usecase text is the sector use.
+- **herringbone_internal_planet** [low] fit=no — herringbone_gear, planet_stage, ring_gear already exist. An internal herringbone or herringbone planet is a parameter combination, not a new family.
+
+## clutches-brakes-overrunning — Clutches, brakes, and overrunning
+
+A clutch joins two rotating members so they can share torque or part; a brake joins a rotating member to ground. Same physics, different grounding. First split is how torque is made: positive teeth (no slip once seated), friction (can slip, heat is the cost), wrapping/capstan (a helix or strap self-tightens), or fluid/field (bought hardware). Second split is when it happens: operator (lever, pedal), speed (centrifugal), one-way overrun, trip-at-torque, or single-revolution. Reuleaux puts wrapping (band, wrap-spring) in the higher-pair wrapping family; Norton's machine-design chapter treats cone, plate, centrifugal, and band as the textbook set; 507 Movements names clutch-boxes at 47 (friction), 48 (jaw), 52 (stud-in-hole), 53 (reversing double-clutch + bevels), 361 (pin-on-pulley), and the only named brake at 242 (strap on a crane wheel). Howell's printable siblings are the already-shipped compliant flexure clutch (Roach 2003) and the missing FOA centrifugal (BYU CMR).
+
+Catalog already covers four clutch jobs and none of the brake jobs. Positive: dog_clutch (axial rectangular teeth, engage_frac) and hirth_coupling (face-tooth, a coupling not a clutch). Overrunning: freewheel_clutch is a roller-ramp (star pockets + cylindrical rollers; the prompt's 'missing' roller-ramp already exists), plus the ratchet shelf (ratchet_wheel_pawl, pip_ratchet_hub, spring_cartridge_ratchet, arc_ratchet, ratchet_ring). Slip: torque_limiter (spring-detent face bumps) and compliant_clutch (flexure arms vs sawtooth race; lock_face_frac flips one-way vs limiter). Actuation cousins, not clutches: toggle_clamp (over-center knee), eccentric_cam_clamp, detent_pair, flywheel, coil_spring / belleville_washer / wave_spring (the last two already mention clutch-pack take-up), frustum (the cone solid, not a clutch), idler_pulley + eccentric_idler_mount (a belt clutch is just an idler that tensions). Grep of mechlib/ finds no sprag, wrap_spring, cone_clutch, centrifugal, multiplate, band_brake, caliper, parking_pawl, or any brake_* API. The clutches gallery shelf blurb is 'Torque limiting and freewheeling'; there is no brakes shelf.
+
+FDM reality. Cone is two frustums with engage_frac; PLA-on-PLA friction is enough for teaching and light torque, and it is the printable synchro. Wrap-spring is two hubs plus a close-fit helix (printed TPU/PETG coil, or a bought clock spring); torque follows the capstan equation and coil_spring already exists as the spring blank. Centrifugal shoes inside a drum are the go-kart/chainsaw kit; BYU's two-piece FOA prints without coil springs. Band brake is a drum plus a wrapping strap plus a lever (507 #242); first brake primitive, and the wrapping pair mechlib never named. Parking pawl is a both-ways lock into a park gear, not a ratchet. Sprag is figure-8 cams between two smooth races: distinct from roller-ramp (sprags stay in contact both ways; rollers leave the pocket) and printable as a demo, ugly in wear. Expanding-shoe / drum shares shoes with centrifugal and is the internal-expanding brake. Single-revolution wrap-spring (Creed / Pitney Bowes / Teletype) is wrap-spring plus a trip cam. Spiral-jaw is the self-engaging dog tooth. Ball-ramp turns relative rotation into axial clamp (lockers, some limiters), not the same as freewheel_clutch's roller-ramp. Multiplate, single-disc, and disc/caliper are real machines but the working surface is a bought pad or a product housing; emit a pack or a floating-caliper kit only after the cone and band exist. Magnetic, particle, hysteresis, eddy, electromagnetic coils, fluid couplings, and torque converters are not printable working surfaces. Needle-roller HF cups are bought bearings. Automotive synchromesh, slipper clutches, and DCT packs are products built from the primitives above.
+
+**New categories**
+- **brakes** — A brake grounds a shaft; a clutch joins two shafts. Winch hold, hoist, park, and Prony are a different agent job from dog/freewheel/limiter. Catalog has a clutches shelf and no brakes shelf. Band, expanding-shoe, and parking-pawl would live here; the missing-categories slice can rank the shelf.
+
+**Candidates**
+- **cone_clutch** [high] fit=yes — Wedge-amplified friction clutch: male and female cones, axial engage. Textbook sibling of the plate clutch (Norton) and the printable synchro. Higher torque than a same-diameter disc. frustum is the solid, not the clutch. Not a dog (positive) and not a plate pack.
+- **wrap_spring_clutch** [high] fit=yes — Helix wrapped on two coaxial hubs. Drive that tightens the spring locks (capstan, torque ~ e^{mu*theta}); the other sense unwraps and slips. Creed single-turn, Pitney Bowes, Thomson CB, printing-press start-stop. Distinct from coil_spring and from every ratchet. Same wrapping pair as a band, on a helix.
+- **centrifugal_clutch** [high] fit=yes — Speed-actuated expanding shoes inside a drum. Chainsaws, go-karts, mopeds, lawn equipment: idle is free, a trip rpm couples the drum. Drum brake in reverse. No current API engages by speed. Not a dog and not a roller freewheel.
+- **band_brake** [high] fit=yes — Flexible band tightens on a drum. Winches, cranes, chainsaws, epicyclic hold, bicycle band brakes, Prony. Effectiveness e^{mu*theta}. Catalog has zero brakes. The wrapping higher pair mechlib never named. Distinct from a shoe (rigid arc) and from wrap-spring (helix on a hub, clutch not brake).
+- **parking_pawl** [high] fit=yes — Positive lock of a shaft to ground. Transmission park, hoist pawl, over-center park brake. A ratchet drives one way and clicks the other; a park pawl holds both directions and is not in the drive path when lifted. ratchet_wheel_pawl is the winch drive, not the park.
+- **sprag_clutch** [med] fit=yes — Overrunning clutch whose elements are asymmetric cams that stay in contact with both races and wedge by tilting. Helicopter autorotation, starter overrun, conveyor backstop, auto 1-2. Distinct from freewheel_clutch: rollers leave a ramped pocket; sprags never leave the races. The prompt listed this as missing; it is.
+- **expanding_shoe_brake** [med] fit=yes — Internal-expanding drum brake. Automotive drum, hoist service brake, any shaft-to-ground friction that is not a band. 507 has the external strap (242) but not the internal pair. Shares shoes with centrifugal; do not emit a third shoe kit.
+- **single_revolution_clutch** [med] fit=yes — One pull, one turn, then it parks. Presses, shears, teleprinters, postage meters, typewriters. Not a generic wrap-spring (which stays locked while driven) and not a Geneva (which indexes a load from a continuously spinning crank). The trip is the primitive.
+- **spiral_jaw_clutch** [med] fit=yes — Self-engaging jaw: spiral faces pull the clutch in under torque. Square-jaw is already dog_clutch. Spiral-jaw is the other named positive clutch (machine-tool back-gear, some PTO). A jaw= argument, not a second module, but the geometry is missing.
+- **ball_ramp_clutch** [med] fit=yes — Relative rotation rides balls up ramps and generates axial force. Locking diffs, some torque limiters, clutch actuators. Not freewheel_clutch (radial wedge, one-way) and not torque_limiter (detent bumps, no balls). The prompt's roller-ramp is the radial freewheel; this is the axial cousin.
+- **compliant_centrifugal** [med] fit=yes — Howell's missing clutch sibling. compliant_clutch is an overrunning/limiter flexure, not a speed-actuated shoe. Do not add a fifth clutch module if centrifugal_clutch can emit an FOA shoe style.
+- **multiplate_pack** [low] fit=maybe — Wet multi-disc: n friction + n steel. Motorcycle, auto clutch packs, DCT. The pack is a primitive; the basket is a product. After cone_clutch exists this is a stack helper, not a new family.
+- **friction_slip_clutch** [low] fit=maybe — Continuous-slip friction limiter (not a ratchet-past-detents). Useful, but cone_clutch or a plate pair plus belleville_washer already compose it. Do not add until cone exists and someone still asks.
+- **disc_caliper** [low] fit=maybe — Shaft-to-ground friction on a disc face. Bicycle mechanical disc, park brake on a rotor. The rotor+pads are semi-primitive; the automotive caliper body is not. Rank below band and expanding-shoe.
+- **synchromesh_ring** [low] fit=maybe — Baulk-ring synchro is a cone clutch that must lock before dogs can pass. The primitive is cone_clutch. The gearbox is a product.
+- **roller_ramp_freewheel** [low] fit=no — Already freewheel_clutch: cylindrical rollers in ramped outer-ring pockets, hub, posed at the free end. The prompt listed roller-ramp as missing; it is the existing overrunning kit.
+- **magnetic_clutch** [low] fit=no — Electromagnetic, particle, hysteresis, eddy. Field devices. Same reject as magnetic_gear. A printed magnet holder is a project fixture.
+- **fluid_coupling** [low] fit=no — Impeller + turbine (+ stator = torque converter). Working fluid is the clutch. Teaching cutaways are products. The fluid-machines slice owns pumps.
+
+## couplings-cv — Shaft couplings and CV joints
+
+A shaft coupling transmits rotation across a gap that may include parallel offset, angular bend, or axial plunge. Rigid face teeth (Hirth) and lost-motion dogs sit at one end; at the other, a homokinetic (constant-velocity) joint keeps omega_out == omega_in at every phase while the shafts articulate. Reuleaux treats the Hooke/Cardan as two intersecting revolutes (a spherical 4-bar with 90-90-90 links). Norton and IFToMM split the rest by what they tolerate: parallel offset (Oldham, Schmidt), angular (Hooke, Rzeppa, Tracta, Thompson), plunge (tripod, VL ball), or small mixed misalignment via a compliant body (beam, bellows, disc/membrane). 507 Movements names two universal joints at 50-51 and a union coupling at 248. Howell's printed couplings are the helical-slit beam and a bellows or membrane. Homokinetic means the working elements stay in the plane that bisects the shaft angle; double Cardan only gets there if the two joint angles stay equal (a centering ball in trucks; a spherical pantograph in Thompson).
+
+Catalog already covers the FDM staples and one true CV kit. Parallel offset: oldham_coupling (two hubs + floating cross disc). Angular non-CV: universal_joint (Hooke, posed at bend_deg only). Quasi-CV: double_cardan_joint (two Hookes, 90-deg intermediate, equal angles by construction, no centering ball). True plunging CV: tripod_cv_joint + tripod_pose (housing_deg == phase_deg at every angle; spider centre orbits at 3-omega). Mixed small misalignment: jaw_coupling (Lovejoy spider), beam_coupling (helical slit). Rigid: hirth_coupling. Lost motion: dog_slot_coupling. Locate, not drive: kinematic_coupling (Maxwell/Kelvin, fixtures). Speed law only: cv_velocity_ratio / cv_velocity_fluctuation for hooke / tripod / double_cardan / double_cardan_intermediate. bellows_suction_cup is a gripper, not a shaft bellows. Grep finds no Rzeppa, Tracta, Thompson, Schmidt, membrane/disc coupling, grid, or chain coupling.
+
+Pose vs display (the animate gate). gallery/build_gallery.py is explicit: oldham, universal_joint, and double_cardan are display-only because their pose laws (Oldham disc 2-omega orbit, Cardan tangent that places the spider) are textbook but not in the module; cv_velocity_ratio is the SPEED relation and does not place a body. tripod_cv_joint is the exception and does animate (phase_deg, 36 frames) because tripod_pose returns housing/spider/centre. jaw, beam, hirth, and kinematic need no relative pose (rigid rotation or a static locate). The highest-leverage missing pieces are therefore hooke_pose and oldham_pose: they unlock two existing kits rather than adding solids.
+
+FDM and first-principles gaps. Schmidt (three discs, three-or-more links at 120 deg, 1963/1967) is the large-offset CV Oldham cannot do; discs print flat, pose is closed-form, offset can exceed a disc radius. Tracta (Gregoire 1926, four printed parts: two yokes + two sliding spherical swivels) is the first FWD CV and more honest in FDM than a Rzeppa. Thompson nests two Cardans and adds a spherical pantograph (pantograph already in-tree) so the intermediate does not fluctuate; double_cardan still has a swinging intermediate. Bellows coupling is the compact compliant sibling of beam_coupling. Disc/membrane is the high-stiffness servo coupling (thin printed discs + spacer). Gear coupling (crowned teeth in a sleeve) and chain coupling (two sprockets + duplex chain) are compositions once roller_sprocket and a crown exist. Rzeppa/Birfield/Weiss need six (or four) hardened balls in ground races plus a cage; tripod_cv_joint's own docstring already refuses them as honest FDM. A display Rzeppa with printed balls is a teaching cutaway, not a generator. Grid (Falk) wants a spring-steel serpentine. Magnetic and fluid couplings are hardware. VL/DO plunging ball joints are Rzeppa variants.
+
+**New categories**
+- none
+
+**Candidates**
+- **hooke_pose** [high] fit=yes — universal_joint is display-only. Gallery left it out of ANIMATE because the pose law is not in the module; cv_velocity_ratio is speed only and does not place a spider. One function unlocks the Hooke demo and is the building block for double_cardan_pose and Thompson.
+- **oldham_pose** [high] fit=yes — oldham_coupling builds a rest pose. The 2-omega disc orbit is the motion people want to see and the reason Oldham is CV for parallel shafts. Gallery named this law and refused to invent it. Same family as the Tusi couple in the straight-line slice.
+- **schmidt_coupling** [high] fit=yes — Large-offset parallel CV. Oldham's offset is capped by tongue length and puts a sliding disc in the load path. Schmidt uses only revolutes, stays CV as offset varies, and is the name Zero-Max / printing-press / encoder people search. Distinct from oldham and from a pantograph.
+- **bellows_coupling** [high] fit=yes — Compact compliant coupling: high torsional stiffness, generous angular and axial, almost no backlash. The instrument/servo alternative to a helical beam. beam_coupling is a slit cylinder; a bellows is a convolution stack. Not the gripper cup.
+- **tracta_joint** [med] fit=yes — Gregoire 1926, first production FWD CV (Tracta, DKW, Adler). Double tongue-and-groove, 90 deg out of phase, so each half's Cardan error cancels. More printable than Rzeppa and historically the missing named CV. Pose is homokinetic (bisecting plane).
+- **thompson_coupling** [med] fit=yes — True CV with no fluctuating intermediate. double_cardan_joint cancels output error but the middle shaft still swings at the full Hooke fluctuation. Thompson adds the control yoke (spherical pantograph, and pantograph already exists) so both joint angles stay equal and the intermediate does not carry that inertia. The named modern fix.
+- **disc_membrane_coupling** [med] fit=yes — Servo and encoder membrane coupling. Higher stiffness and better concentricity than a beam slit. Not a bellows (convolutions) and not a jaw (elastomer). Standard when someone asks for a 'disc coupling' or 'flexible disc'.
+- **double_cardan_pose** [med] fit=yes — double_cardan_joint is a rest pose. Animating it needs hooke_pose applied twice. The missing hardware is the centering ball the docstring already admits is 'not modelled here'.
+- **gear_coupling** [med] fit=yes — Crowned-tooth gear coupling: the industrial high-torque misalignment kit (Falk, flanged). Not a spur pair and not a jaw. Crown is the primitive; without it a straight tooth binds at any angle.
+- **chain_coupling** [low] fit=maybe — Two sprockets facing, a duplex roller chain as the flex element. Cheap, serviceable, dirty. Not a new tooth. Wait for a chain-strand poser.
+- **grid_coupling** [low] fit=maybe — Falk grid: a snake-spring in axial slots. Damping + misalignment. The working part is bought spring stock. Low priority versus bellows and disc.
+- **rzeppa_display** [low] fit=maybe — The outboard FWD joint. Six balls, meridional races, cage in the homokinetic plane. tripod_cv_joint's docstring already refuses it as honest FDM. Birfield and Weiss are the same reject with different track counts.
+- **oldham_kit** [low] fit=no — Already shipped. The gap is oldham_pose.
+- **hooke_kit** [low] fit=no — Already shipped as universal_joint. 507 #50-51. The gap is the Cardan tangent pose.
+- **tripod_again** [low] fit=no — The one coupling that already has an in-module pose law and a working ANIMATE entry.
+- **magnetic_coupling** [low] fit=no — Through-wall magnet drive. Same reject as magnetic_gear / magnetic_clutch. Hardware.
+
+## screws-linear-actuators — Screws, jacks, and linear actuators
+
+Linear actuation is rotary-to-line, force-to-line, or stored-energy-to-line. Reuleaux's helical pair H is the screw; the inclined plane / wedge is the parent simple machine (a screw is a wrapped wedge). Norton and Slocum split mechanical actuators by conversion: screw (lead, jack, ball, roller), wheel-and-axle (rack, winch, belt, chain, rigid chain), and cam/wedge (limited travel). Fluid cylinders and moving-coil (voice-coil) sit beside them as force sources, not converters. 507 names a ratchet lifting-jack (389), hydrostatic jack (467), differential screw (266), Archimedes (443), and the toggle (140). Howell's linear piece is the compound parallelogram flexure stage, already in-tree; tape-spring / Negator constant-force is the other Howell-adjacent linear source and is named again on the flexure and clockwork slices.
+
+Catalog already covers the printable screw family and the main linkage converters. Screws: lead_screw (trapezoidal Tr/ACME, multi-start, nut+optional flange), differential_screw (same-hand two-pitch, travel = p1-p2), screw_jack (rod+base nut+pad, lift_frac pose), scroll_drive (Archimedean chuck rib, three jaws). Helical conveyor, not an actuator: archimedes_screw. Rotary-to-reciprocating: swash_plate, scotch_yoke, slider_crank, rack_pinion / rack_2d, worm (rotary only). Guides, not actuators: linear_way, telescoping_stage. Compliant line: flexure_stage (compound parallelogram, strain-gated). Linkage expanders: lazy_tongs (Nuremberg scissors), sarrus_linkage, toggle_clamp (over-center clamp, not a jack). Grep finds no ball_screw, roller_screw, wedge actuator, hydraulic/pneumatic cylinder kit, voice_coil, Negator / constant-force tape, cable cylinder, scissor_jack, or rigid_chain.
+
+FDM reality. The missing simple machine is the wedge: a sliding incline under a load, or two opposing wedges. It is the parent of every power screw and of the machine-tool gib already hiding inside linear_way. Scissor jack is a lead screw across an X-frame, not lazy_tongs (which is a pin-driven rhomb chain). A hydraulic/pneumatic cylinder is tube+piston+rod+gland+ports: the envelope is a semi-primitive even though the fluid is not; same contract as external_gear_pump. Negator / tape-measure constant-force is a prestressed strip on a drum (Hunter NEG'ATOR); print the drums and take bought steel tape, or demo in TPU. Cable cylinder (Tolomatic) is a piston in a tube with cables out both glands, stroke almost the tube length, no rod buckle. Voice-coil is a printed coil-former + magnet pocket + plunger: a stand-in, not a motor. Ball screw is recirculating balls in a gothic race: printed_ball_bearing already exists, so a printed nut + bought balls is a teaching analog, not a service screw. Planetary roller screw (threaded rollers orbiting a multi-start screw) is ground metal; do not claim FDM conjugacy. Buttress is a profile argument on lead_screw. Rigid-chain / helical-band / segmented-spindle telescoping columns are real but sit near products. Linear motors, piezo stacks, and wax motors are hardware.
+
+**New categories**
+- **constant_force** — Negator tape, constant-force flexures, and gravity arms are a machinery class of their own: they source a flat force/torque, they are not a screw. The flexure and clockwork slices will name the compliant and horological members; this slice owns the tape-on-drum actuator. missing-categories can rank the shelf.
+
+**Candidates**
+- **wedge** [high] fit=yes — The missing simple machine. Doorstops, machine-tool tapers, splitting, die-set actuation, every power screw is a wrapped wedge. linear_way's gib is a locked taper, not a running actuator. Distinct from plate_cam (rotary law) and from lead_screw (helix).
+- **scissor_jack** [high] fit=yes — Car jack / table lift: a screw shortens the diagonal of an X and the pad rises. lazy_tongs is a pin-driven rhomb chain (usecase even says 'scissor lifts' but there is no screw). screw_jack is a single vertical screw. This is the named product-shaped request that is still a semi-primitive (one cell, not a vehicle lift).
+- **hydraulic_cylinder** [high] fit=yes — The default linear force source in machines. Presses, loaders, workholding, any time the prime mover is already fluid. Envelope is a semi-primitive (tube+piston+rod) the way external_gear_pump is a rotor pair. A bottle jack with a lever pump is a product.
+- **negator_spring** [high] fit=yes — Prestressed flat strip that coils at nearly constant radius, so extension force is flat. Tape measures, counterbalances, cable retractors, some printer-bed assists. Not a coil_spring (force rises with x) and not a clock mainspring (torque on a barrel). The linear actuator form of constant-force. Compliant constant-force flexures belong on the flexure slice.
+- **cable_cylinder** [med] fit=yes — Tolomatic-style: cables leave both ends of a sealed piston so the load is pulled from either side. Also the belt-driven linear stage (wheel-and-axle family). Distinct from a rod cylinder (buckling, dead length) and from a winch (the pulleys slice). Long-travel electric/air linear without a screw.
+- **buttress_lead** [med] fit=yes — One-way power-screw profile. lead_screw hard-codes 30 deg trapezoid. Buttress and square are the other two textbook forms (Norton). A form= argument, not a second module.
+- **ball_spline** [med] fit=yes — Prismatic pair that also carries torque (the sliding_spline named in kinematic-pairs, with rolling elements). PTO shafts, robotic axes, any spline that must run. Distinct from lead_screw (helix) and from linear_way (no torque).
+- **worm_rack** [med] fit=yes — Worm driving a rack: compact, self-locking linear from a rotary input at 90 deg. Not rack_pinion (spur) and not lead_screw (coaxial). Common on slides, gates, and camera heads. A posed pair, not a new tooth.
+- **ball_screw** [low] fit=maybe — The high-efficiency power screw. Ground metal in service. A printed analog is honest only if labelled teaching. Do not claim C0/C5 preload.
+- **voice_coil** [low] fit=maybe — Moving-coil linear: force, position, speed controllable. Hard-disk and loudspeaker class. The printed part is a fixture. Same reject-or-cage pattern as magnetic_gear.
+- **rigid_chain** [low] fit=maybe — Helical-band / rigid-chain / segmented-spindle: stroke many times the retracted length. Real telescoping class. One locking link is a semi-primitive; a stage lift is not.
+- **roller_screw** [low] fit=no — Planetary (or inverted) roller screw: many line contacts, huge load, tiny lead. Tolomatic / SKF class. Not printable as a working pair. After lead_screw and a teaching ball_screw, this is hardware.
+- **lead_screw_again** [low] fit=no — Already the printable power screw. Missing is form= (buttress/square), not a second kit.
+- **scotch_yoke_again** [low] fit=no — Prompt listed it as have. Linkage converter, not a screw.
+- **rack_again** [low] fit=no — Prompt listed it as have. worm_rack is the missing posed pair.
+
+## flexure-compliant — Compliant mechanisms and flexure joints
+
+A compliant mechanism gets its mobility from elastic deflection, not from kinematic pairs. Howell's textbook split is (1) small-length flexural pivots (notch, leaf, living hinge, cross-axis, cartwheel, split-tube) that stand in for a revolute, (2) long flexible members that are the links (compliant four-bars, Young mechanisms), (3) lamina-emergent mechanisms (LEMs) that start as a sheet and fold out of plane, and (4) special-purpose cells: bistable, constant-force, contact-aided, remote-center. IFToMM has a compliant-mechanisms committee on the same map. Reuleaux and 507 Movements barely touch this class (they assume rigid bodies + pairs). FDM is the native process: print flat, bend in the layer plane, keep blades >= 0.8 mm, strain-gate like flexure_stage already does.
+
+Catalog already covers a useful but incomplete shelf. Pivots: cross_flexure (3D two-blade cross-axis, the watch-balance pivot). Linear: flexure_stage (compound parallelogram, parasitic-arc cancelled, strain-gated; compound=False is the single parallelogram). Bistable: bistable_beam (cosine buckled beams + shuttle). Springs (energy, not joints): coil_spring, leaf_spring, wave_spring, belleville_washer, spiral_power_spring, torsion_spring_mesh. Sheet tricks: kerf_bend_cutter (lattice/diagonal/spiral slits), auxetic_panel. Drive: compliant_clutch (flexure pawls). beam_coupling is a helical-slit shaft couple, not a hinge. knuckle_hinge is a print-in-place pin hinge; its usecase text says 'living hinges' but the solid is barrels on a pin. Grep finds no notch_hinge, cartwheel, living_hinge API, LET / lamina_emergent, tape_spring, split_tube, remote_center / RCC / ORBITAL, or contact-aided cell.
+
+FDM and first-principles gaps. The missing primitive under every other pivot is the notch hinge (circular or elliptical neck): one parameter, a documented rotational stiffness, the MEMS and instrument default. Cartwheel is the planar sibling of cross_flexure: four (or more) blades from a hub in one plane, larger angle, prints flat. living_hinge(length, t, width) is the named polypropylene-style leaf; kerf_bend_cutter is a slit lattice, not that API. LET (lamina-emergent torsion, Jacobsen/Howell) is a sheet joint: torsion bars in the plane that let the sheet fold out of plane. Tape-spring (carpenter-tape / Pellegrino) is a curved-section leaf that locks when straight and folds with a snap. Split-tube (Jensen) is a cylinder slit so the remaining ligament is the hinge. Remote-center / RCC (and the ORBITAL-class large-displacement remote-center joints) put the instant center off the body, which is the peg-in-hole / alignment job. Constant-force compliant cells (slider-crank or contact-aided rolling beam) are the flexure answer to the Negator tape named on the screws slice. Contact-aided (CAM / CRBM) uses self-contact to shape a path or flatten a force curve. CORE / rolling-contact flexures are a maybe. Do not re-file knuckle_hinge as a living hinge, and do not add a second flexure_stage.
+
+**New categories**
+- none
+
+**Candidates**
+- **notch_hinge** [high] fit=yes — Small-length flexural pivot: all rotation lives in a short neck. Every cartwheel, remote-center, and compliant 4-bar is built from these. cross_flexure is a two-blade 3D crossing, not a notch. Missing the atomic hinge.
+- **cartwheel_hinge** [high] fit=yes — Planar cross-axis: four (or more) blades in one plane. Precision rotation, MEMS, optical mounts. Distinct from cross_flexure (two blades crossing in 3D between two blocks) and from a notch (one neck).
+- **living_hinge** [high] fit=yes — The named polypropylene hinge. Boxes, lids, origami folds. kerf_bend_cutter is a slit lattice across a panel; knuckle_hinge is a PIP pin whose usecase text wrongly says 'living'. Agents searching living_hinge currently miss.
+- **let_joint** [high] fit=yes — Lamina-emergent torsion, Jacobsen/Howell. The LEM primitive: a flat sheet that becomes a hinge. Pop-up machines, origami-inspired deployables, single-sheet chairs. Missing the whole LEM class.
+- **tape_spring_hinge** [med] fit=yes — Pellegrino / deployable: curved cross-section is stiff when straight and folds with a snap. Satellite panels, self-deploying booms, tape measures. Not a flat leaf_spring and not a Negator (which is prestressed to coil, not to stay straight).
+- **split_tube_flexure** [med] fit=yes — A tube slit along its length so it bends about the remaining wall. Compact revolute stand-in, different construction from blades or notches. Used as instrument pivots and in some surgical tools.
+- **remote_center** [med] fit=yes — Remote center of compliance: the rotation center is outside the part. Peg-in-hole, alignment wrists, door hinges that swing about a hidden axis. flexure_stage is a straight line through the body; cross_flexure rotates about the blade crossing. Neither puts the center off-board.
+- **constant_force_compliant** [med] fit=yes — Howell's constant-force mechanisms: a flexure whose restoring force is flat. Electrical contacts, exercise equipment, statically balanced arms. bistable_beam is two wells, not a plateau. The flexure answer to the Negator.
+- **contact_aided** [med] fit=yes — Contact-aided compliant mechanisms (CAM / CRBM): self-contact is a feature, not a collision. Used to get a prescribed path or a constant-force plateau that a free beam cannot. The collision_gate would have to ALLOW_CONTACT by design, same as a clutch.
+- **core_rolling** [low] fit=maybe — Compliant rolling-contact element. Large-angle revolute stand-in. After cartwheel and tape-spring, a research extra.
+- **cross_flexure_again** [low] fit=no — Already the 3D cross-axis pivot. Cartwheel is the planar sibling, not a second cross.
+- **flexure_stage_again** [low] fit=no — Already the compliant straight line. remote_center is the missing off-board center, not a second stage.
+- **kerf_as_living** [low] fit=no — A slit pattern across a plate. Useful, not a living_hinge primitive. Keep both.
+- **knuckle_as_living** [low] fit=no — Barrels on a printed pin. The usecase string saying 'living hinges' is the bug, not a missing solid.
+
+## clockwork-escapements — Clockwork, escapements, and energy storage
+
+A clock is a feedback oscillator: a harmonic resonator (pendulum or balance+hairspring) plus an escapement that both locks the train and impulses the resonator. Wikipedia/Airy classify escapements by how much of the cycle they disturb the oscillator: frictional (verge, recoil anchor), frictional-rest (deadbeat, cylinder, duplex), detached (lever, detent/chronometer, gravity). Constant-force devices sit upstream of the escapement so the impulse does not follow Hooke's-law rundown: fusee, going barrel (flat enough), remontoire, stackfreed, gravity arms. 507 Movements is thick here: escapements at 234, 238, 288-314, 36-38, 396, 402; fusees 46 and 358; maintaining power 320-321; winding stops 212-215.
+
+Catalog already covers the pendulum pair and the two constant-torque blanks. escapement(style='anchor'|'deadbeat') plus escapement_pose is Hooke's recoil anchor and Graham's 1715 deadbeat, posed through one tick-tock. The prompt's 'deadbeat vs recoil' is therefore not a gap: both styles ship. grooved_drum(radius_law='fusee') is 507 #46. spiral_power_spring is a mainspring in a smooth barrel with T-slot arbor (no barrel teeth, no click). Ratchets, geneva_pair, star_wheel, intermittent_gear_pair, detent_pair, and flywheel sit next door. detent_pair is an index click, not a chronometer detent. Grep finds no verge, lever, pin-pallet, gravity, cylinder, coaxial, going_barrel teeth, remontoire, maintaining_power, stackfreed, geneva_stop, count_wheel, or balance+hairspring kit.
+
+FDM reality. Recoil and deadbeat print as two plates and already animate. The missing watch primitive is the detached lever (Mudge 1750 / Swiss): escape wheel + lever with fork + impulse pin on a roller. That is what printed clocks that are not pendulums actually use. Verge + crown wheel is the first mechanical escapement and a teaching kit (crown teeth axial, two flags on a staff). Gravity (Denison/Grimthorpe, Big Ben) is two falling arms that give a constant impulse; large, printable, and the prompt named it. Chronometer detent is a spring latch that fires once per cycle; the spring is TPU or bought, the wheel and roller print; do not confuse with detent_pair. Pin-pallet (Roskopf) is the FDM-cheap lever (pins instead of jeweled pallets). Going barrel is spiral_power_spring plus external teeth and a click: the modern spring motor, no fusee. Remontoire is a small secondary spring or weight rewound on a schedule so the escape sees constant torque. Maintaining power (507 320-321) keeps the train alive while winding. Stackfreed is a cam+spring, the German pre-fusee constant-torque. Geneva / Maltese stop-work (507 212-215) limits barrel turns. Cylinder and coaxial are real but cylinder wears and coaxial is a product. Striking trains and tourbillons are products. A count wheel is a mutilated locking plate, close to intermittent_gear_pair.
+
+**New categories**
+- **clockwork** — Escapements, going barrels, remontoires, and stop-work are a machinery class. Indexing (geneva, star wheel) is intermittent motion from a continuous crank; clockwork is a feedback oscillator. The gallery currently files escapement under indexing. missing-categories can rank the shelf.
+
+**Candidates**
+- **lever_escapement** [high] fit=yes — Mudge 1750 / Swiss lever. The watch escapement since the 19th century. escapement() is a pendulum anchor (recoil or deadbeat), always in contact. A lever is detached and talks to a balance, not a pendulum crutch. Different solids, different pose.
+- **verge_escapement** [high] fit=yes — Crown wheel + verge + two pallets. 400 years of clocks before the anchor. 507 is full of them. Not an anchor (radial teeth, planar pallets) and not a lever. The missing historical primitive.
+- **gravity_escapement** [high] fit=yes — Denison/Grimthorpe (Big Ben): impulse comes from a falling gravity arm, not from the train, so the pendulum sees constant force. The prompt listed gravity. Distinct from deadbeat (train still pushes the pallet) and from a remontoire (which is upstream).
+- **going_barrel** [high] fit=yes — Mainspring barrel that drives through teeth on the barrel, not the arbor. spiral_power_spring's barrel is a smooth pot. Adding a gear and a click is the missing going-barrel kit. Fusee is the older constant-torque cousin and already has a drum.
+- **detent_escapement** [med] fit=yes — Arnold/Earnshaw marine chronometer. Detached, one impulse per period, no oil on the impulse. detent_pair is a rotary index click, not this. Do not overload that name.
+- **geneva_stop** [med] fit=yes — Limits how far a barrel can wind (typically 4-5 turns). geneva_pair is an indexer (continuous crank, stepped output). Stop-work is a 1-finger Geneva that parks. The missing clock-train safety.
+- **remontoire** [med] fit=yes — Secondary spring or weight rewound at short intervals so the escape sees constant torque. Bürgi, Harrison, tower clocks. The constant-force mechanism the prompt named. Fusee equalizes a rundown; remontoire resets.
+- **stackfreed** [med] fit=yes — Cam+spring that loads the barrel more when the mainspring is full. The other historical constant-torque, next to fusee. plate_cam plus a leaf is the composition; a named kit stops people inventing it.
+- **pin_pallet** [med] fit=yes — Cheap-watch lever. Pins print as cylinders. A pallet= argument on lever_escapement, not a fifth escapement module.
+- **maintaining_power** [low] fit=maybe — Keeps the clock going while you wind. Real, but it is a ratchet arrangement on going_barrel, not a new family. Ship going_barrel first.
+- **cylinder_escapement** [low] fit=maybe — Graham 1726 frictional-rest, slim watches. Teaching only after lever and verge exist.
+- **coaxial_escapement** [low] fit=maybe — Daniels: lever lock + detent-style radial impulse. After lever and detent exist, a research extra, not a primitive.
+- **deadbeat_again** [low] fit=no — Already shipped. Prompt listed deadbeat vs recoil; both styles are arguments on escapement().
+- **recoil_again** [low] fit=no — Already shipped as the default anchor.
+- **fusee_again** [low] fit=no — The drum exists. A fusee+chain+barrel assembly is a product built from this drum plus spiral_power_spring.
+
+## pulleys-cables-tackle — Pulleys, cables, tackle, and textile hardware
+
+Wrapping pairs (Reuleaux higher pair: a flexible member on a sheave or drum) split by what they wrap and what they do. Belts (toothed or V) transmit rotary power between fixed centres. Cables and ropes lift, haul, or hold: a sheave redirects, a drum stores, a tackle multiplies, a cleat or clutch locks. 507 is almost a pulley textbook: 1-23 simple and compound tackles, 58-62 differentials, 224 expanding pulley, 243 friction, 255-259 more tackles, Chinese windlass 129 and 352, capstans 412 and 491. Weston (1850s) is the Chinese windlass with an endless chain. Howell barely touches this class (a tape-spring is not a sheave).
+
+Catalog already covers belts and one cable drum. timing_pulley (GT2-style), v_belt_pulley (3L etc.), idler_pulley (crowned), eccentric_idler_mount, belt_tensioner. grooved_drum is the winch/fusee/cone cable drum (winch_drum_demo and fusee_demo share the API). drag_chain is a cable carrier, not a tackle. ratchet_wheel_pawl's usecase mentions winches. Grep finds no sheave, block, tackle, Weston, capstan, windlass, cleat, fairlead, rope clutch, or variable-pitch CVT pulley. The wrapping primitive for rope (a sheave) is missing; everything rope-side is currently a timing belt or a drum.
+
+FDM reality. A sheave is a grooved wheel with a cheek; a turning block is that sheave in a strap with a becket. Block-and-tackle is n sheaves posed on two frames, MA = n or 2n depending on which end is fixed. Weston differential is two different-diameter chain wheels on one shaft plus an endless chain and a moving hook sheave; self-locking, the garage engine hoist. Chinese windlass is the same law on two drum diameters (507 #129). Cam cleat is two sprung cams that bite a rope one way (sailing, the printable lock). Clam cleat is a V with teeth, no moving parts. Fairlead / bullseye is a ring that only redirects. Capstan is a vertical warping drum (507 #412), distinct from a grooved winch drum. Belt CVT is two facing cones whose axial gap sets the pitch radius (Variomatic, scooter, 507 #224 expanding). Self-tailing winch and rope clutch are real but close to products: emit a stripper-jaw cell or a cam-in-slot, not a Harken assembly. Spanish windlass is a bar twisting a loop (no sheave). Cable carrier is already drag_chain.
+
+**New categories**
+- none
+
+**Candidates**
+- **sheave** [high] fit=yes — The wrapping primitive for rope and wire. Every block, tackle, and fairlead starts here. idler_pulley is a crowned belt idler; timing_pulley has teeth; grooved_drum stores many turns. A sheave redirects one part of line.
+- **block_and_tackle** [high] fit=yes — The simple machine after the wedge and the screw. Mechanical advantage from wrapping. No current API poses more than one cable turn on a drum. The agent job when someone says 'pulley system' or 'purchase'.
+- **weston_differential** [high] fit=yes — Weston 1850s chain fall. Evolved from the Chinese windlass by making the rope endless. Distinct from block-and-tackle (equal sheaves, not self-locking) and from grooved_drum (one diameter).
+- **chinese_windlass** [high] fit=yes — Differential windlass. Lift per turn is pi*(D-d). The prompt's Spanish windlass is a different machine (a twisting bar); this is the one 507 actually names. grooved_drum is a single radius_law, not two drums.
+- **cam_cleat** [high] fit=yes — The printable rope lock. No current cleat. Distinct from a ratchet (toothed wheel) and from a rope clutch (cam in a closed slot). First textile-hardware primitive.
+- **belt_cvt_pulley** [high] fit=yes — Variable-pitch V-pulley. v_belt_pulley is a fixed groove. Traction/CVT was named on the missing-categories prompt. The pulley half of a belt CVT is a semi-primitive; the whole scooter transmission is not.
+- **capstan** [med] fit=yes — Warping head: rope is not stored, it slips with a tail. Distinct from grooved_drum (helical storage). Ship, theatre, dock. The wrapping pair whose torque is e^{mu*theta}.
+- **clam_cleat** [med] fit=yes — Zero-moving-part rope lock. Simpler than cam_cleat, lower holding. Both belong; cam is the sprung pair, clam is the toothed V.
+- **fairlead** [med] fit=yes — Redirects a line without a rolling sheave. Bullseye, padeye, turning point on a deck. Too thin to skip once sheave exists; agents ask for it by name.
+- **rope_clutch** [med] fit=yes — Holds a loaded line that must stay aligned (halyard). Cam cleat is open; a clutch is a closed channel. Rank after cam_cleat.
+- **spanish_windlass** [low] fit=maybe — Twisting a bar in a bight to shorten a lashing. Field improvisation, not a machine part. The prompt listed it; the 507 windlass is the Chinese differential, not this.
+- **self_tailing_winch** [low] fit=maybe — Sailing winch that tails itself. The reusable parts are already a drum and a ratchet. A stripper-jaw cell is a maybe after those exist.
+- **timing_again** [low] fit=no — GT2-style already ships.
+- **v_belt_again** [low] fit=no — The missing V-belt piece is the variable-pitch CVT, not a second fixed sheave.
+- **drag_chain_again** [low] fit=no — Prompt said cable carrier is already drag_chain. Correct.
+
+## fluid-pumps-valves — Pumps, valves, and fluid machines
+
+Fluid machines split first by how they move volume: positive-displacement (trap a chamber and force it out) vs dynamic (impart momentum). PD then splits rotary (gear, gerotor, vane, lobe, screw, progressive-cavity, peristaltic) vs reciprocating (piston, plunger, diaphragm, bellows). Dynamic is centrifugal (radial / mixed / axial impeller), regenerative, and jet/ejector. Valves split by what they do: stop (gate, ball, butterfly, plug), throttle (needle, globe), check (ball, swing, Tesla), relieve (spring poppet), and route (rotary plug, linear spool, shuttle, manifold). 507 is rich on this shelf: lift/force pumps 448-453, rotary 455-456, diaphragm 454, chain 462, Archimedes 443, four-way cock 395, ejectors 475-476. Reuleaux barely applies (fluid is not a pair). Howell shows up as a printed diaphragm or a Tesla channel, not as a rotor.
+
+Catalog already covers the FDM-honest PD staples and one plug valve. Rotary PD: gerotor_pump (trochoid, posed, measured displacement), external_gear_pump (two involutes in a figure-eight, posed). Peristaltic: peristaltic_pump_head (rollers pinch a bought tube). Reciprocating converter, not a pump: swash_plate (tilted disc + shoes, stroke = 2*pitch*tan(tilt); no barrels, no ports, no valves). Valves: rotary_spool_valve (cross-drilled plug, derived routing table), check_valve (bought ball + spring on a 45 deg seat). Fitting: hose_barb. iris_diaphragm is a light/air iris, not a pump diaphragm. archimedes_screw is a conveyor helix, not a twin-screw or Moineau. Grep finds no vane, lobe/Roots, progressive-cavity, centrifugal impeller, needle, quarter-turn ball, gate, butterfly, relief, shuttle, Tesla, or axial-piston housing.
+
+FDM reality. Printed rotors leak at the faces; the existing gerotor/gear docs already say that. Geometry kits are still the right primitive. Sliding-vane (eccentric rotor, vanes in slots) prints as a teaching oil pump. Lobe / Roots is two non-contacting rotors plus timing gears (reuse spur_gear_mesh). Progressive cavity is a single-helix rotor in a TPU double-helix stator (Moineau) and is the printable screw-pump. Centrifugal impeller (radial blades on a backplate) is the missing dynamic primitive; a volute is an optional shell. Needle valve is a taper on a lead_screw in a seat. Butterfly is a disc on a shaft in a bore. Tesla valve is a no-moving-parts check, extremely FDM-native. Pressure-relief is check_valve with a calibrated spring and a setpoint. Shuttle is a free piston that routes the higher of two supplies (pneumatic logic). Axial-piston pump is swash_plate plus barrels and a port plate, not a second swash. Diaphragm pump is a printed (or TPU) disc plus two check_valves. Linear 5/2 spool is the sliding cousin of rotary_spool_valve. Twin-screw metal pumps, pulsatile VADs, and manifold blocks as products stay out.
+
+**New categories**
+- none
+
+**Candidates**
+- **vane_pump** [high] fit=yes — Sliding-vane rotary PD. Hydraulic power steering, vacuum pumps, A/C compressors. Distinct from gerotor (trochoid mesh) and from external gears. The missing rotary-PD sibling.
+- **lobe_pump** [high] fit=yes — Rotary lobe / Roots. Non-contacting, can pass solids, needs timing gears. external_gear_pump meshes; this does not. The other two-rotor PD.
+- **centrifugal_impeller** [high] fit=yes — The other half of 'pump'. Every PD kit in-tree is a trap-and-push. Agents asking for a fan, coolant pump, or blower need an impeller, not another gerotor.
+- **tesla_valve** [high] fit=yes — Valvular conduit, Tesla 1920. A check with zero moving parts. check_valve is a bought ball on a seat. Distinct, and the prompt named it.
+- **needle_valve** [high] fit=yes — The metering valve. Carb jets, instrument flow, any time you want a continuous Cv, not a detent route. rotary_spool_valve is on/off routing.
+- **butterfly_valve** [high] fit=yes — The compact quarter-turn shutoff/throttle for air and water. Not a plug (spool) and not a ball. HVAC, intakes, printed ducts.
+- **progressive_cavity** [med] fit=yes — Progressing cavity / Moineau. Viscous, solids-laden, metering. Twin-screw metal pumps are the rejected cousin. This is the one that prints.
+- **axial_piston_pump** [med] fit=yes — swash_plate is a converter (usecase already says 'axial piston pumps') but it has no barrels or ports. The pump is the missing housing. Do not add a second swash.
+- **diaphragm_pump** [med] fit=yes — Reciprocating PD with a flexure wall, no sliding seal. Dosing, chemicals, air pumps. iris_diaphragm is an aperture, not this.
+- **ball_valve** [med] fit=yes — The named quarter-turn shutoff. rotary_spool_valve is a plug with radial passages; a ball is a sphere. check_valve's ball is a free check, not a quarter-turn.
+- **pressure_relief** [med] fit=yes — Safety / bypass. Every hydraulic circuit needs one. A parameterised check, but the name and the setpoint metadata are the job.
+- **shuttle_valve** [med] fit=yes — Pneumatic logic. Distinct from a check (one inlet) and from a spool (operator-driven). The prompt named it.
+- **gate_valve** [low] fit=maybe — On/off, low loss. After butterfly and ball, a third shutoff. Lower leverage.
+- **linear_spool_5_2** [low] fit=maybe — The ISO pneumatic valve. rotary_spool_valve already routes; this is the sliding cousin. After the rotary exists, a pose=stroke argument may be enough.
+- **manifold_block** [low] fit=maybe — A plumbing product. Ports and passages are composition of barb + bores. Skip until someone is inventing manifolds from boxc.
+- **gerotor_again** [low] fit=no — Already the internal-gear PD.
+- **external_gear_again** [low] fit=no — Already the meshing two-rotor PD.
+- **peristaltic_again** [low] fit=no — Already the tube-pinch PD.
+
+## grippers-chucks-workholding — Grippers, chucks, latches, and workholding
+
+Holding splits by what is being held and how the force is made. Chucks centre a round part on an axis (scroll, collet, 4-jaw). Workholding clamps a part to a table (toggle, cam, vise, strap/toe). Robot grippers pick a free part (parallel jaw, angular, 3-finger, vacuum, magnetic). Latches hold two panels shut (draw, hood/over-center, slam/pawl, snap). 507 names bench clamps 174/180/381, screw clamp 190, toggle 140. Norton treats vises and chucks as screw-and-wedge. Howell's holding is a compliant tweezer or a living-hinge clip, not a Schunk jaw.
+
+Catalog already covers the clamp/chuck/locate staples and one vacuum cup. Over-center: toggle_clamp (knee linkage, posed), eccentric_cam_clamp (eccentric disc + follower, posed). On-axis chuck: collet_chuck (split taper + nut), scroll_drive (Archimedean rib + three jaws, the self-centering 3-jaw mechanism). Vacuum: bellows_suction_cup. Aperture: iris_diaphragm. Locate: kinematic_coupling, repeatable_dock (usecase already says tool changers), three_point_leveller. Lid snaps: snap_catch / snap_finger. lead_screw's usecase names vices. Grep finds no parallel-jaw gripper, angular gripper, draw latch, hood latch, machine vise, soft-jaw insert, pawl/slam latch, flat vacuum cup, or strap/toe clamp. The grippers shelf blurb is 'Parts that hold, centre, and grip' but the robot 2-finger primitive is missing.
+
+FDM reality. Parallel-jaw gripper is two slides (or a parallelogram) driven by a rack-and-pinion or a leadscrew; the default robot EOAT and the highest-leverage missing kit. Angular gripper is two jaws on pivots (simpler, cheaper, not parallel). 3-finger centric is scroll_drive plus finger bodies, not a new scroll. Draw latch is an over-center hasp that pulls two panels together (chest, case, flight case). Hood latch is a striker hook that goes over-center (car hood, toggle_clamp kinematics on a hook, not a press toe). Machine vise is lead_screw + two jaws + a way; the product handle stays out. Soft jaw is a consumable insert with a part-shaped pocket, the thing people reprint. Pawl / slam latch is a sprung catch that a striker lifts and drops behind. Flat vacuum cup is the non-bellows sibling. Strap/toe clamp is a slotted bar + stud, the mill table default. Magnetic chucks and Bernoulli pads are hardware. A finished Schunk or a Kurt vise is a product.
+
+**New categories**
+- none
+
+**Candidates**
+- **parallel_gripper** [high] fit=yes — Two jaws translate toward a midplane and stay parallel. Pick-and-place, vises that ride a robot, every cobot EOAT request. No current API closes two jaws in parallel. iris and scroll centre; toggle and cam press; none of them is a parallel gripper.
+- **angular_gripper** [high] fit=yes — Pivoting 2-jaw. The other named robot gripper. Wider opening, jaws do not stay parallel. Distinct from toggle_clamp (workholding press) and from parallel_gripper.
+- **draw_latch** [high] fit=yes — Over-center latch that draws two panels together. toggle_clamp presses a part to a table; snap_catch is a lid finger. A draw latch is the missing panel-to-panel lock.
+- **machine_vise** [high] fit=yes — The bench/mill vise. lead_screw's usecase names vices but there is no jaw pair or way. Distinct from a gripper (no robot flange) and from a collet (on-axis).
+- **hood_latch** [med] fit=yes — Over-center hook latch. The prompt listed it. Not a draw (which pulls a hasp) and not a toggle clamp (which presses). Same over-center law, different job.
+- **soft_jaw** [med] fit=yes — Sacrificial vise/chuck insert. The FDM workholding people actually search. A pocket in a brick, not a new mechanism. Still a named primitive so agents stop inventing it from boxc.
+- **pawl_latch** [med] fit=yes — Pawl/slam latch. The prompt listed latch/pawl catch. Distinct from snap_catch (light lid) and from a ratchet (one-way drive).
+- **flat_vacuum_cup** [med] fit=yes — The other vacuum family. Flat cups for smooth sheets; bellows for uneven. Only bellows exists. A kind= on one cup API is enough.
+- **toe_clamp** [med] fit=yes — Strap / toe / step clamp. The workholding that is not a toggle and not a cam. Every mill fixture.
+- **three_finger** [low] fit=maybe — 3-finger centric robot gripper. The mechanism is scroll_drive (usecase already says three-jaw). A finger kit is composition.
+- **c_clamp** [low] fit=maybe — C-clamp. lead_screw plus a frame. After machine_vise, low leverage.
+- **atc_plate** [low] fit=maybe — repeatable_dock's usecase already names tool changers. Do not add a Schunk/ATI clone.
+- **magnetic_chuck** [low] fit=no — Bought magnets or an electromagnet. Same reject as magnetic_gear / magnetic_clutch.
+- **toggle_again** [low] fit=no — Already the over-center workholding knee.
+- **collet_again** [low] fit=no — Already the on-axis concentric grip.
+- **scroll_again** [low] fit=no — Already the self-centering 3-jaw mechanism. 3-finger robot is fingers on this.
+
+## bearings-ways-seals — Bearings, ways, and seals
+
+A bearing constrains relative motion and carries load; a way is a prismatic bearing; a seal keeps fluid or dirt on one side. Reuleaux's rolling higher pair is the rolling bearing; the prismatic lower pair is the way; a seal is not a pair. Norton/Slocum split bearings by contact (plain vs rolling vs fluid-film vs magnetic) and by load (radial, thrust, moment). Linear families are sliding (dovetail, vee, box, t-slot), rolling (recirculating profile rail, ball bushing, crossed-roller non-recirc, V-wheel), and aerostatic. Seals split contact (lip, O-ring, piston ring, wiper, packing) vs non-contact (labyrinth, viscoseal). 507 barely names them (anti-friction rolls 250, 270). Howell's 'bearing' is a flexure pivot, already in-tree.
+
+Catalog already covers the printable staples. Radial plain: plain_bushing (sleeve/flange, grease grooves, lead-in). Radial rolling: printed_ball_bearing (print-in-place truncated races, honest FDM limits, buy a 608 for load). Thrust: thrust_washer (pads/pockets/flat, or pair=True ball-thrust with bought balls). Ways: linear_way already ships profile='dovetail'|'vee'|'tslot' plus a tapered gib. telescoping_stage is keyed square tubes. flexure_stage is the compliant way. Seals: oring_groove (face or bore, squeeze/fill gated), labyrinth_seal (interleaved comb, the printable rotary seal), gasket_channel (non-round cord). Cutters: bearing_seat (608 pocket), ydovetail (assembly tongue, not a running way). The prompt's 'dovetail way' and 'V-way' are therefore not gaps: they are arguments on linear_way. Grep finds no crossed-roller, needle roller, linear ball bushing, V-wheel rail, lip/shaft seal, piston ring, or wiper.
+
+FDM reality. Crossed-roller (rotary or linear) is alternating 90-deg cylinders between V-races: high stiffness, the CMM/robot wrist bearing. Print the races, buy needles. Linear ball bushing (LM on a round shaft) is the printer-axis request; printed balls fail, bought balls in a printed nut is a teaching analog of printed_ball_bearing. V-wheel on a V-rail (OpenBuilds) is the most FDM-native rolling way: printed or bought Delrin wheels, an aluminium V-slot or a printed rail. Needle-roller stand-in is a cage of bought needles in a printed cup, not a drawn HF bearing. Lip / shaft seal is a TPU or bought elastomer ring in a housing groove; labyrinth already covers the non-contact rotary case. Piston ring is a split (or printed-gap) ring on a piston OD. Wiper/scraper is a lip facing dirt on a rod or way. Air and magnetic bearings are out (compressor + restrictors, or coils/magnets). Recirculating Hiwin rails and tapered-roller cups are products / ground metal. A pillow block is a housing around a bushing, a product.
+
+**New categories**
+- none
+
+**Candidates**
+- **crossed_roller** [high] fit=yes — Alternating 90-deg rollers carry radial, thrust, and moment in one thin section. Robot wrists, CMMs, rotary tables. Not a ball bearing (point contact, no moment) and not a sliding way. The missing precision rolling pair.
+- **v_wheel_rail** [high] fit=yes — V-wheel on a V-rail. linear_way vee is a sliding pair that needs hold-down. This rolls. The hobby linear default, and it is not in-tree.
+- **linear_ball_bushing** [high] fit=yes — Recirculating balls on a round shaft (Thomson / LM). The other linear rolling family next to crossed-roller and V-wheel. plain_bushing slides; this rolls.
+- **lip_seal** [high] fit=yes — Radial shaft / oil seal. Rotating shaft, grease or oil stays in. oring_groove is a static gland; labyrinth is a comb. The missing dynamic contact seal.
+- **piston_ring** [high] fit=yes — Reciprocating seal on a piston OD. Engines, compressors, printed syringes. Not an O-ring (which is a static/slow gland) and not a lip (which rides a shaft).
+- **wiper** [med] fit=yes — Scraper / dirt wiper. Linear rods and hydraulic rams. Distinct from a lip seal (retains lubricant) by facing the other way. Cheap and named.
+- **needle_roller** [med] fit=yes — Needle roller: high load, thin section. The prompt listed it. Not a ball and not a sprag. Cage is the printable part.
+- **box_way** [low] fit=maybe — Classic mill column way. Capture is from wrap + gib, not an undercut. A profile= argument, not a second module.
+- **dovetail_way** [low] fit=no — Prompt listed dovetail as missing. It is the default linear_way profile. Do not add a second dovetail.
+- **vee_way** [low] fit=no — Already a linear_way profile. The gap is the rolling V-wheel, not a second sliding vee.
+- **air_bearing** [low] fit=no — Aerostatic. Out. A printed pad is a fixture around bought hardware.
+- **magnetic_bearing** [low] fit=no — Active or passive magnetic. Coils or magnets. Same reject as magnetic_gear / magnetic_clutch.
+
+## missing-categories — Whole categories mechlib does not name
+
+A gallery shelf is justified when (1) it is a real machinery class agents search by name, (2) at least three FDM-printable semi-primitives would live there, and (3) those parts are currently misfiled or unshelved. Live CATEGORIES has 30 shelves: movements cover cams, chains, clutches, couplings, drives, flexures, fluid, gears, grippers, guides, indexing, joints, linear, linkages, pulleys, ratchets; elements cover bearings, closures, fasteners, fixtures, mechanisms; blocks cover cutters, lattices, meshutil, packing, patterns, prim, stepio, sweep, text. Overnight slices already proposed brakes, clockwork, constant_force, leg_mechanisms, and spatial. This slice ranks those against the prompt list and against classes nobody named.
+
+What is already a shelf under another name. End-effectors are grippers. Cable/tendon is pulleys (blurb already says belt and cable) plus drag_chain. Differentials are one kit (bevel_differential) under gears, not a gearbox aisle. ATC is repeatable_dock under fixtures. Springs live inside flexures. Seals live as cutters (oring, labyrinth, gasket). Traction/CVT is one variable-pitch pulley under pulleys. Parallel robots are kits under linkages/spatial, not a robot aisle.
+
+What should become a shelf. brakes: shaft-to-ground, opposite of clutches (shaft-to-shaft); band, expanding-shoe, parking-pawl, disc-pad are real and printable; clutches blurb is 'torque limiting and freewheeling' and has no ground. clockwork: a feedback oscillator (escapement + resonator + going barrel), not indexing (crank in, steps out); escapement is currently misfiled under indexing. constant_force: Negator, remontoire, compliant CF cell, gravity arm; they source a flat F or T, they are not screws or springs. leg_mechanisms: one-leg kits (Klann, Jansen, walking-beam) are a distinct agent job from four_bar; four_bar's usecase currently dumps walking-robot legs onto a crank-rocker. spatial: Bennett, spherical 4-bar, 5-bar, delta forearm, UPS strut; not planar linkages and not a finished robot. dampers: orifice dashpot and rotary vane damper are printable envelopes; viscous/eddy hardware stays out; thinner than brakes but a real class.
+
+What must not become a shelf. Magnetic drives, magnetic bearings, magnetic gears: printed cages around bought magnets, rejected on every slice. Heat, thermoelectric, Stirling: out of scope. Finished parallel robots (Delta, Stewart, Agile Eye): products; the cells belong on spatial/linkages. Tooling/ATC products. A springs split from flexures: not enough confusion to pay for a 31st shelf. A seals elements shelf: only if lip/piston/wiper land as solids rather than cutters.
+
+**New categories**
+- none
+
+**Candidates**
+- **brakes** [high] fit=yes — Shaft-to-ground. Winch hold, hoist, park. Clutches join two shafts and the current blurb does not mention grounding. Three high-fit kits already named. The cleanest split on the prompt list.
+- **clockwork** [high] fit=yes — Feedback oscillator, not intermittent motion. Indexing is crank-in/steps-out (Geneva). Clockwork locks and impulses a resonator. escapement is misfiled today. Five-plus yes kits.
+- **constant_force** [high] fit=yes — Flat F or T is a machinery class, not a spring (force rises with x) and not a screw. Cross-cuts three existing shelves, which is why agents miss it. Four named kits.
+- **leg_mechanisms** [med] fit=yes — Walking is a distinct agent job. four_bar's usecase currently claims walking-robot legs. Search cannot hit Klann if it lives as an anonymous 6-bar. Rank below brakes/clockwork because the kits can also live under linkages if we refuse a 31st shelf.
+- **spatial** [med] fit=yes — Not planar and not a robot product. joints currently dumps wrists onto ball_socket and gimbal. A shelf keeps Delta/Stewart products out while naming the cells. Same rank logic as legs: useful, but linkages can absorb the kits.
+- **dampers** [med] fit=yes — Energy dissipation is a real class (Norton, vehicle suspensions, door closers). Prompt listed it. Thinner than brakes: only two honest FDM kits. Add the shelf when the first kit lands, not before.
+- **seals_elements** [low] fit=maybe — A shelf for three cutters is noise. Promote only after contact-seal solids exist.
+- **cable_tendon** [low] fit=maybe — Pulleys blurb already claims cable. Splitting now orphans grooved_drum. Revisit if tackle grows past six APIs.
+- **differentials_shelf** [low] fit=no — One teaching kit. Not a class. Torsen/LSD/locked diffs are products.
+- **parallel_robots** [low] fit=no — The prompt listed it. The cells are spatial/linkage primitives. The aisle would fill with products. Do not add.
+- **magnetic_drives** [low] fit=no — Rejected on gears, clutches, couplings, bearings, linear. Not a printable working surface.
+- **traction_cvt_shelf** [low] fit=no — One kit under pulleys. Not a shelf.
+- **end_effectors_split** [low] fit=no — grippers already is the holding shelf. Splitting EOAT from clamps is taxonomy theater.
+- **tooling_atc** [low] fit=no — Dock is the locate primitive. A tooling aisle would be finished ATC products.
+- **heat** [low] fit=no — Prompt said heat? (out). Correct. Not a mechanism class this library should name.
+
+## animate-coverage — Mechanisms that exist but cannot play
+
+ANIMATE is 36 entries. catalog lists 80 multi-body movement demos; 45 of them do not play. The left-out comment in gallery/build_gallery.py was measured, but several reasons are stale: the same file already sine/cosine-maps bounded travels onto a 360 deg drive_deg for peaucellier, watt, sarrus, lazy_tongs, screw_jack, rack_pinion, and dog_clutch. That pattern unlocks iris, knuckle, telescoping, linear_way, lead_screw, and check_valve without a new theory. A second bucket is missing pose laws that the couplings and cams slices already named (oldham, Hooke, double Cardan, intermittent gears). A third is rigid rotation that is visible (helical flight, peristaltic rotor, scroll plate) and only needs a phase kwarg. Do not animate static adjustments (eccentric_idler_mount) or all-bodies-together spins (jaw, hirth, timing_pulley, idler). Do not claim deformation (harmonic cup, collet, flexure springs, kerf) until the rigid-recovery gate changes.
+
+Stale reasons. iris_diaphragm already takes close_pct; knuckle_hinge already takes open_deg; telescoping_stage already takes extend. All three are the exact out-and-back the comment said a linear ramp cannot express, and the gallery already solved that with a sine. linear_way has no travel param yet; adding one and cosine-mapping it is the screw_jack pattern. lead_screw / differential_screw / scroll_drive have closed-form travels (lead, p1-p2, spiral_pitch) and only need a phase. roller_follower already has pose_deg and is not in ANIMATE. peristaltic_pump_head's rotor is a rigid body; one turn closes. archimedes_screw's flight is a helix, so spinning it is not a camera move.
+
+Still true. demo_worm has no measurable conjugate contact (overlap 0). harmonic_drive deforms the cup every frame (bake residual ~0.15 mm). planet_stage is feasible at 2520 deg / 252 frames if the D-flat is dropped for the bake, but the current demo's 1-fold sun makes the short track illegal. intermittent_gear_pair still has no engagement law. collet, leaf/coil/wave/spiral springs, auxetic/kerf deform. jaw_coupling, hirth, timing_pulley, idler_pulley, freewheel (as currently posed) are rigid rotations of the whole assembly. eccentric_idler_mount is a lock-once adjustment.
+
+**New categories**
+- none
+
+**Candidates**
+- **oldham_pose** [high] fit=yes — Left-out comment names this law and refuses to invent it. Textbook. Highest-value coupling play. Couplings slice already ranked it high.
+- **hooke_pose** [high] fit=yes — cv_velocity_ratio is speed only. The gallery said so. Unlocks Hooke and is the block for double_cardan_pose.
+- **iris_play** [high] fit=yes — Nine bodies, the iris actually opening. The demo already has close_pct. Wire it.
+- **knuckle_play** [high] fit=yes — Same stale 'bounded travel' reason. The hinge swinging is the point of the demo.
+- **telescoping_play** [high] fit=yes — Left-out said the cycle does not close. screw_jack already closed an open lift with a cosine. Same trick.
+- **lead_screw_play** [high] fit=yes — The rotary-to-linear primitive does not play. screw_jack already does. lead_screw and differential_screw are the same law.
+- **scroll_pose** [high] fit=yes — Three jaws walking a spiral is the picture people want. Demo is static at face_r.
+- **intermittent_gear_pose** [high] fit=yes — Left-out is still true and is a real gap. Same class as geneva_wheel_angle / escapement_pose.
+- **peristaltic_play** [high] fit=yes — A pump demo that does not turn. Trivial rigid repose. Rollers are 3-fold; a 120 deg closed track may work.
+- **double_cardan_pose** [med] fit=yes — Five-body CV. Depends on hooke_pose. Intermediate still fluctuates; that is the teaching point.
+- **linear_way_play** [med] fit=yes — Same stale open-interval reason as telescoping. Needs a new demo kwarg; the kit already poses the carriage centred.
+- **roller_follower_play** [med] fit=yes — The follower demo is not wired. Not a cam pair (plate_cam already plays); it is the arm+roller kit rocking.
+- **archimedes_play** [med] fit=yes — A screw that does not turn. Distinct from timing_pulley (a toothless spin of a symmetric sheave).
+- **ratchet_pose** [med] fit=yes — Four ratchet demos sit still. One law plays all of them. detent_pair is the plunger cousin.
+- **drag_chain_play** [med] fit=yes — A cable carrier that does not articulate. bend_deg is already a demo param.
+- **planet_stage_roundbore** [low] fit=maybe — Left-out is still true of the current demo. A round-bore bake demo is a demo change, not a new law. Feasible, previously judged not worth 252 frames.
+- **flat_worm_play** [low] fit=maybe — demo_worm is still invalid (no contact). printed/flat worms exist specifically to mesh. If the coupon pair contacts, it can play; do not assert a drive sense.
+- **harmonic_play** [low] fit=no — Still true. A spinning wave generator with a frozen cup lies about the ratio.
+- **jaw_hirth_timing_spin** [low] fit=no — Left-out still true. freewheel rollers walking the ramps would be a different demo.
+- **eccentric_idler** [low] fit=no — Prompt said do not propose this. Correct. Animating it claims the part spins in service.
+- **deforming_kits** [low] fit=no — Still true. Not a pose-law gap.
+- **worm_display** [low] fit=no — Still true. Drive sense cannot be recovered from the geometry.
+
+## dampers-dashpots — Dampers, dashpots, and energy sinks
+
+A damper turns organised motion into heat. Norton and machine-design texts split by the dissipation law: viscous (F = c*v, dashpot / rotary vane in a pot), friction (F = mu*N, Coulomb snubber / interleaf), hysteretic / elastomer (loss in the solid), fluid-dynamic (orifice, shock), and field (eddy, MR). Smith 2002 added the inerter (F = b*a_rel), a two-terminal inertia that is not a damper but lives on the same shelf because every textbook now draws C-K-B networks. 507 barely names dissipation (friction brake 242, dynamometer 244, friction test 373). Howell's lossy flexure is a viscoelastic hinge, not a pot. Reuleaux has no damper pair.
+
+Catalog has zero damper APIs. Grep of mechlib/ for damper, dashpot, snubber, inerter, orifice, shock is empty. Neighbours that are not dampers: flywheel (stores, does not dissipate), coil/leaf/wave/belleville (return force rises with x), band_brake (clutches slice, grounds a shaft, not a rate element), linear_way (friction is parasitic). missing-categories already ranked a dampers shelf as med: add it when the first kit lands.
+
+FDM reality. orifice_dashpot is a piston with a hole in a closed cylinder; fluid is bought oil or air; the envelope is tube+piston+rod, cousin of hydraulic_cylinder, but the hole and the sealed volume are the point. rotary_vane_damper is a vane in a silicone-filled pot (cabinet door, toilet seat, steering); prints as a pot + vane + bought grease. friction_snubber is two pads and a preload (Coulomb); prints. elastomer_bumper is a TPU puck or bellows, the cheapest printed sink. inerter is a rack (or leadscrew) spinning a flywheel between two terminals; rack_pinion + flywheel already exist, the kit is the two-terminal packaging. A TMD is mass + spring + dashpot: composition, close to a product once you add the building. Hydraulic monotube shocks, eddy plates, and MR fluid are hardware. Do not file a brake as a damper.
+
+**New categories**
+- **dampers** — Energy dissipation is a machinery class. No current shelf. First kits: orifice_dashpot, rotary_vane_damper, friction_snubber, inerter. Brakes ground a shaft; dampers are two-terminal rate elements.
+
+**Candidates**
+- **orifice_dashpot** [high] fit=yes — The viscous linear primitive. Door closers, instrument settling, recoil buffers. hydraulic_cylinder is a force source (ports, pressure). This is a rate sink (a hole, no pump). Distinct.
+- **rotary_vane_damper** [high] fit=yes — The viscous rotary primitive. No current API dissipates rotation. Not a wrap-spring (locks) and not a brake (grounds). Soft-close lids are the agent job.
+- **friction_snubber** [high] fit=yes — Dry friction as a designed sink, not a parasitic way. band_brake grounds a shaft; this is a two-terminal pad pair on a rod or a leaf.
+- **inerter** [high] fit=yes — Not a damper (no heat) but every modern network draws it next to C and K. Vehicle suspensions, TMDIs. Agents searching inerter currently get nothing. Composition of existing parts, still a named primitive.
+- **elastomer_bumper** [med] fit=yes — End-stop / snubber pad. Not a spring (the point is hysteresis and a hard stop). Fine as a one-body kit so agents stop inventing it from cyl.
+- **tuned_mass_damper** [low] fit=maybe — Named, real, and agents will ask. After dashpot and a mass exist, it is three parts on a plate. Close to a product. Rank after the primitives.
+- **air_cushion** [low] fit=maybe — A parameter on the dashpot (fluid=air, plus a check), not a second kit.
+- **eddy_damper** [low] fit=no — Field device. Same reject as magnetic_gear / magnetic_bearing.
+- **hydraulic_shock_product** [low] fit=no — Fox / Bilstein / Koni. The reusable part is orifice_dashpot. The shock is a finished absorber.
+- **brake_as_damper** [low] fit=no — A brake grounds a shaft to stop it. A damper is a two-terminal rate. Do not merge the shelves.
+
+## governors-regulators — Governors, speed regulators, and flyballs
+
+A governor is a closed-loop speed regulator: it senses shaft rate and moves a throttle (or a hit-and-miss pawl). Machine-design texts split centrifugal vs inertia. Centrifugal then splits pendulum (Watt conical pendulum, no sleeve load), dead-weight loaded (Porter: weight on the sleeve; Proell: balls on downward extensions), and spring-controlled (Hartnell bell-crank + spring, Hartung, Wilson-Hartnell, Pickering leaf-spring). Inertia governors respond to angular acceleration, not just speed, and are rare. Hit-and-miss is an IC-engine special: a pawl misses the valve when the flyballs lift. Isochronism (zero speed range over the sleeve travel) is a Hartnell spring-rate property, not a kit; a Porter cannot be isochronous. 507 names several: 147 (air-fan + inclined-plane), 161-163, 170, 274, 287, 357.
+
+Catalog has no governor. Grep of mechlib/ and usecases.py for governor, flyball, Hartnell, Pickering, hit-and-miss is empty. Neighbours that are not governors: flywheel (stores energy, does not throttle), centrifugal_clutch (proposed; engages a load when rpm rises, does not modulate a valve), bell_crank (exists; the usual sleeve-to-throttle link), orifice_dashpot (proposed; damps hunting). A Watt governor is four bars + two balls + a sleeve on a spindle, posed by rpm or sleeve height. That is a semi-primitive. A Corliss engine with a Porter on top is a product.
+
+FDM reality. Watt flyball prints as a teaching kit: spindle, four links, two balls, sliding sleeve; pose is sleeve height from the conical-pendulum law. Porter is a sleeve mass on the same kit. Proell moves the balls onto downward arms (most sensitive of the three dead-weight types). Hartnell is two bell-cranks, two balls, a spring on the sleeve; compact, the modern spring governor. Pickering is two or three leaf springs with balls at mid-span, no pin joints, Howell-adjacent and the most FDM-native. Hit-and-miss is a flyball plus a pawl that misses a cam; composition. Air-fan 507 #147 is a historical curiosity (wings + inclined plane). Inertia governors and electronic ECUs are out. Do not file centrifugal_clutch as a governor.
+
+**New categories**
+- none
+
+**Candidates**
+- **watt_governor** [high] fit=yes — Watt 1788 flyball. The first feedback regulator and the missing conical-pendulum kit. Not a flywheel and not a centrifugal clutch. Steam, hit-and-miss, any shaft that must hold a speed.
+- **porter_governor** [high] fit=yes — Dead-weight loaded Watt. More sensitive, higher equilibrium speed. The named lab experiment next to Watt. Do not add a second module if watt_governor can take a sleeve mass.
+- **hartnell_governor** [high] fit=yes — The spring-controlled textbook governor. Compact, high-speed, the one that can be isochronous. Distinct from Watt (no spring, gravity only).
+- **pickering_governor** [high] fit=yes — Leaf-spring centrifugal. Small high-speed engines, steam toys. Howell construction, Watt job. Distinct from watt_governor (pins) and from hartnell (bell-cranks).
+- **proell_governor** [med] fit=yes — Named lab variant. A style= on the Watt/Porter kit, not a fourth module.
+- **hit_and_miss** [med] fit=yes — IC hit-and-miss regulation. The governor does not throttle; it gates a valve event. Real, named, and still a kit once Watt exists.
+- **air_fan_governor** [low] fit=maybe — 507's named steam-engine governor. Historical, drag-based. After Watt and Hartnell, low leverage.
+- **inertia_governor** [low] fit=maybe — Textbook sibling. Faster response, worse balance. Research extra.
+- **centrifugal_clutch_as_gov** [low] fit=no — Engages a load at a trip rpm. Does not modulate a throttle. Different job.
+- **flywheel_as_gov** [low] fit=no — Stores energy, smooths speed. Does not sense and act. Not a governor.
+
+## deployables-origami — Deployables, origami, and foldable cells
+
+A deployable is a 1-DoF (or few-DoF) mechanism that packs small and opens large. Two families: bar-and-scissor (Hoberman, lazy-tongs, Bennett/Bricard rings) and origami tessellations (rigid-foldable sheets: Miura, flasher, Yoshimura; non-rigid: Kresling, waterbomb). Pellegrino/You treat the reusable object as a unit cell; the sphere, canopy, or satellite is a product. Spatial slice already named angulated_scissor (Hoberman kinked cell) and Bennett/Bricard rings. Flexure slice named LET and tape-spring. This slice owns the crease-pattern cells that are not those.
+
+Catalog already has the bar special cases and two sheet tricks. lazy_tongs is the straight-scissor (kink=180). sarrus is a spatial fold that makes a line, not a pack. iris_diaphragm is an aperture of blades, not a crease pattern. auxetic_panel is a metamaterial lattice (reentrant), related in spirit to Miura but not a rigid-origami pose. kerf_bend_cutter is a living-hinge slit lattice. Grep finds no Miura, Kresling, Yoshimura, flasher, waterbomb, STEM boom, or kaleidocycle.
+
+FDM reality. Miura-ori unit (four parallelograms, one mountain and three valleys at a degree-4 vertex) is rigid-foldable, 1 DoF, prints as four plates plus living hinges or LET joints; pose is the fold angle. That is the solar-array / map-fold cell. Kresling is a twist-buckled cylinder, non-rigid, often bistable, prints as a tube of triangles; the named origami actuator. Yoshimura is a diamond-tube that flattens; structural boom cell. Flasher wraps a disc into a compact spiral; one cell is a radial sector, a full flasher is getting product-shaped. Waterbomb is a 6-crease vertex, used as a bump / gripper cell. STEM / CTM coilable boom is a tape-spring cousin (slit tube that coils on a drum). Kaleidocycle is a Bricard ring of tetrahedra; after bricard_6r, a named toy cell. A Hoberman sphere or a Miura solar wing is a product. Inflatable deployables are out.
+
+**New categories**
+- none
+
+**Candidates**
+- **miura_cell** [high] fit=yes — Miura-ori, 1970 / map fold. Rigid-foldable degree-4 vertex, one DoF, packs a sheet into a stack. Solar arrays, folding maps, sandwich cores. auxetic_panel is a hole lattice, not a crease pose. The missing origami cell.
+- **kresling_cell** [high] fit=yes — Kresling twist-buckle. Non-rigid origami, the named origami actuator / bellows. Distinct from sarrus (bar fold, exact line) and from bistable_beam (planar snap). Deployable booms, crawling robots, pumps.
+- **yoshimura_cell** [med] fit=yes — Yoshimura diamond pattern. The other named origami tube. Packs flat, carries load. After Miura and Kresling, the third tessellation people search.
+- **waterbomb_vertex** [med] fit=yes — Waterbomb / balloon vertex. Not rigid-foldable the same way as Miura. Soft-robot and texture cell.
+- **stem_boom** [med] fit=yes — Storable tubular extendible member. Coilable boom, the deployable cousin of Negator (which wants to coil) and tape-spring (which wants to stay straight). Antenna / camera masts.
+- **flasher_sector** [low] fit=maybe — Flasher origami. One sector is a cell; wrapping a whole solar disc is a product. After Miura.
+- **kaleidocycle** [low] fit=maybe — Named Bricard ring. After bricard_6r, a style, not a second topology.
+- **hoberman_sphere** [low] fit=no — Spatial slice already rejected this. The cell is angulated_scissor. lazy_tongs is the straight special case.
+- **lazy_tongs_again** [low] fit=no — Straight scissor. Not a crease pattern.
+- **auxetic_as_miura** [low] fit=no — Reentrant metamaterial, not a rigid-origami pose. Keep both.
+
+## valve-gear — Valve gear, eccentrics, and reversing motions
+
+Valve gear turns crank rotation into a valve travel that can reverse and can be notched up (shorten the cutoff). Wikipedia splits it by how the two components (lap+lead vs travel) are made: dual-eccentric + expansion link (Stephenson 1842), constant-lead Walschaerts-type (one return crank + combination lever + expansion link, 1844), lever-and-link with no slide (Baker), and radial gears that derive the motion from the conrod (Hackworth, Joy). Slip-eccentric and gab are the cheap reverse. Corliss is a wrist-plate special. Poppet/Caprotti is cams, not bars. 507 is a valve-gear textbook: eccentrics 89-91, 135, 137; link motion 171, 185; a long run of gears at 181-189, 286, 418.
+
+Catalog has the neighbours, not the gear. slider_crank is the piston. plate_cam / face_cam can time a valve but cannot reverse or notch. rotary_spool_valve is a plug, not a motion. eccentric_cam_clamp and eccentric_idler_mount are a clamp and a belt take-up, not a strap eccentric. bell_crank exists (Baker uses several). Grep finds no Walschaerts, Stephenson link, Joy, Hackworth, gab, slip eccentric, expansion link, or a generic eccentric sheave.
+
+FDM reality. The missing primitive under every named gear is the eccentric: a disc whose centre is offset, a strap (or a rod on a pin), travel = 2e. That is not a plate_cam and not an idler bush. The second primitive is the expansion link + die block: a curved slotted link that mixes two motions and reverses by flipping which end drives. Combination lever (Walschaerts) adds lap+lead from the crosshead. A posed Walschaerts cell (return crank, eccentric rod, expansion link, radius rod, combination lever, union link) is a semi-primitive; a locomotive with cylinders and a boiler is a product. Stephenson is two eccentrics + one link. Baker replaces the slot with bell-cranks (no sliding). Joy/Hackworth hang off the conrod. Slip-eccentric is one eccentric that rotates to the reverse position. Do not emit a 2-8-0.
+
+**New categories**
+- none
+
+**Candidates**
+- **eccentric** [high] fit=yes — The primitive under Stephenson, Walschaerts (return crank is an eccentric), pumps, and many 507 motions. plate_cam is a programmed lift. eccentric_idler is a lock-once take-up. Missing the running strap eccentric.
+- **expansion_link** [high] fit=yes — The notch-up / reverse primitive. Stephenson and Walschaerts both hang on this. quick_return is a straight slot on a crank; this is a curved mixer. pin_in_slot is the pair; this is the named valve-gear part.
+- **walschaerts_cell** [high] fit=yes — The named 1-DoF valve motion with reverse and cutoff. A locomotive is a product; this cell is not. Teaching set and live-steam hobby default.
+- **stephenson_link** [high] fit=yes — Dual-eccentric + link. The other named gear. Inside-frame historically; the cell is still two eccentrics and a slot.
+- **combination_lever** [med] fit=yes — The constant-lead trick. If walschaerts_cell ships, this is a named part of it, not a second module.
+- **baker_gear** [med] fit=yes — Walschaerts without a slot. Named, printable, and the prompt of anyone who hates sliding dies.
+- **joy_hackworth** [med] fit=yes — The no-eccentric family. Compact. A cell hanging on slider_crank, not a new crank.
+- **slip_eccentric** [med] fit=yes — The model-engineer reverse. Not a full link motion. An argument on eccentric.
+- **corliss_wrist** [low] fit=maybe — Separate admission/exhaust. Famous, but the engine is a product. After eccentric + dashpot exist.
+- **caprotti_poppet** [low] fit=maybe — Cam valve gear. Do not add a locomotive cam box; use plate_cam.
+- **locomotive_product** [low] fit=no — Cylinders, boiler, frames. Product. The cell is walschaerts_cell.
+
+## chain-families — Chain types beyond roller and drag
+
+A chain is a wrapping pair made of discrete links. Fractory / Tsubaki split power-transmission chains by joint: roller (bush + roller on a pin), silent / inverted-tooth (toothed plates, no roller), leaf (stacked plates, no sprocket, a sheave), and engineering/offset-sidebar (large, dirty). Conveyor cousins are pintle/block, hollow-pin, flat-top, and modular plastic belt. Ball chain is a cheap pull. 507 names chain pulleys 227-229 and a sprocket 254.
+
+Catalog already covers the roller family and the cable-carrier. roller_chain_link / roller_chain, roller_sprocket_2d, plus layout posers chain_reverse, chain_s_wrap, chain_dual_output. drag_chain / drag_chain_link is an energy chain, not a drive. Grep finds no silent chain, inverted tooth, leaf chain, pintle, block chain, hollow-pin, or ball chain.
+
+FDM reality. Silent / inverted-tooth is a stack of toothed plates that engage a sprocket with straight or involute flanks (Morse Hy-Vo is the rocker-pin high-speed cousin). Prints as plates + pins; the sprocket is a new tooth, not roller_sprocket_2d. Leaf chain is a forklift/mast chain: interleaved plates, no rollers, runs on a sheave not a sprocket; the sheave (pulleys slice) plus a plate stack is the kit. Pintle / block is an open hook-and-bar agricultural/sewage chain, very FDM-friendly, coarse pitch. Hollow-pin is a roller chain whose pins are tubes for attachments; an argument on roller_chain_link. Ball chain is spheres and wire, a pull not a drive. Modular plastic belt (Habasit/Intralox) is a product. Engineering class is a scaled dirty roller. Do not add a second roller_chain.
+
+**New categories**
+- none
+
+**Candidates**
+- **silent_chain** [high] fit=yes — Inverted-tooth / silent chain. High speed, quiet, camshafts, transfers. Distinct from roller_chain (round rollers) and from a gear (the chain flexes around). The missing power-chain family.
+- **leaf_chain** [high] fit=yes — BL / AL leaf chain. No sprocket, only a sheave. The other named lifting chain. Not a roller and not a drag_chain.
+- **pintle_chain** [high] fit=yes — Block / pintle / 400-class. The open-joint cousin of roller chain. Prints as one piece per link. The farm-machine request.
+- **hollow_pin** [med] fit=yes — Conveyor attachments. Named, but it is a pin option on the existing link.
+- **ball_chain** [med] fit=yes — The cheap pull chain. Not a drive. A bead + pocket wheel is a thin kit so agents stop inventing it from cyl.
+- **flat_top_chain** [low] fit=maybe — Table-top / slat chain. An attachment on pintle or hollow-pin, not a new joint.
+- **hyvo_rocker** [low] fit=maybe — Morse Hy-Vo. After silent_chain exists. Do not claim Borg-Warner conjugacy.
+- **modular_plastic_belt** [low] fit=no — Injection-moulded conveyor belt. Finished product. Not a mechlib chain.
+- **roller_again** [low] fit=no — Already the default drive chain. Do not add a second roller.
+- **drag_again** [low] fit=no — Cable carrier, not a drive chain.
+
+## textile-sewing — Sewing, weaving, and textile mechanisms
+
+Textile machines make a stitch or a shed. Lock-stitch (Howe 1846, Singer rotary hook later) is needle + hook/shuttle + take-up: the needle leaves a loop, the hook carries it around a bobbin, the take-up sets the knot. Weaving is shed (heddles lift warp), pick (shuttle or rapier carries weft), beat-up (reed). Jacquard is a hook that chooses which warp lifts. 507 names shuttle motion 397, warp-dressing 383, spinning throstle 496. Heart-cam's usecase already mentions sewing-machine take-up; barrel_cam mentions textile traverse. No other textile API exists.
+
+Catalog has the motion neighbours, not the textile cells. slider_crank / watt_six (proposed) can drive a needle bar. heart_cam and plate_cam can time take-up. geneva and cams can index a feed. iris is not a reed. Grep finds no rotary hook, bobbin case, needle bar, heddle, reed, rapier, or Jacquard hook.
+
+FDM reality. rotary_hook is a 2:1 spinning hook around a stationary bobbin case; prints as two pieces, the Singer cell, and it is the missing stitch primitive. Oscillating shuttle is the older Howe cell (a boat that rocks). take_up_lever is a cam-driven or four-bar eye that pulls slack; heart_cam already claims the job, so a named lever on that cam is enough. needle_bar is a guided prismatic plus a needle; composition of linear_way + a bar. heddle is an eye in a frame, the warp-lift cell. reed is a comb that beats weft. Jacquard hook is a lifted hook that catches a knife; the card/computer is a product. A sewing machine or a loom is a finished product. Rapier and projectile looms are products built on a pick cell.
+
+**New categories**
+- none
+
+**Candidates**
+- **rotary_hook** [high] fit=yes — The stitch primitive. Needle leaves a loop, hook carries it around the bobbin. Not a cam and not a slider-crank. Every printed sewing demo invents this from a cylinder.
+- **oscillating_shuttle** [high] fit=yes — The other lock-stitch cell. 507's named shuttle motion. Distinct from rotary_hook (continuous spin vs rock).
+- **heddle** [high] fit=yes — Weaving shed. Every warp thread through an eye. Not a needle and not a reed. The missing loom primitive.
+- **reed** [med] fit=yes — The other weaving cell. Heddles shed, the reed beats. A comb, not a gear.
+- **take_up_lever** [med] fit=yes — Pulls slack after the hook. The motion is a cam; the part is an eyed lever. Do not add a second cam.
+- **needle_bar** [med] fit=yes — The needle's prismatic. Agents invent it from cyl. A named bar on slider_crank / linear_way, not a new pair.
+- **jacquard_hook** [med] fit=yes — Jacquard 1804. Binary lift of one warp. Distinct from a heddle (always on a harness) and from a detent.
+- **feed_dog** [low] fit=maybe — Fabric feed. Real, but the law is two cams. After rotary_hook exists.
+- **sewing_machine_product** [low] fit=no — Bed, arm, motor, tensioners. Product. The cells are hook + take-up + needle bar.
+- **loom_product** [low] fit=no — Frame, warp beam, cloth beam. Product.
+
+## water-wind-wheels — Water wheels, turbines, and wind rotors
+
+Prime-mover rotors extract work from a fluid. Water wheels split by where the stream hits: undershot (blades, low head), breast, overshot (buckets, high head). Modern hydro splits impulse (Pelton, Turgo, cross-flow) vs reaction (Francis mixed-flow, Kaplan axial). Wind splits drag (Savonius) vs lift (Darrieus VAWT, propeller HAWT). 507 is thick: water wheels 430-438, Barker's mill 438, windmills 485-486, paddles 487/489. Fluid slice already proposed centrifugal_impeller as a pump/fan; this slice owns the prime-mover rotors that are not that impeller.
+
+Catalog has no wheel or turbine rotor. Grep of mechlib/ for Pelton, Savonius, Darrieus, overshot, water wheel, turbine, windmill, impeller is empty. Neighbours: archimedes_screw (conveyor helix, also used as a low-head turbine), flywheel (stores, does not extract), proposed centrifugal_impeller (dynamic pump). A mill building is a product. A Pelton bucket wheel is a semi-primitive.
+
+FDM reality. overshot_wheel is a rim of buckets, prints as a disc + buckets, the teaching water wheel. undershot is flat or curved blades on a rim. Pelton is a disc of double-cusp buckets around a pitch circle; the jet is not printed. Savonius is two (or three) half-cylinders on a vertical shaft, the most FDM-native wind rotor. Darrieus is two or three airfoils on a vertical shaft (troposkein or H-rotor). A propeller / HAWT blade is an airfoil loft; one blade is a primitive, a 3-blade turbine on a tower is a product. Francis and Kaplan need a scroll case and a draft tube; the runner can print as a teaching cutaway, the plant cannot. Barker's mill is a reaction sprinkler (Hero / lawn). Do not emit a dam.
+
+**New categories**
+- none
+
+**Candidates**
+- **overshot_wheel** [high] fit=yes — The gravity water wheel. Overshot buckets, undershot blades, breast in between. Not an Archimedes conveyor and not a Pelton. The missing 507 water-wheel kit.
+- **pelton_wheel** [high] fit=yes — Pelton 1870s. Splitter-ridge buckets, atmospheric runner. Distinct from an overshot (gravity, no jet) and from a centrifugal impeller (enclosed, reaction).
+- **savonius_rotor** [high] fit=yes — Savonius 1922. Vertical-axis drag. Not a Darrieus (lift) and not a propeller. Anemometers, small chargers, teaching.
+- **darrieus_rotor** [high] fit=yes — Darrieus 1931. The lift vertical-axis. Distinct from Savonius. H-rotor is the easy print; eggbeater is the classic.
+- **propeller_blade** [med] fit=yes — Horizontal-axis lift rotor. The other wind family. centrifugal_impeller is a radial pump/fan; this is an axial propeller.
+- **barker_mill** [med] fit=yes — Barker's mill. The named 507 reaction wheel. Teaching, not a plant.
+- **francis_runner** [low] fit=maybe — Francis 1849. The common hydro runner. After impeller + Pelton. Do not emit a powerhouse.
+- **kaplan_runner** [low] fit=maybe — Kaplan. A propeller with adjustable blades. The blade is propeller_blade; the hub actuator is a product.
+- **windmill_product** [low] fit=no — 507 #485-486 are finished mills. The rotor is the primitive.
+- **hydro_plant** [low] fit=no — Out of scope.
+
+## locks-keys — Locks, keys, and combination mechanisms
+
+A lock is a constraint that a coded input (key, discs, or word) lifts. The usual taxonomy is by the obstacle: wards (the key must miss them), lever tumblers (gates must line up on a stump), pin tumblers (Yale: pin stack splits at a shear line), wafers (flat pins), disc detainers (Abloy: rotating discs, a sidebar drops into gates), and combination packs (discs with gates, no key). Padlock shackles add locking balls or a claw. 507 barely names locks. Reuleaux does not. Howell's 'lock' is a snap or a bistable, already in-tree as snap_catch / bistable_beam.
+
+Catalog has no tumbler, ward, or combination pack. Neighbours: detent_pair (a click, not a coded shear), shaft_key (DIN machine key, not a lock key), pawl_latch (proposed, slam catch), geneva_stop (winding limit), dog_clutch (positive drive). Grep of usecases.py hits 'lock' only as self-locking screws, folding-leg clicks, and over-center clamps.
+
+FDM reality. pin_tumbler is a cylinder, a plug, n pin stacks (key pin + driver + spring), and a shear line; prints oversized for teaching (Thingiverse cutaways). lever_tumbler is a stack of flat levers with gates and a bolt stump; Chubb cell, prints flat. combination_pack is n discs with a gate and a fence; the padlock/safe cell. disc_detainer is rotating discs plus a sidebar. warded is a keyway with obstacles, the oldest and the weakest. wafer is a flat pin tumbler. A lockset, a mortise body, or a safe is a product. Magnetic and electronic locks are hardware.
+
+**New categories**
+- none
+
+**Candidates**
+- **pin_tumbler** [high] fit=yes — Yale pin tumbler. The coded shear-line cell. Not a detent (no code) and not a shaft_key (no tumblers). The missing lock primitive.
+- **lever_tumbler** [high] fit=yes — Lever lock. Gates must align for the stump to pass. Distinct from pin tumbler (no plug, no shear line). British furniture and safe-deposit default.
+- **combination_pack** [high] fit=yes — Coded discs, no key. The combination primitive. detent_pair is a single click, not a pack of gates.
+- **disc_detainer** [med] fit=yes — Disc detainer. Sidebar, not a shear line and not a fence on a bolt. The other rotating-disc lock.
+- **warded_keyway** [med] fit=yes — Wards. The key must miss obstacles. No tumblers. Teaching / antique.
+- **wafer_tumbler** [med] fit=yes — Wafer lock. Same shear-line idea, flat tumblers. Do not add a second module if pin_tumbler can emit wafers.
+- **padlock_shackle** [low] fit=maybe — Shackle + balls. The padlock is a product around a tumbler. A thin shackle kit after the cell exists.
+- **lockset_product** [low] fit=no — A door lockset. The reusable part is pin_tumbler.
+- **detent_as_lock** [low] fit=no — A positional click, not a coded constraint.
+
+## metrology-drawing — Drawing instruments and kinematic tracers
+
+A drawing instrument is a 1-DoF (or 2-DoF) linkage whose coupler traces a named curve. 507 is an instrument shelf: ellipsograph 152, helicograph 384, cyclograph 403-404, proportion compasses 405, parabola instrument 406, centrolinead 408, bisecting gauge 410. IFToMM treats these as function generators. A CMM or a plotter is a product.
+
+Catalog already has the scaling tracer: pantograph_pose / pantograph_linkage. straight-line already proposed trammel (Archimedes ellipsograph / double-slider) as fit=yes. four_bar_coupler_point (proposed) traces a general coupler curve, not a named instrument. Grep finds no helicograph, centrolinead, proportional dividers, or cyclograph.
+
+FDM reality. helicograph is a wheel that rolls around a fixed point while sliding on a radial arm, tracing an Archimedean spiral (507 #384); prints as an arm + a rolling wheel. proportional_dividers are two legs with an adjustable pivot, similar triangles; prints, the instrument version of a pantograph ratio. centrolinead is two rulers plus a T that draws lines through a hidden vanishing point (perspective). cyclograph is a rolling circle that draws a cycloid. trammel is already claimed on the straight-line slice; do not re-rank it as a new discovery. A beam compass is two rods and a pivot, too thin. Do not emit a drafting machine or a CNC plotter.
+
+**New categories**
+- none
+
+**Candidates**
+- **helicograph** [high] fit=yes — The spiral tracer. 507's named helicograph. Not a pantograph (scale) and not a mainspring (energy). Teaching + a printable volute generator.
+- **proportional_dividers** [high] fit=yes — Similar-triangles scaler. The pocket pantograph. Distinct from pantograph_linkage (a parallelogram that copies a path).
+- **centrolinead** [med] fit=yes — Draws lines through an inaccessible point. Named 507 instrument. Niche but a real cell.
+- **cyclograph** [med] fit=yes — Rolling-circle curve. tusi_couple is the 2:1 hypocycloid line; this is the general rolling tracer.
+- **trammel_again** [low] fit=no — Archimedes ellipsograph / double-slider. 507 #152. Do not claim it twice. Ship it under straight-line.
+- **pantograph_again** [low] fit=no — Already the scaling tracer.
+- **beam_compass** [low] fit=maybe — A large compass. After proportional_dividers, skip.
+- **cmm_plotter** [low] fit=no — CMM / plotter / drafting machine. Product. The cells are ways and tracers.
+
+## wheels-casters-omni — Wheels, casters, and omnidirectional rolling
+
+A ground wheel is a rolling pair that carries a vehicle or a load. The class splits first by how many directions it can roll without slipping the tire: a conventional wheel is 1-DoF (roll plus spin about the axle), a swivel caster adds a vertical kingpin and a trail so the fork self-aligns, and an omnidirectional wheel (omni 90 deg, Mecanum 45 deg, spherical / ball-transfer) can slide sideways. Siegwart/Nourbakhsh and IFToMM mobile-robot taxonomies treat these as distinct kinematic primitives. 507 never names a Mecanum; the closest historical cells are oblique rollers 204 (skew-shaft rolling contact) and 365 (a rod between two oblique rollers that both translates and spins). Water-wind-wheels already owns prime-mover rotors (Pelton, Savonius). flywheel stores energy. roller_sprocket and idler_pulley are chain and belt sheaves, not ground contact.
+
+Catalog has no caster, Mecanum, omni, or ball-transfer. Grep of mechlib/ and usecases.py is empty for those names. Neighbours: printed_ball_bearing (a radial race, balls trapped between rings), rolling_pair (proposed, cylinder-on-plane contact, not a hub), idler_pulley (belt), flywheel (inertia), roller_sprocket (chain). A chassis, a swerve module, or a shopping cart is a product.
+
+FDM reality. mecanum_wheel is a hub plus n barrel rollers at 45 deg (Ilon 1973, US 3876255); every FTC/VEX print is this cell. omni_wheel is the 90 deg sibling (Grabowiecki 1919, US 1305535; Blumrich 1972); rollers print as barrels on axles, two or three staggered rows hide the gaps. swivel_caster is a fork, a wheel, a kingpin, and a trail offset; without trail it will not self-align. ball_transfer is a large sphere in a cup of small balls (Autoset 1958); printed_ball_bearing is a radial shaft support, this is an omnidirectional load ball. killough_pair is two conventional wheels at 90 deg in a cage (Killough 1994), holonomic without true omni rollers. track_shoe is one grousered plate plus two pins, the continuous-track cell; a tank is a product. Do not emit a robot base or a forklift.
+
+**New categories**
+- **wheels** — Ground-contact rolling cells (caster, Mecanum, omni, ball-transfer) are a machinery class. pulleys are belt sheaves, chains are sprocket trains, water-wind is prime-mover rotors, flywheel is inertia. Agents looking up 'caster' or 'mecanum' currently hit nothing. A movements shelf keeps chassis products out.
+
+**Candidates**
+- **mecanum_wheel** [high] fit=yes — Ilon 1973 Swedish wheel. 45 deg rollers, force along the frame diagonal. Not an omni (90 deg) and not a caster (no kingpin). The missing holonomic drive cell.
+- **omni_wheel** [high] fit=yes — 90 deg poly wheel. Kiwi drive, H-drive, Robocup. Distinct from Mecanum (45 deg, four-wheel X) and from a caster (passive).
+- **swivel_caster** [high] fit=yes — The self-aligning undriven wheel. Trail is the kinematic primitive. Carts, chairs, robot trailing wheels. Not a Mecanum (driven, no kingpin) and not a ball transfer (no trail).
+- **ball_transfer** [high] fit=yes — Omnidirectional load sphere. Luggage tables, cargo decks. printed_ball_bearing is a shaft race; this is a cargo ball. Casters need trail; this does not.
+- **killough_pair** [med] fit=yes — The other holonomic cell. No small rollers to print or jam. After omni_wheel, this is the no-roller stand-in.
+- **track_shoe** [med] fit=yes — Continuous-track cell. roller_chain is a roller-and-bushing drive chain, not a grouser. One shoe is the primitive.
+- **rigid_caster** [low] fit=maybe — Shopping-cart rear. After swivel_caster, emit it as trail=0 / lock=True, not a second kit.
+- **swerve_module** [low] fit=no — FRC swerve. Product. The wheel is the primitive; the two-motor pod is a project.
+- **flywheel_as_wheel** [low] fit=no — Inertia store, not ground contact. Do not file it here.
+- **water_wheel_again** [low] fit=no — Prime-mover rotor. Already ranked. This slice is ground rolling.
+
+## toggles-presses — Toggle joints, over-center, and press cells
+
+A toggle is two bars sharing a knee that is driven toward colinearity. Mechanical advantage goes to infinity as the knee straightens; past dead centre the cell locks (over-center). 507 names the toggle-joint as a punching machine (140) and a knee-lever press (164). Norton and every press-builder split mechanical presses by the last joint: crank/slider (slider_crank already), knuckle/toggle (missing), screw (lead_screw / screw_jack), and hydraulic (product). Schuler's knuckle-joint press is a crank that drives a two-bar toggle into the ram, giving a long dwell and a huge force near BDC. 507 #132 is a different cell: two oblique bars between disks that go upright when the top disk turns. #105 is a screw stamp. #133 is a pinion-and-sector platen.
+
+Catalog already has one over-center product-shaped kit: toggle_clamp (welding hold-down, posed). grippers already proposed draw_latch and hood_latch (panel locks on the same law). screws-linear already proposed scissor_jack (screw shortens an X). bistable_beam is a compliant snap-through, not a bar toggle. lazy_tongs is a rhomb chain that extends, not a force amplifier. Grep of mechlib/ finds no toggle_joint, knuckle_press, or knee_lever. A punch-press frame, a fly press with a ball, or a vise-grip plier is a product.
+
+FDM reality. toggle_joint is two bars and a driven knee, ram on the far pin; pose is knee angle, MA = 1/tan(theta). Prints flat. This is the missing primitive under toggle_clamp. knuckle_press is a crank + connecting rod + two rockers + two push rods + ram (the usual Schuler inversion); pose is crank angle, ram z and a dwell near BDC. knee_lever is 507 #164, a horizontal lever that lifts the knee, a one-shot stamp. disk_bar_press is 507 #132, two (or more) bars between a grounded disk and a turning disk; unique, not a four_bar. double_toggle is two toggles in series or in parallel, the coining-press default. Do not re-rank toggle_clamp, scissor_jack, or the latches. Do not emit a C-frame press.
+
+**New categories**
+- none
+
+**Candidates**
+- **toggle_joint** [high] fit=yes — The generic over-center cell. toggle_clamp is a hold-down with a handle and a toe. This is the force-amplifier agents reinvent for presses, locks, and folding legs.
+- **knuckle_press** [high] fit=yes — The named press drive. slider_crank is a punch without the force spike. toggle_joint is the last two bars. This is the whole 1-DoF cell, not a C-frame machine.
+- **knee_lever** [med] fit=yes — 507's other named toggle. Hand-driven, not crank-driven. Distinct from knuckle_press (continuous rotation) and from toggle_clamp (clamps, does not stamp).
+- **disk_bar_press** [med] fit=yes — Oblique bars between disks. Not a planar toggle and not a screw. Named 507 press, unused elsewhere in the survey.
+- **double_toggle** [med] fit=yes — Two knees, more MA, more dwell. Useful as a named kit once toggle_joint exists; do not ship it first.
+- **sector_press** [low] fit=maybe — A sector and a connecting rod. No new pair. Skip unless someone wants the named 507 demo.
+- **screw_stamp** [low] fit=maybe — Flying / screw stamp. The primitives exist. A named kit is optional teaching only.
+- **toggle_clamp_again** [low] fit=no — Already the over-center workholding knee. Do not claim it twice.
+- **scissor_jack_again** [low] fit=no — A screw shortens an X. Different law from a toggle (no over-center lock). Ship it under linear.
+- **draw_hood_latch_again** [low] fit=no — Panel locks on the toggle law. Other slice owns them.
+- **punch_press_product** [low] fit=no — A finished machine. The cell is knuckle_press or slider_crank.
+
+## analog-computing-counters — Analog computers, integrators, and mechanical counters
+
+Mechanical computation splits into digital counters (discrete teeth, carry) and analog integrators (a rolling pair whose output angle is the integral of a product). 507 is thick on the digital side: revolution-counters and meters 63-71 (jumping pawl + star, worm, mutilated gear). The analog side is later: Amsler polar planimeter 1854 (Green's theorem as a measuring wheel on a two-bar), Thomson/Kelvin ball-and-disk integrator (output omega ~ r * omega_disk), Bush differential analyzer (many integrators). Digital adders sit on Leibniz's stepped drum (1673, Staffelwalze: teeth of increasing length so a slider picks 0-9) and Odhner's pinwheel (variable protruding pins). IFToMM treats these as function generators, not as machines.
+
+Catalog already covers the indexer cousins, not the compute cells. geneva_pair is a film/turret step (usecase: projectors, indexing tables). star_wheel is a bottle/can pocket wheel (usecase: filling and capping). intermittent_gear_pair is a mutilated lock. Grep of mechlib/ and usecases.py finds no Leibniz, pinwheel, planimeter, integrator, or odometer decade. usecases.py 'mechanical counters' is a geneva line. metrology-drawing owns tracers (helicograph, pantograph), not integrators. A Curta, a Pascaline cabinet, or a room-sized differential analyzer is a product.
+
+FDM reality. leibniz_wheel is a cylinder with nine tooth-lengths; a sliding pinion meshes 0-9 teeth per turn; prints as a stepped drum + a pinion on a spline. pinwheel is a disk of radially sliding pins set by a cam or a lever; the Odhner/Curta cell. planimeter is two bars, a pole weight, a tracer, and a measuring wheel that rolls/skids; prints; pose is the tracer path, output is wheel angle ~ area. ball_disk_integrator is a spinning disk, a ball (or two) at radius r, a cylinder that takes the integral; prints oversized for teaching; r is the second input. decade_counter is a 10-tooth wheel plus a 2-tooth carry pinion (odometer); geneva can fake it but the named cell is a 10:1 carry. Do not emit a calculator or a tide-predicting machine.
+
+**New categories**
+- none
+
+**Candidates**
+- **leibniz_wheel** [high] fit=yes — Variable tooth count in one revolution. Not a sector (fixed teeth) and not a mutilated gear (lock + gap). Every printed calculator demo invents this drum.
+- **pinwheel** [high] fit=yes — The other variable-tooth primitive. Pins in, pins out. Distinct from Leibniz (axial steps) and from a detent (no count).
+- **planimeter** [high] fit=yes — Green's theorem as a kit. Not a pantograph (scale) and not a helicograph (spiral). The analog area cell. Linear variant is the same wheel on a rolling carriage.
+- **ball_disk_integrator** [high] fit=yes — The analog multiply-and-integrate cell. Bombsights, tide machines, Bush analyzers. Not a planimeter (area, not time integral) and not a ball bearing (no output shaft).
+- **decade_counter** [med] fit=yes — 10:1 carry. geneva is a turret step with dwell; this is a continuous-input decade. star_wheel pockets bottles, it does not carry tens.
+- **pascaline_sautoir** [med] fit=yes — Gravity carry, not a 2-tooth pinion. The other digital-carry cell. After decade_counter, this is the historical sibling.
+- **harmonic_analyzer** [low] fit=maybe — Fourier as an assembly of integrators. Ship ball_disk_integrator first. Do not emit a tide predictor.
+- **geneva_as_counter** [low] fit=no — An indexer with dwell. usecase already names mechanical counters. Do not file it here.
+- **star_wheel_as_counter** [low] fit=no — A packaging pocket wheel. Not a decade and not an integrator.
+- **curta_product** [low] fit=no — Curta / Pascaline / arithmometer cabinets. Product. The cell is the drum or the pinwheel.
+
+## hammers-drops-stamps — Trip hammers, drops, and impact cells
+
+An impact cell stores energy (gravity or a spring) and dumps it in one stroke. 507 splits the family by how the mass is lifted and how it is released: tilt/trip hammer 72 (wiper cam lifts a third-order helve, gravity drops it), 353 (same cam, first-order helve), drop/stamp 85 (two wipers lift a vertical rod, the rod falls), pile-driver releasing-hook 251 (hooks open at the top of a slot). Norton and forge practice add the board-drop (friction boards lift the ram; a clutch dumps it) and the steam/air hammer (a piston, a product). Reuleaux's wrapping/cam higher pair is the lift; the drop is a free prismatic. This is not a press (toggles-presses: force without flight) and not a cam profile (the cam is already in-tree).
+
+Catalog already has the lift cam, not the hammer. snail_cam usecase names trip hammers; the solid is a drop-off plate, no helve. plate_cam / roller_follower can lift; they do not fall. cams-indexing proposed linear_cam as a trip-hammer form (the translating wedge), still no hammer. Grep of mechlib/ finds no tilt_hammer, drop_stamp, or pile_release. Neighbours: slider_crank (constrained punch), toggle_joint (proposed, force lock), ratchet (holds, does not drop). A forge, a steam hammer, or a pile-driving rig is a product.
+
+FDM reality. tilt_hammer is a pivoted helve, a head, and a wiper wheel (n lobes); pose is cam angle, the head flies after the lobe lets go. Prints as bars + a cam. drop_stamp is a vertical ram in a way, two wipers, gravity return; 507 #85 ore stamper. pile_release is a pair of hooks that a slot squeezes open at TDC; the mass falls; the lift can be a winch already in-tree. board_drop is two boards, a ram, a friction clutch; prints as a teaching analog (TPU pads). Do not emit a Nasmyth steam hammer or a smithy.
+
+**New categories**
+- none
+
+**Candidates**
+- **tilt_hammer** [high] fit=yes — The trip-hammer primitive. snail_cam is a drop-off plate with no helve. slider_crank is constrained. This is lift-then-fall.
+- **drop_stamp** [high] fit=yes — Vertical gravity stamp. Not a tilt (no helve) and not a press (the ram flies). 507's named ore-stamper.
+- **pile_release** [high] fit=yes — Automatic release at height. Not a cam (no lobe) and not a tilt. Pile-driver / drop-weight cell. The rig is a product.
+- **trip_hammer_first_order** [med] fit=yes — 507's other named helve. Distinct pivot. Do not ship a second name if tilt_hammer can take order=1|3.
+- **board_drop** [med] fit=yes — Friction lift, no cam. The other industrial drop. Distinct from drop_stamp (wipers) and from pile_release (hooks).
+- **snail_as_hammer** [low] fit=no — A drop-off plate. usecase already names trip hammers. The missing part is the helve, not a second snail.
+- **linear_cam_as_hammer** [low] fit=no — A translating wedge. The lift, not the falling mass. Do not claim it twice.
+- **slider_crank_punch** [low] fit=no — Constrained punch. No free flight. Presses own it.
+- **steam_hammer_product** [low] fit=no — 507 steam hammer 47 is a finished machine. The cell would be a double-acting cylinder, already rejected as a product on the fluid slice.
+- **forge_product** [low] fit=no — A smithy. The reusable part is tilt_hammer.
+
+## FINAL
+
+Cutoff reached 2026-08-13 07:28 EEST. 31 slices done, 0 pending. 229 fit=yes, 63 maybe, 101 no. 122 of the yeses are high. Seven new shelves named: brakes, clockwork, constant_force, dampers, wheels, spatial, leg_mechanisms. spatial and leg_mechanisms can stay under linkages if a 31st gallery group is refused.
+
+This is research, not an API list. Build the pair and pose holes first. Historical 507 names wait.
+
+**Ship first (agents invent these from boxes today)**
+
+1. **revolute_pair**, **pin_in_slot**, **cylindrical_pair**, **rod_end** — the missing pair primitives. Every printed linkage currently rolls its own pin and slot.
+2. **four_bar_coupler_point** — unlocks Roberts, Hoecken tracer, and cognates without a new topology.
+3. **toggle_joint** — the generic over-center. toggle_clamp is a hold-down, not the cell.
+4. **sheave** + **block_and_tackle** — wrapping simple machine. idler_pulley is a belt.
+5. **parallel_gripper** — cobot EOAT default. iris and scroll centre; nothing closes two parallel jaws.
+6. **wedge** — the missing simple machine. Every power screw is a wrapped wedge.
+7. **notch_hinge** + **living_hinge** — atomic flexure and the named PP hinge. knuckle_hinge is a pin.
+8. **grooved_plate_cam** — form-closed plate. plate_cam still needs a spring.
+9. **lantern_pinion** + **face_gear** — clock pinion and the printable 90-deg that is not a bevel.
+10. **v_wheel_rail** — hobby linear default. linear_way slides.
+11. **hooke_pose** + **oldham_pose** — solids exist, gallery left them static. Highest-value play.
+12. **watt_six** + **stephenson** — the two 6-bar topologies. Klann and Jansen sit on Stephenson III.
+13. **band_brake** — first brake. Clutches join shafts; nothing grounds one.
+14. **orifice_dashpot** — first damper. hydraulic_cylinder is a force source.
+15. **mecanum_wheel** + **swivel_caster** — holonomic drive and the self-aligning undriven wheel.
+
+**Next wave (named kits, still semi-primitive)**
+
+hart_inversor, tusi_couple, spherical_four_bar, bennett, five_bar, delta_parallelogram, geneva_internal, conjugate_cam_pair, wrap_spring_clutch, scissor_jack, hydraulic_cylinder, negator_spring, lever_escapement, going_barrel, centrifugal_impeller, vane_pump, crossed_roller, watt_governor, miura_cell, eccentric, silent_chain, pin_tumbler, planimeter, ball_disk_integrator.
+
+**New shelves, ranked**
+
+1. **brakes** — three high kits already (band, shoe, park pawl). Cleanest split from clutches.
+2. **clockwork** — escapement is misfiled under indexing. Lever, verge, gravity, going barrel.
+3. **constant_force** — Negator, remontoire, gravity arm. Cross-cuts flexure, linear, and clockwork.
+4. **dampers** — orifice, rotary vane, snubber, inerter. Two-terminal rate, not a brake.
+5. **wheels** — Mecanum, omni, caster, ball-transfer. Not pulleys, not water wheels.
+
+**Do not build**
+
+Finished products: Delta robot, Stewart hexapod, Strandbeest, punch-press C-frame, lockset, Curta, differential analyzer, forge, hydro plant, swerve module, sewing machine, loom. Those are assemblies of the cells above.
+
+**Animate before adding solids**
+
+oldham_pose, hooke_pose, iris_play, knuckle_play, telescoping_play, lead_screw_play, scroll_pose, intermittent_gear_pose, peristaltic_play. The geometry is already in-tree.

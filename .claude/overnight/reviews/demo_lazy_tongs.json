@@ -1,0 +1,14 @@
+{
+  "bodies_that_look_frozen": [
+    "frame",
+    "pin_0"
+  ],
+  "cycle_closes": true,
+  "demo": "demo_lazy_tongs",
+  "issues": [],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Red frame stays put. Yellow scissor bars fold from an open zigzag into a compact stack around 80-150 deg, then flatten and shoot the blue output yoke out along the axis by 300 deg.",
+  "notes": "Nuremberg-scissors stroke: retract then extend in one 360 drive. Front row shows the stack thinning as the rhombs flatten. Pins travel with the joints; nothing detaches.",
+  "verdict": "pass"
+}

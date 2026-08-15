@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_ball_socket_joint",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: pink ball stud snapped into a blue split-finger socket, stem leaving the mouth at an angle inside the cone.",
+  "notes": "Non-animated. Side row shows the slots and the lip past the ball equator. Stud is retained, not exploded out of the cup. Sane rest assembly.",
+  "verdict": "pass"
+}

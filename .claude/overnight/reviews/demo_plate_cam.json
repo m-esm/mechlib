@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_plate_cam",
+  "issues": [],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Blue plate cam spins in place while the orange roller stays on the profile and the green follower stem walks clockwise around the cam with changing lift (short at 60 deg, longer at 139 deg).",
+  "notes": "Demo param is follower_deg starting at 60. Follower orbits rather than sliding on a fixed axis: kinematic inversion of a radial cam, lift still reads off the stem length. Last column at 362.4 continues clockwise toward the 60 deg start.",
+  "verdict": "pass"
+}

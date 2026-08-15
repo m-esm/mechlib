@@ -1,0 +1,14 @@
+{
+  "bodies_that_look_frozen": [
+    "clamp_base",
+    "pivot_pin"
+  ],
+  "cycle_closes": true,
+  "demo": "demo_eccentric_cam_clamp",
+  "issues": [],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Red eccentric handle turns a full circle on the fixed orange pivot; the green follower is pressed and released as the offset disc sweeps past, blue base stays put.",
+  "notes": "Handle clock: ~1 o'clock at 0, then 11, 9, 7, 4, 3, heading back to 1. 180 is the clamp-overlap pose. Last column continues the rotation.",
+  "verdict": "pass"
+}

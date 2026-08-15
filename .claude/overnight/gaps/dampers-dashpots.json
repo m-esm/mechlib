@@ -1,0 +1,122 @@
+{
+  "candidates": [
+    {
+      "already": "hydraulic_cylinder (proposed)",
+      "api_shape": "orifice_dashpot(bore, rod_d, orifice_d, stroke, extend_frac) -> {tube, piston, rod} plus c ~ mu*A^2/d^4",
+      "fdm": "Tube, piston with a through-hole, rod, two caps. Prints. Fluid is bought. Leak around the piston is the honesty note, same as a printed pump. Air dashpot is the same kit with a smaller hole.",
+      "mechlib_fit": "yes",
+      "name": "orifice_dashpot",
+      "priority": "high",
+      "why": "The viscous linear primitive. Door closers, instrument settling, recoil buffers. hydraulic_cylinder is a force source (ports, pressure). This is a rate sink (a hole, no pump). Distinct."
+    },
+    {
+      "already": null,
+      "api_shape": "rotary_vane_damper(pot_d, vane_t, sweep_deg, fill) -> {pot, vane, cap}",
+      "fdm": "A pot, a vane on a shaft, a cap, bought silicone grease. Prints. Cabinet-door / toilet-seat / steering-damper class. Seal is a bought O-ring.",
+      "mechlib_fit": "yes",
+      "name": "rotary_vane_damper",
+      "priority": "high",
+      "why": "The viscous rotary primitive. No current API dissipates rotation. Not a wrap-spring (locks) and not a brake (grounds). Soft-close lids are the agent job."
+    },
+    {
+      "already": "linear_way, band_brake (proposed)",
+      "api_shape": "friction_snubber(pad_a, pad_b, preload) -> two pads + spring, F = mu*N*sign(v)",
+      "fdm": "Two printed pads, a belleville or coil preload. Prints. Coulomb, not viscous. Railway snubber / leaf-spring interleaf stand-in.",
+      "mechlib_fit": "yes",
+      "name": "friction_snubber",
+      "priority": "high",
+      "why": "Dry friction as a designed sink, not a parasitic way. band_brake grounds a shaft; this is a two-terminal pad pair on a rod or a leaf."
+    },
+    {
+      "already": "rack_pinion, flywheel, lead_screw",
+      "api_shape": "inerter(stroke, flywheel_J, drive='rack'|'screw') -> {term_a, term_b, pinion_or_nut, flywheel} F = b * a_rel",
+      "fdm": "Two eyes, a rack or screw, a printed flywheel. Prints. Smith 2002. The two-terminal packaging is the kit; the tooth is rack_pinion.",
+      "mechlib_fit": "yes",
+      "name": "inerter",
+      "priority": "high",
+      "why": "Not a damper (no heat) but every modern network draws it next to C and K. Vehicle suspensions, TMDIs. Agents searching inerter currently get nothing. Composition of existing parts, still a named primitive."
+    },
+    {
+      "already": "coil_spring, bellows_suction_cup",
+      "api_shape": "bumper(d, h, shape='puck'|'bellows'|'cone') -> one TPU body",
+      "fdm": "A printed TPU puck or bellows. The cheapest sink. Progressive if conical.",
+      "mechlib_fit": "yes",
+      "name": "elastomer_bumper",
+      "priority": "med",
+      "why": "End-stop / snubber pad. Not a spring (the point is hysteresis and a hard stop). Fine as a one-body kit so agents stop inventing it from cyl."
+    },
+    {
+      "already": "coil_spring, orifice_dashpot, flywheel",
+      "api_shape": "mass + spring + dashpot on a frame. Frahm 1909",
+      "fdm": "Prints as an assembly. A building TMD is a product. A small instrument TMD is composition.",
+      "mechlib_fit": "maybe",
+      "name": "tuned_mass_damper",
+      "priority": "low",
+      "why": "Named, real, and agents will ask. After dashpot and a mass exist, it is three parts on a plate. Close to a product. Rank after the primitives."
+    },
+    {
+      "already": "orifice_dashpot",
+      "api_shape": "dashpot with air and a check that dumps one way",
+      "fdm": "Same envelope as orifice_dashpot plus a check_valve. Pneumatic cushion on a cylinder.",
+      "mechlib_fit": "maybe",
+      "name": "air_cushion",
+      "priority": "low",
+      "why": "A parameter on the dashpot (fluid=air, plus a check), not a second kit."
+    },
+    {
+      "already": null,
+      "api_shape": null,
+      "fdm": "Prints a magnet/copper cage.",
+      "mechlib_fit": "no",
+      "name": "eddy_damper",
+      "priority": "low",
+      "why": "Field device. Same reject as magnetic_gear / magnetic_bearing."
+    },
+    {
+      "already": "orifice_dashpot",
+      "api_shape": null,
+      "fdm": "Monotube with gas charge, valving, seals. Product.",
+      "mechlib_fit": "no",
+      "name": "hydraulic_shock_product",
+      "priority": "low",
+      "why": "Fox / Bilstein / Koni. The reusable part is orifice_dashpot. The shock is a finished absorber."
+    },
+    {
+      "already": "band_brake (proposed)",
+      "api_shape": null,
+      "fdm": "Covered on the brakes shelf.",
+      "mechlib_fit": "no",
+      "name": "brake_as_damper",
+      "priority": "low",
+      "why": "A brake grounds a shaft to stop it. A damper is a two-terminal rate. Do not merge the shelves."
+    }
+  ],
+  "id": "dampers-dashpots",
+  "new_categories": [
+    {
+      "name": "dampers",
+      "why": "Energy dissipation is a machinery class. No current shelf. First kits: orifice_dashpot, rotary_vane_damper, friction_snubber, inerter. Brakes ground a shaft; dampers are two-terminal rate elements."
+    }
+  ],
+  "rejected": [
+    {
+      "name": "mr_fluid",
+      "why": "Magnetorheological fluid + coil. Hardware."
+    },
+    {
+      "name": "taipei_101_tmd",
+      "why": "A building-scale pendulum product. The cell is mass+spring+dashpot."
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Dashpot",
+    "https://en.wikipedia.org/wiki/Tuned_mass_damper",
+    "https://en.wikipedia.org/wiki/Inerter_(mechanical_networks)",
+    "https://507movements.com/toc.html",
+    ".claude/overnight/gaps/missing-categories.json dampers shelf",
+    ".claude/overnight/gaps/screws-linear-actuators.json hydraulic_cylinder",
+    "mechlib/ grep damper|dashpot|snubber|inerter empty; flywheel, coil_spring, hydraulic_cylinder (proposed) are neighbours"
+  ],
+  "summary": "A damper turns organised motion into heat. Norton and machine-design texts split by the dissipation law: viscous (F = c*v, dashpot / rotary vane in a pot), friction (F = mu*N, Coulomb snubber / interleaf), hysteretic / elastomer (loss in the solid), fluid-dynamic (orifice, shock), and field (eddy, MR). Smith 2002 added the inerter (F = b*a_rel), a two-terminal inertia that is not a damper but lives on the same shelf because every textbook now draws C-K-B networks. 507 barely names dissipation (friction brake 242, dynamometer 244, friction test 373). Howell's lossy flexure is a viscoelastic hinge, not a pot. Reuleaux has no damper pair.\n\nCatalog has zero damper APIs. Grep of mechlib/ for damper, dashpot, snubber, inerter, orifice, shock is empty. Neighbours that are not dampers: flywheel (stores, does not dissipate), coil/leaf/wave/belleville (return force rises with x), band_brake (clutches slice, grounds a shaft, not a rate element), linear_way (friction is parasitic). missing-categories already ranked a dampers shelf as med: add it when the first kit lands.\n\nFDM reality. orifice_dashpot is a piston with a hole in a closed cylinder; fluid is bought oil or air; the envelope is tube+piston+rod, cousin of hydraulic_cylinder, but the hole and the sealed volume are the point. rotary_vane_damper is a vane in a silicone-filled pot (cabinet door, toilet seat, steering); prints as a pot + vane + bought grease. friction_snubber is two pads and a preload (Coulomb); prints. elastomer_bumper is a TPU puck or bellows, the cheapest printed sink. inerter is a rack (or leadscrew) spinning a flywheel between two terminals; rack_pinion + flywheel already exist, the kit is the two-terminal packaging. A TMD is mass + spring + dashpot: composition, close to a product once you add the building. Hydraulic monotube shocks, eddy plates, and MR fluid are hardware. Do not file a brake as a damper.",
+  "title": "Dampers, dashpots, and energy sinks"
+}

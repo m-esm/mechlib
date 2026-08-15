@@ -1,4 +1,4 @@
-__version__ = "0.10.0"
+__version__ = "0.10.1"
 
 from .bearings import plain_bushing, printed_ball_bearing, thrust_washer
 from .cams import (
@@ -44,8 +44,10 @@ from .couplings import (
     cv_velocity_ratio,
     double_cardan_joint,
     hirth_coupling,
+    hooke_pose,
     jaw_coupling,
     oldham_coupling,
+    oldham_pose,
     tripod_cv_joint,
     tripod_pose,
     universal_joint,
@@ -422,7 +424,9 @@ __all__ = (
     "differential_screw",
     "archimedes_screw",
     "oldham_coupling",
+    "oldham_pose",
     "universal_joint",
+    "hooke_pose",
     "jaw_coupling",
     "torque_limiter",
     "freewheel_clutch",

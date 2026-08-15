@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_peristaltic_pump_head",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: teal cap on a blue race body, rotor posts visible through the windows, tube slots at the rim.",
+  "notes": "Non-animated. Cap, body, and rotor stay assembled. Tubing is a bought part so not shown. Sane rest assembly of a peristaltic head.",
+  "verdict": "pass"
+}

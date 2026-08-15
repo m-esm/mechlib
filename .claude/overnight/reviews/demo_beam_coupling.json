@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_beam_coupling",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: single purple helical-slit coupling with clamp slots, bore, and set-screw bosses.",
+  "notes": "Non-animated. One body. Helical beam and split clamps read. Sane rest assembly of a beam coupling.",
+  "verdict": "pass"
+}

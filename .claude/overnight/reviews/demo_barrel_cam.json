@@ -1,0 +1,13 @@
+{
+  "bodies_that_look_frozen": [
+    "barrel_cam"
+  ],
+  "cycle_closes": true,
+  "demo": "demo_barrel_cam",
+  "issues": [],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Follower pin and blue guide orbit the stationary barrel while the pin stays seated in the helical groove and climbs/descends with the groove program.",
+  "notes": "Barrel is correctly stationary; pin_phase_deg walks the follower around. Last column at 340 deg continues toward the 40 deg start.",
+  "verdict": "pass"
+}

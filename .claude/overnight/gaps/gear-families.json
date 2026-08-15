@@ -1,0 +1,186 @@
+{
+  "candidates": [
+    {
+      "already": null,
+      "api_shape": "lantern_pinion(pins, pin_d, pitch_r, width, disc_t, bore_d) / lantern_wheel(teeth, ...) -> {pinion, wheel} posed",
+      "fdm": "Two discs plus printed pins or dropped-in dowels. The mating wheel is an extruded socket profile. Extremely FDM-friendly; wooden-clock practice transfers directly. Clearance on pin diameter is the only parameter that matters.",
+      "mechlib_fit": "yes",
+      "name": "lantern_pinion",
+      "priority": "high",
+      "why": "Cage / pin pinion: cylindrical rods on a circle mesh a wheel whose teeth are cycloidal or circular-arc sockets. Clock trains, wooden mills, any printed clock that should not use involute pinions under 8 teeth. Distinct from roller_sprocket_2d (chain) and from spur_gear."
+    },
+    {
+      "already": "bevel_gear_pair, worm",
+      "api_shape": "face_gear_pair(z_face, z_pinion, m, face_w, offset=0, ...) -> {face, pinion} posed at 90 deg",
+      "fdm": "Pinion is spur_gear. Face is a disc with teeth lofted or boolean-cut from a rotated pinion envelope (same trick as ring_gear). Prints face-down or standing. Offset (hypoid-ish) is an extra argument, not a second kit.",
+      "mechlib_fit": "yes",
+      "name": "face_gear",
+      "priority": "high",
+      "why": "Crown / face gear: a disc with teeth on its face meshed by a spur or helical pinion, shafts at 90 deg, pinion axis in the disc plane. Wikipedia face gear. The printable right-angle that is not a bevel loft and not a worm. Used as crown wheels, rotary-table drives, and cheap 90-deg prints."
+    },
+    {
+      "already": "spur_gear(helix_deg), worm",
+      "api_shape": "crossed_helical_pair(z1, z2, m, helix_deg, shaft_angle_deg=90, offset, width) -> {gear_a, gear_b}",
+      "fdm": "Two spur_gear(..., helix_deg=45) on skew axes. Prints standing. Load capacity is poor; that is the textbook warning, not a reason to omit the pair.",
+      "mechlib_fit": "yes",
+      "name": "crossed_helical_pair",
+      "priority": "high",
+      "why": "Two helical gears on skew (usually 90 deg) non-intersecting shafts. Screw gears. Point contact, low load, easy 90-deg when you already have helix_deg. Not a worm (worm wraps) and not a bevel (axes miss)."
+    },
+    {
+      "already": null,
+      "api_shape": "elliptical_gear_pair(a, b, z1, z2, m, width, phase_deg) -> {gear_a, gear_b}; optional pitch_curve=...",
+      "fdm": "Extrude a pitch-curve involute (or circular-tooth stand-in) of two conjugate ellipses. Print flat. Phase is a function of rolling arc length, not mesh_phase.",
+      "mechlib_fit": "yes",
+      "name": "noncircular_gear_pair",
+      "priority": "med",
+      "why": "Elliptical and other noncircular conjugate pairs. Variable ratio, axle-displacement oscillation, printing-press and textile function generation. Hirnschall and MakerWorld show FDM is routine. Not a round spur with a different argument."
+    },
+    {
+      "already": "bevel_gear_pair, planet_stage",
+      "api_shape": "bevel_differential(m, z_side, z_spider, n_spiders=2, ...) -> {side_a, side_b, spiders, carrier}",
+      "fdm": "Reuse bevel_gear_pair miters. Carrier is a printed cage. Finger-spun teaching models are common. Do not emit axle tubes or a hypoid ring.",
+      "mechlib_fit": "yes",
+      "name": "bevel_differential",
+      "priority": "med",
+      "why": "Open bevel differential: two side gears + two (or four) spider miters in a carrier. The teaching analog of planet_stage for intersecting axes. Automotive axle, robot yaw split, any 1-in 2-out torque split. The housing and hypoid ring are the product; the four-bevel kit is not."
+    },
+    {
+      "already": "spur_gear, herringbone_gear",
+      "api_shape": "helical_pair(z1, z2, m, helix_deg, width, ...) -> {gear_a, gear_b} opposite hands, posed",
+      "fdm": "Print standing. Needs a thrust face or bearing. Phasing is mesh_phase plus the helix lead.",
+      "mechlib_fit": "yes",
+      "name": "helical_pair",
+      "priority": "med",
+      "why": "Named posed pair of opposite-hand single helicals on parallel shafts. spur_gear(helix_deg) already builds one blank; there is no mesh kit, no opposite-hand helper, and no thrust-bearing note. FDM people usually want herringbone instead, but helical is what they search."
+    },
+    {
+      "already": "planet_stage",
+      "api_shape": "sun_and_planet(z_sun, z_planet, m, rod_angle_deg, ...) -> {sun, planet, rod}",
+      "fdm": "Two spur gears and a planet rod. Prints flat. Pose is crank angle of the rod.",
+      "mechlib_fit": "yes",
+      "name": "sun_and_planet",
+      "priority": "med",
+      "why": "Watt's sun-and-planet: a planet pinned to a rod, walking around a fixed or driven sun, no ring. Converts reciprocating steam to rotation without a slider-crank patent. Distinct from planet_stage (which is a modern epicyclic with a ring). Historical and still the name people use."
+    },
+    {
+      "already": "bevel_gear_pair",
+      "api_shape": "bevel_gear_pair(..., shaft_angle_deg=90)",
+      "fdm": "Same Tredgold loft with a free shaft angle.",
+      "mechlib_fit": "maybe",
+      "name": "angular_bevel",
+      "priority": "low",
+      "why": "Straight bevels whose shaft angle is not 90 deg. bevel_gear_pair hard-codes delta1+delta2=90. Useful, but it is a parameter on the existing loft, not a new family."
+    },
+    {
+      "already": "bevel_gear_pair",
+      "api_shape": "prefer face_gear_pair(offset=...) over a fake hypoid tooth",
+      "fdm": "Printable as a demo (Thingiverse 1888576). High reduction, offset shafts. Wear is ugly without huge backlash.",
+      "mechlib_fit": "maybe",
+      "name": "hypoid_standin",
+      "priority": "low",
+      "why": "Offset spiral bevel. True conjugate hypoid is a face-hobbed envelope. Otvinta's printable model is a stand-in. A cheap FDM version is face_gear_pair(offset=...) or a skewed bevel loft. Do not claim Gleason conjugacy."
+    },
+    {
+      "already": "worm, face_gear",
+      "api_shape": null,
+      "fdm": "Hard to print a conjugate pair. Low priority.",
+      "mechlib_fit": "maybe",
+      "name": "spiroid",
+      "priority": "low",
+      "why": "Face-type worm / helicon: a tapered worm meshing a face gear. Compact right-angle high ratio. Almost no honest FDM generators; McNeel thread is people asking how to model one. After face_gear + worm exist, a spiroid is a research extra."
+    },
+    {
+      "already": "bevel_gear_pair, cycloidal_drive, harmonic_drive",
+      "api_shape": "compose four bevels; do not add a fifth reduction family until bevel_differential lands",
+      "fdm": "Prints, noisy, needs a bearing for the nutating member.",
+      "mechlib_fit": "maybe",
+      "name": "nutating_drive",
+      "priority": "low",
+      "why": "Pericyclic / wobble: typically four bevels, one nutates, huge ratio. Thingiverse/Retsetman printed boxes exist. The tooth primitive is bevel_gear_pair. The wobble gearbox is an assembly close to a product."
+    },
+    {
+      "already": "spur_gear_mesh",
+      "api_shape": "compound_train([(z,m), ...]) -> posed gears + centre distances",
+      "fdm": "No new solids.",
+      "mechlib_fit": "maybe",
+      "name": "compound_train",
+      "priority": "low",
+      "why": "Two or more pairs sharing a shaft. A layout helper, not a tooth. Agents can already place two spur_gear_mesh. A thin compound_pair(z1,z2,z3,z4) poser would stop people inventing centre distances."
+    },
+    {
+      "already": null,
+      "api_shape": null,
+      "fdm": "Prints a cage; the working surface is bought magnets.",
+      "mechlib_fit": "no",
+      "name": "magnetic_gear",
+      "priority": "low",
+      "why": "Pole-pair magnet rings, coaxial or concentric. Not a printable tooth. The printed part is a magnet holder, which is a project fixture."
+    },
+    {
+      "already": "spur_gear",
+      "api_shape": null,
+      "fdm": "Covered.",
+      "mechlib_fit": "no",
+      "name": "single_helical_blank",
+      "priority": "low",
+      "why": "Already spur_gear(..., helix_deg=). Do not add helical_gear as a second blank."
+    },
+    {
+      "already": "spur_gear",
+      "api_shape": null,
+      "fdm": "Covered.",
+      "mechlib_fit": "no",
+      "name": "sector_gear",
+      "priority": "low",
+      "why": "Already spur_gear(sector_deg=) and spur_gear_2d(sector=). Gallery even has spur_gear_sector_demo. usecase text is the sector use."
+    },
+    {
+      "already": "herringbone_gear, planet_stage, ring_gear",
+      "api_shape": null,
+      "fdm": "Covered as composition.",
+      "mechlib_fit": "no",
+      "name": "herringbone_internal_planet",
+      "priority": "low",
+      "why": "herringbone_gear, planet_stage, ring_gear already exist. An internal herringbone or herringbone planet is a parameter combination, not a new family."
+    }
+  ],
+  "id": "gear-families",
+  "new_categories": [],
+  "rejected": [
+    {
+      "name": "spiral_bevel_zerol",
+      "why": "Curved-tooth bevels. FDM cannot hold the face-milled spiral well enough to beat a straight bevel with extra backlash. bevel_gear_pair is the printable intersecting-axis kit."
+    },
+    {
+      "name": "automotive_axle",
+      "why": "Hypoid ring + differential carrier + axle tubes. Product. The reusable part is bevel_differential (and maybe a face_gear ring)."
+    },
+    {
+      "name": "ravigneaux_simpson",
+      "why": "Named compound planetaries inside automatic transmissions. Products built from planet_stage cells."
+    },
+    {
+      "name": "miter_gear",
+      "why": "Just bevel_gear_pair(z1=z2). No second kit."
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Gear",
+    "https://en.wikipedia.org/wiki/List_of_gear_nomenclature",
+    "https://en.wikipedia.org/wiki/Spiral_bevel_gear",
+    "https://en.wikipedia.org/wiki/Bevel_gear",
+    "https://en.wikipedia.org/wiki/Gear_train",
+    "https://howtomechatronics.com/how-it-works/how-to-3d-print-gears-the-ultimate-guide/",
+    "https://jlc3dp.com/blog/3d-printed-gear-guide",
+    "https://blog.hirnschall.net/gears-for-3d-printing/",
+    "https://www.otvinta.com/download06.html",
+    "https://www.thingiverse.com/thing:1888576",
+    "https://www.thingiverse.com/thing:6682195",
+    "https://makerworld.com/en/models/1147744-elliptical-gears",
+    ".claude/overnight/catalog.json public_api + categories gears/drives + animate demo_bevel/demo_herringbone/demo_planet_stage/demo_cycloidal/demo_harmonic/demo_worm + left_out_notes",
+    "mechlib/gears.py (spur_gear helix_deg/sector_deg, herringbone_gear, bevel_gear_pair 90deg, worm, cycloidal_*, ring_*), mechlib/drives.py (printed_worm, flat_worm, planet_stage, harmonic_drive), mechlib/usecases.py"
+  ],
+  "summary": "Gears split first by shaft layout, then by tooth line, then by train. Parallel: spur, helical, herringbone/double-helical, internal/ring, rack, sector. Intersecting: straight / spiral / zerol bevel, miter (1:1 bevel), crown/face (planar pitch + pinion). Skew: worm, crossed-helical/screw gears, hypoid (offset spiral bevel), spiroid/helicon (face-type worm). Special profiles: cycloidal pin drive, harmonic/strain-wave, lantern/cage/pin pinion, noncircular/elliptical. Trains: simple pair, compound (two pairs on a shared shaft), planetary/epicyclic, Watt sun-and-planet (planet on a rod, no ring), bevel/hypoid automotive differential, Ravigneaux, nutating/pericyclic/wobble (typically four bevels, one nutates).\n\nCatalog already ships the FDM staples. Parallel: spur_gear_2d / spur_gear / spur_gear_mesh (spur_gear already takes helix_deg and sector_deg \u2014 single helical and sector are arguments, not missing solids), herringbone_gear, rack_2d / rack_pinion, internal_gear_2d / ring_gear / ring_gear_mesh. Intersecting: bevel_gear_pair (straight, 90 deg only, Tredgold back-cone). Skew: worm, printed_worm, flat_worm, worm_wheel_band, worm_coupon. Special: cycloidal_drive / cycloidal_pose, harmonic_drive, trochoid_profile_2d. Trains: planet_stage (fixed-ring epicyclic). roller_sprocket_2d is a chain wheel, not a gear. usecases.py maps spur_gear to steering sectors. Animate includes demo_bevel_gear_pair, demo_cycloidal_drive, demo_herringbone_gear, demo_planet_stage, demo_ring_gear_mesh, demo_spur_gear_mesh, demo_worm / demo_printed_worm / demo_flat_worm_pair, demo_harmonic_drive (left_out: harmonic deforms, worm pose is display-only). Grep of gears.py / drives.py / usecases.py finds no lantern, face/crown gear, hypoid, spiroid, crossed-helical pair, elliptical/noncircular, nutating, sun-and-planet, or differential kit.\n\nFDM reality: herringbone is the preferred printed parallel gear (cancels thrust, self-aligns; HowToMechatronics / Retsetman). Single helical prints (spur_gear helix_deg) but needs a thrust bearing. Lantern pinions are the clock default and print as a cage of dowels or printed pins. Face/crown is the easy printed right-angle when you do not want a bevel loft. Crossed-helicals are two helix_deg gears on skew shafts, low load, easy. Elliptical pairs are a popular demo (MakerWorld). True hypoid and spiroid envelopes want 5-axis grinding; Otvinta ships a finger-spun hypoid STL as a stand-in, not a conjugate generator. Nutating boxes print as four bevels (Thingiverse 6682195 / Retsetman) \u2014 composition, not a new tooth. Magnetic gears are magnet rings, not teeth. A bevel open-differential (four miters + two sides) is the teaching analog of planet_stage; the axle housing is a product.",
+  "title": "Gear and reduction families"
+}

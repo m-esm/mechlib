@@ -1,0 +1,167 @@
+{
+  "candidates": [
+    {
+      "already": "idler_pulley, grooved_drum, timing_pulley",
+      "api_shape": "sheave(groove_r, width, flange, bore_d, cheek=True) -> grooved rope wheel, optional strap",
+      "fdm": "A wheel with a circular or U groove sized to the rope, flanges that keep the line on. Prints standing or as a revolve. Not a GT2 tooth and not a helical winch drum.",
+      "mechlib_fit": "yes",
+      "name": "sheave",
+      "priority": "high",
+      "why": "The wrapping primitive for rope and wire. Every block, tackle, and fairlead starts here. idler_pulley is a crowned belt idler; timing_pulley has teeth; grooved_drum stores many turns. A sheave redirects one part of line."
+    },
+    {
+      "already": "sheave",
+      "api_shape": "block_and_tackle(n_sheaves, rope_d, frame) -> {fixed_block, moving_block, rope_path} plus MA and purchase",
+      "fdm": "Two frames, n printed sheaves, a posed rope polyline or a swept tube. Prints. Gun / luff / twofold / threefold are n= arguments. 507 #1-23.",
+      "mechlib_fit": "yes",
+      "name": "block_and_tackle",
+      "priority": "high",
+      "why": "The simple machine after the wedge and the screw. Mechanical advantage from wrapping. No current API poses more than one cable turn on a drum. The agent job when someone says 'pulley system' or 'purchase'."
+    },
+    {
+      "already": "grooved_drum, roller_sprocket_2d",
+      "api_shape": "weston_hoist(d_large, d_small, chain_pitch) -> {compound_sprocket, hook_sheave} MA = 2*D/(D-d)",
+      "fdm": "Two different-diameter chain wheels fixed together, an endless chain, a moving hook sheave. Prints. Self-locking if the diameter split is modest. Garage engine hoist.",
+      "mechlib_fit": "yes",
+      "name": "weston_differential",
+      "priority": "high",
+      "why": "Weston 1850s chain fall. Evolved from the Chinese windlass by making the rope endless. Distinct from block-and-tackle (equal sheaves, not self-locking) and from grooved_drum (one diameter)."
+    },
+    {
+      "already": "grooved_drum",
+      "api_shape": "chinese_windlass(d_large, d_small, rope_d) -> two drums on one shaft plus optional moving sheave. 507 #129/#352",
+      "fdm": "Two drum diameters on one axle. Rope winds on one and off the other. Prints. Same law as Weston, finite rope.",
+      "mechlib_fit": "yes",
+      "name": "chinese_windlass",
+      "priority": "high",
+      "why": "Differential windlass. Lift per turn is pi*(D-d). The prompt's Spanish windlass is a different machine (a twisting bar); this is the one 507 actually names. grooved_drum is a single radius_law, not two drums."
+    },
+    {
+      "already": null,
+      "api_shape": "cam_cleat(rope_d, cam_r, teeth) -> {base, cam_a, cam_b} one-way bite",
+      "fdm": "Two toothed cams on springs (or printed flexure tails). Line pulls through one way, locks the other. Prints. Sailing, tent guys, any rope lock.",
+      "mechlib_fit": "yes",
+      "name": "cam_cleat",
+      "priority": "high",
+      "why": "The printable rope lock. No current cleat. Distinct from a ratchet (toothed wheel) and from a rope clutch (cam in a closed slot). First textile-hardware primitive."
+    },
+    {
+      "already": "v_belt_pulley",
+      "api_shape": "cvt_pulley(min_d, max_d, belt_w, gap) -> {sheave_a, sheave_b} pitch_r = f(axial_gap)",
+      "fdm": "Two facing cones, axial gap sets the belt pitch radius. Prints. Pair two for a Variomatic / scooter CVT demo. 507 #224 expanding pulley.",
+      "mechlib_fit": "yes",
+      "name": "belt_cvt_pulley",
+      "priority": "high",
+      "why": "Variable-pitch V-pulley. v_belt_pulley is a fixed groove. Traction/CVT was named on the missing-categories prompt. The pulley half of a belt CVT is a semi-primitive; the whole scooter transmission is not."
+    },
+    {
+      "already": "grooved_drum",
+      "api_shape": "capstan(drum_d, warping_head, pawls) -> vertical drum, rope takes n turns and a tail",
+      "fdm": "A slightly tapered vertical drum, optional pawls. Prints standing. 507 #412/#491. Capstan equation already cited on wrap-spring.",
+      "mechlib_fit": "yes",
+      "name": "capstan",
+      "priority": "med",
+      "why": "Warping head: rope is not stored, it slips with a tail. Distinct from grooved_drum (helical storage). Ship, theatre, dock. The wrapping pair whose torque is e^{mu*theta}."
+    },
+    {
+      "already": "cam_cleat",
+      "api_shape": "clam_cleat(rope_d, vee_deg, teeth) -> one body, no moving parts",
+      "fdm": "A V-groove with opposing teeth. Prints as one piece. Clamcleat Ltd. class. Jam cleat is the same idea smoother.",
+      "mechlib_fit": "yes",
+      "name": "clam_cleat",
+      "priority": "med",
+      "why": "Zero-moving-part rope lock. Simpler than cam_cleat, lower holding. Both belong; cam is the sprung pair, clam is the toothed V."
+    },
+    {
+      "already": "sheave",
+      "api_shape": "fairlead(id, od, kind='bullseye'|'open') -> a ring or open guide",
+      "fdm": "A torus or an open hook. Prints. No sheave, just a low-friction hole.",
+      "mechlib_fit": "yes",
+      "name": "fairlead",
+      "priority": "med",
+      "why": "Redirects a line without a rolling sheave. Bullseye, padeye, turning point on a deck. Too thin to skip once sheave exists; agents ask for it by name."
+    },
+    {
+      "already": "cam_cleat",
+      "api_shape": "rope_clutch(rope_d) -> {body, cam, handle} line stays on a path and is jammed",
+      "fdm": "A cam in a slot, a handle that over-centers. Prints. Spinlock class. Closer to a product than cam_cleat.",
+      "mechlib_fit": "yes",
+      "name": "rope_clutch",
+      "priority": "med",
+      "why": "Holds a loaded line that must stay aligned (halyard). Cam cleat is open; a clutch is a closed channel. Rank after cam_cleat."
+    },
+    {
+      "already": null,
+      "api_shape": "a bar twisting a closed loop of rope; pose is twist count",
+      "fdm": "A stick and a loop. Almost too thin for a kit.",
+      "mechlib_fit": "maybe",
+      "name": "spanish_windlass",
+      "priority": "low",
+      "why": "Twisting a bar in a bight to shorten a lashing. Field improvisation, not a machine part. The prompt listed it; the 507 windlass is the Chinese differential, not this."
+    },
+    {
+      "already": "grooved_drum, ratchet_wheel_pawl",
+      "api_shape": "winch drum + feeder jaw + stripper arm",
+      "fdm": "Drum prints; the stripper/jaw is a product-shaped assembly on top of grooved_drum + ratchet.",
+      "mechlib_fit": "maybe",
+      "name": "self_tailing_winch",
+      "priority": "low",
+      "why": "Sailing winch that tails itself. The reusable parts are already a drum and a ratchet. A stripper-jaw cell is a maybe after those exist."
+    },
+    {
+      "already": "timing_pulley",
+      "api_shape": null,
+      "fdm": "Covered.",
+      "mechlib_fit": "no",
+      "name": "timing_again",
+      "priority": "low",
+      "why": "GT2-style already ships."
+    },
+    {
+      "already": "v_belt_pulley",
+      "api_shape": null,
+      "fdm": "Covered as a fixed groove.",
+      "mechlib_fit": "no",
+      "name": "v_belt_again",
+      "priority": "low",
+      "why": "The missing V-belt piece is the variable-pitch CVT, not a second fixed sheave."
+    },
+    {
+      "already": "drag_chain",
+      "api_shape": null,
+      "fdm": "Covered.",
+      "mechlib_fit": "no",
+      "name": "drag_chain_again",
+      "priority": "low",
+      "why": "Prompt said cable carrier is already drag_chain. Correct."
+    }
+  ],
+  "id": "pulleys-cables-tackle",
+  "new_categories": [],
+  "rejected": [
+    {
+      "name": "harken_winch_product",
+      "why": "Two-speed sailing winch with gearbox and self-tailer. Product built from grooved_drum + ratchet + planet_stage."
+    },
+    {
+      "name": "deadeye_and_lanyard",
+      "why": "Wooden deadeyes are historical tackle hardware. A fairlead with three holes is too thin."
+    },
+    {
+      "name": "step_cone_pulley",
+      "why": "507 #9/#10 stepped cones. Just n copies of v_belt_pulley at different d. No second kit."
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Block_and_tackle",
+    "https://en.wikipedia.org/wiki/Differential_pulley",
+    "https://en.wikipedia.org/wiki/Windlass",
+    "https://en.wikipedia.org/wiki/Capstan_(nautical)",
+    "https://507movements.com/toc.html",
+    "https://www.ronstan.com/us/products/cleats-clutches.html",
+    ".claude/overnight/catalog.json category pulleys + winch_drum_demo/fusee_demo both grooved_drum + drag_chain",
+    "mechlib/pulleys.py (timing_pulley, v_belt_pulley, idler_pulley, eccentric_idler_mount, belt_tensioner, grooved_drum), mechlib/chains.py (drag_chain), mechlib/usecases.py"
+  ],
+  "summary": "Wrapping pairs (Reuleaux higher pair: a flexible member on a sheave or drum) split by what they wrap and what they do. Belts (toothed or V) transmit rotary power between fixed centres. Cables and ropes lift, haul, or hold: a sheave redirects, a drum stores, a tackle multiplies, a cleat or clutch locks. 507 is almost a pulley textbook: 1-23 simple and compound tackles, 58-62 differentials, 224 expanding pulley, 243 friction, 255-259 more tackles, Chinese windlass 129 and 352, capstans 412 and 491. Weston (1850s) is the Chinese windlass with an endless chain. Howell barely touches this class (a tape-spring is not a sheave).\n\nCatalog already covers belts and one cable drum. timing_pulley (GT2-style), v_belt_pulley (3L etc.), idler_pulley (crowned), eccentric_idler_mount, belt_tensioner. grooved_drum is the winch/fusee/cone cable drum (winch_drum_demo and fusee_demo share the API). drag_chain is a cable carrier, not a tackle. ratchet_wheel_pawl's usecase mentions winches. Grep finds no sheave, block, tackle, Weston, capstan, windlass, cleat, fairlead, rope clutch, or variable-pitch CVT pulley. The wrapping primitive for rope (a sheave) is missing; everything rope-side is currently a timing belt or a drum.\n\nFDM reality. A sheave is a grooved wheel with a cheek; a turning block is that sheave in a strap with a becket. Block-and-tackle is n sheaves posed on two frames, MA = n or 2n depending on which end is fixed. Weston differential is two different-diameter chain wheels on one shaft plus an endless chain and a moving hook sheave; self-locking, the garage engine hoist. Chinese windlass is the same law on two drum diameters (507 #129). Cam cleat is two sprung cams that bite a rope one way (sailing, the printable lock). Clam cleat is a V with teeth, no moving parts. Fairlead / bullseye is a ring that only redirects. Capstan is a vertical warping drum (507 #412), distinct from a grooved winch drum. Belt CVT is two facing cones whose axial gap sets the pitch radius (Variomatic, scooter, 507 #224 expanding). Self-tailing winch and rope clutch are real but close to products: emit a stripper-jaw cell or a cam-in-slot, not a Harken assembly. Spanish windlass is a bar twisting a loop (no sheave). Cable carrier is already drag_chain.",
+  "title": "Pulleys, cables, tackle, and textile hardware"
+}

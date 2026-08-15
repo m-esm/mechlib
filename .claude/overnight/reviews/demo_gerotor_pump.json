@@ -1,0 +1,14 @@
+{
+  "bodies_that_look_frozen": [
+    "gerotor_housing",
+    "gerotor_port_cap"
+  ],
+  "cycle_closes": true,
+  "demo": "demo_gerotor_pump",
+  "issues": [],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Housing and kidney-port cap stay put while red/green/yellow lobe flashes walk along both ports, showing the inner and outer rotors turning in place through the 60 deg pitch cycle.",
+  "notes": "Side and front rows hide the rotors, same as the external gear pump. Iso port colors at 50.4 deg are returning toward the 0 deg pattern, as expected for a 60 deg closed cycle. Centroid travel ~0 is spin-in-place.",
+  "verdict": "pass"
+}

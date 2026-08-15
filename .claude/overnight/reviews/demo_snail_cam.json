@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": false,
+  "demo": "demo_snail_cam",
+  "issues": [],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Yellow snail stays put while the orange roller and green stem orbit it, riding a slow Archimedean rise then jumping inward at the radial drop face.",
+  "notes": "Kinematic inversion: follower_deg walks the stem around a fixed cam. Drop-face jump at mid phases is expected and not a fail. Sample ends at 552.4 deg, still closing toward 610 (=250+360).",
+  "verdict": "pass"
+}

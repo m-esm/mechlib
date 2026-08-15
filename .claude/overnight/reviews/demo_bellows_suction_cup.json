@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_bellows_suction_cup",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: magenta bellows cup with sealing lip, two compliant folds, and a hose-barb stem.",
+  "notes": "Non-animated. One body. Lip, folds, and barb all read. Sane rest assembly of a TPU vacuum cup.",
+  "verdict": "pass"
+}

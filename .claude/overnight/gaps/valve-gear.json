@@ -1,0 +1,125 @@
+{
+  "candidates": [
+    {
+      "already": "plate_cam, eccentric_cam_clamp, eccentric_idler_mount, slider_crank",
+      "api_shape": "eccentric(d, e, strap_w, rod_len, phase_deg) -> {sheave, strap, rod} travel = 2e",
+      "fdm": "A disc with an offset bore, a strap or a pinned rod. Prints flat. 507 #89-91. The simple-machine eccentric, not a cam profile and not a belt bushing.",
+      "mechlib_fit": "yes",
+      "name": "eccentric",
+      "priority": "high",
+      "why": "The primitive under Stephenson, Walschaerts (return crank is an eccentric), pumps, and many 507 motions. plate_cam is a programmed lift. eccentric_idler is a lock-once take-up. Missing the running strap eccentric."
+    },
+    {
+      "already": "pin_in_slot (proposed), quick_return",
+      "api_shape": "expansion_link(arc_r, slot_len, die, reverse_frac) -> {link, die_block} plus mix of two inputs",
+      "fdm": "A curved slotted link and a sliding die. Prints. Reverse_frac flips which end is the driver. The reversing cell.",
+      "mechlib_fit": "yes",
+      "name": "expansion_link",
+      "priority": "high",
+      "why": "The notch-up / reverse primitive. Stephenson and Walschaerts both hang on this. quick_return is a straight slot on a crank; this is a curved mixer. pin_in_slot is the pair; this is the named valve-gear part."
+    },
+    {
+      "already": "eccentric, expansion_link, slider_crank, bell_crank",
+      "api_shape": "walschaerts_cell(crank_r, e, link, cutoff) -> posed bars + valve travel law",
+      "fdm": "Return crank, eccentric rod, expansion link, radius rod, combination lever, union link. Prints as flat bars. Constant lead. The usual later-steam gear.",
+      "mechlib_fit": "yes",
+      "name": "walschaerts_cell",
+      "priority": "high",
+      "why": "The named 1-DoF valve motion with reverse and cutoff. A locomotive is a product; this cell is not. Teaching set and live-steam hobby default."
+    },
+    {
+      "already": "eccentric, expansion_link",
+      "api_shape": "stephenson_link(e, link, reverse_frac) -> two eccentrics + expansion link + die",
+      "fdm": "Two eccentrics 90-ish deg apart, one curved link. Prints. 19th-century default. Variable lead (a known property, not a bug).",
+      "mechlib_fit": "yes",
+      "name": "stephenson_link",
+      "priority": "high",
+      "why": "Dual-eccentric + link. The other named gear. Inside-frame historically; the cell is still two eccentrics and a slot."
+    },
+    {
+      "already": "bell_crank, walschaerts_cell",
+      "api_shape": "a lever that adds a fraction of crosshead travel (lap+lead) to the radius-rod motion",
+      "fdm": "One bar, three pins. Prints. Can be an argument inside walschaerts_cell.",
+      "mechlib_fit": "yes",
+      "name": "combination_lever",
+      "priority": "med",
+      "why": "The constant-lead trick. If walschaerts_cell ships, this is a named part of it, not a second module."
+    },
+    {
+      "already": "bell_crank, walschaerts_cell",
+      "api_shape": "bell-cranks replace the expansion-link slot; no sliding die",
+      "fdm": "All revolute. Prints. US late-steam. No die-block wear.",
+      "mechlib_fit": "yes",
+      "name": "baker_gear",
+      "priority": "med",
+      "why": "Walschaerts without a slot. Named, printable, and the prompt of anyone who hates sliding dies."
+    },
+    {
+      "already": "slider_crank",
+      "api_shape": "radial gear: valve motion derived from a point on the conrod, no eccentric",
+      "fdm": "A few bars off the conrod. Prints. Joy (LNWR) and Hackworth 1859.",
+      "mechlib_fit": "yes",
+      "name": "joy_hackworth",
+      "priority": "med",
+      "why": "The no-eccentric family. Compact. A cell hanging on slider_crank, not a new crank."
+    },
+    {
+      "already": "eccentric",
+      "api_shape": "one eccentric that can rotate to a reverse stop on the shaft",
+      "fdm": "Eccentric + two stops. Cheap reverse for models and donkey pumps.",
+      "mechlib_fit": "yes",
+      "name": "slip_eccentric",
+      "priority": "med",
+      "why": "The model-engineer reverse. Not a full link motion. An argument on eccentric."
+    },
+    {
+      "already": "rotary_spool_valve, plate_cam",
+      "api_shape": "a wrist plate driving four valves, dashpot dashpots",
+      "fdm": "Prints. Getting product-shaped (the Corliss engine).",
+      "mechlib_fit": "maybe",
+      "name": "corliss_wrist",
+      "priority": "low",
+      "why": "Separate admission/exhaust. Famous, but the engine is a product. After eccentric + dashpot exist."
+    },
+    {
+      "already": "plate_cam, conjugate_cam_pair (proposed)",
+      "api_shape": "cams on a shaft, poppet valves",
+      "fdm": "The primitive is a cam. The gearbox is a product.",
+      "mechlib_fit": "maybe",
+      "name": "caprotti_poppet",
+      "priority": "low",
+      "why": "Cam valve gear. Do not add a locomotive cam box; use plate_cam."
+    },
+    {
+      "already": "walschaerts_cell, slider_crank",
+      "api_shape": null,
+      "fdm": "A 2-8-0 is a finished machine.",
+      "mechlib_fit": "no",
+      "name": "locomotive_product",
+      "priority": "low",
+      "why": "Cylinders, boiler, frames. Product. The cell is walschaerts_cell."
+    }
+  ],
+  "id": "valve-gear",
+  "new_categories": [],
+  "rejected": [
+    {
+      "name": "eccentric_idler_as_valve",
+      "why": "A lock-once belt take-up. Not a running eccentric."
+    },
+    {
+      "name": "rotary_spool_as_gear",
+      "why": "A plug that routes ports. No reverse/cutoff law."
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Valve_gear",
+    "https://en.wikipedia.org/wiki/Walschaerts_valve_gear",
+    "https://en.wikipedia.org/wiki/Stephenson_valve_gear",
+    "https://www.steamlocomotive.com/appliances/valvegear.php",
+    "https://507movements.com/toc.html",
+    "mechlib/linkages.py slider_crank bell_crank, mechlib/cams.py plate_cam, mechlib/fluid.py rotary_spool_valve, mechlib/grippers.py eccentric_cam_clamp, mechlib/pulleys.py eccentric_idler_mount"
+  ],
+  "summary": "Valve gear turns crank rotation into a valve travel that can reverse and can be notched up (shorten the cutoff). Wikipedia splits it by how the two components (lap+lead vs travel) are made: dual-eccentric + expansion link (Stephenson 1842), constant-lead Walschaerts-type (one return crank + combination lever + expansion link, 1844), lever-and-link with no slide (Baker), and radial gears that derive the motion from the conrod (Hackworth, Joy). Slip-eccentric and gab are the cheap reverse. Corliss is a wrist-plate special. Poppet/Caprotti is cams, not bars. 507 is a valve-gear textbook: eccentrics 89-91, 135, 137; link motion 171, 185; a long run of gears at 181-189, 286, 418.\n\nCatalog has the neighbours, not the gear. slider_crank is the piston. plate_cam / face_cam can time a valve but cannot reverse or notch. rotary_spool_valve is a plug, not a motion. eccentric_cam_clamp and eccentric_idler_mount are a clamp and a belt take-up, not a strap eccentric. bell_crank exists (Baker uses several). Grep finds no Walschaerts, Stephenson link, Joy, Hackworth, gab, slip eccentric, expansion link, or a generic eccentric sheave.\n\nFDM reality. The missing primitive under every named gear is the eccentric: a disc whose centre is offset, a strap (or a rod on a pin), travel = 2e. That is not a plate_cam and not an idler bush. The second primitive is the expansion link + die block: a curved slotted link that mixes two motions and reverses by flipping which end drives. Combination lever (Walschaerts) adds lap+lead from the crosshead. A posed Walschaerts cell (return crank, eccentric rod, expansion link, radius rod, combination lever, union link) is a semi-primitive; a locomotive with cylinders and a boiler is a product. Stephenson is two eccentrics + one link. Baker replaces the slot with bell-cranks (no sliding). Joy/Hackworth hang off the conrod. Slip-eccentric is one eccentric that rotates to the reverse position. Do not emit a 2-8-0.",
+  "title": "Valve gear, eccentrics, and reversing motions"
+}

@@ -1,0 +1,18 @@
+{
+  "bodies_that_look_frozen": [
+    "hub_a"
+  ],
+  "cycle_closes": true,
+  "demo": "demo_dog_clutch",
+  "issues": [
+    {
+      "severity": "low",
+      "what": "Mid-engagement columns (120-240) show a mushy sawtooth band at the dog interface, likely z-fighting as the teeth nest, not parts flying apart."
+    }
+  ],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Green hub_b slides axially onto the fixed magenta hub: stack is tallest at 0/300 (withdrawn) and shortest at 180 (dogs fully nested), then opens again.",
+  "notes": "drive_deg is a cosine engage_frac (0 withdrawn, 180 seated). 300 continues toward the withdrawn start. Hubs stay coaxial; no relative spin through locked dogs.",
+  "verdict": "pass"
+}

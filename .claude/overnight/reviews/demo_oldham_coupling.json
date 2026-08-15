@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_oldham_coupling",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: orange and blue tongue hubs driving a yellow cross-slotted disc, tongues perpendicular.",
+  "notes": "Non-animated. Disc floats between the hubs; tongues seat in the slots. Sane rest assembly of an Oldham coupling.",
+  "verdict": "pass"
+}

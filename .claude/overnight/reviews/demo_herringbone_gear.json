@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_herringbone_gear",
+  "issues": [],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Orange driver and blue driven herringbone pair stay in mesh while tooth and spoke highlights rotate across drive_deg 0/5/79/148/227/302. Centroids stay put as expected for spin-in-place gears.",
+  "notes": "Anti-alias resample: 0 vs 5 deg are nearly identical (5 deg of mesh) and later columns show clear chevron rotation on both wheels. Not a frozen-from-symmetry miss. Remaining 58 deg would return toward the 0 pose.",
+  "verdict": "pass"
+}

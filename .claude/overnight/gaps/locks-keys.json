@@ -1,0 +1,111 @@
+{
+  "candidates": [
+    {
+      "already": "detent_pair, coil_spring",
+      "api_shape": "pin_tumbler(n, pin_d, shear_heights, key_bitting) -> {cylinder, plug, key_pins, drivers, springs, key}",
+      "fdm": "Oversized teaching cylinder. Prints. Springs bought or printed coil. Cutaway optional. Thingiverse default lock demo.",
+      "mechlib_fit": "yes",
+      "name": "pin_tumbler",
+      "priority": "high",
+      "why": "Yale pin tumbler. The coded shear-line cell. Not a detent (no code) and not a shaft_key (no tumblers). The missing lock primitive."
+    },
+    {
+      "already": "pin_tumbler",
+      "api_shape": "lever_tumbler(n, gate_offsets, stump) -> {levers, bolt, stump, key}",
+      "fdm": "Flat levers with a gate slot, a bolt stump. Prints flat. Chubb / mortise cell.",
+      "mechlib_fit": "yes",
+      "name": "lever_tumbler",
+      "priority": "high",
+      "why": "Lever lock. Gates must align for the stump to pass. Distinct from pin tumbler (no plug, no shear line). British furniture and safe-deposit default."
+    },
+    {
+      "already": "detent_pair",
+      "api_shape": "combination_pack(n_discs, gate_w, fence) -> {discs, fence, bolt} plus a dial law",
+      "fdm": "Stacked discs with one gate each, a fence. Prints. Padlock / safe cell. Dial sequence is the pose.",
+      "mechlib_fit": "yes",
+      "name": "combination_pack",
+      "priority": "high",
+      "why": "Coded discs, no key. The combination primitive. detent_pair is a single click, not a pack of gates."
+    },
+    {
+      "already": "combination_pack, pin_tumbler",
+      "api_shape": "rotating discs with a sidebar that drops into aligned gates (Abloy)",
+      "fdm": "Discs + sidebar. Prints. High-security teaching cell.",
+      "mechlib_fit": "yes",
+      "name": "disc_detainer",
+      "priority": "med",
+      "why": "Disc detainer. Sidebar, not a shear line and not a fence on a bolt. The other rotating-disc lock."
+    },
+    {
+      "already": null,
+      "api_shape": "a keyway with obstacle wards; the key is the negative",
+      "fdm": "Prints. Oldest lock. Weak, but the named historical cell.",
+      "mechlib_fit": "yes",
+      "name": "warded_keyway",
+      "priority": "med",
+      "why": "Wards. The key must miss obstacles. No tumblers. Teaching / antique."
+    },
+    {
+      "already": "pin_tumbler",
+      "api_shape": "flat wafers instead of round pin stacks, same shear line",
+      "fdm": "Prints. Car-door / cabinet. A pin_tumbler(style='wafer') argument.",
+      "mechlib_fit": "yes",
+      "name": "wafer_tumbler",
+      "priority": "med",
+      "why": "Wafer lock. Same shear-line idea, flat tumblers. Do not add a second module if pin_tumbler can emit wafers."
+    },
+    {
+      "already": "pin_tumbler, combination_pack",
+      "api_shape": "a U-shackle plus locking balls or a claw",
+      "fdm": "Prints. The body is whichever tumbler cell. Getting product-shaped.",
+      "mechlib_fit": "maybe",
+      "name": "padlock_shackle",
+      "priority": "low",
+      "why": "Shackle + balls. The padlock is a product around a tumbler. A thin shackle kit after the cell exists."
+    },
+    {
+      "already": "pin_tumbler",
+      "api_shape": null,
+      "fdm": "Knob, rose, latchbolt, strike. Product.",
+      "mechlib_fit": "no",
+      "name": "lockset_product",
+      "priority": "low",
+      "why": "A door lockset. The reusable part is pin_tumbler."
+    },
+    {
+      "already": "detent_pair",
+      "api_shape": null,
+      "fdm": "Covered.",
+      "mechlib_fit": "no",
+      "name": "detent_as_lock",
+      "priority": "low",
+      "why": "A positional click, not a coded constraint."
+    }
+  ],
+  "id": "locks-keys",
+  "new_categories": [],
+  "rejected": [
+    {
+      "name": "electronic_lock",
+      "why": "Solenoid + firmware. Hardware / out of scope."
+    },
+    {
+      "name": "magnetic_lock",
+      "why": "Bought magnets. Same reject as magnetic_clutch."
+    },
+    {
+      "name": "safe_product",
+      "why": "A box around a combination_pack. Product."
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Pin_tumbler_lock",
+    "https://en.wikipedia.org/wiki/Lever_tumbler_lock",
+    "https://en.wikipedia.org/wiki/Disc_detainer_lock",
+    "https://www.lockpickworld.com/pages/types-of-locks",
+    "https://www.firgelliauto.com/blogs/mechanisms/lever-tumbler-lock",
+    "mechlib/indexing.py detent_pair, mechlib/fasteners.py shaft_key, mechlib/closures.py snap_catch, .claude/overnight/gaps/grippers-chucks-workholding.json pawl_latch"
+  ],
+  "summary": "A lock is a constraint that a coded input (key, discs, or word) lifts. The usual taxonomy is by the obstacle: wards (the key must miss them), lever tumblers (gates must line up on a stump), pin tumblers (Yale: pin stack splits at a shear line), wafers (flat pins), disc detainers (Abloy: rotating discs, a sidebar drops into gates), and combination packs (discs with gates, no key). Padlock shackles add locking balls or a claw. 507 barely names locks. Reuleaux does not. Howell's 'lock' is a snap or a bistable, already in-tree as snap_catch / bistable_beam.\n\nCatalog has no tumbler, ward, or combination pack. Neighbours: detent_pair (a click, not a coded shear), shaft_key (DIN machine key, not a lock key), pawl_latch (proposed, slam catch), geneva_stop (winding limit), dog_clutch (positive drive). Grep of usecases.py hits 'lock' only as self-locking screws, folding-leg clicks, and over-center clamps.\n\nFDM reality. pin_tumbler is a cylinder, a plug, n pin stacks (key pin + driver + spring), and a shear line; prints oversized for teaching (Thingiverse cutaways). lever_tumbler is a stack of flat levers with gates and a bolt stump; Chubb cell, prints flat. combination_pack is n discs with a gate and a fence; the padlock/safe cell. disc_detainer is rotating discs plus a sidebar. warded is a keyway with obstacles, the oldest and the weakest. wafer is a flat pin tumbler. A lockset, a mortise body, or a safe is a product. Magnetic and electronic locks are hardware.",
+  "title": "Locks, keys, and combination mechanisms"
+}

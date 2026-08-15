@@ -1,0 +1,13 @@
+{
+  "bodies_that_look_frozen": [
+    "cam"
+  ],
+  "cycle_closes": true,
+  "demo": "demo_face_cam",
+  "issues": [],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Brown follower pin walks around the stationary pink face disc and rises then falls on the axial track, tallest near 180 deg and lowest near 0/300.",
+  "notes": "Cam disc stays put; pin_phase_deg is the moving coordinate. Front row makes the lift program obvious.",
+  "verdict": "pass"
+}

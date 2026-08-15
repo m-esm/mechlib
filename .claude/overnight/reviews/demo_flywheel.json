@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_flywheel",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: orange rim-heavy four-spoke flywheel with a hub bore.",
+  "notes": "Non-animated. One body. Rim is thicker than the web. Sane rest assembly of an inertia wheel.",
+  "verdict": "pass"
+}

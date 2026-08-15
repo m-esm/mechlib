@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_check_valve",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: green snap-on cap with a hose barb stacked on a blue body with a matching barb, on one axis.",
+  "notes": "Non-animated. Ball is a bought part so only body+cap print. Cap seats on the body; barbs on both ports. Sane rest assembly.",
+  "verdict": "pass"
+}

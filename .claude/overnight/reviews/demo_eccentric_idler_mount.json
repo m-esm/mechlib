@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_eccentric_idler_mount",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: blue idler pulley on a green eccentric bushing; offset bore and setscrew boss visible.",
+  "notes": "Non-animated. Front row shows the eccentric boss sticking out of the pulley axis. Two bodies, no explode. Sane rest assembly.",
+  "verdict": "pass"
+}

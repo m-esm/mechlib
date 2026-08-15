@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_clevis",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: magenta U-fork, green eye between the ears, cyan pin through all three.",
+  "notes": "Non-animated. Side row is the pin axis; front is the fork face. Clearance looks designed, not exploded. Sane rest assembly of a pin joint.",
+  "verdict": "pass"
+}

@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_drag_chain",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: eight-link cable carrier with a straight run and a U-bend to the designed min radius, lids on, pins in.",
+  "notes": "Non-animated. Links stay chained; bend is one-way as designed. Side/front show the trough and lids. Sane rest assembly of an energy-chain run.",
+  "verdict": "pass"
+}

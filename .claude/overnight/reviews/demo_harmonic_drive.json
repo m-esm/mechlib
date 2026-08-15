@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_harmonic_drive",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: orange flex spline and wave generator nested in a blue internally toothed circular spline.",
+  "notes": "Non-animated. Concentric stack, teeth around the rim. Ellipse of the wave generator is subtle at this scale but the three bodies are assembled, not exploded. Sane rest assembly.",
+  "verdict": "pass"
+}

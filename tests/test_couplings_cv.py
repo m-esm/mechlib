@@ -12,8 +12,11 @@ from mechlib.couplings import (
     cv_velocity_fluctuation,
     cv_velocity_ratio,
     double_cardan_joint,
+    hooke_pose,
+    oldham_pose,
     tripod_cv_joint,
     tripod_pose,
+    universal_joint,
 )
 from mechlib.prim import cyl
 
@@ -305,3 +308,77 @@ def test_double_cardan_rejects_bad_arguments():
         double_cardan_joint(inter_len=120.0, sections=32)
     with pytest.raises(ValueError):
         double_cardan_joint(bend_deg=60.0, sections=32)
+
+
+# ---------------------------------------------------------------------------
+# Oldham 2-omega orbit and Hooke Cardan pose
+# ---------------------------------------------------------------------------
+
+
+def test_oldham_pose_is_constant_velocity_and_orbits_at_2_omega():
+    offset = 4.0
+    rest = oldham_pose(0.0, offset)
+    assert rest["disc_xy"] == pytest.approx((0.0, 0.0))
+    assert rest["hub_b_xy"] == pytest.approx((0.0, offset))
+    mid = oldham_pose(90.0, offset)
+    assert mid["disc_xy"] == pytest.approx((0.0, offset))
+    assert mid["orbit_r"] == pytest.approx(offset / 2.0)
+    centre = np.array([0.0, offset / 2.0])
+    for phase in np.linspace(0.0, 360.0, 25):
+        pose = oldham_pose(float(phase), offset)
+        assert pose["hub_a_deg"] == pytest.approx(phase)
+        assert pose["hub_b_deg"] == pytest.approx(phase)
+        assert pose["disc_deg"] == pytest.approx(phase)
+        assert pose["ratio"] == 1.0
+        xy = np.asarray(pose["disc_xy"])
+        assert np.linalg.norm(xy - centre) == pytest.approx(offset / 2.0)
+
+
+def test_hooke_pose_matches_cardan_tangent_and_cv_velocity_ratio():
+    bend = 20.0
+    beta = math.radians(bend)
+    rest = hooke_pose(bend, 0.0)
+    assert rest["input_deg"] == 0.0
+    assert rest["output_deg"] == pytest.approx(0.0)
+    assert rest["spider_pin_a"] == pytest.approx((1.0, 0.0, 0.0))
+    assert rest["spider_pin_b"] == pytest.approx((0.0, math.cos(beta), math.sin(beta)))
+    phases = np.linspace(0.0, 360.0, 37)
+    outputs = []
+    for phase in phases:
+        pose = hooke_pose(bend, float(phase))
+        phi = math.radians(phase)
+        expected = math.degrees(math.atan2(
+            math.cos(beta) * math.sin(phi), math.cos(phi)))
+        while expected < phase - 180.0:
+            expected += 360.0
+        while expected > phase + 180.0:
+            expected -= 360.0
+        assert pose["output_deg"] == pytest.approx(expected, abs=1e-9)
+        # Same speed law as cv_velocity_ratio, 90 deg of phase origin later:
+        # this rest pose has the A-pin on the bend axis.
+        assert pose["ratio"] == pytest.approx(
+            cv_velocity_ratio(bend, phase + 90.0))
+        pin_a = np.asarray(pose["spider_pin_a"])
+        pin_b = np.asarray(pose["spider_pin_b"])
+        axis = np.asarray(pose["output_axis"])
+        assert float(pin_a @ pin_b) == pytest.approx(0.0, abs=1e-12)
+        assert float(pin_b @ axis) == pytest.approx(0.0, abs=1e-12)
+        assert float(pin_a @ np.array([0.0, 0.0, 1.0])) == pytest.approx(0.0)
+        outputs.append(pose["output_deg"])
+    # Slow at 0 (A-pin on the bend axis), one full turn closes.
+    assert hooke_pose(bend, 0.0)["ratio"] == pytest.approx(math.cos(beta))
+    assert outputs[-1] == pytest.approx(360.0)
+
+
+def test_hooke_pose_applied_to_rest_meshes_is_rigid():
+    rest = universal_joint(bend_deg=20.0, sections=32)
+    from mechlib.couplings import _hooke_spider_matrix
+    spider = rest["spider"].copy()
+    spider.apply_transform(_hooke_spider_matrix(20.0, 40.0))
+    assert spider.is_watertight
+    assert spider.volume == pytest.approx(rest["spider"].volume, rel=1e-9)
+
+
+def test_hooke_pose_rejects_bad_bend():
+    with pytest.raises(ValueError):
+        hooke_pose(bend_deg=60.0)

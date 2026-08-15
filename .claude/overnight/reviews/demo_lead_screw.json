@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_lead_screw",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: pink trapezoidal screw through a green nut, threads visible on both sides of the nut.",
+  "notes": "Non-animated. Nut sits concentric on the screw; no explode. Sane rest assembly of a Tr power screw.",
+  "verdict": "pass"
+}

@@ -1,0 +1,13 @@
+{
+  "bodies_that_look_frozen": [
+    "heart_cam"
+  ],
+  "cycle_closes": true,
+  "demo": "demo_heart_cam",
+  "issues": [],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Green follower stem and orange roller orbit the stationary pink heart disc, staying on the rim while radial reach grows near 180 deg and shrinks toward 0/360.",
+  "notes": "Same stationary-cam / walking-follower convention as barrel_cam and face_cam. Heart outline reads almost circular at this scale; the lift program is the changing stem length, longest near follower_deg 169 and shortest near 32/90. Last column at 392=32 continues toward the 90 deg start.",
+  "verdict": "pass"
+}

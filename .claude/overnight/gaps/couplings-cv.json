@@ -1,0 +1,196 @@
+{
+  "candidates": [
+    {
+      "already": "universal_joint, cv_velocity_ratio",
+      "api_shape": "hooke_pose(bend_deg, phase_deg) -> {yoke_a_deg, spider_R, yoke_b_R, ratio} then universal_joint(..., phase_deg=)",
+      "fdm": "No new solids. Places the existing three bodies. The Cardan tangent: tan(out) = cos(b)*tan(in), plus the spider that sits in both pin axes.",
+      "mechlib_fit": "yes",
+      "name": "hooke_pose",
+      "priority": "high",
+      "why": "universal_joint is display-only. Gallery left it out of ANIMATE because the pose law is not in the module; cv_velocity_ratio is speed only and does not place a spider. One function unlocks the Hooke demo and is the building block for double_cardan_pose and Thompson."
+    },
+    {
+      "already": "oldham_coupling",
+      "api_shape": "oldham_pose(offset, phase_deg) -> {hub_a, disc_xy, disc_deg=2*phase, hub_b} then oldham_coupling(..., offset=, phase_deg=)",
+      "fdm": "No new solids. The floating disc translates on a circle of radius offset/2 at twice input speed (Tusi/Cardanic). Hubs stay on their axes and just spin.",
+      "mechlib_fit": "yes",
+      "name": "oldham_pose",
+      "priority": "high",
+      "why": "oldham_coupling builds a rest pose. The 2-omega disc orbit is the motion people want to see and the reason Oldham is CV for parallel shafts. Gallery named this law and refused to invent it. Same family as the Tusi couple in the straight-line slice."
+    },
+    {
+      "already": "oldham_coupling",
+      "api_shape": "schmidt_coupling(disc_d, link_len, n_links=3, offset, phase_deg) -> {disc_in, disc_mid, disc_out, links} plus schmidt_pose(offset, phase)",
+      "fdm": "Three flat discs and six (or more) bars on pins at 120 deg. Prints flat. Offset can exceed a disc radius and can change under load. Closed-form: all three discs turn at the same angle; mid disc finds its own centre.",
+      "mechlib_fit": "yes",
+      "name": "schmidt_coupling",
+      "priority": "high",
+      "why": "Large-offset parallel CV. Oldham's offset is capped by tongue length and puts a sliding disc in the load path. Schmidt uses only revolutes, stays CV as offset varies, and is the name Zero-Max / printing-press / encoder people search. Distinct from oldham and from a pantograph."
+    },
+    {
+      "already": "beam_coupling, bellows_suction_cup",
+      "api_shape": "bellows_coupling(d, folds, convolution, bore_a, bore_b, length) -> one body",
+      "fdm": "Single body, stacked toroidal or conical convolutions, prints standing. TPU or thin PETG. bellows_suction_cup is a vacuum lip, not a shaft couple.",
+      "mechlib_fit": "yes",
+      "name": "bellows_coupling",
+      "priority": "high",
+      "why": "Compact compliant coupling: high torsional stiffness, generous angular and axial, almost no backlash. The instrument/servo alternative to a helical beam. beam_coupling is a slit cylinder; a bellows is a convolution stack. Not the gripper cup."
+    },
+    {
+      "already": "universal_joint, oldham_coupling",
+      "api_shape": "tracta_joint(yoke_d, swivel_r, angle_deg, phase_deg) -> {yoke_in, male_swivel, female_swivel, yoke_out} plus tracta_pose",
+      "fdm": "Four printed parts: two forks and two semi-spherical sliding pieces (tongue-and-groove). No balls, no cage. Prints. Sliding spherical faces want clearance and grease; that is honest FDM, unlike a Rzeppa race.",
+      "mechlib_fit": "yes",
+      "name": "tracta_joint",
+      "priority": "med",
+      "why": "Gregoire 1926, first production FWD CV (Tracta, DKW, Adler). Double tongue-and-groove, 90 deg out of phase, so each half's Cardan error cancels. More printable than Rzeppa and historically the missing named CV. Pose is homokinetic (bisecting plane)."
+    },
+    {
+      "already": "double_cardan_joint, pantograph, universal_joint",
+      "api_shape": "thompson_coupling(shaft_d, angle_deg, phase_deg) -> two nested Hookes + spherical scissors plus thompson_pose",
+      "fdm": "Two Cardan spiders sharing a volume plus a spherical 4-bar / pantograph that holds the bisecting plane. Prints as bars and yokes. Needs a 2 deg minimum angle in service (textbook wear note).",
+      "mechlib_fit": "yes",
+      "name": "thompson_coupling",
+      "priority": "med",
+      "why": "True CV with no fluctuating intermediate. double_cardan_joint cancels output error but the middle shaft still swings at the full Hooke fluctuation. Thompson adds the control yoke (spherical pantograph, and pantograph already exists) so both joint angles stay equal and the intermediate does not carry that inertia. The named modern fix."
+    },
+    {
+      "already": "beam_coupling",
+      "api_shape": "disc_coupling(disc_d, disc_t, n_bolts, spacer_len, hubs) -> {hub_a, disc_a, spacer, disc_b, hub_b}",
+      "fdm": "Thin printed (or lasered) discs bolted at alternating holes to hubs and a spacer. Prints. Torsional stiffness is the point; angular and axial come from disc flex.",
+      "mechlib_fit": "yes",
+      "name": "disc_membrane_coupling",
+      "priority": "med",
+      "why": "Servo and encoder membrane coupling. Higher stiffness and better concentricity than a beam slit. Not a bellows (convolutions) and not a jaw (elastomer). Standard when someone asks for a 'disc coupling' or 'flexible disc'."
+    },
+    {
+      "already": "double_cardan_joint, hooke_pose",
+      "api_shape": "compose two hooke_pose at equal angles, 90-deg intermediate; optional centering_ball",
+      "fdm": "No new solids if hooke_pose exists. A centering ball between the yokes is one extra sphere and is what makes a truck double Cardan stay CV when angles drift.",
+      "mechlib_fit": "yes",
+      "name": "double_cardan_pose",
+      "priority": "med",
+      "why": "double_cardan_joint is a rest pose. Animating it needs hooke_pose applied twice. The missing hardware is the centering ball the docstring already admits is 'not modelled here'."
+    },
+    {
+      "already": "spur_gear, ring_gear",
+      "api_shape": "gear_coupling(z, m, crown, sleeve_w) -> {hub_a, hub_b, sleeve}",
+      "fdm": "Two external hubs and an internal sleeve. Crowning is a barrel on the tooth (same trick as tripod rollers). Prints standing. Backlash is the misalignment budget.",
+      "mechlib_fit": "yes",
+      "name": "gear_coupling",
+      "priority": "med",
+      "why": "Crowned-tooth gear coupling: the industrial high-torque misalignment kit (Falk, flanged). Not a spur pair and not a jaw. Crown is the primitive; without it a straight tooth binds at any angle."
+    },
+    {
+      "already": "roller_sprocket_2d",
+      "api_shape": "two sprockets + a short duplex (or twice-wrapped simplex) chain",
+      "fdm": "Composition. Needs a posed chain strand, which the chains slice owns.",
+      "mechlib_fit": "maybe",
+      "name": "chain_coupling",
+      "priority": "low",
+      "why": "Two sprockets facing, a duplex roller chain as the flex element. Cheap, serviceable, dirty. Not a new tooth. Wait for a chain-strand poser."
+    },
+    {
+      "already": null,
+      "api_shape": "two slotted hubs + a serpentine grid",
+      "fdm": "Hubs print. The grid is spring steel in service; a TPU ribbon is a demo.",
+      "mechlib_fit": "maybe",
+      "name": "grid_coupling",
+      "priority": "low",
+      "why": "Falk grid: a snake-spring in axial slots. Damping + misalignment. The working part is bought spring stock. Low priority versus bellows and disc."
+    },
+    {
+      "already": "tripod_cv_joint",
+      "api_shape": "display-only {inner, cage, balls, outer} with balls held in the bisecting plane; do not claim FDM service",
+      "fdm": "Printed balls in printed races wear out immediately. Honest working Rzeppa is ground steel. A cutaway teaching kit is a product-shaped demo.",
+      "mechlib_fit": "maybe",
+      "name": "rzeppa_display",
+      "priority": "low",
+      "why": "The outboard FWD joint. Six balls, meridional races, cage in the homokinetic plane. tripod_cv_joint's docstring already refuses it as honest FDM. Birfield and Weiss are the same reject with different track counts."
+    },
+    {
+      "already": "oldham_coupling",
+      "api_shape": null,
+      "fdm": "Covered. Missing is the pose, not a second Oldham.",
+      "mechlib_fit": "no",
+      "name": "oldham_kit",
+      "priority": "low",
+      "why": "Already shipped. The gap is oldham_pose."
+    },
+    {
+      "already": "universal_joint",
+      "api_shape": null,
+      "fdm": "Covered. Missing is hooke_pose.",
+      "mechlib_fit": "no",
+      "name": "hooke_kit",
+      "priority": "low",
+      "why": "Already shipped as universal_joint. 507 #50-51. The gap is the Cardan tangent pose."
+    },
+    {
+      "already": "tripod_cv_joint, tripod_pose",
+      "api_shape": null,
+      "fdm": "Covered and animated.",
+      "mechlib_fit": "no",
+      "name": "tripod_again",
+      "priority": "low",
+      "why": "The one coupling that already has an in-module pose law and a working ANIMATE entry."
+    },
+    {
+      "already": null,
+      "api_shape": null,
+      "fdm": "Prints a magnet cage.",
+      "mechlib_fit": "no",
+      "name": "magnetic_coupling",
+      "priority": "low",
+      "why": "Through-wall magnet drive. Same reject as magnetic_gear / magnetic_clutch. Hardware."
+    }
+  ],
+  "id": "couplings-cv",
+  "new_categories": [],
+  "rejected": [
+    {
+      "name": "rzeppa_working",
+      "why": "Six hardened balls in ground races plus a cage. Not an FDM working surface. Tripod is the printable CV the library already chose."
+    },
+    {
+      "name": "birfield_weiss_vl",
+      "why": "Rzeppa family (elliptical tracks, 4-ball Weiss, plunging VL/DO). Same balls-and-races reject."
+    },
+    {
+      "name": "bellows_suction_as_coupling",
+      "why": "bellows_suction_cup is a vacuum gripper. Do not overload it as a shaft couple."
+    },
+    {
+      "name": "kinematic_as_drive",
+      "why": "kinematic_coupling locates two plates (Maxwell/Kelvin). It is not a rotating shaft coupling."
+    },
+    {
+      "name": "flange_muff_sleeve",
+      "why": "Rigid bolted or keyed sleeves. Too thin for a kit; two hubs and bolts."
+    },
+    {
+      "name": "tire_pin_bush",
+      "why": "Elastomeric tyre or pin-and-bush. The working part is bought rubber. jaw_coupling already covers the elastomer-spider job."
+    },
+    {
+      "name": "giubo_flex_disc",
+      "why": "Rotoflex / Giubo rubber doughnut. Product, bought elastomer."
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Constant-velocity_joint",
+    "https://en.wikipedia.org/wiki/Schmidt_coupling",
+    "https://en.wikipedia.org/wiki/Universal_joint",
+    "https://507movements.com/mm_051.html",
+    "https://507movements.com/toc.html",
+    "https://www.zero-max.com/flexible-shaft-couplings/schmidt-couplings",
+    "https://www.firgelliauto.com/blogs/mechanisms/thompson-coupling-cv",
+    "https://www.firgelliauto.com/blogs/mechanisms/constant-velocity-joint",
+    "https://www.youtube.com/watch?v=bkN5F-QD9jA",
+    "gallery/build_gallery.py ANIMATE comments on oldham/universal/double_cardan vs tripod_pose",
+    ".claude/overnight/catalog.json categories.couplings + ANIMATE demo_tripod_cv_joint only",
+    "mechlib/couplings.py (oldham, universal_joint, jaw, hirth, tripod_pose/tripod_cv_joint, double_cardan, beam, cv_velocity_*), mechlib/mechanisms.py (dog_slot_coupling), mechlib/fixtures.py (kinematic_coupling), mechlib/usecases.py"
+  ],
+  "summary": "A shaft coupling transmits rotation across a gap that may include parallel offset, angular bend, or axial plunge. Rigid face teeth (Hirth) and lost-motion dogs sit at one end; at the other, a homokinetic (constant-velocity) joint keeps omega_out == omega_in at every phase while the shafts articulate. Reuleaux treats the Hooke/Cardan as two intersecting revolutes (a spherical 4-bar with 90-90-90 links). Norton and IFToMM split the rest by what they tolerate: parallel offset (Oldham, Schmidt), angular (Hooke, Rzeppa, Tracta, Thompson), plunge (tripod, VL ball), or small mixed misalignment via a compliant body (beam, bellows, disc/membrane). 507 Movements names two universal joints at 50-51 and a union coupling at 248. Howell's printed couplings are the helical-slit beam and a bellows or membrane. Homokinetic means the working elements stay in the plane that bisects the shaft angle; double Cardan only gets there if the two joint angles stay equal (a centering ball in trucks; a spherical pantograph in Thompson).\n\nCatalog already covers the FDM staples and one true CV kit. Parallel offset: oldham_coupling (two hubs + floating cross disc). Angular non-CV: universal_joint (Hooke, posed at bend_deg only). Quasi-CV: double_cardan_joint (two Hookes, 90-deg intermediate, equal angles by construction, no centering ball). True plunging CV: tripod_cv_joint + tripod_pose (housing_deg == phase_deg at every angle; spider centre orbits at 3-omega). Mixed small misalignment: jaw_coupling (Lovejoy spider), beam_coupling (helical slit). Rigid: hirth_coupling. Lost motion: dog_slot_coupling. Locate, not drive: kinematic_coupling (Maxwell/Kelvin, fixtures). Speed law only: cv_velocity_ratio / cv_velocity_fluctuation for hooke / tripod / double_cardan / double_cardan_intermediate. bellows_suction_cup is a gripper, not a shaft bellows. Grep finds no Rzeppa, Tracta, Thompson, Schmidt, membrane/disc coupling, grid, or chain coupling.\n\nPose vs display (the animate gate). gallery/build_gallery.py is explicit: oldham, universal_joint, and double_cardan are display-only because their pose laws (Oldham disc 2-omega orbit, Cardan tangent that places the spider) are textbook but not in the module; cv_velocity_ratio is the SPEED relation and does not place a body. tripod_cv_joint is the exception and does animate (phase_deg, 36 frames) because tripod_pose returns housing/spider/centre. jaw, beam, hirth, and kinematic need no relative pose (rigid rotation or a static locate). The highest-leverage missing pieces are therefore hooke_pose and oldham_pose: they unlock two existing kits rather than adding solids.\n\nFDM and first-principles gaps. Schmidt (three discs, three-or-more links at 120 deg, 1963/1967) is the large-offset CV Oldham cannot do; discs print flat, pose is closed-form, offset can exceed a disc radius. Tracta (Gregoire 1926, four printed parts: two yokes + two sliding spherical swivels) is the first FWD CV and more honest in FDM than a Rzeppa. Thompson nests two Cardans and adds a spherical pantograph (pantograph already in-tree) so the intermediate does not fluctuate; double_cardan still has a swinging intermediate. Bellows coupling is the compact compliant sibling of beam_coupling. Disc/membrane is the high-stiffness servo coupling (thin printed discs + spacer). Gear coupling (crowned teeth in a sleeve) and chain coupling (two sprockets + duplex chain) are compositions once roller_sprocket and a crown exist. Rzeppa/Birfield/Weiss need six (or four) hardened balls in ground races plus a cage; tripod_cv_joint's own docstring already refuses them as honest FDM. A display Rzeppa with printed balls is a teaching cutaway, not a generator. Grid (Falk) wants a spring-steel serpentine. Magnetic and fluid couplings are hardware. VL/DO plunging ball joints are Rzeppa variants.",
+  "title": "Shaft couplings and CV joints"
+}

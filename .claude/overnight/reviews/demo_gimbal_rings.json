@@ -1,0 +1,13 @@
+{
+  "bodies_that_look_frozen": [
+    "gimbal_ring_0"
+  ],
+  "cycle_closes": true,
+  "demo": "demo_gimbal_rings",
+  "issues": [],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Blue outer ring stays level while the red middle ring swings from nearly flat through vertical and back, and the pink inner ring rides its trunnions through the same tilt_deg sweep.",
+  "notes": "Single-parameter tilt swings the nested rings rather than holding a payload level against a moving frame; that matches tilt_deg on a fixed outer ring. Last column at 322 deg is heading back toward the 20 deg start pose. Near-zero centroid travel is rotation about the trunnion axes.",
+  "verdict": "pass"
+}

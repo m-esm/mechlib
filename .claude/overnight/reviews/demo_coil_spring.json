@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_coil_spring",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: cyan helical compression spring with closed end coils and open active turns.",
+  "notes": "Non-animated. One body. Helix is printable, not fused into a tube. Sane rest assembly.",
+  "verdict": "pass"
+}

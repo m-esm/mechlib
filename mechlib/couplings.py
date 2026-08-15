@@ -103,6 +103,32 @@ def oldham_coupling(d=30.0, bore_d=8.0, tongue_w=8.0, tongue_h=4.0,
     return {"hub_a": hub_a, "disc": disc, "hub_b": hub_b}
 
 
+def oldham_pose(phase_deg=0.0, offset=0.0):
+    """Return the rigid pose of an Oldham coupling at input phase ``phase_deg``.
+
+    Hub A sits on the origin, hub B on ``(0, offset)``. Both hubs and the
+    disc turn with the input (constant velocity). The disc centre orbits a
+    circle of radius ``|offset| / 2`` centred on the midpoint of the two
+    shaft axes, at twice input speed: that is the 2-omega orbit of a
+    double-slider.
+
+    Returns ``{"hub_a_deg", "hub_b_deg", "disc_deg", "disc_xy", "hub_b_xy",
+    "orbit_r", "ratio"}``. Units mm and degrees.
+    """
+    e = float(offset)
+    theta = math.radians(phase_deg)
+    return {
+        "hub_a_deg": float(phase_deg),
+        "hub_b_deg": float(phase_deg),
+        "disc_deg": float(phase_deg),
+        "disc_xy": (0.5 * e * math.sin(2.0 * theta),
+                    0.5 * e * (1.0 - math.cos(2.0 * theta))),
+        "hub_b_xy": (0.0, e),
+        "orbit_r": 0.5 * abs(e),
+        "ratio": 1.0,
+    }
+
+
 def universal_joint(shaft_d=10.0, pin_d=5.0, fork_gap=18.0, tine_t=4.0,
                     yoke_w=12.0, fork_len=15.0, web_t=2.0, shaft_len=12.0,
                     bend_deg=20.0, boss_r=5.0, clearance=0.3, sections=64):
@@ -166,6 +192,86 @@ def universal_joint(shaft_d=10.0, pin_d=5.0, fork_gap=18.0, tine_t=4.0,
     for mesh in (yoke_a, spider, yoke_b):
         mesh.metadata.update(metadata)
     return {"yoke_a": yoke_a, "spider": spider, "yoke_b": yoke_b}
+
+
+def hooke_pose(bend_deg=20.0, phase_deg=0.0):
+    """Return yoke and spider orientations for a Hooke (Cardan) joint.
+
+    Matches ``universal_joint``'s rest frame: input shaft along -Z, bend
+    about +X, output shaft ``(0, -sin β, cos β)``. Input phase is yoke A
+    about +Z. The rest A-pin lies on the bend axis, so the Cardan
+    relation is ``tan ψ = cos(β) tan φ`` (slow at 0/180, fast at 90/270).
+    That is the same speed law as ``cv_velocity_ratio`` shifted 90 deg of
+    input phase, because that helper measures phase from a pin
+    perpendicular to the bend plane.
+
+    Pin A is ``(cos φ, sin φ, 0)``. Pin B is the rest B-pin rotated with
+    yoke B about the output shaft, which stays in the output eyes and
+    stays perpendicular to pin A.
+
+    Returns ``{"input_deg", "output_deg", "output_axis", "spider_pin_a",
+    "spider_pin_b", "ratio"}``. Units degrees; axes are unit triples.
+    """
+    if not 0.0 <= float(bend_deg) <= 45.0:
+        raise ValueError("hooke_pose(): bend_deg must be in [0, 45]")
+    beta = math.radians(bend_deg)
+    phi = math.radians(phase_deg)
+    psi = math.atan2(math.cos(beta) * math.sin(phi), math.cos(phi))
+    while psi < phi - math.pi:
+        psi += 2.0 * math.pi
+    while psi > phi + math.pi:
+        psi -= 2.0 * math.pi
+    pin_a = (math.cos(phi), math.sin(phi), 0.0)
+    axis = (0.0, -math.sin(beta), math.cos(beta))
+    rest_b = (0.0, math.cos(beta), math.sin(beta))
+    # Rodrigues: rotate rest_b about ``axis`` by ψ.
+    k = axis
+    cross = (
+        k[1] * rest_b[2] - k[2] * rest_b[1],
+        k[2] * rest_b[0] - k[0] * rest_b[2],
+        k[0] * rest_b[1] - k[1] * rest_b[0],
+    )
+    dot = k[0] * rest_b[0] + k[1] * rest_b[1] + k[2] * rest_b[2]
+    c, s = math.cos(psi), math.sin(psi)
+    pin_b = (
+        rest_b[0] * c + cross[0] * s + k[0] * dot * (1.0 - c),
+        rest_b[1] * c + cross[1] * s + k[1] * dot * (1.0 - c),
+        rest_b[2] * c + cross[2] * s + k[2] * dot * (1.0 - c),
+    )
+    length = math.sqrt(pin_b[0] ** 2 + pin_b[1] ** 2 + pin_b[2] ** 2)
+    pin_b = (pin_b[0] / length, pin_b[1] / length, pin_b[2] / length)
+    sin_b = math.sin(beta)
+    ratio = math.cos(beta) / (1.0 - (sin_b * math.sin(phi)) ** 2)
+    return {
+        "input_deg": float(phase_deg),
+        "output_deg": math.degrees(psi),
+        "output_axis": axis,
+        "spider_pin_a": pin_a,
+        "spider_pin_b": pin_b,
+        "ratio": ratio,
+    }
+
+
+def _hooke_spider_matrix(bend_deg, phase_deg):
+    """4x4 taking the rest spider onto ``hooke_pose`` at ``phase_deg``."""
+    rest = hooke_pose(bend_deg=bend_deg, phase_deg=0.0)
+    posed = hooke_pose(bend_deg=bend_deg, phase_deg=phase_deg)
+    a0 = np.asarray(rest["spider_pin_a"], dtype=float)
+    b0 = np.asarray(rest["spider_pin_b"], dtype=float)
+    a1 = np.asarray(posed["spider_pin_a"], dtype=float)
+    b1 = np.asarray(posed["spider_pin_b"], dtype=float)
+
+    def _basis(a, b):
+        c = np.cross(a, b)
+        c = c / np.linalg.norm(c)
+        b = np.cross(c, a)
+        b = b / np.linalg.norm(b)
+        return np.column_stack((a, b, c))
+
+    rot = _basis(a1, b1) @ _basis(a0, b0).T
+    matrix = np.eye(4)
+    matrix[:3, :3] = rot
+    return matrix
 
 
 def jaw_coupling(d=30.0, bore_d=8.0, jaws=3, jaw_deg=30.0, jaw_h=7.0,

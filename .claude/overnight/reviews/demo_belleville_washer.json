@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_belleville_washer",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: three gold coned disc springs stacked in series with alternating cone direction.",
+  "notes": "Non-animated. Side row shows the sandwich and the cone flip. Sane rest assembly of a Belleville stack.",
+  "verdict": "pass"
+}

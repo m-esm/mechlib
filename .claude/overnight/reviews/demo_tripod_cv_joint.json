@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": false,
+  "demo": "demo_tripod_cv_joint",
+  "issues": [],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Blue tulip stays fixed at a shaft angle. Orange input shaft and pink crowned barrels rotate inside the three tracks: the shaft cross-hole walks left to front to right, and the barrels progress around the housing.",
+  "notes": "Catalog lists every body stationary because centroid travel is only ~0.6 mm (spin about a near-center axis plus a little plunge). Orientation, not centroid, shows the CV rotation. Housing does not spin. Last column 302.4 deg is approaching 360.",
+  "verdict": "pass"
+}

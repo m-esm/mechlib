@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_hirth_coupling",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: green and magenta hubs face-to-face with radial V-teeth seated in each other's valleys.",
+  "notes": "Non-animated. Tooth interface is continuous around the joint; hubs stay coaxial. Sane rest assembly of a Hirth face coupling.",
+  "verdict": "pass"
+}

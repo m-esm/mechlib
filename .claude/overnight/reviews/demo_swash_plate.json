@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": false,
+  "demo": "demo_swash_plate",
+  "issues": [],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Tilted pink plate spins under four colored shoes. Shoes stay on their angular stations and stroke axially, high side walking around the plate as phase advances.",
+  "notes": "Shaft stays on axis. Plate is catalog-stationary because its centroid barely translates; the tilt orientation rotating is the intended spin. Last column 302.4 deg is approaching the 360 start. Shoe heights at 0 vs 302 are consistent with a continuing cycle.",
+  "verdict": "pass"
+}

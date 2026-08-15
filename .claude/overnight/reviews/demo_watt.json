@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": false,
+  "demo": "demo_watt",
+  "issues": [],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Pink and green levers rock on the fixed blue ground while the yellow coupler and orange tracer sweep an approximate straight line. Front row keeps the tracer near a level stroke; mid columns show the expected bow at the ends.",
+  "notes": "Ground and its two cyan pivots stay put. Floating pins travel with the joints. 302.4 deg is folding back toward the 0 pose. No broken joints or explosions.",
+  "verdict": "pass"
+}

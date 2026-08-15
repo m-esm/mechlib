@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_ring_gear",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: blue internal involute ring gear, teeth cut inward from the rim.",
+  "notes": "Non-animated. One body. Internal teeth and outer rim read. Sane rest assembly of an annular gear.",
+  "verdict": "pass"
+}

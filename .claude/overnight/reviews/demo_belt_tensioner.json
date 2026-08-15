@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_belt_tensioner",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: purple cantilever arm with a cyan idler pulley on the tip, mount block at the other end.",
+  "notes": "Non-animated. Idler sits on the arm axis; front row shows the slight curve of the spring arm. Two bodies, no explode. Sane rest assembly.",
+  "verdict": "pass"
+}

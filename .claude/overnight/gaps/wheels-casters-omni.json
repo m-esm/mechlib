@@ -1,0 +1,123 @@
+{
+  "candidates": [
+    {
+      "already": null,
+      "api_shape": "mecanum_wheel(hub_d, roller_n, roller_d, roller_len, angle_deg=45) -> {hub, rollers, axles} L/R hand",
+      "fdm": "A hub with n barrels at 45 deg. Prints as a hub plus loose rollers on pins, or print-in-place with clearance. FTC/VEX default. TPU rollers optional.",
+      "mechlib_fit": "yes",
+      "name": "mecanum_wheel",
+      "priority": "high",
+      "why": "Ilon 1973 Swedish wheel. 45 deg rollers, force along the frame diagonal. Not an omni (90 deg) and not a caster (no kingpin). The missing holonomic drive cell."
+    },
+    {
+      "already": "mecanum_wheel",
+      "api_shape": "omni_wheel(hub_d, roller_n, rows=2) -> {hub, rollers} rollers at 90 deg to the plane",
+      "fdm": "Hub plus barrels whose axes are tangent. Two or three staggered rows hide flats. Prints. Grabowiecki 1919 / Blumrich 1972.",
+      "mechlib_fit": "yes",
+      "name": "omni_wheel",
+      "priority": "high",
+      "why": "90 deg poly wheel. Kiwi drive, H-drive, Robocup. Distinct from Mecanum (45 deg, four-wheel X) and from a caster (passive)."
+    },
+    {
+      "already": "printed_ball_bearing, knuckle_hinge",
+      "api_shape": "swivel_caster(wheel_d, trail, fork_w, kingpin_d) -> {fork, wheel, kingpin} trail > 0 required",
+      "fdm": "A fork, a wheel, a vertical pin offset by trail. Prints. Without trail the fork will not self-align. Optional swivel lock is an argument.",
+      "mechlib_fit": "yes",
+      "name": "swivel_caster",
+      "priority": "high",
+      "why": "The self-aligning undriven wheel. Trail is the kinematic primitive. Carts, chairs, robot trailing wheels. Not a Mecanum (driven, no kingpin) and not a ball transfer (no trail)."
+    },
+    {
+      "already": "printed_ball_bearing",
+      "api_shape": "ball_transfer(ball_d, cup_d, support_n) -> {cup, ball, support_balls}",
+      "fdm": "One large sphere on a nest of small balls in a cup. Prints oversized. Load ball up (table) or down (caster). Autoset 1958.",
+      "mechlib_fit": "yes",
+      "name": "ball_transfer",
+      "priority": "high",
+      "why": "Omnidirectional load sphere. Luggage tables, cargo decks. printed_ball_bearing is a shaft race; this is a cargo ball. Casters need trail; this does not."
+    },
+    {
+      "already": "omni_wheel",
+      "api_shape": "killough_pair(wheel_d, cage) -> two conventional wheels at 90 deg in a rotating cage",
+      "fdm": "Two plain wheels, a cage, two axles. Prints. Killough 1994 ORNL. Holonomic without barrel rollers.",
+      "mechlib_fit": "yes",
+      "name": "killough_pair",
+      "priority": "med",
+      "why": "The other holonomic cell. No small rollers to print or jam. After omni_wheel, this is the no-roller stand-in."
+    },
+    {
+      "already": "roller_chain_link, drag_chain_link",
+      "api_shape": "track_shoe(pitch, width, grouser_h) -> one plate + two pins; chain of n is an assembly",
+      "fdm": "A grousered plate with two pin eyes. Prints. Soft ground, stairs, snow. A tank hull is a product.",
+      "mechlib_fit": "yes",
+      "name": "track_shoe",
+      "priority": "med",
+      "why": "Continuous-track cell. roller_chain is a roller-and-bushing drive chain, not a grouser. One shoe is the primitive."
+    },
+    {
+      "already": "swivel_caster",
+      "api_shape": "a wheel in a non-swivelling fork",
+      "fdm": "Too thin. A wheel plus a fork with no kingpin.",
+      "mechlib_fit": "maybe",
+      "name": "rigid_caster",
+      "priority": "low",
+      "why": "Shopping-cart rear. After swivel_caster, emit it as trail=0 / lock=True, not a second kit."
+    },
+    {
+      "already": "swivel_caster",
+      "api_shape": null,
+      "fdm": "Steer motor + drive motor + encoder + a wheel. A finished module.",
+      "mechlib_fit": "no",
+      "name": "swerve_module",
+      "priority": "low",
+      "why": "FRC swerve. Product. The wheel is the primitive; the two-motor pod is a project."
+    },
+    {
+      "already": "flywheel",
+      "api_shape": null,
+      "fdm": "Already ships.",
+      "mechlib_fit": "no",
+      "name": "flywheel_as_wheel",
+      "priority": "low",
+      "why": "Inertia store, not ground contact. Do not file it here."
+    },
+    {
+      "already": "overshot_wheel (water-wind-wheels)",
+      "api_shape": null,
+      "fdm": "Other slice.",
+      "mechlib_fit": "no",
+      "name": "water_wheel_again",
+      "priority": "low",
+      "why": "Prime-mover rotor. Already ranked. This slice is ground rolling."
+    }
+  ],
+  "id": "wheels-casters-omni",
+  "new_categories": [
+    {
+      "name": "wheels",
+      "why": "Ground-contact rolling cells (caster, Mecanum, omni, ball-transfer) are a machinery class. pulleys are belt sheaves, chains are sprocket trains, water-wind is prime-mover rotors, flywheel is inertia. Agents looking up 'caster' or 'mecanum' currently hit nothing. A movements shelf keeps chassis products out."
+    }
+  ],
+  "rejected": [
+    {
+      "name": "oblique_roller_shaft",
+      "why": "507 #204 is skew-shaft rolling contact, a coupling, not a ground wheel. couplings-cv already surveyed it as a friction coupling."
+    },
+    {
+      "name": "robot_base",
+      "why": "Four Mecanums plus a plate is a chassis. Product. One wheel is the cell."
+    }
+  ],
+  "sources": [
+    "https://en.wikipedia.org/wiki/Mecanum_wheel",
+    "https://en.wikipedia.org/wiki/Omni_wheel",
+    "https://en.wikipedia.org/wiki/Caster",
+    "https://en.wikipedia.org/wiki/Ball_transfer_unit",
+    "https://507movements.com/mm_204.html",
+    "https://507movements.com/mm_365.html",
+    "https://507movements.com/toc.html",
+    "mechlib/bearings.py printed_ball_bearing, mechlib/pulleys.py idler_pulley, mechlib/drives.py flywheel, .claude/overnight/gaps/water-wind-wheels.json, .claude/overnight/gaps/kinematic-pairs.json rolling_pair"
+  ],
+  "summary": "A ground wheel is a rolling pair that carries a vehicle or a load. The class splits first by how many directions it can roll without slipping the tire: a conventional wheel is 1-DoF (roll plus spin about the axle), a swivel caster adds a vertical kingpin and a trail so the fork self-aligns, and an omnidirectional wheel (omni 90 deg, Mecanum 45 deg, spherical / ball-transfer) can slide sideways. Siegwart/Nourbakhsh and IFToMM mobile-robot taxonomies treat these as distinct kinematic primitives. 507 never names a Mecanum; the closest historical cells are oblique rollers 204 (skew-shaft rolling contact) and 365 (a rod between two oblique rollers that both translates and spins). Water-wind-wheels already owns prime-mover rotors (Pelton, Savonius). flywheel stores energy. roller_sprocket and idler_pulley are chain and belt sheaves, not ground contact.\n\nCatalog has no caster, Mecanum, omni, or ball-transfer. Grep of mechlib/ and usecases.py is empty for those names. Neighbours: printed_ball_bearing (a radial race, balls trapped between rings), rolling_pair (proposed, cylinder-on-plane contact, not a hub), idler_pulley (belt), flywheel (inertia), roller_sprocket (chain). A chassis, a swerve module, or a shopping cart is a product.\n\nFDM reality. mecanum_wheel is a hub plus n barrel rollers at 45 deg (Ilon 1973, US 3876255); every FTC/VEX print is this cell. omni_wheel is the 90 deg sibling (Grabowiecki 1919, US 1305535; Blumrich 1972); rollers print as barrels on axles, two or three staggered rows hide the gaps. swivel_caster is a fork, a wheel, a kingpin, and a trail offset; without trail it will not self-align. ball_transfer is a large sphere in a cup of small balls (Autoset 1958); printed_ball_bearing is a radial shaft support, this is an omnidirectional load ball. killough_pair is two conventional wheels at 90 deg in a cage (Killough 1994), holonomic without true omni rollers. track_shoe is one grousered plate plus two pins, the continuous-track cell; a tank is a product. Do not emit a robot base or a forklift.",
+  "title": "Wheels, casters, and omnidirectional rolling"
+}

@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_detent_pair",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: green plunger in a blue housing clicking into a notch of the pink dial, coil spring visible in the pocket.",
+  "notes": "Non-animated. Front row shows the plunger tip in a tooth gap. Housing, plunger, and wheel stay assembled. Sane rest assembly.",
+  "verdict": "pass"
+}

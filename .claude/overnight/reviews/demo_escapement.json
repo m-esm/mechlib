@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_escapement",
+  "issues": [],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Anchor rocks through one pendulum period; escape wheel steps two teeth (one per beat).",
+  "notes": "First overnight fail was n-fold tooth symmetry plus a centroid-only travel metric. Wheel vertices move 9.1 mm at two teeth. Picture identity after a whole tooth is the closed-track design, not a frozen wheel.",
+  "verdict": "pass"
+}

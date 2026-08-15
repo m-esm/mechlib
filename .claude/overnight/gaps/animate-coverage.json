@@ -1,0 +1,223 @@
+{
+  "candidates": [
+    {
+      "already": "oldham_coupling",
+      "api_shape": "oldham_pose(offset, phase_deg) then ANIMATE demo_oldham_coupling(phase_deg)",
+      "fdm": "No new solids. Disc orbits at 2-omega.",
+      "mechlib_fit": "yes",
+      "name": "oldham_pose",
+      "priority": "high",
+      "why": "Left-out comment names this law and refuses to invent it. Textbook. Highest-value coupling play. Couplings slice already ranked it high."
+    },
+    {
+      "already": "universal_joint, cv_velocity_ratio",
+      "api_shape": "hooke_pose(bend_deg, phase_deg) then ANIMATE demo_universal_joint(phase_deg)",
+      "fdm": "No new solids. Cardan tangent places the spider.",
+      "mechlib_fit": "yes",
+      "name": "hooke_pose",
+      "priority": "high",
+      "why": "cv_velocity_ratio is speed only. The gallery said so. Unlocks Hooke and is the block for double_cardan_pose."
+    },
+    {
+      "already": "iris_diaphragm, iris_control_range",
+      "api_shape": "ANIMATE demo_iris_diaphragm(close_pct) via sine of drive_deg onto 0..100. close_pct already exists",
+      "fdm": "No new solids. Reason in the left-out comment is stale: lazy_tongs already does this mapping.",
+      "mechlib_fit": "yes",
+      "name": "iris_play",
+      "priority": "high",
+      "why": "Nine bodies, the iris actually opening. The demo already has close_pct. Wire it."
+    },
+    {
+      "already": "knuckle_hinge",
+      "api_shape": "ANIMATE demo_knuckle_hinge(open_deg) sine-mapped between stop_deg and 180",
+      "fdm": "No new solids. open_deg already exists.",
+      "mechlib_fit": "yes",
+      "name": "knuckle_play",
+      "priority": "high",
+      "why": "Same stale 'bounded travel' reason. The hinge swinging is the point of the demo."
+    },
+    {
+      "already": "telescoping_stage",
+      "api_shape": "ANIMATE demo_telescoping_stage(extend) cosine-mapped 0..1 like screw_jack",
+      "fdm": "No new solids. extend already exists.",
+      "mechlib_fit": "yes",
+      "name": "telescoping_play",
+      "priority": "high",
+      "why": "Left-out said the cycle does not close. screw_jack already closed an open lift with a cosine. Same trick."
+    },
+    {
+      "already": "lead_screw, screw_jack",
+      "api_shape": "demo takes drive_deg; nut_z = z0 + lead * turns(sine). Same for differential_screw (travel = p1-p2)",
+      "fdm": "No new solids. Demos today are static.",
+      "mechlib_fit": "yes",
+      "name": "lead_screw_play",
+      "priority": "high",
+      "why": "The rotary-to-linear primitive does not play. screw_jack already does. lead_screw and differential_screw are the same law."
+    },
+    {
+      "already": "scroll_drive",
+      "api_shape": "scroll_drive(..., phase_deg) rotates the plate and poses jaws at face_r + spiral_pitch * turns",
+      "fdm": "No new solids. travel_per_rev is already in metadata.",
+      "mechlib_fit": "yes",
+      "name": "scroll_pose",
+      "priority": "high",
+      "why": "Three jaws walking a spiral is the picture people want. Demo is static at face_r."
+    },
+    {
+      "already": "intermittent_gear_pair, geneva_wheel_angle",
+      "api_shape": "intermittent_angle(theta) -> driven_deg, locked. Then ANIMATE",
+      "fdm": "No new solids. Without this law a constant-ratio bake drives the lock into the notch.",
+      "mechlib_fit": "yes",
+      "name": "intermittent_gear_pose",
+      "priority": "high",
+      "why": "Left-out is still true and is a real gap. Same class as geneva_wheel_angle / escapement_pose."
+    },
+    {
+      "already": "peristaltic_pump_head",
+      "api_shape": "add phase_deg, rotate the rotor, ANIMATE 360/n_rollers closed or 360 open",
+      "fdm": "Rotor is rigid. Body and cap are ground. One turn closes.",
+      "mechlib_fit": "yes",
+      "name": "peristaltic_play",
+      "priority": "high",
+      "why": "A pump demo that does not turn. Trivial rigid repose. Rollers are 3-fold; a 120 deg closed track may work."
+    },
+    {
+      "already": "double_cardan_joint, hooke_pose",
+      "api_shape": "two hooke_pose at equal angles, 90-deg intermediate",
+      "fdm": "No new solids once hooke_pose exists.",
+      "mechlib_fit": "yes",
+      "name": "double_cardan_pose",
+      "priority": "med",
+      "why": "Five-body CV. Depends on hooke_pose. Intermediate still fluctuates; that is the teaching point."
+    },
+    {
+      "already": "linear_way",
+      "api_shape": "add travel to the demo, cosine-map like rack_pinion",
+      "fdm": "Carriage translates on a fixed rail. Cycle closes on the same pose.",
+      "mechlib_fit": "yes",
+      "name": "linear_way_play",
+      "priority": "med",
+      "why": "Same stale open-interval reason as telescoping. Needs a new demo kwarg; the kit already poses the carriage centred."
+    },
+    {
+      "already": "roller_follower",
+      "api_shape": "ANIMATE demo_roller_follower(pose_deg) sine-mapped on the arm swing",
+      "fdm": "pose_deg already exists. Three rigid bodies.",
+      "mechlib_fit": "yes",
+      "name": "roller_follower_play",
+      "priority": "med",
+      "why": "The follower demo is not wired. Not a cam pair (plate_cam already plays); it is the arm+roller kit rocking."
+    },
+    {
+      "already": "archimedes_screw",
+      "api_shape": "add phase_deg, rotate the flight in the trough",
+      "fdm": "Helix has no rotational symmetry at a useful pitch, so 360 deg / 24 frames is visible. Not a camera move.",
+      "mechlib_fit": "yes",
+      "name": "archimedes_play",
+      "priority": "med",
+      "why": "A screw that does not turn. Distinct from timing_pulley (a toothless spin of a symmetric sheave)."
+    },
+    {
+      "already": "ratchet_wheel_pawl, pip_ratchet, arc_ratchet, spring_cartridge_ratchet, detent_pair",
+      "api_shape": "ratchet_pose(phase) -> wheel_deg + pawl_lift, one tooth per cycle, like escapement_pose",
+      "fdm": "No new solids. Spring leaf on ratchet_wheel_pawl deforms slightly; gate may need ALLOW or a rigid pawl-only bake.",
+      "mechlib_fit": "yes",
+      "name": "ratchet_pose",
+      "priority": "med",
+      "why": "Four ratchet demos sit still. One law plays all of them. detent_pair is the plunger cousin."
+    },
+    {
+      "already": "drag_chain",
+      "api_shape": "sine-map bend_deg (already on the demo) across the designed range",
+      "fdm": "24 bodies. Pose exists. Heavy bake, but the law is there.",
+      "mechlib_fit": "yes",
+      "name": "drag_chain_play",
+      "priority": "med",
+      "why": "A cable carrier that does not articulate. bend_deg is already a demo param."
+    },
+    {
+      "already": "planet_stage",
+      "api_shape": "demo variant without the D-flat, then a one-tooth closed track or 2520 deg / 252 frames",
+      "fdm": "The law exists (carrier = sun * zs/(zs+zr)). The D-flat is what kills the short track.",
+      "mechlib_fit": "maybe",
+      "name": "planet_stage_roundbore",
+      "priority": "low",
+      "why": "Left-out is still true of the current demo. A round-bore bake demo is a demo change, not a new law. Feasible, previously judged not worth 252 frames."
+    },
+    {
+      "already": "flat_worm, worm_wheel_band",
+      "api_shape": "if conjugate contact measures non-zero, add phase and ANIMATE; else same reject as demo_worm",
+      "fdm": "Demo is display-posed with a fixed 11.3 deg wheel clock. Measure overlap before wiring.",
+      "mechlib_fit": "maybe",
+      "name": "flat_worm_play",
+      "priority": "low",
+      "why": "demo_worm is still invalid (no contact). printed/flat worms exist specifically to mesh. If the coupon pair contacts, it can play; do not assert a drive sense."
+    },
+    {
+      "already": "harmonic_drive",
+      "api_shape": null,
+      "fdm": "Cup deforms every frame. Gate rejects ~0.15 mm residual.",
+      "mechlib_fit": "no",
+      "name": "harmonic_play",
+      "priority": "low",
+      "why": "Still true. A spinning wave generator with a frozen cup lies about the ratio."
+    },
+    {
+      "already": "jaw_coupling, hirth_coupling, timing_pulley, idler_pulley, freewheel_clutch",
+      "api_shape": null,
+      "fdm": "Whole assembly rotates. Picture is a camera orbit.",
+      "mechlib_fit": "no",
+      "name": "jaw_hirth_timing_spin",
+      "priority": "low",
+      "why": "Left-out still true. freewheel rollers walking the ramps would be a different demo."
+    },
+    {
+      "already": "eccentric_idler_mount",
+      "api_shape": null,
+      "fdm": "A lock-once adjustment.",
+      "mechlib_fit": "no",
+      "name": "eccentric_idler",
+      "priority": "low",
+      "why": "Prompt said do not propose this. Correct. Animating it claims the part spins in service."
+    },
+    {
+      "already": "collet_chuck, leaf_spring, spiral_power_spring, bistable_beam, auxetic, kerf",
+      "api_shape": null,
+      "fdm": "Rigid-recovery gate rejects strain by design.",
+      "mechlib_fit": "no",
+      "name": "deforming_kits",
+      "priority": "low",
+      "why": "Still true. Not a pose-law gap."
+    },
+    {
+      "already": "worm",
+      "api_shape": null,
+      "fdm": "No conjugate contact. Interpenetrates 93 mm^3.",
+      "mechlib_fit": "no",
+      "name": "worm_display",
+      "priority": "low",
+      "why": "Still true. Drive sense cannot be recovered from the geometry."
+    }
+  ],
+  "id": "animate-coverage",
+  "new_categories": [],
+  "rejected": [
+    {
+      "name": "animate_static_explode",
+      "why": "Explode sliders on jaw/oldham/torque_limiter are presentation, not mechanism motion."
+    },
+    {
+      "name": "single_link_chain",
+      "why": "demo_drag_chain_link and demo_roller_chain_link are one link. The run (demo_drag_chain / demo_roller_chain) is the playable object."
+    }
+  ],
+  "sources": [
+    "gallery/build_gallery.py ANIMATE + left-out comment (lines 447-625)",
+    ".claude/overnight/catalog.json animate (36) + demos (161, 80 multi-body movements)",
+    "docs/playground/demos.py (iris close_pct, knuckle open_deg, telescoping extend, roller_follower pose_deg, lead_screw static nut, scroll_drive static jaws)",
+    ".claude/overnight/gaps/couplings-cv.json hooke_pose / oldham_pose",
+    "mechlib/couplings.py tripod_pose vs cv_velocity_ratio, mechlib/indexing.py escapement_pose / geneva_wheel_angle"
+  ],
+  "summary": "ANIMATE is 36 entries. catalog lists 80 multi-body movement demos; 45 of them do not play. The left-out comment in gallery/build_gallery.py was measured, but several reasons are stale: the same file already sine/cosine-maps bounded travels onto a 360 deg drive_deg for peaucellier, watt, sarrus, lazy_tongs, screw_jack, rack_pinion, and dog_clutch. That pattern unlocks iris, knuckle, telescoping, linear_way, lead_screw, and check_valve without a new theory. A second bucket is missing pose laws that the couplings and cams slices already named (oldham, Hooke, double Cardan, intermittent gears). A third is rigid rotation that is visible (helical flight, peristaltic rotor, scroll plate) and only needs a phase kwarg. Do not animate static adjustments (eccentric_idler_mount) or all-bodies-together spins (jaw, hirth, timing_pulley, idler). Do not claim deformation (harmonic cup, collet, flexure springs, kerf) until the rigid-recovery gate changes.\n\nStale reasons. iris_diaphragm already takes close_pct; knuckle_hinge already takes open_deg; telescoping_stage already takes extend. All three are the exact out-and-back the comment said a linear ramp cannot express, and the gallery already solved that with a sine. linear_way has no travel param yet; adding one and cosine-mapping it is the screw_jack pattern. lead_screw / differential_screw / scroll_drive have closed-form travels (lead, p1-p2, spiral_pitch) and only need a phase. roller_follower already has pose_deg and is not in ANIMATE. peristaltic_pump_head's rotor is a rigid body; one turn closes. archimedes_screw's flight is a helix, so spinning it is not a camera move.\n\nStill true. demo_worm has no measurable conjugate contact (overlap 0). harmonic_drive deforms the cup every frame (bake residual ~0.15 mm). planet_stage is feasible at 2520 deg / 252 frames if the D-flat is dropped for the bake, but the current demo's 1-fold sun makes the short track illegal. intermittent_gear_pair still has no engagement law. collet, leaf/coil/wave/spiral springs, auxetic/kerf deform. jaw_coupling, hirth, timing_pulley, idler_pulley, freewheel (as currently posed) are rigid rotations of the whole assembly. eccentric_idler_mount is a lock-once adjustment.",
+  "title": "Mechanisms that exist but cannot play"
+}

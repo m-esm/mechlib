@@ -1,0 +1,15 @@
+{
+  "bodies_that_look_frozen": [
+    "crank_disc",
+    "rail_a",
+    "rail_b"
+  ],
+  "cycle_closes": true,
+  "demo": "demo_scotch_yoke",
+  "issues": [],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Gold crank pin orbits on the orange disc while the blue slotted yoke reciprocates in the purple rails, long at 35/337 deg and shortest near 183 deg.",
+  "notes": "Front row makes the SHM stroke obvious. Disc has no orientation landmark so spin-with-pin is not confirmable; the pin orbit is the driving motion. Last column at 337 deg continues toward the 35 deg start.",
+  "verdict": "pass"
+}

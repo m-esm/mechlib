@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_freewheel_clutch",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: six orange rollers in ramped pockets of a blue outer ring around a purple inner hub.",
+  "notes": "Non-animated. Rollers sit in the wedge pockets, not exploded. Classic sprag/roller freewheel rest. Sane rest assembly.",
+  "verdict": "pass"
+}

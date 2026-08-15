@@ -362,6 +362,11 @@ USE_CASES = {
         "Misaligned parallel shafts on pumps and encoders, and printed "
         "couplings that tolerate offset without side load."
     ),
+    'oldham_pose': (
+        "Posing an Oldham coupling through a turn so the floating disc "
+        "orbits at twice shaft speed: printer stepper-to-screw couplers "
+        "and scroll-compressor drive trains."
+    ),
     'oring_groove': (
         "Face-seal glands on lids and flanges, AS568 O-ring seats designed "
         "for correct squeeze and fill."
@@ -641,6 +646,11 @@ USE_CASES = {
     'universal_joint': (
         "Driveshafts, steering columns, and any angled shaft pair that can "
         "live with Cardan speed variation."
+    ),
+    'hooke_pose': (
+        "Animating a Cardan joint through a turn so the output lags and "
+        "leads twice per revolution: driveshafts, steering columns, and "
+        "socket-wrench extensions at a known bend."
     ),
     'v_belt_pulley': (
         "Washing machines, drill presses, lathes, and HVAC blowers: "

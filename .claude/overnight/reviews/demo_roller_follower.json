@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_roller_follower",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: pink pivoted arm, green roller on a blue pin at the tip, pivot hole at the other end.",
+  "notes": "Non-animated. Roller sits on the pin through the arm; nothing exploded. Sane rest assembly of a cam follower lever.",
+  "verdict": "pass"
+}

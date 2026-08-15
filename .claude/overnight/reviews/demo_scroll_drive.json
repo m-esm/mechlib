@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_scroll_drive",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: blue Archimedean scroll plate with three colored jaws at 120 deg on a common gripping circle.",
+  "notes": "Non-animated. Jaws sit on the spiral rib, equally spaced. Sane rest assembly of a 3-jaw chuck scroll.",
+  "verdict": "pass"
+}

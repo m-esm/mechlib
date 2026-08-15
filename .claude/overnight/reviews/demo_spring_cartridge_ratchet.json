@@ -1,0 +1,11 @@
+{
+  "bodies_that_look_frozen": [],
+  "cycle_closes": true,
+  "demo": "demo_spring_cartridge_ratchet",
+  "issues": [],
+  "kind": "movement",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Rest pose: three orange rigid pawls in a slotted blue hub inside a green self-energising ring.",
+  "notes": "Non-animated. Pawls sit in the hub slots and engage the ring. Sane rest assembly of a serviceable cartridge ratchet.",
+  "verdict": "pass"
+}

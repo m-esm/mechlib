@@ -1,0 +1,203 @@
+{
+  "candidates": [
+    {
+      "already": "gerotor_pump, external_gear_pump",
+      "api_shape": "vane_pump(n_vanes, rotor_d, ecc, vane_t, width, phase_deg) -> {rotor, vanes, housing, cap}",
+      "fdm": "Eccentric rotor with radial slots, sliding vanes (print or drop-in card). Housing bore is circular. Prints flat. Leaks like the gerotor; same honesty note. Variable displacement is an extra ring, not a second kit.",
+      "mechlib_fit": "yes",
+      "name": "vane_pump",
+      "priority": "high",
+      "why": "Sliding-vane rotary PD. Hydraulic power steering, vacuum pumps, A/C compressors. Distinct from gerotor (trochoid mesh) and from external gears. The missing rotary-PD sibling."
+    },
+    {
+      "already": "external_gear_pump, gerotor_pump",
+      "api_shape": "lobe_pump(lobes=2|3, d, width, clearance, phase_deg) -> {rotor_a, rotor_b, housing} plus timing gears",
+      "fdm": "Two conjugate lobe rotors that do not touch; timing is a 1:1 spur pair. Prints. Roots blower is lobes=2. Food/hygiene pumps are 3-lobe. Clearance is the leak path on purpose.",
+      "mechlib_fit": "yes",
+      "name": "lobe_pump",
+      "priority": "high",
+      "why": "Rotary lobe / Roots. Non-contacting, can pass solids, needs timing gears. external_gear_pump meshes; this does not. The other two-rotor PD."
+    },
+    {
+      "already": null,
+      "api_shape": "centrifugal_impeller(d, blades, blade_h, eye_d, style='radial'|'mixed'|'axial') -> impeller, optional volute",
+      "fdm": "Backplate + blades, prints standing or as a revolve. A volute is a spiral shell, optional. Does not seal; it is a momentum machine. The missing dynamic primitive.",
+      "mechlib_fit": "yes",
+      "name": "centrifugal_impeller",
+      "priority": "high",
+      "why": "The other half of 'pump'. Every PD kit in-tree is a trap-and-push. Agents asking for a fan, coolant pump, or blower need an impeller, not another gerotor."
+    },
+    {
+      "already": "check_valve",
+      "api_shape": "tesla_valve(n_stages, channel_w, diodicity_target) -> a planar channel, no moving parts",
+      "fdm": "A 2D labyrinth extruded. Prints flat. No ball, no spring. Diodicity is modest (~2-4) and that is honest. The FDM-native check.",
+      "mechlib_fit": "yes",
+      "name": "tesla_valve",
+      "priority": "high",
+      "why": "Valvular conduit, Tesla 1920. A check with zero moving parts. check_valve is a bought ball on a seat. Distinct, and the prompt named it."
+    },
+    {
+      "already": "lead_screw, check_valve",
+      "api_shape": "needle_valve(seat_d, taper_deg, travel) -> {body, needle} plus Cv(lift)",
+      "fdm": "A taper on a threaded stem in a conical seat. Prints upright. Fine throttle, not a shutoff. lead_screw is the stem, not the valve.",
+      "mechlib_fit": "yes",
+      "name": "needle_valve",
+      "priority": "high",
+      "why": "The metering valve. Carb jets, instrument flow, any time you want a continuous Cv, not a detent route. rotary_spool_valve is on/off routing."
+    },
+    {
+      "already": "rotary_spool_valve",
+      "api_shape": "butterfly_valve(bore_d, disc_t, shaft_d, open_deg) -> {body, disc}",
+      "fdm": "A disc on a diametral shaft in a short tube. Prints. Seal is a bought O-ring or a printed interference lip. Quarter-turn damper.",
+      "mechlib_fit": "yes",
+      "name": "butterfly_valve",
+      "priority": "high",
+      "why": "The compact quarter-turn shutoff/throttle for air and water. Not a plug (spool) and not a ball. HVAC, intakes, printed ducts."
+    },
+    {
+      "already": "archimedes_screw",
+      "api_shape": "progressive_cavity(rotor_starts=1, stator_starts=2, pitch, ecc, length, phase_deg) -> {rotor, stator}",
+      "fdm": "Single-helix metal/PETG rotor in a TPU double-helix stator (Moineau). Stator prints as a flexible liner. The printable screw-pump. archimedes_screw is an open conveyor, not a sealed PC.",
+      "mechlib_fit": "yes",
+      "name": "progressive_cavity",
+      "priority": "med",
+      "why": "Progressing cavity / Moineau. Viscous, solids-laden, metering. Twin-screw metal pumps are the rejected cousin. This is the one that prints."
+    },
+    {
+      "already": "swash_plate, check_valve",
+      "api_shape": "axial_piston_pump(n, pitch_r, tilt, phase_deg) -> swash + barrel block + port plate + shoes",
+      "fdm": "Reuse swash_plate. Add a barrel cylinder block and a kidney port plate. Prints. Leaks. Teaching axial-piston / bent-axis demo.",
+      "mechlib_fit": "yes",
+      "name": "axial_piston_pump",
+      "priority": "med",
+      "why": "swash_plate is a converter (usecase already says 'axial piston pumps') but it has no barrels or ports. The pump is the missing housing. Do not add a second swash."
+    },
+    {
+      "already": "check_valve, swash_plate, bistable_beam",
+      "api_shape": "diaphragm_pump(d, stroke, phase) -> {body, diaphragm, check_in, check_out}",
+      "fdm": "A TPU or thin PETG disc, two check_valves, a cam or wobble drive. Prints. AODD (air-operated double) is a second chamber, not a second kit. 507 #454.",
+      "mechlib_fit": "yes",
+      "name": "diaphragm_pump",
+      "priority": "med",
+      "why": "Reciprocating PD with a flexure wall, no sliding seal. Dosing, chemicals, air pumps. iris_diaphragm is an aperture, not this."
+    },
+    {
+      "already": "rotary_spool_valve, check_valve",
+      "api_shape": "ball_valve(bore_d, ball_d, port_d, open_deg) -> {body, ball, seats}",
+      "fdm": "A sphere with a through-bore, two printed or bought seats. Quarter-turn. Prints as a revolve. Seats are the leak.",
+      "mechlib_fit": "yes",
+      "name": "ball_valve",
+      "priority": "med",
+      "why": "The named quarter-turn shutoff. rotary_spool_valve is a plug with radial passages; a ball is a sphere. check_valve's ball is a free check, not a quarter-turn."
+    },
+    {
+      "already": "check_valve, coil_spring",
+      "api_shape": "pressure_relief(seat_d, spring_rate, setpoint_or_preload) -> {body, poppet, spring_seat}",
+      "fdm": "Poppet on a seat, coil_spring preload. Prints. Setpoint is the spring, not a new solid. check_valve is a free ball; this is a calibrated crack pressure.",
+      "mechlib_fit": "yes",
+      "name": "pressure_relief",
+      "priority": "med",
+      "why": "Safety / bypass. Every hydraulic circuit needs one. A parameterised check, but the name and the setpoint metadata are the job."
+    },
+    {
+      "already": "rotary_spool_valve, check_valve",
+      "api_shape": "shuttle_valve(port_d) -> {body, shuttle} two inlets, one outlet, higher pressure wins",
+      "fdm": "A free piston or ball that seats against the lower-pressure inlet. Prints. Pneumatic OR / 'selector'.",
+      "mechlib_fit": "yes",
+      "name": "shuttle_valve",
+      "priority": "med",
+      "why": "Pneumatic logic. Distinct from a check (one inlet) and from a spool (operator-driven). The prompt named it."
+    },
+    {
+      "already": "butterfly_valve",
+      "api_shape": "a plate sliding across a bore",
+      "fdm": "Prints. Full-bore when open. Stem is a lead_screw.",
+      "mechlib_fit": "maybe",
+      "name": "gate_valve",
+      "priority": "low",
+      "why": "On/off, low loss. After butterfly and ball, a third shutoff. Lower leverage."
+    },
+    {
+      "already": "rotary_spool_valve",
+      "api_shape": "a sliding spool with lands in a bore, 5 ports 2 positions",
+      "fdm": "Prints as a cylinder in a bore. Same leak story as the rotary plug.",
+      "mechlib_fit": "maybe",
+      "name": "linear_spool_5_2",
+      "priority": "low",
+      "why": "The ISO pneumatic valve. rotary_spool_valve already routes; this is the sliding cousin. After the rotary exists, a pose=stroke argument may be enough."
+    },
+    {
+      "already": "hose_barb, rotary_spool_valve",
+      "api_shape": "a block with named ports and drilled passages",
+      "fdm": "Prints. Close to a project fixture.",
+      "mechlib_fit": "maybe",
+      "name": "manifold_block",
+      "priority": "low",
+      "why": "A plumbing product. Ports and passages are composition of barb + bores. Skip until someone is inventing manifolds from boxc."
+    },
+    {
+      "already": "gerotor_pump",
+      "api_shape": null,
+      "fdm": "Covered, posed, displacement measured.",
+      "mechlib_fit": "no",
+      "name": "gerotor_again",
+      "priority": "low",
+      "why": "Already the internal-gear PD."
+    },
+    {
+      "already": "external_gear_pump",
+      "api_shape": null,
+      "fdm": "Covered.",
+      "mechlib_fit": "no",
+      "name": "external_gear_again",
+      "priority": "low",
+      "why": "Already the meshing two-rotor PD."
+    },
+    {
+      "already": "peristaltic_pump_head",
+      "api_shape": null,
+      "fdm": "Covered.",
+      "mechlib_fit": "no",
+      "name": "peristaltic_again",
+      "priority": "low",
+      "why": "Already the tube-pinch PD."
+    }
+  ],
+  "id": "fluid-pumps-valves",
+  "new_categories": [],
+  "rejected": [
+    {
+      "name": "twin_screw_metal",
+      "why": "Timed metal screws with tiny clearance. Not FDM. progressive_cavity is the printable screw-pump."
+    },
+    {
+      "name": "pulsatile_vad",
+      "why": "Heart / ventricular-assist product. A diaphragm_pump plus a drive law, not a primitive."
+    },
+    {
+      "name": "iris_as_valve",
+      "why": "iris_diaphragm is a light/air aperture gripper. Do not file it as a pump diaphragm."
+    },
+    {
+      "name": "archimedes_as_pd",
+      "why": "archimedes_screw is an open helical conveyor. Already shipped. Not a sealed screw pump."
+    },
+    {
+      "name": "swash_as_pump",
+      "why": "swash_plate is the converter. axial_piston_pump is the missing housing, not a second plate."
+    }
+  ],
+  "sources": [
+    "https://www.northridgepumps.com/article-88_what-are-positive-displacement-pumps",
+    "https://www.spxflow.com/blog/demystifying-positive-displacement-pumps-types-functions-and-benefits/",
+    "https://en.wikipedia.org/wiki/Pump",
+    "https://en.wikipedia.org/wiki/Tesla_valve",
+    "https://en.wikipedia.org/wiki/Vane_pump",
+    "https://en.wikipedia.org/wiki/Roots-type_supercharger",
+    "https://507movements.com/toc.html",
+    ".claude/overnight/catalog.json category fluid + swash_plate usecase axial piston",
+    "mechlib/fluid.py (gerotor_pump, external_gear_pump, peristaltic_pump_head, rotary_spool_valve, check_valve, hose_barb), mechlib/linear.py (swash_plate), mechlib/linear.py (archimedes_screw), mechlib/grippers.py (iris_diaphragm), mechlib/usecases.py"
+  ],
+  "summary": "Fluid machines split first by how they move volume: positive-displacement (trap a chamber and force it out) vs dynamic (impart momentum). PD then splits rotary (gear, gerotor, vane, lobe, screw, progressive-cavity, peristaltic) vs reciprocating (piston, plunger, diaphragm, bellows). Dynamic is centrifugal (radial / mixed / axial impeller), regenerative, and jet/ejector. Valves split by what they do: stop (gate, ball, butterfly, plug), throttle (needle, globe), check (ball, swing, Tesla), relieve (spring poppet), and route (rotary plug, linear spool, shuttle, manifold). 507 is rich on this shelf: lift/force pumps 448-453, rotary 455-456, diaphragm 454, chain 462, Archimedes 443, four-way cock 395, ejectors 475-476. Reuleaux barely applies (fluid is not a pair). Howell shows up as a printed diaphragm or a Tesla channel, not as a rotor.\n\nCatalog already covers the FDM-honest PD staples and one plug valve. Rotary PD: gerotor_pump (trochoid, posed, measured displacement), external_gear_pump (two involutes in a figure-eight, posed). Peristaltic: peristaltic_pump_head (rollers pinch a bought tube). Reciprocating converter, not a pump: swash_plate (tilted disc + shoes, stroke = 2*pitch*tan(tilt); no barrels, no ports, no valves). Valves: rotary_spool_valve (cross-drilled plug, derived routing table), check_valve (bought ball + spring on a 45 deg seat). Fitting: hose_barb. iris_diaphragm is a light/air iris, not a pump diaphragm. archimedes_screw is a conveyor helix, not a twin-screw or Moineau. Grep finds no vane, lobe/Roots, progressive-cavity, centrifugal impeller, needle, quarter-turn ball, gate, butterfly, relief, shuttle, Tesla, or axial-piston housing.\n\nFDM reality. Printed rotors leak at the faces; the existing gerotor/gear docs already say that. Geometry kits are still the right primitive. Sliding-vane (eccentric rotor, vanes in slots) prints as a teaching oil pump. Lobe / Roots is two non-contacting rotors plus timing gears (reuse spur_gear_mesh). Progressive cavity is a single-helix rotor in a TPU double-helix stator (Moineau) and is the printable screw-pump. Centrifugal impeller (radial blades on a backplate) is the missing dynamic primitive; a volute is an optional shell. Needle valve is a taper on a lead_screw in a seat. Butterfly is a disc on a shaft in a bore. Tesla valve is a no-moving-parts check, extremely FDM-native. Pressure-relief is check_valve with a calibrated spring and a setpoint. Shuttle is a free piston that routes the higher of two supplies (pneumatic logic). Axial-piston pump is swash_plate plus barrels and a port plate, not a second swash. Diaphragm pump is a printed (or TPU) disc plus two check_valves. Linear 5/2 spool is the sliding cousin of rotary_spool_valve. Twin-screw metal pumps, pulsatile VADs, and manifold blocks as products stay out.",
+  "title": "Pumps, valves, and fluid machines"
+}

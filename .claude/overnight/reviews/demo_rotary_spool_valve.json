@@ -1,0 +1,14 @@
+{
+  "bodies_that_look_frozen": [
+    "spool_valve_body",
+    "spool_valve_cap"
+  ],
+  "cycle_closes": true,
+  "demo": "demo_rotary_spool_valve",
+  "issues": [],
+  "kind": "animate",
+  "looks_like_intended_mechanism": true,
+  "motion_reads_as": "Blue body and orange cap stay put. Brown plug rotates in the bore: hex socket walks, the stem slot appears and disappears in the side row, and the L-passage lines up with the body port around 227 deg (see-through in the side view).",
+  "notes": "Centroids are all ~0 as expected for a rotary valve. Plug_deg 0-302 is a partial turn; last column is heading back toward the 0 hex pose.",
+  "verdict": "pass"
+}
