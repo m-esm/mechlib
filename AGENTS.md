@@ -1,5 +1,7 @@
 # Agent notes for mechlib
 
+Work continues on `main`. Do not branch or open a PR unless asked.
+
 ## What this library is
 
 Semi-primitive **parametric mechanical geometry** for FDM (trimesh + shapely +
