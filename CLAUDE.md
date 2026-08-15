@@ -64,6 +64,8 @@ API already covers it.
 
 ## Workflow
 
+- Work continues on `main`. Commit there. Do not open a feature branch or
+  PR unless asked (standing exception, 2026-08-15).
 - Version lives in BOTH `pyproject.toml` and `mechlib/__init__.py`; bump
   together.
 - New public function: add to module, re-export in `mechlib/__init__.py`
