@@ -36,7 +36,8 @@ Prefer the matching API over composing primitives. Only fall back to
 `find_vitamin("608")`, `vitamin_addresses()`). ISO bearings/fasteners and
 calipered motors/sensors. Envelopes are display meshes, not printed STLs.
 Consumers rebind product params from the address; do not add a second table
-here or in the product.
+here or in the product. Do not add CadQuery, OpenSCAD, or NopSCADlib as a
+dependency to grow the catalog. Port facts into `mechlib/vitamins/tables.py`.
 
 ## Do not
 
