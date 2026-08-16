@@ -32,6 +32,12 @@ use_case("toggle_clamp")
 Prefer the matching API over composing primitives. Only fall back to
 `boxc` / `cyl` / cutters when no use case fits.
 
+**Bought parts** are `mechlib.vitamin("bearing/608-2rs")` (also
+`find_vitamin("608")`, `vitamin_addresses()`). ISO bearings/fasteners and
+calipered motors/sensors. Envelopes are display meshes, not printed STLs.
+Consumers rebind product params from the address; do not add a second table
+here or in the product.
+
 ## Do not
 
 - Add finished product models (brackets, enclosures, robot chassis) here —
