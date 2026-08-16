@@ -19,6 +19,19 @@ from __future__ import annotations
 # ---------------------------------------------------------------------------
 
 USE_CASES = {
+    'vitamin': (
+        "Bought bearings, ISO fasteners, motors, servos, cells, and sensors "
+        "looked up by address (bearing/608-2rs) so a printed pocket rebinds "
+        "from one catalog instead of a forked dimension table."
+    ),
+    'find_vitamin': (
+        "Search the bought-part catalog by family or title when picking a "
+        "608 vs 695, an M3 SHCS, or a GA12-N20 envelope for a new product."
+    ),
+    'vitamin_addresses': (
+        "List every catalog address so a staleness gate can prove a posed "
+        "assembly node still resolves after a catalog refresh."
+    ),
     'annular_snap': (
         "Bottle-cap and filter-housing lids, pipe couplings, and round "
         "enclosure closures that snap together on a circumferential "

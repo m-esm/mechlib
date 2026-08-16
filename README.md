@@ -35,6 +35,11 @@ Semi-primitive building blocks only (gears, cams, linkages, ratchets,
 couplings, flexures, cutters, fasteners). Explicit arguments, no project
 config. MIT licensed.
 
+**Bought parts** live in ``mechlib.vitamins`` (also ``ml.vitamin("bearing/608-2rs")``):
+ISO bearings and fasteners, calipered motors/sensors. Addresses are
+``family/slug``. Envelopes are display meshes, not printed STLs. Product
+params should rebind from the catalog instead of forking a second table.
+
 **For AI agents / part selection:** each API has a real-machinery use case in
 [`mechlib/usecases.py`](mechlib/usecases.py) (`search_use_cases("robot joint")`,
 `use_case("four_bar")`). Same text appears as **Used in** on every gallery

@@ -1,4 +1,4 @@
-__version__ = "0.10.1"
+__version__ = "0.11.0"
 
 from .bearings import plain_bushing, printed_ball_bearing, thrust_washer
 from .cams import (
@@ -276,6 +276,9 @@ from .ratchets import (
 from .stepio import export_assembly
 from .sweep import extrude_twist, loft, ring_pts, swept_keyed_bore
 from .text import place, place_right, text_block, text_polygon
+from .vitamins import all_addresses as vitamin_addresses
+from .vitamins import find as find_vitamin
+from .vitamins import get as vitamin
 
 __all__ = (
     "cyl",
@@ -533,4 +536,7 @@ __all__ = (
     "annular_snap",
     "check_valve",
     "bellows_suction_cup",
+    "vitamin",
+    "find_vitamin",
+    "vitamin_addresses",
 )
