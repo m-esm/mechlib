@@ -57,6 +57,15 @@ Prefer **PETG** for **arm**/**zn**/**zp**; **PLA** is fine for **stencil**. Cons
 No printed geometry lives here, and none should be added.
 Do not add CadQuery, OpenSCAD, or NopSCADlib.
 
+## First layer / bed
+Print on **PEI**; bed **PETG ~70C**, **PLA ~60C**. Consumer project; not this repo.
+1. **PEI**: wipe the sheet, no glue; first layer must stick on zn/zp faces.
+2. **PETG ~70C**: arm/zn/zp bed; too cold and the sandwich warps off PEI.
+3. **PLA ~60C**: stencil bed; hotter PEI elephants-foot the aim cut.
+4. **first layer**: reject a smeared or unstuck skirt before committing the kit.
+No printed geometry lives here, and none should be added.
+Do not add CadQuery, OpenSCAD, or NopSCADlib.
+
 ## `vitamin()` slugs
 
 ```python
