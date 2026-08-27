@@ -677,6 +677,12 @@ USE_CASES = {
         "Compact axial preload in bearings and seals, crest-to-crest springs "
         "where a coil spring is too tall."
     ),
+    'wiper_kit': (
+        "Wall-button single-pivot wiper kits (printed arm, zn and zp frame "
+        "halves, aim stencil) that rebind the bought servo from "
+        "vitamin(\"servo/sg90\") and vitamin(\"servo/mg90s\") instead of a "
+        "forked envelope table."
+    ),
     'worm': (
         "High-ratio right-angle reducers, tuning knobs, winches, and "
         "self-locking stages that should not back-drive."
