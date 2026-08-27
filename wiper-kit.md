@@ -39,6 +39,15 @@ Sandwich **zn**+**zp**, then **arm**, **stencil** last. Consumer project; not th
 No printed geometry lives here, and none should be added.
 Do not add CadQuery, OpenSCAD, or NopSCADlib.
 
+## Post-print inspection
+Inspect **flash**, **layer**, and **zn**/**zp** fit before the sandwich. Consumer project; not this repo.
+1. **flash** — peel brim, elephants-foot, and stringing off zn/zp faces and the arm horn seat.
+2. **layer** — reject delam, missing walls, or a smeared first layer that closes the sandwich.
+3. **zn/zp fit** — dry-mate −Z and +Z; they must close flush with no crush or gap.
+Stencil is aim-only; it is not a fit part. Arm horn seat must stay free after cleanup.
+No printed geometry lives here, and none should be added.
+Do not add CadQuery, OpenSCAD, or NopSCADlib.
+
 ## `vitamin()` slugs
 
 ```python
