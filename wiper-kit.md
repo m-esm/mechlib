@@ -93,6 +93,15 @@ Do not add CadQuery, OpenSCAD, or NopSCADlib.
 No printed geometry lives here, and none should be added.
 Do not add CadQuery, OpenSCAD, or NopSCADlib.
 
+## Layer height / speed
+**PETG arm** **0.2mm** / **40mm/s**; **PLA stencil** **0.16mm** / **50mm/s**. Consumer project; not this repo.
+1. **arm**: PETG 0.2mm/40mm/s; taller or faster layers starve the horn weld.
+2. **zn**: same 0.2mm/40mm/s so the wall half matches arm shrinkage.
+3. **zp**: match zn; a finer/faster half gaps the sandwich.
+4. **stencil**: PLA 0.16mm/50mm/s; thicker layers blur the press-point cut.
+No printed geometry lives here, and none should be added.
+Do not add CadQuery, OpenSCAD, or NopSCADlib.
+
 ## `vitamin()` slugs
 
 ```python
