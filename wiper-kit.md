@@ -66,6 +66,15 @@ Print on **PEI**; bed **PETG ~70C**, **PLA ~60C**. Consumer project; not this re
 No printed geometry lives here, and none should be added.
 Do not add CadQuery, OpenSCAD, or NopSCADlib.
 
+## Retraction / stringing
+Keep **PETG** retraction **short**; **PLA stencil** can retract more. Consumer project; not this repo.
+1. **arm** — PETG: short retract so the horn seat does not jam; wipe stringing off the blade.
+2. **zn** — PETG: same short retract; strings on the sandwich face fail the dry-mate.
+3. **zp** — PETG: match zn so both halves string the same; peel before sandwich.
+4. **stencil** — PLA: more retract is fine; leftover strings blur the press-point cut.
+No printed geometry lives here, and none should be added.
+Do not add CadQuery, OpenSCAD, or NopSCADlib.
+
 ## `vitamin()` slugs
 
 ```python
