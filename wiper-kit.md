@@ -75,6 +75,15 @@ Keep **PETG** retraction **short**; **PLA stencil** can retract more. Consumer p
 No printed geometry lives here, and none should be added.
 Do not add CadQuery, OpenSCAD, or NopSCADlib.
 
+## Cooling / fan
+**PETG** low fan on **arm**; **PLA stencil** fan **100%**. Consumer project; not this repo.
+1. **arm**: PETG low fan so layers weld at the horn; high fan makes the blade brittle.
+2. **zn**: PETG low fan; a cold sandwich face delams under wall load.
+3. **zp**: match zn so both halves shrink the same.
+4. **stencil**: PLA 100% fan; low fan blurs the press-point cut.
+No printed geometry lives here, and none should be added.
+Do not add CadQuery, OpenSCAD, or NopSCADlib.
+
 ## `vitamin()` slugs
 
 ```python
