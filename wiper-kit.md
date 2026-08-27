@@ -102,6 +102,15 @@ Do not add CadQuery, OpenSCAD, or NopSCADlib.
 No printed geometry lives here, and none should be added.
 Do not add CadQuery, OpenSCAD, or NopSCADlib.
 
+## Retraction distance / speed
+**PETG arm** **1.2mm** / **40mm/s**; **PLA stencil** **0.8mm** / **35mm/s**. Consumer project; not this repo.
+1. **arm**: PETG 1.2mm/40mm/s; longer retract blobs the horn seat.
+2. **zn**: same 1.2mm/40mm/s so sandwich faces do not string.
+3. **zp**: match zn; a longer retract on one half leaves unmatched blobs.
+4. **stencil**: PLA 0.8mm/35mm/s; leftover strings blur the press-point cut.
+No printed geometry lives here, and none should be added.
+Do not add CadQuery, OpenSCAD, or NopSCADlib.
+
 ## `vitamin()` slugs
 
 ```python
