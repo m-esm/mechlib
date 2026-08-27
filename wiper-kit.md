@@ -30,6 +30,15 @@ Print **arm**, then **zn**, then **zp**, then **stencil**. Consumer project; not
 No printed geometry lives here, and none should be added.
 Do not add CadQuery, OpenSCAD, or NopSCADlib.
 
+## Post-print assembly
+Sandwich **zn**+**zp**, then **arm**, **stencil** last. Consumer project; not this repo.
+1. **zn** — frame half (wall / −Z), first face of the sandwich.
+2. **zp** — frame half (+Z), close the sandwich on zn.
+3. **arm** — wiper blade on the servo horn, after the frame sandwich.
+4. **stencil** — aim / tape template last (press-point layout).
+No printed geometry lives here, and none should be added.
+Do not add CadQuery, OpenSCAD, or NopSCADlib.
+
 ## `vitamin()` slugs
 
 ```python
