@@ -46,3 +46,12 @@ params should rebind from the catalog instead of forking a second table.
 card. See [`AGENTS.md`](AGENTS.md).
 
 **[m-esm.github.io/mechlib](https://m-esm.github.io/mechlib/)**
+
+## wiper_kit
+Wall-button single-pivot wiper kits: printed **arm**, **zn** and **zp** frame halves, and an aim **stencil**.
+The bought servo is rebound from `vitamin("servo/sg90")` (datasheet) or `vitamin("servo/mg90s")` (caliper).
+Not a mesh API — no printed geometry lives here, and none should be added.
+Finished solids stay in the product. Envelopes are display meshes, not printed STLs.
+Consumers rebind product params from the address (`family/slug`).
+Lookup: `use_case("wiper_kit")`. See [wiper-kit.md](wiper-kit.md).
+Do not add CadQuery, OpenSCAD, or NopSCADlib.
