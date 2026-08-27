@@ -48,6 +48,15 @@ Stencil is aim-only; it is not a fit part. Arm horn seat must stay free after cl
 No printed geometry lives here, and none should be added.
 Do not add CadQuery, OpenSCAD, or NopSCADlib.
 
+## Filament (PETG vs PLA)
+Prefer **PETG** for **arm**/**zn**/**zp**; **PLA** is fine for **stencil**. Consumer project; not this repo.
+1. **arm** — PETG: heat and creep at the horn; PLA can sag on a warm wall.
+2. **zn** — PETG: layer weld on the wall half; PLA is brittle at the sandwich.
+3. **zp** — PETG: same as zn so the sandwich matches shrinkage.
+4. **stencil** — PLA: aim/tape template only; PETG stringing blurs the press point.
+No printed geometry lives here, and none should be added.
+Do not add CadQuery, OpenSCAD, or NopSCADlib.
+
 ## `vitamin()` slugs
 
 ```python
