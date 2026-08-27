@@ -21,6 +21,15 @@ halves, and an aim **stencil**. The bought servo is rebound from
 Finished solids stay in the product. Do not add CadQuery, OpenSCAD, or
 NopSCADlib, and do not grow a second dim table here.
 
+## Print order
+Print **arm**, then **zn**, then **zp**, then **stencil**. Consumer project; not this repo.
+1. **arm** — wiper blade on the servo horn.
+2. **zn** — frame half (wall / −Z).
+3. **zp** — frame half (+Z).
+4. **stencil** — aim / tape template for the press point.
+No printed geometry lives here, and none should be added.
+Do not add CadQuery, OpenSCAD, or NopSCADlib.
+
 ## `vitamin()` slugs
 
 ```python
