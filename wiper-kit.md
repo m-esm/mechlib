@@ -165,6 +165,15 @@ Do not add CadQuery, OpenSCAD, or NopSCADlib.
 No printed geometry lives here, and none should be added.
 Do not add CadQuery, OpenSCAD, or NopSCADlib.
 
+## Bed temp
+**PETG arm** **80°C**; **PLA stencil** **60°C**. Consumer project; not this repo.
+1. **arm** — PETG 80°C; cooler bed warps the horn off PEI.
+2. **zn** — same 80°C so the wall half matches arm shrinkage.
+3. **zp** — match zn; a colder half gaps the sandwich.
+4. **stencil** — PLA 60°C; hotter PEI elephants-foot the press-point cut.
+No printed geometry lives here, and none should be added.
+Do not add CadQuery, OpenSCAD, or NopSCADlib.
+
 ## `vitamin()` slugs
 
 ```python
