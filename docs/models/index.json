@@ -57769,6 +57769,50 @@
       "applications": "Conveyors, motorcycles, and machine drives that wrap a roller chain around a sprocket."
     },
     {
+      "file": "chain_dual_output_demo.glb",
+      "name": "chain_dual_output",
+      "module": "mechlib.chains",
+      "signature": "chain_dual_output(n_teeth=12, out_teeth=12, idler_teeth=10, pitch=9.525, roller_d=6.0, clear=0.3, wrap_deg=160.0, idler_wrap_deg=60.0, out_wrap_deg=120.0, in_pitches=4, mid_pitches=4, tail_pitches=3, sprocket_width=6.0, outer_d=None)",
+      "description": "A driver sprocket, a backside idler, and a forward output on one serpentine run of bare rollers, each seated in its tooth gap with running clearance by construction: the geometric proof that one chain can take off simultaneous forward and reverse shafts, as on a jackshaft.",
+      "origin": "Gap-analysis wave v0.8.0; classic ref: Hans Renold bush roller chain, 1880",
+      "build_ms": 116,
+      "category": "chains",
+      "group": "movements",
+      "rank": 14,
+      "parts": 26,
+      "size_mm": [
+        139.2,
+        99.8,
+        6.0
+      ],
+      "play": {
+        "demo": "demo_chain_dual_output",
+        "params": [
+          {
+            "name": "in_pitches",
+            "label": "In Pitches",
+            "unit": "mm",
+            "type": "int",
+            "default": 4,
+            "min": 3,
+            "max": 6,
+            "step": 1
+          },
+          {
+            "name": "idler_teeth",
+            "label": "Idler Teeth",
+            "unit": "",
+            "type": "int",
+            "default": 10,
+            "min": 8,
+            "max": 16,
+            "step": 2
+          }
+        ]
+      },
+      "applications": "Jackshafts and conveyor lines needing simultaneous forward and reverse take-offs from one chain run: a sprocket inside the loop turns with the driver, an idler on the back of a span turns opposite."
+    },
+    {
       "file": "cross_flexure_demo.glb",
       "name": "cross_flexure",
       "module": "mechlib.flexures",

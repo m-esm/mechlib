@@ -44,6 +44,7 @@ from mechlib.closures import (
 )
 from mechlib.bearings import plain_bushing, printed_ball_bearing, thrust_washer
 from mechlib.chains import (
+    chain_dual_output,
     drag_chain,
     drag_chain_link,
     roller_chain,
@@ -2361,6 +2362,20 @@ def build():
                 "pitch actually mate with the sprocket function."),
             "origin": "Gap-analysis wave v0.8.0; classic ref: Hans Renold bush roller chain, 1880",
             "demo": "demo_roller_chain",
+        },
+        {
+            "file": "chain_dual_output_demo.glb",
+            "name": "chain_dual_output",
+            "module": "mechlib.chains",
+            "signature": signature(chain_dual_output),
+            "description": (
+                "A driver sprocket, a backside idler, and a forward output on "
+                "one serpentine run of bare rollers, each seated in its tooth "
+                "gap with running clearance by construction: the geometric "
+                "proof that one chain can take off simultaneous forward and "
+                "reverse shafts, as on a jackshaft."),
+            "origin": "Gap-analysis wave v0.8.0; classic ref: Hans Renold bush roller chain, 1880",
+            "demo": "demo_chain_dual_output",
         },
         {
             "file": "belleville_washer_demo.glb",
