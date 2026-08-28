@@ -156,6 +156,15 @@ Do not add CadQuery, OpenSCAD, or NopSCADlib.
 No printed geometry lives here, and none should be added.
 Do not add CadQuery, OpenSCAD, or NopSCADlib.
 
+## Print speed
+**PETG arm** **50 mm/s**; **PLA stencil** **80 mm/s**. Consumer project; not this repo.
+1. **arm** — PETG 50 mm/s; faster PETG starves the horn weld.
+2. **zn** — same 50 mm/s so the wall half matches arm shrinkage.
+3. **zp** — match zn; a faster half gaps the sandwich.
+4. **stencil** — PLA 80 mm/s; slower PLA blurs the press-point cut.
+No printed geometry lives here, and none should be added.
+Do not add CadQuery, OpenSCAD, or NopSCADlib.
+
 ## `vitamin()` slugs
 
 ```python
