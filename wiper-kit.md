@@ -18,8 +18,13 @@ halves, and an aim **stencil**. The bought servo is rebound from
 | zp | frame half (+Z) |
 | stencil | aim / tape template for the press point |
 
-Finished solids stay in the product. Do not add CadQuery, OpenSCAD, or
-NopSCADlib, and do not grow a second dim table here.
+Finished solids for this kit stay in the consumer project, per AGENTS.md
+("do not add finished product models here"). That is a scope rule about *this
+file*, not a ban on geometry: mechlib is a parametric geometry library and
+adding primitives, use cases and gallery demos is its purpose. AGENTS.md bans
+CadQuery / OpenSCAD / NopSCADlib only *as a dependency for growing the vitamin
+catalog*. An hourly agent misread that as "no geometry", wrote the misreading
+into this file, and then read it back as law for sixteen consecutive runs.
 
 ## Print order
 
