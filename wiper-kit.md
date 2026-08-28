@@ -147,6 +147,15 @@ Do not add CadQuery, OpenSCAD, or NopSCADlib.
 No printed geometry lives here, and none should be added.
 Do not add CadQuery, OpenSCAD, or NopSCADlib.
 
+## Fan percent
+**PETG arm** **40%**; **PLA stencil** **100%**. Consumer project; not this repo.
+1. **arm**: PETG 40% part cooling; 0% under-welds the horn, 100% makes the blade brittle.
+2. **zn**: same 40% so the wall half matches arm layer weld.
+3. **zp**: match zn; a higher fan on one half shrinks the sandwich.
+4. **stencil**: PLA 100% fan; 40% blurs the press-point cut.
+No printed geometry lives here, and none should be added.
+Do not add CadQuery, OpenSCAD, or NopSCADlib.
+
 ## `vitamin()` slugs
 
 ```python
