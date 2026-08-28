@@ -120,6 +120,15 @@ Do not add CadQuery, OpenSCAD, or NopSCADlib.
 No printed geometry lives here, and none should be added.
 Do not add CadQuery, OpenSCAD, or NopSCADlib.
 
+## Infill
+**PETG arm** **20% gyroid**; **PLA stencil** **100% rectilinear**. Consumer project; not this repo.
+1. **arm**: PETG 20% gyroid; denser infill warps the horn and wastes time.
+2. **zn**: same 20% gyroid so the wall half matches arm stiffness.
+3. **zp**: match zn; denser infill on one half shrinks the sandwich.
+4. **stencil**: PLA 100% rectilinear; gyroid voids blur the press-point cut.
+No printed geometry lives here, and none should be added.
+Do not add CadQuery, OpenSCAD, or NopSCADlib.
+
 ## `vitamin()` slugs
 
 ```python
