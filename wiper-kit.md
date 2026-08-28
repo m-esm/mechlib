@@ -138,6 +138,15 @@ Do not add CadQuery, OpenSCAD, or NopSCADlib.
 No printed geometry lives here, and none should be added.
 Do not add CadQuery, OpenSCAD, or NopSCADlib.
 
+## Nozzle / bed
+**PETG arm** nozzle **250C** / bed **80C**; **PLA stencil** **210C**/**60C**. Consumer project; not this repo.
+1. **arm**: PETG 250C/80C; cooler nozzle fails the horn weld.
+2. **zn**: same 250C/80C so the wall half matches arm shrinkage.
+3. **zp**: match zn; a colder half gaps the sandwich.
+4. **stencil**: PLA 210C/60C; hotter PLA blurs the press-point cut.
+No printed geometry lives here, and none should be added.
+Do not add CadQuery, OpenSCAD, or NopSCADlib.
+
 ## `vitamin()` slugs
 
 ```python
