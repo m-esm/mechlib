@@ -111,6 +111,15 @@ Do not add CadQuery, OpenSCAD, or NopSCADlib.
 No printed geometry lives here, and none should be added.
 Do not add CadQuery, OpenSCAD, or NopSCADlib.
 
+## Wall count
+**PETG arm** **3 walls**; **PLA stencil** **2 walls**. Consumer project; not this repo.
+1. **arm**: PETG 3 walls; two walls starve the horn and blade.
+2. **zn**: same 3 walls so the wall half matches arm stiffness.
+3. **zp**: match zn; a thinner half gaps or flexes the sandwich.
+4. **stencil**: PLA 2 walls; extra walls blur the press-point cut.
+No printed geometry lives here, and none should be added.
+Do not add CadQuery, OpenSCAD, or NopSCADlib.
+
 ## `vitamin()` slugs
 
 ```python
