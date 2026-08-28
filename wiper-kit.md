@@ -129,6 +129,15 @@ Do not add CadQuery, OpenSCAD, or NopSCADlib.
 No printed geometry lives here, and none should be added.
 Do not add CadQuery, OpenSCAD, or NopSCADlib.
 
+## Supports off
+**PETG arm** / **zn** / **zp** and **PLA stencil** print **supports off**. Consumer project; not this repo.
+1. **arm**: PETG supports off; orient horn-down so the blade needs no tree/organic supports.
+2. **zn**: PETG supports off; sandwich face on the bed so the wall half has no overhang.
+3. **zp**: match zn; supports on one half scar or gap the sandwich.
+4. **stencil**: PLA supports off; supports scar the press-point cut.
+No printed geometry lives here, and none should be added.
+Do not add CadQuery, OpenSCAD, or NopSCADlib.
+
 ## `vitamin()` slugs
 
 ```python
