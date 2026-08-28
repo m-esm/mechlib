@@ -22,157 +22,49 @@ Finished solids stay in the product. Do not add CadQuery, OpenSCAD, or
 NopSCADlib, and do not grow a second dim table here.
 
 ## Print order
-Print **arm**, then **zn**, then **zp**, then **stencil**. Consumer project; not this repo.
+
 1. **arm** — wiper blade on the servo horn.
-2. **zn** — frame half (wall / −Z).
+2. **zn** — frame half (wall / -Z).
 3. **zp** — frame half (+Z).
 4. **stencil** — aim / tape template for the press point.
-No printed geometry lives here, and none should be added.
-Do not add CadQuery, OpenSCAD, or NopSCADlib.
 
-## Post-print assembly
-Sandwich **zn**+**zp**, then **arm**, **stencil** last. Consumer project; not this repo.
-1. **zn** — frame half (wall / −Z), first face of the sandwich.
-2. **zp** — frame half (+Z), close the sandwich on zn.
-3. **arm** — wiper blade on the servo horn, after the frame sandwich.
-4. **stencil** — aim / tape template last (press-point layout).
-No printed geometry lives here, and none should be added.
-Do not add CadQuery, OpenSCAD, or NopSCADlib.
+## Assembly
 
-## Post-print inspection
-Inspect **flash**, **layer**, and **zn**/**zp** fit before the sandwich. Consumer project; not this repo.
-1. **flash** — peel brim, elephants-foot, and stringing off zn/zp faces and the arm horn seat.
-2. **layer** — reject delam, missing walls, or a smeared first layer that closes the sandwich.
-3. **zn/zp fit** — dry-mate −Z and +Z; they must close flush with no crush or gap.
-Stencil is aim-only; it is not a fit part. Arm horn seat must stay free after cleanup.
-No printed geometry lives here, and none should be added.
-Do not add CadQuery, OpenSCAD, or NopSCADlib.
+Sandwich **zn**+**zp**, then **arm**, **stencil** last. Dry-mate -Z and +Z first:
+they must close flush with no crush or gap. The arm horn seat must stay free
+after cleanup. The stencil is aim-only, not a fit part.
 
-## Filament (PETG vs PLA)
-Prefer **PETG** for **arm**/**zn**/**zp**; **PLA** is fine for **stencil**. Consumer project; not this repo.
-1. **arm** — PETG: heat and creep at the horn; PLA can sag on a warm wall.
-2. **zn** — PETG: layer weld on the wall half; PLA is brittle at the sandwich.
-3. **zp** — PETG: same as zn so the sandwich matches shrinkage.
-4. **stencil** — PLA: aim/tape template only; PETG stringing blurs the press point.
-No printed geometry lives here, and none should be added.
-Do not add CadQuery, OpenSCAD, or NopSCADlib.
+## Inspection
 
-## First layer / bed
-Print on **PEI**; bed **PETG ~70C**, **PLA ~60C**. Consumer project; not this repo.
-1. **PEI**: wipe the sheet, no glue; first layer must stick on zn/zp faces.
-2. **PETG ~70C**: arm/zn/zp bed; too cold and the sandwich warps off PEI.
-3. **PLA ~60C**: stencil bed; hotter PEI elephants-foot the aim cut.
-4. **first layer**: reject a smeared or unstuck skirt before committing the kit.
-No printed geometry lives here, and none should be added.
-Do not add CadQuery, OpenSCAD, or NopSCADlib.
+Peel brim, elephants-foot and stringing off the zn/zp faces and the arm horn
+seat. Reject delamination, missing walls, or a smeared first layer.
 
-## Retraction / stringing
-Keep **PETG** retraction **short**; **PLA stencil** can retract more. Consumer project; not this repo.
-1. **arm** — PETG: short retract so the horn seat does not jam; wipe stringing off the blade.
-2. **zn** — PETG: same short retract; strings on the sandwich face fail the dry-mate.
-3. **zp** — PETG: match zn so both halves string the same; peel before sandwich.
-4. **stencil** — PLA: more retract is fine; leftover strings blur the press-point cut.
-No printed geometry lives here, and none should be added.
-Do not add CadQuery, OpenSCAD, or NopSCADlib.
+## Slicer settings
 
-## Cooling / fan
-**PETG** low fan on **arm**; **PLA stencil** fan **100%**. Consumer project; not this repo.
-1. **arm**: PETG low fan so layers weld at the horn; high fan makes the blade brittle.
-2. **zn**: PETG low fan; a cold sandwich face delams under wall load.
-3. **zp**: match zn so both halves shrink the same.
-4. **stencil**: PLA 100% fan; low fan blurs the press-point cut.
-No printed geometry lives here, and none should be added.
-Do not add CadQuery, OpenSCAD, or NopSCADlib.
+`zn`, `zp` and `arm` print in PETG: they carry wall load, and the arm creeps at
+the horn if printed in PLA. The `stencil` prints in PLA, because PETG stringing
+blurs the press point.
 
-## Bed / nozzle
-**PETG arm** bed **85** / nozzle **250**; **PLA stencil** **60**/**210**. Consumer project; not this repo.
-1. **arm** — PETG: bed 85, nozzle 250; cooler PETG fails the horn weld.
-2. **zn** — PETG: same 85/250 so the wall half matches the arm shrinkage.
-3. **zp** — PETG: match zn; a colder half gaps the sandwich.
-4. **stencil** — PLA: bed 60, nozzle 210; hotter PLA blurs the press-point cut.
-No printed geometry lives here, and none should be added.
-Do not add CadQuery, OpenSCAD, or NopSCADlib.
+| Setting | arm / zn / zp (PETG) | stencil (PLA) |
+| --- | --- | --- |
+| Layer height | 0.20 mm | 0.16 mm |
+| Print speed | 50 mm/s | 80 mm/s |
+| Nozzle | 250 °C | 210 °C |
+| Bed (PEI) | 80 °C | 60 °C |
+| Walls | 3 | 2 |
+| Infill | 20% gyroid | 100% rectilinear |
+| Part cooling | 40% | 100% |
+| Retraction | 1.2 mm @ 40 mm/s | 0.8 mm @ 35 mm/s |
+| Supports | off | off |
 
-## Layer height / speed
-**PETG arm** **0.2mm** / **40mm/s**; **PLA stencil** **0.16mm** / **50mm/s**. Consumer project; not this repo.
-1. **arm**: PETG 0.2mm/40mm/s; taller or faster layers starve the horn weld.
-2. **zn**: same 0.2mm/40mm/s so the wall half matches arm shrinkage.
-3. **zp**: match zn; a finer/faster half gaps the sandwich.
-4. **stencil**: PLA 0.16mm/50mm/s; thicker layers blur the press-point cut.
-No printed geometry lives here, and none should be added.
-Do not add CadQuery, OpenSCAD, or NopSCADlib.
+Orient the arm horn-down and the zn/zp sandwich faces on the bed so neither
+needs supports.
 
-## Retraction distance / speed
-**PETG arm** **1.2mm** / **40mm/s**; **PLA stencil** **0.8mm** / **35mm/s**. Consumer project; not this repo.
-1. **arm**: PETG 1.2mm/40mm/s; longer retract blobs the horn seat.
-2. **zn**: same 1.2mm/40mm/s so sandwich faces do not string.
-3. **zp**: match zn; a longer retract on one half leaves unmatched blobs.
-4. **stencil**: PLA 0.8mm/35mm/s; leftover strings blur the press-point cut.
-No printed geometry lives here, and none should be added.
-Do not add CadQuery, OpenSCAD, or NopSCADlib.
-
-## Wall count
-**PETG arm** **3 walls**; **PLA stencil** **2 walls**. Consumer project; not this repo.
-1. **arm**: PETG 3 walls; two walls starve the horn and blade.
-2. **zn**: same 3 walls so the wall half matches arm stiffness.
-3. **zp**: match zn; a thinner half gaps or flexes the sandwich.
-4. **stencil**: PLA 2 walls; extra walls blur the press-point cut.
-No printed geometry lives here, and none should be added.
-Do not add CadQuery, OpenSCAD, or NopSCADlib.
-
-## Infill
-**PETG arm** **20% gyroid**; **PLA stencil** **100% rectilinear**. Consumer project; not this repo.
-1. **arm**: PETG 20% gyroid; denser infill warps the horn and wastes time.
-2. **zn**: same 20% gyroid so the wall half matches arm stiffness.
-3. **zp**: match zn; denser infill on one half shrinks the sandwich.
-4. **stencil**: PLA 100% rectilinear; gyroid voids blur the press-point cut.
-No printed geometry lives here, and none should be added.
-Do not add CadQuery, OpenSCAD, or NopSCADlib.
-
-## Supports off
-**PETG arm** / **zn** / **zp** and **PLA stencil** print **supports off**. Consumer project; not this repo.
-1. **arm**: PETG supports off; orient horn-down so the blade needs no tree/organic supports.
-2. **zn**: PETG supports off; sandwich face on the bed so the wall half has no overhang.
-3. **zp**: match zn; supports on one half scar or gap the sandwich.
-4. **stencil**: PLA supports off; supports scar the press-point cut.
-No printed geometry lives here, and none should be added.
-Do not add CadQuery, OpenSCAD, or NopSCADlib.
-
-## Nozzle / bed
-**PETG arm** nozzle **250C** / bed **80C**; **PLA stencil** **210C**/**60C**. Consumer project; not this repo.
-1. **arm**: PETG 250C/80C; cooler nozzle fails the horn weld.
-2. **zn**: same 250C/80C so the wall half matches arm shrinkage.
-3. **zp**: match zn; a colder half gaps the sandwich.
-4. **stencil**: PLA 210C/60C; hotter PLA blurs the press-point cut.
-No printed geometry lives here, and none should be added.
-Do not add CadQuery, OpenSCAD, or NopSCADlib.
-
-## Fan percent
-**PETG arm** **40%**; **PLA stencil** **100%**. Consumer project; not this repo.
-1. **arm**: PETG 40% part cooling; 0% under-welds the horn, 100% makes the blade brittle.
-2. **zn**: same 40% so the wall half matches arm layer weld.
-3. **zp**: match zn; a higher fan on one half shrinks the sandwich.
-4. **stencil**: PLA 100% fan; 40% blurs the press-point cut.
-No printed geometry lives here, and none should be added.
-Do not add CadQuery, OpenSCAD, or NopSCADlib.
-
-## Print speed
-**PETG arm** **50 mm/s**; **PLA stencil** **80 mm/s**. Consumer project; not this repo.
-1. **arm** — PETG 50 mm/s; faster PETG starves the horn weld.
-2. **zn** — same 50 mm/s so the wall half matches arm shrinkage.
-3. **zp** — match zn; a faster half gaps the sandwich.
-4. **stencil** — PLA 80 mm/s; slower PLA blurs the press-point cut.
-No printed geometry lives here, and none should be added.
-Do not add CadQuery, OpenSCAD, or NopSCADlib.
-
-## Bed temp
-**PETG arm** **80°C**; **PLA stencil** **60°C**. Consumer project; not this repo.
-1. **arm** — PETG 80°C; cooler bed warps the horn off PEI.
-2. **zn** — same 80°C so the wall half matches arm shrinkage.
-3. **zp** — match zn; a colder half gaps the sandwich.
-4. **stencil** — PLA 60°C; hotter PEI elephants-foot the press-point cut.
-No printed geometry lives here, and none should be added.
-Do not add CadQuery, OpenSCAD, or NopSCADlib.
+These values were accreted by an hourly agent one row at a time and were never
+confirmed against a print. Earlier revisions of this file also claimed a PETG
+bed of 70 °C and 85 °C and an arm speed of 40 mm/s; the table above takes the
+most recent committed value in each case. Treat it as a starting profile, not
+as measured data.
 
 ## `vitamin()` slugs
 
