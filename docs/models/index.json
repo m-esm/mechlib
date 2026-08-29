@@ -57769,6 +57769,50 @@
       "applications": "Conveyors, motorcycles, and machine drives that wrap a roller chain around a sprocket."
     },
     {
+      "file": "chain_reverse_demo.glb",
+      "name": "chain_reverse",
+      "module": "mechlib.chains",
+      "signature": "chain_reverse(n_teeth=12, idler_teeth=10, pitch=9.525, roller_d=6.0, clear=0.3, wrap_deg=160.0, idler_wrap_deg=80.0, span_pitches=6, sprocket_width=6.0, outer_d=None)",
+      "description": "A backside idler on the slack span reverses rotation; bare rollers are seated with running clearance.",
+      "origin": "Gap-analysis wave v0.8.0; classic ref: Hans Renold bush roller chain, 1880",
+      "build_ms": 63,
+      "category": "chains",
+      "group": "movements",
+      "rank": 14,
+      "parts": 16,
+      "size_mm": [
+        96.2,
+        69.1,
+        6.0
+      ],
+      "play": {
+        "demo": "demo_chain_reverse",
+        "params": [
+          {
+            "name": "wrap_deg",
+            "label": "Wrap Deg",
+            "unit": "deg",
+            "type": "float",
+            "default": 160.0,
+            "min": 120,
+            "max": 240,
+            "step": 30
+          },
+          {
+            "name": "idler_teeth",
+            "label": "Idler Teeth",
+            "unit": "",
+            "type": "int",
+            "default": 10,
+            "min": 8,
+            "max": 16,
+            "step": 2
+          }
+        ]
+      },
+      "applications": "Reverse-rotation takeoffs on conveyors, agricultural machinery, and machine drives: an idler sprocket bearing on the back of a chain span turns opposite to the driver."
+    },
+    {
       "file": "chain_dual_output_demo.glb",
       "name": "chain_dual_output",
       "module": "mechlib.chains",

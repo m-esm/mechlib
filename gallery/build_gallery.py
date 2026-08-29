@@ -45,6 +45,7 @@ from mechlib.closures import (
 from mechlib.bearings import plain_bushing, printed_ball_bearing, thrust_washer
 from mechlib.chains import (
     chain_dual_output,
+    chain_reverse,
     drag_chain,
     drag_chain_link,
     roller_chain,
@@ -2362,6 +2363,17 @@ def build():
                 "pitch actually mate with the sprocket function."),
             "origin": "Gap-analysis wave v0.8.0; classic ref: Hans Renold bush roller chain, 1880",
             "demo": "demo_roller_chain",
+        },
+        {
+            "file": "chain_reverse_demo.glb",
+            "name": "chain_reverse",
+            "module": "mechlib.chains",
+            "signature": signature(chain_reverse),
+            "description": (
+                "A backside idler on the slack span reverses rotation; bare "
+                "rollers are seated with running clearance."),
+            "origin": "Gap-analysis wave v0.8.0; classic ref: Hans Renold bush roller chain, 1880",
+            "demo": "demo_chain_reverse",
         },
         {
             "file": "chain_dual_output_demo.glb",
