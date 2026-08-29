@@ -57813,6 +57813,50 @@
       "applications": "Reverse-rotation takeoffs on conveyors, agricultural machinery, and machine drives: an idler sprocket bearing on the back of a chain span turns opposite to the driver."
     },
     {
+      "file": "chain_s_wrap_demo.glb",
+      "name": "chain_s_wrap",
+      "module": "mechlib.chains",
+      "signature": "chain_s_wrap(n_teeth=12, out_teeth=12, pitch=9.525, roller_d=6.0, clear=0.3, wrap_deg=160.0, out_wrap_deg=150.0, span_pitches=6, sprocket_width=6.0, outer_d=None)",
+      "description": "An S-wrap takeoff: the chain wraps the driver, then the backside of the output sprocket so the shaft reverses without gears; bare rollers are seated with running clearance.",
+      "origin": "Gap-analysis wave v0.8.0; classic ref: Hans Renold bush roller chain, 1880",
+      "build_ms": 86,
+      "category": "chains",
+      "group": "movements",
+      "rank": 14,
+      "parts": 19,
+      "size_mm": [
+        100.0,
+        75.2,
+        6.0
+      ],
+      "play": {
+        "demo": "demo_chain_s_wrap",
+        "params": [
+          {
+            "name": "out_wrap_deg",
+            "label": "Out Wrap Deg",
+            "unit": "deg",
+            "type": "float",
+            "default": 150.0,
+            "min": 60,
+            "max": 180,
+            "step": 30
+          },
+          {
+            "name": "out_teeth",
+            "label": "Out Teeth",
+            "unit": "",
+            "type": "int",
+            "default": 12,
+            "min": 8,
+            "max": 16,
+            "step": 2
+          }
+        ]
+      },
+      "applications": "S-wrap reversing drives on conveyors, mixers, and farm machinery: the chain snakes over the driver and around the outside of the driven sprocket, so the output shaft turns opposite without gears."
+    },
+    {
       "file": "chain_dual_output_demo.glb",
       "name": "chain_dual_output",
       "module": "mechlib.chains",

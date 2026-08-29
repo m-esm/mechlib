@@ -46,6 +46,7 @@ from mechlib.bearings import plain_bushing, printed_ball_bearing, thrust_washer
 from mechlib.chains import (
     chain_dual_output,
     chain_reverse,
+    chain_s_wrap,
     drag_chain,
     drag_chain_link,
     roller_chain,
@@ -2374,6 +2375,18 @@ def build():
                 "rollers are seated with running clearance."),
             "origin": "Gap-analysis wave v0.8.0; classic ref: Hans Renold bush roller chain, 1880",
             "demo": "demo_chain_reverse",
+        },
+        {
+            "file": "chain_s_wrap_demo.glb",
+            "name": "chain_s_wrap",
+            "module": "mechlib.chains",
+            "signature": signature(chain_s_wrap),
+            "description": (
+                "An S-wrap takeoff: the chain wraps the driver, then the "
+                "backside of the output sprocket so the shaft reverses without "
+                "gears; bare rollers are seated with running clearance."),
+            "origin": "Gap-analysis wave v0.8.0; classic ref: Hans Renold bush roller chain, 1880",
+            "demo": "demo_chain_s_wrap",
         },
         {
             "file": "chain_dual_output_demo.glb",
