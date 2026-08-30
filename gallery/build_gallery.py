@@ -1199,6 +1199,15 @@ def build():
             "demo": "demo_pins_and_posts",
         },
         {
+            "file": "fix_pin_demo.glb",
+            "name": "fix_pin",
+            "module": "mechlib.closures / mechlib.cutters",
+            "signature": "%s; %s" % (signature(fix_pin), signature(blind_socket)),
+            "description": "A locating pin with a matching blind socket block.",
+            "origin": "Extracted from geo.py in parviz.",
+            "demo": "demo_pins_and_posts",
+        },
+        {
             "file": "spur_gear_mesh_demo.glb",
             "name": "spur_gear_mesh",
             "module": "mechlib.gears",
