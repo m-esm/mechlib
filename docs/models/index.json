@@ -45074,6 +45074,40 @@
       "applications": "Tension-loaded one-way clutches, winch handles, and compact ratchets that use flexure arms instead of rigid pawls."
     },
     {
+      "file": "arc_ratchet_2d_demo.glb",
+      "name": "arc_ratchet_2d",
+      "module": "mechlib.ratchets",
+      "signature": "arc_ratchet_2d(teeth=12, tip_r=14.2, root_r=16.0, ring_outer_r=18.0, undercut_deg=8.0, pawls=3, arm_w=2.0, arm_sweep_deg=113.0, arm_r=12.3, clearance=0.35, flip=False, core_r=6.5)",
+      "description": "Three trailing tension-loaded arc flexures engaging a self-energising undercut ring.",
+      "origin": "Recovered from the pre-bb26eec Klonk follower-ratchet revision.",
+      "build_ms": 9,
+      "category": "ratchets",
+      "group": "movements",
+      "rank": 5,
+      "parts": 2,
+      "size_mm": [
+        36.0,
+        36.0,
+        3.0
+      ],
+      "play": {
+        "demo": "demo_arc_ratchet",
+        "params": [
+          {
+            "name": "extrude_h",
+            "label": "Extrude H",
+            "unit": "mm",
+            "type": "float",
+            "default": 3.0,
+            "min": 1.5,
+            "max": 6.0,
+            "step": 0.5
+          }
+        ]
+      },
+      "applications": "Tension-loaded one-way clutches, winch handles, and compact ratchets that use flexure arms instead of rigid pawls."
+    },
+    {
       "file": "ratchet_wheel_pawl_demo.glb",
       "name": "ratchet_wheel_pawl",
       "module": "mechlib.ratchets",

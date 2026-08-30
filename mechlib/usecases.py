@@ -755,6 +755,7 @@ GALLERY_FILE_TO_API = {
     'thread_insert_demo.glb': 'thread_insert',
     'tslot_nut_demo.glb': 'tslot_nut',
     'v_belt_pulley_demo.glb': 'v_belt_pulley',
+    'arc_ratchet_2d_demo.glb': 'arc_ratchet_2d',
     'arc_ratchet_demo.glb': 'arc_ratchet_2d',
     'archimedes_screw_demo.glb': 'archimedes_screw',
     'auxetic_panel_demo.glb': 'auxetic_panel',

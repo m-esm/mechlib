@@ -1496,6 +1496,15 @@ def build():
             "demo": "demo_arc_ratchet",
         },
         {
+            "file": "arc_ratchet_2d_demo.glb",
+            "name": "arc_ratchet_2d",
+            "module": "mechlib.ratchets",
+            "signature": signature(arc_ratchet_2d),
+            "description": "Three trailing tension-loaded arc flexures engaging a self-energising undercut ring.",
+            "origin": "Recovered from the pre-bb26eec Klonk follower-ratchet revision.",
+            "demo": "demo_arc_ratchet",
+        },
+        {
             "file": "helix_tube_demo.glb",
             "name": "helix_tube",
             "module": "mechlib.mechanisms",
