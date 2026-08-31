@@ -199,6 +199,7 @@ from mechlib.ratchets import (
 )
 from mechlib.sweep import extrude_twist, loft, ring_pts, swept_keyed_bore
 from mechlib.text import text_block, text_polygon
+from mechlib import find_vitamin
 
 
 def _load_demos():
@@ -274,6 +275,7 @@ CATEGORIES = {
     "bearings":   ("elements", "Bearings & bushings", "Printed journal and thrust support for turning shafts."),
     "closures":   ("elements", "Closures & joints", "Lids, snaps, dovetails, and captive hardware."),
     "fixtures":   ("elements", "Fixtures", "Cradles, saddles, and exactly constrained mounts."),
+    "vitamins":   ("elements", "Bought parts", "Catalog envelopes."),
     # building blocks
     "prim":       ("blocks", "Primitives", "The solids and profiles everything else starts from."),
     "sweep":      ("blocks", "Sweeps & lofts", "Profiles carried along a path."),
@@ -1282,6 +1284,18 @@ def build():
             "description": "Pan, socket, and countersunk screws with nut and washer stand-ins.",
             "origin": "Unified from all three source projects.",
             "demo": "demo_fastener_trio",
+        },
+        {
+            "file": "find_vitamin_demo.glb",
+            "name": "find_vitamin",
+            "module": "mechlib.vitamins",
+            "signature": signature(find_vitamin),
+            "description": (
+                "Catalog envelopes from find_vitamin: 608 vs 695, an M3 SHCS, "
+                "and a GA12-N20, one body per query so the sizes read side by side."
+            ),
+            "origin": "Bought-part catalog envelopes (display meshes, not printed STLs).",
+            "demo": "demo_find_vitamin",
         },
         {
             "file": "worm_demo.glb",

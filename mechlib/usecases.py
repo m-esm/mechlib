@@ -799,6 +799,7 @@ GALLERY_FILE_TO_API = {
     'extrude_twist_demo.glb': 'extrude_twist',
     'face_cam_demo.glb': 'face_cam',
     'fastener_trio_demo.glb': 'fastener_mesh',
+    'find_vitamin_demo.glb': 'find_vitamin',
     'fix_pin_demo.glb': 'screw_post',
     'flat_worm_pair_demo.glb': 'flat_worm',
     'flexure_stage_demo.glb': 'flexure_stage',

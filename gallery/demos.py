@@ -17,6 +17,7 @@ from shapely.geometry import Point, box
 from shapely.ops import unary_union
 
 import mechlib
+from mechlib import find_vitamin
 from mechlib.cams import (
     barrel_cam,
     cam_lift,
@@ -1547,6 +1548,25 @@ def demo_fastener_trio(
     colors = (PALETTE[5], PALETTE[9], PALETTE[10], PALETTE[3], PALETTE[12])
     parts = screws + [nut, washer]
     return list(zip(names, parts, colors))
+
+
+def demo_find_vitamin(spacing: float = 10.0) -> MeshList:
+    queries = ("608", "695", "M3 SHCS", "GA12-N20")
+    colors = (PALETTE[7], PALETTE[0], PALETTE[9], PALETTE[5])
+    out = []
+    cursor = None
+    for i, query in enumerate(queries):
+        hits = find_vitamin(query)
+        if not hits:
+            raise ValueError("find_vitamin(%r) returned no hits" % query)
+        hit = hits[0]
+        mesh = hit.envelope()
+        name = hit.address.replace("/", "_")
+        if cursor is not None:
+            mesh.apply_translation((cursor - float(mesh.bounds[0][0]), 0.0, 0.0))
+        cursor = float(mesh.bounds[1][0]) + spacing
+        out.append((name, mesh, colors[i]))
+    return out
 
 
 def demo_worm(

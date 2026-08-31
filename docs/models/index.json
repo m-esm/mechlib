@@ -166,6 +166,13 @@
       "rank": 20
     },
     {
+      "key": "vitamins",
+      "group": "elements",
+      "title": "Bought parts",
+      "blurb": "Catalog envelopes.",
+      "rank": 21
+    },
+    {
       "key": "prim",
       "group": "blocks",
       "title": "Primitives",
@@ -62142,6 +62149,25 @@
         ]
       },
       "applications": "Multi-line plaques, version labels, and stacked raised text on enclosures and tools."
+    },
+    {
+      "file": "find_vitamin_demo.glb",
+      "name": "find_vitamin",
+      "module": "mechlib.vitamins",
+      "signature": "find(query: 'str' = '') -> 'List[Vitamin]'",
+      "description": "Catalog envelopes from find_vitamin: 608 vs 695, an M3 SHCS, and a GA12-N20, one body per query so the sizes read side by side.",
+      "origin": "Bought-part catalog envelopes (display meshes, not printed STLs).",
+      "build_ms": 11,
+      "category": "vitamins",
+      "group": "elements",
+      "rank": 21,
+      "parts": 4,
+      "size_mm": [
+        95.8,
+        22.0,
+        17.0
+      ],
+      "applications": "Search the bought-part catalog by family or title when picking a 608 vs 695, an M3 SHCS, or a GA12-N20 envelope for a new product."
     }
   ],
   "utilities": [
