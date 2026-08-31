@@ -46833,6 +46833,80 @@
       "applications": "Misaligned parallel shafts on pumps and encoders, and printed couplings that tolerate offset without side load."
     },
     {
+      "file": "oldham_pose_demo.glb",
+      "name": "oldham_pose",
+      "module": "mechlib.couplings",
+      "signature": "oldham_pose(phase_deg=0.0, offset=0.0)",
+      "description": "Oldham 2-omega disc orbit at a known parallel-shaft offset: posed copies at 0/45/90/135 deg so the floating disc centre walks a circle of radius |offset|/2 at twice shaft speed. Printer stepper-to-screw couplers and scroll-compressor drives.",
+      "origin": "Mechanical-movements wave v0.6.0; classic ref: Oldham double-slider coupling (507 Mechanical Movements, shaft couplings)",
+      "build_ms": 12,
+      "category": "couplings",
+      "group": "movements",
+      "rank": 7,
+      "parts": 12,
+      "size_mm": [
+        198.0,
+        36.0,
+        34.1
+      ],
+      "play": {
+        "demo": "demo_oldham_pose",
+        "params": [
+          {
+            "name": "phase_deg",
+            "label": "Phase Deg",
+            "unit": "deg",
+            "type": "float",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 360.0,
+            "step": 5.0
+          },
+          {
+            "name": "misalign",
+            "label": "Misalign",
+            "unit": "mm",
+            "type": "float",
+            "default": 6.0,
+            "min": 0.0,
+            "max": 8.0,
+            "step": 0.5
+          },
+          {
+            "name": "explode",
+            "label": "Explode",
+            "unit": "mm",
+            "type": "float",
+            "default": 0.0,
+            "min": 0.0,
+            "max": 12.0,
+            "step": 1.0
+          },
+          {
+            "name": "clearance",
+            "label": "Clearance",
+            "unit": "mm",
+            "type": "float",
+            "default": 0.25,
+            "min": 0.15,
+            "max": 0.4,
+            "step": 0.05
+          },
+          {
+            "name": "sections",
+            "label": "Sections",
+            "unit": "",
+            "type": "int",
+            "default": 64,
+            "min": 24,
+            "max": 64,
+            "step": 8
+          }
+        ]
+      },
+      "applications": "Posing an Oldham coupling through a turn so the floating disc orbits at twice shaft speed: printer stepper-to-screw couplers and scroll-compressor drive trains."
+    },
+    {
       "file": "universal_joint_demo.glb",
       "name": "universal_joint",
       "module": "mechlib.couplings",
