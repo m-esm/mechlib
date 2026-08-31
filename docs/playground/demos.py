@@ -648,6 +648,12 @@ PLAY: dict = {
         "clearance": (0.2, 0.5, 0.05),
         "sections": (24, 64, 8),
     },
+    "demo_hooke_pose": {
+        "phase_deg": (0.0, 360.0, 5.0),
+        "bend_deg": (0.0, 45.0, 5.0),
+        "clearance": (0.2, 0.5, 0.05),
+        "sections": (24, 64, 8),
+    },
     "demo_jaw_coupling": {
         "jaws": (3, 4, 1),
         "explode": (0.0, 12.0, 1.0),
@@ -839,7 +845,7 @@ PLAY: dict = {
         "sweep_deg": (20, 120, 10),
     },
     "demo_chain_reverse": {
-        "wrap_deg": (120, 240, 30),
+        "wrap_deg": (120, 240, 10),
         "idler_teeth": (8, 16, 2),
     },
     "demo_chain_s_wrap": {
@@ -2338,6 +2344,67 @@ def demo_universal_joint(
         ("cross_spider", spider, PALETTE[5]),
         ("fork_yoke_output", yoke_b, PALETTE[3]),
     ]
+
+
+def demo_hooke_pose(
+    phase_deg: float = 0.0,
+    bend_deg: float = 45.0,
+    clearance: float = 0.3,
+    sections: int = 64,
+) -> MeshList:
+    """Four Cardan poses so lag/lead is visible on the static GLB.
+
+    Copies at input 0/45/90/135 deg on a large legal bend: equal at 0 and
+    90, lag near 45, lead near 135. Index flags on each shaft (cyan input,
+    orange output) track ``hooke_pose`` angles so the twice-per-rev
+    mismatch is readable without the playground.
+    """
+    parts = universal_joint(
+        bend_deg=bend_deg, clearance=clearance, sections=sections)
+    # Default universal_joint shaft station from the pin (fork_len + web +
+    # half shaft): 15 + 2 + 6 = 23 mm. Flags sit on that station, outside
+    # the shaft radius, so they do not boolean against the yoke.
+    z_shaft = 23.0
+    beta = math.radians(bend_deg)
+    flag_len = 18.0
+    flag_ext = (flag_len, 2.0, 3.0)
+    shaft_r = 5.0
+    flag_x = shaft_r + 0.4 + flag_len / 2.0
+    spacing = 78.0
+    phases = (0.0, 45.0, 90.0, 135.0)
+    out: MeshList = []
+    for i, phi0 in enumerate(phases):
+        phase = phi0 + float(phase_deg)
+        pose = hooke_pose(bend_deg=bend_deg, phase_deg=phase)
+        yoke_a = _spin(parts["yoke_a"], pose["input_deg"])
+        spider = parts["spider"].copy()
+        yoke_b = parts["yoke_b"].copy()
+        if phase:
+            spider.apply_transform(_hooke_spider_matrix(bend_deg, phase))
+            yoke_b.apply_transform(trimesh.transformations.rotation_matrix(
+                math.radians(pose["output_deg"]), pose["output_axis"]))
+        flag_in = boxc(flag_ext, (flag_x, 0.0, -z_shaft))
+        flag_in = _spin(flag_in, pose["input_deg"])
+        # Output shaft rest is +Z rotated by β about +X; then spin with ψ.
+        flag_out = boxc(flag_ext, (flag_x, 0.0, z_shaft))
+        flag_out.apply_transform(trimesh.transformations.rotation_matrix(
+            beta, (1.0, 0.0, 0.0)))
+        if phase:
+            flag_out.apply_transform(trimesh.transformations.rotation_matrix(
+                math.radians(pose["output_deg"]), pose["output_axis"]))
+        dx = (i - 1.5) * spacing
+        shift = (dx, 0.0, 0.0)
+        for mesh in (yoke_a, spider, yoke_b, flag_in, flag_out):
+            mesh.apply_translation(shift)
+        tag = "phi%d" % int(round(phi0))
+        out.extend([
+            ("fork_yoke_input_%s" % tag, yoke_a, PALETTE[7]),
+            ("cross_spider_%s" % tag, spider, PALETTE[5]),
+            ("fork_yoke_output_%s" % tag, yoke_b, PALETTE[3]),
+            ("input_index_%s" % tag, flag_in, PALETTE[0]),
+            ("output_index_%s" % tag, flag_out, PALETTE[1]),
+        ])
+    return out
 
 
 def demo_jaw_coupling(

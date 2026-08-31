@@ -59,6 +59,7 @@ from mechlib.couplings import (
     jaw_coupling,
     oldham_coupling,
     tripod_cv_joint,
+    hooke_pose,
     universal_joint,
 )
 from mechlib.cutters import (
@@ -1794,6 +1795,23 @@ def build():
                 "universal joint (507 Mechanical Movements)"
             ),
             "demo": "demo_universal_joint",
+        },
+        {
+            "file": "hooke_pose_demo.glb",
+            "name": "hooke_pose",
+            "module": "mechlib.couplings",
+            "signature": signature(hooke_pose),
+            "description": (
+                "Cardan lag and lead twice per revolution at a known bend: "
+                "posed copies at 0/45/90/135 deg with input vs output index "
+                "flags so the mismatch is readable at rest. Driveshafts, "
+                "steering columns, and socket-wrench extensions."
+            ),
+            "origin": (
+                "Mechanical-movements wave v0.6.0; classic ref: Cardan/Hooke's "
+                "universal joint (507 Mechanical Movements)"
+            ),
+            "demo": "demo_hooke_pose",
         },
         {
             "file": "jaw_coupling_demo.glb",

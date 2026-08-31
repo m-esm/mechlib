@@ -816,6 +816,7 @@ GALLERY_FILE_TO_API = {
     'herringbone_gear_demo.glb': 'herringbone_gear',
     'hex_poly_demo.glb': 'hex_poly',
     'hirth_coupling_demo.glb': 'hirth_coupling',
+    'hooke_pose_demo.glb': 'hooke_pose',
     'hose_barb_demo.glb': 'hose_barb',
     'idler_pulley_demo.glb': 'idler_pulley',
     'intermittent_gear_pair_demo.glb': 'intermittent_gear_pair',
