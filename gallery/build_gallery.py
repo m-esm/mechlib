@@ -58,6 +58,7 @@ from mechlib.couplings import (
     hirth_coupling,
     jaw_coupling,
     oldham_coupling,
+    oldham_pose,
     tripod_cv_joint,
     hooke_pose,
     universal_joint,
@@ -1778,6 +1779,24 @@ def build():
                 "couplings)"
             ),
             "demo": "demo_oldham_coupling",
+        },
+        {
+            "file": "oldham_pose_demo.glb",
+            "name": "oldham_pose",
+            "module": "mechlib.couplings",
+            "signature": signature(oldham_pose),
+            "description": (
+                "Oldham 2-omega disc orbit at a known parallel-shaft offset: "
+                "posed copies at 0/45/90/135 deg so the floating disc centre "
+                "walks a circle of radius |offset|/2 at twice shaft speed. "
+                "Printer stepper-to-screw couplers and scroll-compressor drives."
+            ),
+            "origin": (
+                "Mechanical-movements wave v0.6.0; classic ref: Oldham "
+                "double-slider coupling (507 Mechanical Movements, shaft "
+                "couplings)"
+            ),
+            "demo": "demo_oldham_pose",
         },
         {
             "file": "universal_joint_demo.glb",

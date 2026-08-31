@@ -834,6 +834,7 @@ GALLERY_FILE_TO_API = {
     'loft_demo.glb': 'loft',
     'nut_slot_demo.glb': 'nut_slot',
     'oldham_coupling_demo.glb': 'oldham_coupling',
+    'oldham_pose_demo.glb': 'oldham_pose',
     'oring_groove_demo.glb': 'oring_groove',
     'pantograph_linkage_demo.glb': 'pantograph_linkage',
     'peaucellier_linkage_demo.glb': 'peaucellier_linkage',

@@ -642,6 +642,13 @@ PLAY: dict = {
         "clearance": (0.15, 0.4, 0.05),
         "sections": (24, 64, 8),
     },
+    "demo_oldham_pose": {
+        "phase_deg": (0.0, 360.0, 5.0),
+        "misalign": (0.0, 8.0, 0.5),
+        "explode": (0.0, 12.0, 1.0),
+        "clearance": (0.15, 0.4, 0.05),
+        "sections": (24, 64, 8),
+    },
     "demo_universal_joint": {
         "phase_deg": (0.0, 360.0, 5.0),
         "bend_deg": (0.0, 35.0, 5.0),
@@ -2320,6 +2327,47 @@ def demo_oldham_coupling(
         ("cross_slotted_disc", disc, PALETTE[5]),
         ("tongue_hub_b", hub_b, PALETTE[1]),
     ]
+
+
+def demo_oldham_pose(
+    phase_deg: float = 0.0,
+    misalign: float = 6.0,
+    explode: float = 0.0,
+    clearance: float = 0.25,
+    sections: int = 64,
+) -> MeshList:
+    """Four Oldham poses so the 2-omega disc orbit is visible on the static GLB.
+
+    Copies at input 0/45/90/135 deg on a large parallel-shaft offset: the
+    floating disc centre walks a circle of radius ``|offset| / 2`` at twice
+    shaft speed. Assembled (explode=0) so the orbit is readable without the
+    playground.
+    """
+    parts = oldham_coupling(clearance=clearance, sections=sections)
+    spacing = 56.0
+    phases = (0.0, 45.0, 90.0, 135.0)
+    out: MeshList = []
+    for i, phi0 in enumerate(phases):
+        phase = phi0 + float(phase_deg)
+        pose = oldham_pose(phase_deg=phase, offset=misalign)
+        hub_a = _spin(parts["hub_a"], pose["hub_a_deg"])
+        hub_a.apply_translation((0.0, 0.0, -explode))
+        disc = _spin(parts["disc"], pose["disc_deg"])
+        disc.apply_translation((pose["disc_xy"][0], pose["disc_xy"][1], 0.0))
+        hub_b = parts["hub_b"].copy()
+        hub_b.apply_translation((0.0, misalign, explode))
+        hub_b = _spin(hub_b, pose["hub_b_deg"], center=(0.0, misalign, 0.0))
+        dx = (i - 1.5) * spacing
+        shift = (dx, 0.0, 0.0)
+        for mesh in (hub_a, disc, hub_b):
+            mesh.apply_translation(shift)
+        tag = "phi%d" % int(round(phi0))
+        out.extend([
+            ("tongue_hub_a_%s" % tag, hub_a, PALETTE[0]),
+            ("cross_slotted_disc_%s" % tag, disc, PALETTE[5]),
+            ("tongue_hub_b_%s" % tag, hub_b, PALETTE[1]),
+        ])
+    return out
 
 
 def demo_universal_joint(
