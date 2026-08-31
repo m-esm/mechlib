@@ -199,7 +199,7 @@ from mechlib.ratchets import (
 )
 from mechlib.sweep import extrude_twist, loft, ring_pts, swept_keyed_bore
 from mechlib.text import text_block, text_polygon
-from mechlib import find_vitamin
+from mechlib import find_vitamin, vitamin
 
 
 def _load_demos():
@@ -1296,6 +1296,18 @@ def build():
             ),
             "origin": "Bought-part catalog envelopes (display meshes, not printed STLs).",
             "demo": "demo_find_vitamin",
+        },
+        {
+            "file": "vitamin_demo.glb",
+            "name": "vitamin",
+            "module": "mechlib.vitamins",
+            "signature": signature(vitamin),
+            "description": (
+                "Catalog envelopes from vitamin address lookup: 608-2RS, "
+                "an 18650 cell, a NEMA17, and an SG90, one body per address."
+            ),
+            "origin": "Bought-part catalog envelopes (display meshes, not printed STLs).",
+            "demo": "demo_vitamin",
         },
         {
             "file": "worm_demo.glb",

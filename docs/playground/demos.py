@@ -17,7 +17,7 @@ from shapely.geometry import Point, box
 from shapely.ops import unary_union
 
 import mechlib
-from mechlib import find_vitamin
+from mechlib import find_vitamin, vitamin
 from mechlib.cams import (
     barrel_cam,
     cam_lift,
@@ -1562,6 +1562,26 @@ def demo_find_vitamin(spacing: float = 10.0) -> MeshList:
         hit = hits[0]
         mesh = hit.envelope()
         name = hit.address.replace("/", "_")
+        if cursor is not None:
+            mesh.apply_translation((cursor - float(mesh.bounds[0][0]), 0.0, 0.0))
+        cursor = float(mesh.bounds[1][0]) + spacing
+        out.append((name, mesh, colors[i]))
+    return out
+
+
+def demo_vitamin(spacing: float = 10.0) -> MeshList:
+    addresses = (
+        "bearing/608-2rs",
+        "cell/18650",
+        "motor/nema17",
+        "servo/sg90",
+    )
+    colors = (PALETTE[1], PALETTE[4], PALETTE[6], PALETTE[10])
+    out = []
+    cursor = None
+    for i, address in enumerate(addresses):
+        mesh = vitamin(address).envelope()
+        name = address.replace("/", "_")
         if cursor is not None:
             mesh.apply_translation((cursor - float(mesh.bounds[0][0]), 0.0, 0.0))
         cursor = float(mesh.bounds[1][0]) + spacing
