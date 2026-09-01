@@ -8,7 +8,7 @@ Semi-primitives. No CadQuery. FDM: nozzle-multiple struts, wall>=0.8, kerf>=nozz
 
 - patterns: polar_ring, lighten_cell_poly (rect|hex), lighten_grid_centres, directed_holes
 - auxetic_panel: reentrant, rotating_squares, chiral (hexachiral is a dup, vetoed)
-- kerf_bend_cutter: lattice, diagonal, spiral, wave, hex (this hour)
+- kerf_bend_cutter: lattice, diagonal, spiral, wave, hex (7d0cb2a)
 - honeycomb_panel (47e3460)
 - isogrid_panel (3df5609)
 
@@ -18,7 +18,7 @@ Semi-primitives. No CadQuery. FDM: nozzle-multiple struts, wall>=0.8, kerf>=nozz
 | --- | --- | --- | --- | --- |
 | 01 | honeycomb_panel | 2d-lattice | shipped | SHA 47e3460 |
 | 02 | isogrid_panel | 2d-lattice | shipped | NASA triangular rib sheet. SHA 3df5609 |
-| 03 | kerf_bend_cutter(mode="hex") | kerf | shipped | hex living-hinge edge slits |
+| 03 | kerf_bend_cutter(mode="hex") | kerf | shipped | SHA 7d0cb2a hex living-hinge edge slits |
 | 04 | kerf_bend_cutter(mode="cross") | kerf | pending | |
 | 05 | kerf_bend_cutter(mode="chevron") | kerf | pending | |
 | 06 | kerf_bend_cutter(mode="diamond") | kerf | pending | |
