@@ -3,7 +3,7 @@ import math
 import pytest
 import trimesh
 
-from mechlib.lattices import auxetic_panel, kerf_bend_cutter
+from mechlib.lattices import auxetic_panel, honeycomb_panel, kerf_bend_cutter
 from mechlib.meshutil import sub, uni
 from mechlib.prim import boxc
 
@@ -163,6 +163,75 @@ def test_auxetic_panel_cell_cap_protects_the_playground():
     with pytest.raises(ValueError):
         auxetic_panel(mode="reentrant", width=400.0, height=400.0,
                       cell=2.0, strut_t=0.4, border=3.0)
+
+
+# ---------------------------------------------------------------------------
+# honeycomb_panel
+# ---------------------------------------------------------------------------
+
+def test_honeycomb_panel_watertight_and_single_body():
+    panel = honeycomb_panel(width=60.0, height=60.0, cell=12.0)
+    assert_mesh(panel)
+    assert len(panel.split(only_watertight=False)) == 1
+    assert panel.metadata["poisson_ratio_sign"] == 1
+    assert panel.metadata["mode"] == "flat_top"
+    assert panel.bounds[0][2] == pytest.approx(0.0, abs=1e-9)
+    assert panel.bounds[1][2] == pytest.approx(3.0, abs=1e-6)
+
+
+def test_honeycomb_panel_hole_count_matches_euler_characteristic():
+    panel = honeycomb_panel(width=60.0, height=60.0, cell=12.0)
+    assert panel.metadata["hole_count"] > 0
+    assert panel.euler_number == 2 - 2 * panel.metadata["hole_count"]
+
+
+def test_honeycomb_panel_cell_grid_matches_requested_cell_size():
+    panel = honeycomb_panel(width=80.0, height=80.0, cell=10.0)
+    assert panel.metadata["cell_size"] == 10.0
+    assert panel.metadata["pitch_y"] == pytest.approx(10.0)
+    assert panel.metadata["cell_count"] == panel.metadata["hole_count"]
+    assert panel.metadata["cells_x"] >= 4
+    assert panel.metadata["cells_y"] >= 4
+
+
+def test_honeycomb_panel_border_is_solid_frame_at_the_edge():
+    panel = honeycomb_panel(width=50.0, height=50.0, cell=8.0, border=4.0)
+    assert_mesh(panel)
+    assert panel.metadata["border_actual"] >= 4.0 - 1e-9
+    edge_probe = boxc((1.0, 40.0, 10.0), center=(24.5, 0.0, 1.5))
+    from mechlib.meshutil import overlap_volume
+    assert overlap_volume(panel, edge_probe) > 0.5
+
+
+def test_honeycomb_panel_strut_t_snaps_to_nozzle_grid_by_default():
+    panel = honeycomb_panel(strut_t=0.5, snap_strut=True)
+    assert panel.metadata["strut_t"] == pytest.approx(0.4)
+    panel2 = honeycomb_panel(strut_t=0.9, snap_strut=True)
+    assert panel2.metadata["strut_t"] == pytest.approx(0.8)
+
+
+def test_honeycomb_panel_strut_t_off_grid_raises_without_snap():
+    with pytest.raises(ValueError):
+        honeycomb_panel(strut_t=0.5, snap_strut=False)
+    panel = honeycomb_panel(strut_t=0.8, snap_strut=False)
+    assert panel.metadata["strut_t"] == pytest.approx(0.8)
+
+
+def test_honeycomb_panel_rejects_bad_arguments():
+    with pytest.raises(ValueError):
+        honeycomb_panel(cell=2.0, strut_t=1.2)  # cell < 4*strut_t, struts fuse
+    with pytest.raises(ValueError):
+        honeycomb_panel(border=40.0, width=60.0, height=60.0)  # border too wide
+    with pytest.raises(ValueError):
+        honeycomb_panel(nozzle=0.5)  # not a real nozzle width
+    with pytest.raises(ValueError):
+        honeycomb_panel(thickness=0.4)
+
+
+def test_honeycomb_panel_cell_cap_protects_the_playground():
+    with pytest.raises(ValueError):
+        honeycomb_panel(width=400.0, height=400.0,
+                        cell=2.0, strut_t=0.4, border=3.0)
 
 
 # ---------------------------------------------------------------------------

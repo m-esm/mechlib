@@ -1,4 +1,4 @@
-"""Project-agnostic 2D metamaterial cells: auxetic panels and kerf-bend cutters."""
+"""Project-agnostic 2D metamaterial cells: honeycomb and auxetic panels, kerf-bend cutters."""
 
 import math
 
@@ -410,6 +410,152 @@ def auxetic_panel(mode="reentrant", width=60.0, height=60.0, thickness=3.0,
 
 
 # ---------------------------------------------------------------------------
+# Regular honeycomb (positive Poisson)
+# ---------------------------------------------------------------------------
+
+def _flat_top_hex(cx, cy, across_flats):
+    """Regular hexagon, flats on top and bottom, across-flats width ``across_flats``.
+
+    Vertices sit at 0/60/120 deg (flat-top), matching ``patterns.lighten_cell_poly``
+    hex orientation. Across-flats along Y is ``across_flats``; vertex radius is
+    ``across_flats / sqrt(3)``.
+    """
+    r = across_flats / math.sqrt(3.0)
+    angs = [math.radians(60.0 * i) for i in range(6)]
+    return sg.Polygon([(cx + r * math.cos(a), cy + r * math.sin(a)) for a in angs])
+
+
+def _honeycomb_unit(bounds, cell, strut_t):
+    """Place flat-top hex holes on a regular hexagonal lattice inside ``bounds``.
+
+    ``cell`` is the centre-to-centre pitch and the across-flats of the wall
+    centreline. Each hole is the same hex inset by ``strut_t / 2`` so a shared
+    wall between two cells prints at ``strut_t``. Columns use odd-q offset
+    coordinates: odd columns shift up by half a pitch so every interior wall
+    is shared, not a gap. Returns the hole polygons (not the walls) so the
+    caller can punch them from a solid rectangular panel and keep a continuous
+    rim instead of a row of half-cells.
+    """
+    # Flat-top: vertical across-flats = cell, horizontal neighbour at 1.5*R.
+    pitch_x = cell * math.sqrt(3.0) / 2.0
+    pitch_y = cell
+    inner_af = cell - strut_t
+    if inner_af <= 0:
+        raise ValueError(
+            "honeycomb_panel(): cell=%.3g mm is not larger than strut_t=%.3g mm; "
+            "the cells would fuse solid" % (cell, strut_t))
+    inner_r = inner_af / math.sqrt(3.0)
+    hole_ext_x = inner_r
+    hole_ext_y = inner_af / 2.0
+    minx, miny, maxx, maxy = bounds
+    inner_w = (maxx - minx) - 2.0 * hole_ext_x
+    inner_h = (maxy - miny) - 2.0 * hole_ext_y
+    if inner_w <= 0 or inner_h <= 0:
+        raise ValueError(
+            "honeycomb_panel(): no hex cell fits inside the bordered interior; "
+            "increase the panel or shrink cell/border")
+    nx = max(1, int(inner_w // pitch_x) + 1)
+    ny = max(1, int(inner_h // pitch_y) + 1)
+    if nx * ny > _MAX_CELLS:
+        raise ValueError(
+            "honeycomb grid would build %d cells (cap %d); increase cell or "
+            "shrink the panel" % (nx * ny, _MAX_CELLS))
+    x0 = -((nx - 1) * pitch_x) / 2.0
+    y0 = -((ny - 1) * pitch_y) / 2.0
+    interior = sg.box(minx, miny, maxx, maxy)
+    holes = []
+    for i in range(nx):
+        col_off = (pitch_y / 2.0) if (i % 2) else 0.0
+        n_row = ny - 1 if (i % 2 and ny > 1) else ny
+        for j in range(n_row):
+            hole = _flat_top_hex(
+                x0 + i * pitch_x, y0 + j * pitch_y + col_off, inner_af)
+            if interior.contains(hole):
+                holes.append(hole)
+    if not holes:
+        raise ValueError(
+            "honeycomb_panel(): no hex cell fits inside the bordered interior; "
+            "increase the panel or shrink cell/border")
+    return holes, nx, ny, pitch_x, pitch_y
+
+
+def honeycomb_panel(width=60.0, height=60.0, thickness=3.0, cell=12.0,
+                    strut_t=1.2, border=3.0, nozzle=0.4, snap_strut=True):
+    """Build a flat regular-hex honeycomb panel (positive Poisson, lightening).
+
+    A rectangular slab with a grid of through-holes on a regular hexagonal
+    lattice. The cells are **flat-top** (two sides horizontal): ``cell`` is
+    both the centre-to-centre pitch and the across-flats of the wall
+    centreline, so a shared wall between two cells is ``strut_t`` thick.
+    Stretching the panel in-plane makes it thinner in the transverse
+    direction (positive Poisson's ratio), the opposite of ``auxetic_panel``.
+    Use this for lightening a printed sheet, not for auxetic expansion.
+
+    A solid ``border``-wide rim is left around the tiled holes so the panel
+    edge is never a row of half-cells; the actual rim (panel edge to the
+    nearest hole) is reported in ``metadata["border_actual"]`` and is always
+    >= the requested ``border``, because an integer cell count rarely fills
+    the interior exactly. ``strut_t`` is snapped to the nearest integer
+    multiple of ``nozzle`` (one of 0.4 / 0.8 / 1.2 mm) by default; pass
+    ``snap_strut=False`` to get a ``ValueError`` with the corrected value
+    instead of silent snapping. The panel sits flat with its bottom face at
+    z=0 and centred on the XY origin; print it flat, cell layer down, no
+    supports needed. Cell counts are capped so a default-sized panel builds
+    in well under a second. Units are mm.
+    """
+    if width <= 0 or height <= 0 or thickness < 0.8:
+        raise ValueError("honeycomb_panel(): width/height must be positive and "
+                          "thickness must be at least 0.8 mm")
+    if cell <= 0:
+        raise ValueError("honeycomb_panel(): cell must be positive")
+    if border <= 0 or border >= min(width, height) / 2.0:
+        raise ValueError("honeycomb_panel(): border must be positive and less "
+                          "than half the panel's shorter side")
+    _validate_nozzle(nozzle)
+    strut_t = _snap_strut(strut_t, nozzle, snap_strut, "strut_t")
+    if cell < 4.0 * strut_t:
+        raise ValueError(
+            "honeycomb_panel(): cell=%.3g mm is too small for strut_t=%.3g mm; "
+            "the struts would fuse solid (need cell >= 4*strut_t)"
+            % (cell, strut_t))
+
+    bounds = _usable_bounds(width, height, border)
+    holes, nx, ny, px, py = _honeycomb_unit(bounds, cell, strut_t)
+    hole_union = unary_union(holes)
+    hminx, hminy, hmaxx, hmaxy = hole_union.bounds
+    border_actual = min(width / 2.0 + hminx, width / 2.0 - hmaxx,
+                        height / 2.0 + hminy, height / 2.0 - hmaxy)
+    if border_actual < border - 1e-6:
+        raise ValueError(
+            "honeycomb_panel(): tiled cells overflow the requested border "
+            "(actual %.3g mm < requested %.3g mm); increase border or "
+            "shrink cell" % (border_actual, border))
+
+    panel = sg.box(-width / 2.0, -height / 2.0, width / 2.0, height / 2.0)
+    combined = panel.difference(hole_union)
+    if combined.geom_type not in ("Polygon", "MultiPolygon"):
+        raise ValueError("honeycomb_panel(): degenerate panel geometry")
+    combined = _prune_holes(combined)
+    hole_count = _count_holes(combined)
+
+    mesh = _extrude(combined, thickness)
+    mesh.metadata.update({
+        "mode": "flat_top",
+        "cell_size": cell,
+        "cells_x": nx,
+        "cells_y": ny,
+        "cell_count": len(holes),
+        "pitch_x": px,
+        "pitch_y": py,
+        "strut_t": strut_t,
+        "border_actual": border_actual,
+        "hole_count": hole_count,
+        "poisson_ratio_sign": 1,
+    })
+    return mesh
+
+
+# ---------------------------------------------------------------------------
 # Kerf bend cutters
 # ---------------------------------------------------------------------------
 
@@ -602,5 +748,6 @@ def kerf_bend_cutter(mode="lattice", width=60.0, height=40.0, thickness=3.0,
 
 __all__ = (
     "auxetic_panel",
+    "honeycomb_panel",
     "kerf_bend_cutter",
 )

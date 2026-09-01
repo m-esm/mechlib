@@ -138,7 +138,7 @@ from mechlib.indexing import (
     intermittent_gear_pair,
 )
 from mechlib.joints import ball_socket_joint, clevis, gimbal_rings, knuckle_hinge
-from mechlib.lattices import auxetic_panel, kerf_bend_cutter
+from mechlib.lattices import auxetic_panel, honeycomb_panel, kerf_bend_cutter
 from mechlib.linear import (
     archimedes_screw,
     differential_screw,
@@ -959,6 +959,10 @@ PLAY: dict = {
     },
     "demo_auxetic_panel": {
         "mode_index": (0, 2, 1),
+        "cell": (8.0, 16.0, 2.0),
+        "strut_t": (0.4, 1.2, 0.4),
+    },
+    "demo_honeycomb_panel": {
         "cell": (8.0, 16.0, 2.0),
         "strut_t": (0.4, 1.2, 0.4),
     },
@@ -3403,6 +3407,12 @@ def demo_auxetic_panel(mode_index: int = 0, cell: float = 12.0,
     panel = auxetic_panel(mode=mode, width=60.0, height=60.0, thickness=3.0,
                           cell=cell, strut_t=strut_t)
     return [("auxetic_panel", panel, PALETTE[5])]
+
+
+def demo_honeycomb_panel(cell: float = 12.0, strut_t: float = 1.2) -> MeshList:
+    panel = honeycomb_panel(width=60.0, height=60.0, thickness=3.0,
+                            cell=cell, strut_t=strut_t)
+    return [("honeycomb_panel", panel, PALETTE[6])]
 
 
 def demo_kerf_bend_cutter(mode_index: int = 0, kerf: float = 0.5,

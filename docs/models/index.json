@@ -62006,6 +62006,50 @@
       "applications": "Impact pads, expandable meshes, medical and sports structures that widen when stretched."
     },
     {
+      "file": "honeycomb_panel_demo.glb",
+      "name": "honeycomb_panel",
+      "module": "mechlib.lattices",
+      "signature": "honeycomb_panel(width=60.0, height=60.0, thickness=3.0, cell=12.0, strut_t=1.2, border=3.0, nozzle=0.4, snap_strut=True)",
+      "description": "A flat lightening panel of regular hexagonal cells with a solid border frame, so the edge is never a row of half-cells. Cells are flat-top (two sides horizontal): cell is the centre-to-centre pitch and the across-flats of the wall centreline, and strut_t is the printed wall. Stretching it in-plane makes it thinner transversely (positive Poisson), the opposite of auxetic_panel.",
+      "origin": "Gap-analysis wave v0.11.x; classic ref: regular hexagonal honeycomb core",
+      "build_ms": 3,
+      "category": "lattices",
+      "group": "blocks",
+      "rank": 26,
+      "parts": 1,
+      "size_mm": [
+        60.0,
+        60.0,
+        3.0
+      ],
+      "play": {
+        "demo": "demo_honeycomb_panel",
+        "params": [
+          {
+            "name": "cell",
+            "label": "Cell",
+            "unit": "mm",
+            "type": "float",
+            "default": 12.0,
+            "min": 8.0,
+            "max": 16.0,
+            "step": 2.0
+          },
+          {
+            "name": "strut_t",
+            "label": "Strut T",
+            "unit": "mm",
+            "type": "float",
+            "default": 1.2,
+            "min": 0.4,
+            "max": 1.2,
+            "step": 0.4
+          }
+        ]
+      },
+      "applications": "Sandwich skins, drone-frame ribs, and lightened covers that need a regular hex core with a solid rim, not an auxetic bowtie."
+    },
+    {
       "file": "kerf_bend_cutter_demo.glb",
       "name": "kerf_bend_cutter",
       "module": "mechlib.lattices",

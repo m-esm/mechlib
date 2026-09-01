@@ -143,7 +143,7 @@ from mechlib.mechanisms import handwheel, shaft_collar, star_knob
 from mechlib.pulleys import v_belt_pulley
 from mechlib.ratchets import ratchet_wheel_pawl
 from mechlib.joints import ball_socket_joint, clevis, gimbal_rings, knuckle_hinge
-from mechlib.lattices import auxetic_panel, kerf_bend_cutter
+from mechlib.lattices import auxetic_panel, honeycomb_panel, kerf_bend_cutter
 from mechlib.linear import (
     archimedes_screw,
     differential_screw,
@@ -2729,6 +2729,21 @@ def build():
                 "auxetic effect."),
             "origin": "Gap-analysis wave v0.8.0; classic ref: auxetic re-entrant honeycomb (Lakes, 1987)",
             "demo": "demo_auxetic_panel",
+        },
+        {
+            "file": "honeycomb_panel_demo.glb",
+            "name": "honeycomb_panel",
+            "module": "mechlib.lattices",
+            "signature": signature(honeycomb_panel),
+            "description": (
+                "A flat lightening panel of regular hexagonal cells with a solid "
+                "border frame, so the edge is never a row of half-cells. Cells "
+                "are flat-top (two sides horizontal): cell is the centre-to-centre "
+                "pitch and the across-flats of the wall centreline, and strut_t "
+                "is the printed wall. Stretching it in-plane makes it thinner "
+                "transversely (positive Poisson), the opposite of auxetic_panel."),
+            "origin": "Gap-analysis wave v0.11.x; classic ref: regular hexagonal honeycomb core",
+            "demo": "demo_honeycomb_panel",
         },
         {
             "file": "kerf_bend_cutter_demo.glb",

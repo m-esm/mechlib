@@ -299,6 +299,10 @@ USE_CASES = {
         "Nut and bolt blanks, hex columns, and across-flats hex stock for "
         "wrench-driven parts."
     ),
+    'honeycomb_panel': (
+        "Sandwich skins, drone-frame ribs, and lightened covers that need a "
+        "regular hex core with a solid rim, not an auxetic bowtie."
+    ),
     'hirth_coupling': (
         "Machine-tool spindles, indexing tables, and face couplings that must "
         "locate torque and centerline with radial teeth."
@@ -816,6 +820,7 @@ GALLERY_FILE_TO_API = {
     'helix_tube_demo.glb': 'helix_tube',
     'herringbone_gear_demo.glb': 'herringbone_gear',
     'hex_poly_demo.glb': 'hex_poly',
+    'honeycomb_panel_demo.glb': 'honeycomb_panel',
     'hirth_coupling_demo.glb': 'hirth_coupling',
     'hooke_pose_demo.glb': 'hooke_pose',
     'hose_barb_demo.glb': 'hose_barb',
