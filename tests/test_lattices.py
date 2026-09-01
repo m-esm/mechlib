@@ -308,7 +308,7 @@ def test_isogrid_panel_cell_cap_protects_the_playground():
 # kerf_bend_cutter
 # ---------------------------------------------------------------------------
 
-@pytest.mark.parametrize("mode", ["lattice", "diagonal", "spiral", "wave", "hex", "cross", "chevron", "diamond", "fishbone", "meander"])
+@pytest.mark.parametrize("mode", ["lattice", "diagonal", "spiral", "wave", "hex", "cross", "chevron", "diamond", "fishbone", "meander", "biaxial"])
 def test_kerf_bend_cutter_opens_clean_through_slits(mode):
     width, height, thickness = 60.0, 40.0, 3.0
     cutters = kerf_bend_cutter(mode=mode, width=width, height=height,
@@ -356,6 +356,7 @@ def test_kerf_bend_cutter_modes_produce_different_slit_layouts():
     diamond = kerf_bend_cutter(mode="diamond")[0]
     fishbone = kerf_bend_cutter(mode="fishbone")[0]
     meander = kerf_bend_cutter(mode="meander")[0]
+    biaxial = kerf_bend_cutter(mode="biaxial")[0]
     # Rotating (diagonal), shearing (spiral), waving, hex-edge, cross
     # X-lattice, chevron arrowhead, and diamond brick-wall outline slits
     # must actually change the cut geometry, not just relabel it.
@@ -395,6 +396,10 @@ def test_kerf_bend_cutter_modes_produce_different_slit_layouts():
     assert _kerf_layout_differs(lattice, meander)
     assert _kerf_layout_differs(wave, meander)
     assert _kerf_layout_differs(fishbone, meander)
+    assert _kerf_layout_differs(biaxial, lattice)
+    assert _kerf_layout_differs(biaxial, diagonal)
+    assert _kerf_layout_differs(biaxial, cross)
+    assert _kerf_layout_differs(biaxial, meander)
 
 
 def test_kerf_bend_cutter_meander_is_one_square_wave_labyrinth():
@@ -451,6 +456,35 @@ def _principal_xy_deg(mesh):
         cxy += x * y
     ang = 0.5 * math.atan2(2.0 * cxy, cxx - cyy)
     return math.degrees(ang) % 180.0
+
+
+def test_kerf_bend_cutter_biaxial_is_orthogonal_2_axis_wrap():
+    with pytest.raises(ValueError):
+        kerf_bend_cutter(mode="biaxial", kerf=0.2)
+    with pytest.raises(ValueError):
+        kerf_bend_cutter(mode="biaxial", bridge=0.5)
+
+    cutters = kerf_bend_cutter(mode="biaxial", kerf=0.5, pitch=6.0,
+                               bridge=1.0)
+    mesh = cutters[0]
+    assert mesh.metadata["mode"] == "biaxial"
+
+    slab = boxc((60.0, 40.0, 3.0), center=(0.0, 0.0, 1.5))
+    cut = sub(slab, mesh)
+    assert len(cut.split(only_watertight=False)) == 1
+
+    pieces = mesh.split(only_watertight=False)
+    assert len(pieces) > 1
+    bins = {0: 0, 90: 0}
+    for piece in pieces:
+        deg = _principal_xy_deg(piece)
+        for target in (0, 90):
+            delta = abs((deg - target + 90.0) % 180.0 - 90.0)
+            if delta <= 20.0:
+                bins[target] += 1
+                break
+    assert bins[0] >= 1 and bins[90] >= 1
+    assert max(piece.extents[0] for piece in pieces) > 1.5
 
 
 def test_kerf_bend_cutter_hex_slits_have_three_orientations():

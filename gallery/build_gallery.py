@@ -2776,7 +2776,8 @@ def build():
                 "an X-lattice of bars plus ~30° diagonal arms, chevron for "
                 "nested 45° arrowhead slits, and diamond for elongated "
                 "brick-wall outline rhombi, and fishbone for paired 45° "
-                "herringbone ribs; all "
+                "herringbone ribs, plus biaxial orthogonal slits for a "
+                "2-axis wrap; all "
                 "validate kerf width and bridge width against real FDM printability "
                 "floors before cutting."),
             "origin": "Gap-analysis wave v0.8.0; classic ref: kerf bending (laser-cut plywood furniture)",

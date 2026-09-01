@@ -11,7 +11,7 @@ from .meshutil import extrude_poly_z, from_manifold, to_manifold
 _NOZZLE_WIDTHS = (0.4, 0.8, 1.2)
 _AUXETIC_MODES = ("reentrant", "rotating_squares", "chiral")
 _KERF_MODES = ("lattice", "diagonal", "spiral", "wave", "hex", "cross", "chevron",
-               "diamond", "fishbone", "meander")
+               "diamond", "fishbone", "meander", "biaxial")
 _MAX_CELLS = 2500
 
 
@@ -1259,6 +1259,25 @@ def _meander_slit_polys(width, height, kerf, pitch, bridge, margin):
     return [poly], n_runs, 1
 
 
+def _biaxial_slit_polys(width, height, kerf, pitch, bridge, margin):
+    """Return orthogonal interrupted-slit families for two-axis wrapping."""
+    vertical, n_rows, n_slits = _lattice_slit_polys(
+        width, height, kerf, pitch, bridge, margin, 0.0)
+    horizontal, _, _ = _lattice_slit_polys(
+        height, width, kerf, pitch, bridge, margin, 0.0)
+    horizontal = [
+        shapely.affinity.rotate(poly, 90.0, origin=(0, 0))
+        for poly in horizontal
+    ]
+    polys = vertical + horizontal
+    if len(polys) > _MAX_CELLS:
+        raise ValueError(
+            "kerf_bend_cutter(): biaxial would cut %d slits (cap %d); "
+            "increase pitch/bridge or shrink the panel"
+            % (len(polys), _MAX_CELLS))
+    return polys, n_rows, n_slits
+
+
 def kerf_bend_cutter(mode="lattice", width=60.0, height=40.0, thickness=3.0,
                      kerf=0.5, pitch=6.0, bridge=1.0, angle_deg=45.0,
                      helix_shear=1.5, margin=4.0, nozzle=0.4):
@@ -1306,7 +1325,9 @@ def kerf_bend_cutter(mode="lattice", width=60.0, height=40.0, thickness=3.0,
     continuous chevrons or fuse into adjacent units. ``mode="meander"``
     cuts one continuous square-wave labyrinth: parallel local-Y runs are
     joined by square U-turns at alternating ends while an uncut ``bridge``
-    remains at the panel margins.
+    remains at the panel margins. ``mode="biaxial"`` overlays two orthogonal
+    interrupted lattice-slit families so the panel can roll about both X and
+    Y while the bridges keep the slab connected.
 
     Both FDM floors are validated, not just documented: ``kerf`` must be at
     least one ``nozzle`` width (0.4 mm) or the slicer's minimum feature size
@@ -1355,6 +1376,9 @@ def kerf_bend_cutter(mode="lattice", width=60.0, height=40.0, thickness=3.0,
             width, height, kerf, pitch, bridge, margin)
     elif mode == "meander":
         polys, n_rows, n_slits = _meander_slit_polys(
+            width, height, kerf, pitch, bridge, margin)
+    elif mode == "biaxial":
+        polys, n_rows, n_slits = _biaxial_slit_polys(
             width, height, kerf, pitch, bridge, margin)
     else:
         shear = helix_shear if mode == "spiral" else 0.0
