@@ -308,7 +308,7 @@ def test_isogrid_panel_cell_cap_protects_the_playground():
 # kerf_bend_cutter
 # ---------------------------------------------------------------------------
 
-@pytest.mark.parametrize("mode", ["lattice", "diagonal", "spiral", "wave"])
+@pytest.mark.parametrize("mode", ["lattice", "diagonal", "spiral", "wave", "hex"])
 def test_kerf_bend_cutter_opens_clean_through_slits(mode):
     width, height, thickness = 60.0, 40.0, 3.0
     cutters = kerf_bend_cutter(mode=mode, width=width, height=height,
@@ -337,23 +337,28 @@ def test_kerf_bend_cutter_min_bend_radius_matches_closed_form():
     assert cutters[0].metadata["min_bend_radius_mm"] == pytest.approx(expected)
 
 
+def _kerf_layout_differs(a, b):
+    return abs(a.volume - b.volume) > 1e-6 or (
+        a.bounds.tolist() != b.bounds.tolist())
+
+
 def test_kerf_bend_cutter_modes_produce_different_slit_layouts():
     lattice = kerf_bend_cutter(mode="lattice")[0]
     diagonal = kerf_bend_cutter(mode="diagonal")[0]
     spiral = kerf_bend_cutter(mode="spiral")[0]
     wave = kerf_bend_cutter(mode="wave")[0]
-    # Rotating (diagonal), shearing (spiral), and waving the slits must
+    hex_ = kerf_bend_cutter(mode="hex")[0]
+    # Rotating (diagonal), shearing (spiral), waving, and hex-edge slits must
     # actually change the cut geometry, not just relabel it.
-    assert abs(lattice.volume - diagonal.volume) > 1e-6 or (
-        lattice.bounds.tolist() != diagonal.bounds.tolist())
-    assert abs(lattice.volume - spiral.volume) > 1e-6 or (
-        lattice.bounds.tolist() != spiral.bounds.tolist())
-    assert abs(lattice.volume - wave.volume) > 1e-6 or (
-        lattice.bounds.tolist() != wave.bounds.tolist())
-    assert abs(diagonal.volume - wave.volume) > 1e-6 or (
-        diagonal.bounds.tolist() != wave.bounds.tolist())
-    assert abs(spiral.volume - wave.volume) > 1e-6 or (
-        spiral.bounds.tolist() != wave.bounds.tolist())
+    assert _kerf_layout_differs(lattice, diagonal)
+    assert _kerf_layout_differs(lattice, spiral)
+    assert _kerf_layout_differs(lattice, wave)
+    assert _kerf_layout_differs(diagonal, wave)
+    assert _kerf_layout_differs(spiral, wave)
+    assert _kerf_layout_differs(lattice, hex_)
+    assert _kerf_layout_differs(wave, hex_)
+    assert _kerf_layout_differs(diagonal, hex_)
+    assert _kerf_layout_differs(spiral, hex_)
 
 
 def test_kerf_bend_cutter_wave_slits_are_sinusoidal():
@@ -368,6 +373,46 @@ def test_kerf_bend_cutter_wave_slits_are_sinusoidal():
     # wider because of the wave amplitude.
     x_spans = [p.extents[0] for p in pieces]
     assert max(x_spans) > 1.5
+
+
+def _principal_xy_deg(mesh):
+    verts = mesh.vertices
+    n = float(len(verts))
+    mx = sum(v[0] for v in verts) / n
+    my = sum(v[1] for v in verts) / n
+    cxx = cyy = cxy = 0.0
+    for v in verts:
+        x = v[0] - mx
+        y = v[1] - my
+        cxx += x * x
+        cyy += y * y
+        cxy += x * y
+    ang = 0.5 * math.atan2(2.0 * cxy, cxx - cyy)
+    return math.degrees(ang) % 180.0
+
+
+def test_kerf_bend_cutter_hex_slits_have_three_orientations():
+    cutters = kerf_bend_cutter(mode="hex", kerf=0.5, pitch=6.0, bridge=1.0)
+    mesh = cutters[0]
+    assert mesh.metadata["mode"] == "hex"
+    for key in ("min_bend_radius_mm", "kerf", "pitch", "bridge"):
+        assert key in mesh.metadata
+    pieces = mesh.split(only_watertight=False)
+    assert len(pieces) > 1
+    # Lattice slits are kerf-wide in X and long in Y. Hex edges run at
+    # 0/60/120, so some pieces are wide in X (horizontal) rather than a
+    # thin Y-slit family.
+    x_spans = [p.extents[0] for p in pieces]
+    assert max(x_spans) > 1.5
+    bins = {0: 0, 60: 0, 120: 0}
+    for p in pieces:
+        deg = _principal_xy_deg(p)
+        for target in (0, 60, 120):
+            delta = abs((deg - target + 90.0) % 180.0 - 90.0)
+            if delta <= 20.0:
+                bins[target] += 1
+                break
+    assert bins[0] >= 1 and bins[60] >= 1 and bins[120] >= 1
 
 
 def test_kerf_bend_cutter_rejects_sub_nozzle_kerf():

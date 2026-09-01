@@ -2768,11 +2768,12 @@ def build():
             "description": (
                 "A cutter that turns a rigid flat slab into a bendable, twistable, "
                 "or rollable one by slitting it with a staggered kerf pattern, the "
-                "same trick as laser-kerfed plywood. Three slit layouts (straight "
+                "same trick as laser-kerfed plywood. Slit layouts include straight "
                 "lattice for single-axis bending or a living hinge, diagonal for "
-                "torsion, spiral for a helical cylindrical wrap) all validate kerf "
-                "width and bridge width against real FDM printability floors before "
-                "cutting."),
+                "torsion, spiral for a helical cylindrical wrap, wave for sinusoidal "
+                "channels, and hex for hexagonal living-hinge edge slits; all "
+                "validate kerf width and bridge width against real FDM printability "
+                "floors before cutting."),
             "origin": "Gap-analysis wave v0.8.0; classic ref: kerf bending (laser-cut plywood furniture)",
             "demo": "demo_kerf_bend_cutter",
         },

@@ -10,7 +10,7 @@ from .meshutil import extrude_poly_z, from_manifold, to_manifold
 
 _NOZZLE_WIDTHS = (0.4, 0.8, 1.2)
 _AUXETIC_MODES = ("reentrant", "rotating_squares", "chiral")
-_KERF_MODES = ("lattice", "diagonal", "spiral", "wave")
+_KERF_MODES = ("lattice", "diagonal", "spiral", "wave", "hex")
 _MAX_CELLS = 2500
 
 
@@ -825,6 +825,72 @@ def _wave_slit_polys(width, height, kerf, pitch, bridge, margin):
     return polys, n_rows, n_slits
 
 
+def _hex_slit_polys(width, height, kerf, pitch, bridge, margin):
+    """Return hexagonal living-hinge edge slits (LivingHingeGenerator Hex / KM Hex).
+
+    Flat-top hexagonal tiling, same orientation as ``honeycomb_panel``.
+    ``pitch`` is hex centre-to-centre (across-flats of the wall centreline).
+    Each hex **edge** is a kerf slit shortened so an uncut ``bridge`` remains
+    at the vertices; edges run at 0/60/120 deg. This is a cutter of edge
+    slits, not hex through-holes.
+    """
+    usable_w = width - 2.0 * margin
+    usable_h = height - 2.0 * margin
+    # Odd-q offset: same column/row pitches as ``_honeycomb_unit``.
+    pitch_x = pitch * math.sqrt(3.0) / 2.0
+    pitch_y = pitch
+    n_cols = max(1, int(usable_w // pitch_x))
+    n_rows = max(1, int(usable_h // pitch_y))
+    n_slits_est = n_cols * n_rows * 3
+    if n_slits_est > _MAX_CELLS:
+        raise ValueError(
+            "kerf_bend_cutter(): hex would cut %d slits (cap %d); "
+            "increase pitch/bridge or shrink the panel"
+            % (n_slits_est, _MAX_CELLS))
+    x0 = -((n_cols - 1) * pitch_x) / 2.0
+    y0 = -((n_rows - 1) * pitch_y) / 2.0
+    r = pitch / math.sqrt(3.0)
+    inset = bridge / 2.0
+    usable = sg.box(-usable_w / 2.0, -usable_h / 2.0,
+                    usable_w / 2.0, usable_h / 2.0)
+    seen = set()
+    polys = []
+    for i in range(n_cols):
+        col_off = (pitch_y / 2.0) if (i % 2) else 0.0
+        n_row = n_rows - 1 if (i % 2 and n_rows > 1) else n_rows
+        for j in range(n_row):
+            cx = x0 + i * pitch_x
+            cy = y0 + j * pitch_y + col_off
+            verts = []
+            for k in range(6):
+                a = math.radians(60.0 * k)
+                verts.append((cx + r * math.cos(a), cy + r * math.sin(a)))
+            for k in range(6):
+                p1 = verts[k]
+                p2 = verts[(k + 1) % 6]
+                a = (round(p1[0], 6), round(p1[1], 6))
+                b = (round(p2[0], 6), round(p2[1], 6))
+                key = (a, b) if a < b else (b, a)
+                if key in seen:
+                    continue
+                seen.add(key)
+                dx = p2[0] - p1[0]
+                dy = p2[1] - p1[1]
+                length = math.hypot(dx, dy)
+                if length <= bridge + 1e-9:
+                    continue
+                ux, uy = dx / length, dy / length
+                q1 = (p1[0] + ux * inset, p1[1] + uy * inset)
+                q2 = (p2[0] - ux * inset, p2[1] - uy * inset)
+                poly = sg.LineString([q1, q2]).buffer(kerf / 2.0, cap_style=2)
+                if poly.is_empty:
+                    continue
+                if not usable.contains(poly):
+                    continue
+                polys.append(poly)
+    return polys, n_cols, n_rows
+
+
 def kerf_bend_cutter(mode="lattice", width=60.0, height=40.0, thickness=3.0,
                      kerf=0.5, pitch=6.0, bridge=1.0, angle_deg=45.0,
                      helix_shear=1.5, margin=4.0, nozzle=0.4):
@@ -849,7 +915,12 @@ def kerf_bend_cutter(mode="lattice", width=60.0, height=40.0, thickness=3.0,
     ``mode="wave"`` replaces the straight slits with sinusoidal living-hinge
     channels (LivingHingeGenerator Wave / KM Wave): same staggered
     row-and-bridge layout, but each kerf follows a sine so the hinge flexes
-    along a wavy web instead of a straight lattice.
+    along a wavy web instead of a straight lattice. ``mode="hex"`` cuts
+    hexagonal living-hinge **edge slits** (LivingHingeGenerator Hex / KM Hex):
+    each edge of a flat-top hex tiling is a kerf slit shortened so an uncut
+    ``bridge`` remains at the vertices, in three orientations at 0/60/120 deg.
+    ``pitch`` is hex centre-to-centre. This is not ``honeycomb_panel``'s
+    positive hex through-holes.
 
     Both FDM floors are validated, not just documented: ``kerf`` must be at
     least one ``nozzle`` width (0.4 mm) or the slicer's minimum feature size
@@ -880,6 +951,9 @@ def kerf_bend_cutter(mode="lattice", width=60.0, height=40.0, thickness=3.0,
 
     if mode == "wave":
         polys, n_rows, n_slits = _wave_slit_polys(
+            width, height, kerf, pitch, bridge, margin)
+    elif mode == "hex":
+        polys, n_rows, n_slits = _hex_slit_polys(
             width, height, kerf, pitch, bridge, margin)
     else:
         shear = helix_shear if mode == "spiral" else 0.0

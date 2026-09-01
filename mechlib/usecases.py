@@ -334,7 +334,8 @@ USE_CASES = {
     ),
     'kerf_bend_cutter': (
         "Living hinges, foldable enclosures, and kerf-bent panels that roll "
-        "or twist from a flat print, including sinusoidal wave slits."
+        "or twist from a flat print, including sinusoidal wave slits and "
+        "hexagonal living-hinge edge slits."
     ),
     'kinematic_coupling': (
         "Optical mounts, metrology fixtures, and any plate pair that must "
