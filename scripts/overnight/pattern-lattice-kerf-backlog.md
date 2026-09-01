@@ -20,7 +20,7 @@ Semi-primitives. No CadQuery. FDM: nozzle-multiple struts, wall>=0.8, kerf>=nozz
 | 02 | isogrid_panel | 2d-lattice | shipped | NASA triangular rib sheet. SHA 3df5609 |
 | 03 | kerf_bend_cutter(mode="hex") | kerf | shipped | SHA 7d0cb2a hex living-hinge edge slits |
 | 04 | kerf_bend_cutter(mode="cross") | kerf | shipped | X-lattice bars + ~30° arms. THIS HOUR. |
-| 05 | kerf_bend_cutter(mode="chevron") | kerf | shipped | nested 45° arrowheads. THIS HOUR. |
+| 05 | kerf_bend_cutter(mode="chevron") | kerf | shipped | nested 45° arrowheads. SHA 2b34903 |
 | 06 | kerf_bend_cutter(mode="diamond") | kerf | pending | |
 | 07 | kerf_bend_cutter(mode="fishbone") | kerf | pending | |
 | 08 | kerf_bend_cutter(mode="meander") | kerf | pending | MDPI meander |
