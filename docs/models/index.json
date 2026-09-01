@@ -60149,6 +60149,25 @@
       "applications": "Bought bearings, ISO fasteners, motors, servos, cells, and sensors looked up by address (bearing/608-2rs) so a printed pocket rebinds from one catalog instead of a forked dimension table."
     },
     {
+      "file": "vitamin_addresses_demo.glb",
+      "name": "vitamin_addresses",
+      "module": "mechlib.vitamins",
+      "signature": "all_addresses() -> 'List[str]'",
+      "description": "One catalog envelope per vitamin family, addresses taken from vitamin_addresses() so the row tracks the live catalog.",
+      "origin": "Bought-part catalog envelopes (display meshes, not printed STLs).",
+      "build_ms": 15,
+      "category": "vitamins",
+      "group": "elements",
+      "rank": 21,
+      "parts": 9,
+      "size_mm": [
+        224.1,
+        26.0,
+        65.2
+      ],
+      "applications": "List every catalog address so a staleness gate can prove a posed assembly node still resolves after a catalog refresh."
+    },
+    {
       "file": "cyl_demo.glb",
       "name": "cyl",
       "module": "mechlib.prim",

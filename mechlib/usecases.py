@@ -898,6 +898,7 @@ GALLERY_FILE_TO_API = {
     'tripod_cv_joint_demo.glb': 'tripod_cv_joint',
     'u_channel_between_demo.glb': 'u_channel_between',
     'universal_joint_demo.glb': 'universal_joint',
+    'vitamin_addresses_demo.glb': 'vitamin_addresses',
     'vitamin_demo.glb': 'vitamin',
     'watt_linkage_demo.glb': 'watt_linkage',
     'wave_spring_demo.glb': 'wave_spring',

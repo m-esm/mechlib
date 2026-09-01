@@ -199,7 +199,7 @@ from mechlib.ratchets import (
 )
 from mechlib.sweep import extrude_twist, loft, ring_pts, swept_keyed_bore
 from mechlib.text import text_block, text_polygon
-from mechlib import find_vitamin, vitamin
+from mechlib import find_vitamin, vitamin, vitamin_addresses
 
 
 def _load_demos():
@@ -1308,6 +1308,18 @@ def build():
             ),
             "origin": "Bought-part catalog envelopes (display meshes, not printed STLs).",
             "demo": "demo_vitamin",
+        },
+        {
+            "file": "vitamin_addresses_demo.glb",
+            "name": "vitamin_addresses",
+            "module": "mechlib.vitamins",
+            "signature": signature(vitamin_addresses),
+            "description": (
+                "One catalog envelope per vitamin family, addresses taken from "
+                "vitamin_addresses() so the row tracks the live catalog."
+            ),
+            "origin": "Bought-part catalog envelopes (display meshes, not printed STLs).",
+            "demo": "demo_vitamin_addresses",
         },
         {
             "file": "worm_demo.glb",
