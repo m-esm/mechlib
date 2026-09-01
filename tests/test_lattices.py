@@ -308,7 +308,7 @@ def test_isogrid_panel_cell_cap_protects_the_playground():
 # kerf_bend_cutter
 # ---------------------------------------------------------------------------
 
-@pytest.mark.parametrize("mode", ["lattice", "diagonal", "spiral", "wave", "hex", "cross"])
+@pytest.mark.parametrize("mode", ["lattice", "diagonal", "spiral", "wave", "hex", "cross", "chevron"])
 def test_kerf_bend_cutter_opens_clean_through_slits(mode):
     width, height, thickness = 60.0, 40.0, 3.0
     cutters = kerf_bend_cutter(mode=mode, width=width, height=height,
@@ -349,8 +349,10 @@ def test_kerf_bend_cutter_modes_produce_different_slit_layouts():
     wave = kerf_bend_cutter(mode="wave")[0]
     hex_ = kerf_bend_cutter(mode="hex")[0]
     cross = kerf_bend_cutter(mode="cross")[0]
-    # Rotating (diagonal), shearing (spiral), waving, hex-edge, and cross
-    # X-lattice slits must actually change the cut geometry, not just relabel it.
+    chevron = kerf_bend_cutter(mode="chevron")[0]
+    # Rotating (diagonal), shearing (spiral), waving, hex-edge, cross
+    # X-lattice, and chevron arrowhead slits must actually change the
+    # cut geometry, not just relabel it.
     assert _kerf_layout_differs(lattice, diagonal)
     assert _kerf_layout_differs(lattice, spiral)
     assert _kerf_layout_differs(lattice, wave)
@@ -365,6 +367,12 @@ def test_kerf_bend_cutter_modes_produce_different_slit_layouts():
     assert _kerf_layout_differs(hex_, cross)
     assert _kerf_layout_differs(diagonal, cross)
     assert _kerf_layout_differs(spiral, cross)
+    assert _kerf_layout_differs(lattice, chevron)
+    assert _kerf_layout_differs(wave, chevron)
+    assert _kerf_layout_differs(hex_, chevron)
+    assert _kerf_layout_differs(cross, chevron)
+    assert _kerf_layout_differs(diagonal, chevron)
+    assert _kerf_layout_differs(spiral, chevron)
 
 
 def test_kerf_bend_cutter_wave_slits_are_sinusoidal():
@@ -442,6 +450,64 @@ def test_kerf_bend_cutter_cross_slits_have_x_lattice_arms():
                 bins[target] += 1
                 break
     assert bins[30] >= 1 and bins[150] >= 1 and bins[90] >= 1
+
+
+def test_kerf_bend_cutter_chevron_slits_are_nested_arrowheads():
+    import shapely.geometry as sg
+
+    from mechlib.lattices import _chevron_slit_polys
+
+    cutters = kerf_bend_cutter(mode="chevron", kerf=0.5, pitch=6.0, bridge=1.0)
+    mesh = cutters[0]
+    assert mesh.metadata["mode"] == "chevron"
+    for key in ("min_bend_radius_mm", "kerf", "pitch", "bridge"):
+        assert key in mesh.metadata
+    pieces = mesh.split(only_watertight=False)
+    assert len(pieces) > 1
+    # Lattice slits are kerf-wide in X and long in Y. A 45° chevron's
+    # AABB spans more than kerf in X.
+    x_spans = [p.extents[0] for p in pieces]
+    assert max(x_spans) > 1.5
+    # Each chevron is one continuous two-leg path, so split() sees the
+    # joined arrowhead (PCA ~90°). Halve each 2D slit at its midline to
+    # recover the 45° / 135° legs.
+    polys, _, _ = _chevron_slit_polys(60.0, 40.0, 0.5, 6.0, 1.0, 4.0)
+    bins = {45: 0, 135: 0}
+    for poly in polys:
+        geoms = list(poly.geoms) if poly.geom_type == "MultiPolygon" else [poly]
+        for g in geoms:
+            minx, miny, maxx, maxy = g.bounds
+            midy = 0.5 * (miny + maxy)
+            halves = (
+                g.intersection(sg.box(minx - 1.0, midy, maxx + 1.0, maxy + 1.0)),
+                g.intersection(sg.box(minx - 1.0, miny - 1.0, maxx + 1.0, midy)),
+            )
+            for half in halves:
+                if half.is_empty or half.geom_type not in ("Polygon", "MultiPolygon"):
+                    continue
+                coords = []
+                hs = half.geoms if half.geom_type == "MultiPolygon" else [half]
+                for h in hs:
+                    coords.extend(h.exterior.coords)
+                if len(coords) < 3:
+                    continue
+                n = float(len(coords))
+                mx = sum(c[0] for c in coords) / n
+                my = sum(c[1] for c in coords) / n
+                cxx = cyy = cxy = 0.0
+                for c in coords:
+                    x = c[0] - mx
+                    y = c[1] - my
+                    cxx += x * x
+                    cyy += y * y
+                    cxy += x * y
+                deg = math.degrees(0.5 * math.atan2(2.0 * cxy, cxx - cyy)) % 180.0
+                for target in (45, 135):
+                    delta = abs((deg - target + 90.0) % 180.0 - 90.0)
+                    if delta <= 20.0:
+                        bins[target] += 1
+                        break
+    assert bins[45] >= 1 and bins[135] >= 1
 
 
 def test_kerf_bend_cutter_rejects_sub_nozzle_kerf():

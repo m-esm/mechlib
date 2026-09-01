@@ -10,7 +10,7 @@ from .meshutil import extrude_poly_z, from_manifold, to_manifold
 
 _NOZZLE_WIDTHS = (0.4, 0.8, 1.2)
 _AUXETIC_MODES = ("reentrant", "rotating_squares", "chiral")
-_KERF_MODES = ("lattice", "diagonal", "spiral", "wave", "hex", "cross")
+_KERF_MODES = ("lattice", "diagonal", "spiral", "wave", "hex", "cross", "chevron")
 _MAX_CELLS = 2500
 
 
@@ -989,6 +989,99 @@ def _cross_slit_polys(width, height, kerf, pitch, bridge, margin):
     return polys, n_rows, n_repeats
 
 
+def _chevron_leg_length(pitch, bridge, kerf):
+    """Size a 45° chevron leg so nested rows keep an uncut parallel strip.
+
+    Neighbouring rows' legs run parallel. The uncut strip between those
+    legs is at least ``kerf`` and preferably ``bridge``. If a longer leg
+    would close that strip, shorten rather than overlap.
+    """
+    half = math.sqrt(2.0)
+
+    def _from_web(web):
+        perp = web + kerf
+        delta = perp * half
+        # Short-leg branch: half in-row repeat sits below ``pitch``, so
+        # several chevrons still fit on a default panel.
+        y_half = pitch - delta
+        leg = (2.0 * y_half - bridge) / half
+        if y_half > 0.0 and leg >= 2.0 * kerf:
+            return leg
+        y_half = pitch + delta
+        leg = (2.0 * y_half - bridge) / half
+        if leg >= 2.0 * kerf:
+            return leg
+        return None
+
+    for web in (max(kerf, bridge), kerf):
+        leg = _from_web(web)
+        if leg is not None:
+            return leg
+    s = max(kerf, (pitch - kerf) / 2.0)
+    return s * half
+
+
+def _chevron_slit_polys(width, height, kerf, pitch, bridge, margin):
+    """Return nested 45° arrowhead slits (LivingHingeGenerator Chevron).
+
+    Each chevron is two 45° legs meeting at an apex, cut as one
+    LineString of three points buffered to ``kerf``. Rows stack along
+    local X at ``pitch`` (apex-to-apex). Chevrons in a row run along
+    local Y. Even rows point +X, odd rows point -X, and odd rows shift
+    by half the in-row repeat so neighbouring legs run parallel (nested
+    interrupted zigzag). The in-row gap between neighbouring chevron
+    ends is ``bridge``.
+    """
+    usable_w = width - 2.0 * margin
+    usable_h = height - 2.0 * margin
+    n_rows = max(1, int(usable_w // pitch))
+    leg = _chevron_leg_length(pitch, bridge, kerf)
+    s = leg / math.sqrt(2.0)
+    y_span = 2.0 * s
+    y_repeat = y_span + bridge
+    n_repeats = max(1, int(usable_h // y_repeat))
+    n_est = n_rows * (n_repeats + 1)
+    if n_est > _MAX_CELLS:
+        raise ValueError(
+            "kerf_bend_cutter(): chevron would cut %d slits (cap %d); "
+            "increase pitch/bridge or shrink the panel"
+            % (n_est, _MAX_CELLS))
+    x0 = -((n_rows - 1) * pitch) / 2.0
+    y0 = -((n_repeats - 1) * y_repeat) / 2.0
+    usable = sg.box(-usable_w / 2.0, -usable_h / 2.0,
+                    usable_w / 2.0, usable_h / 2.0)
+    half_k = kerf / 2.0
+    polys = []
+    for r in range(n_rows):
+        row_x = x0 + r * pitch
+        # Even: legs extend +X from the apex. Odd: legs extend -X, and
+        # the row is shifted half a repeat so legs nest in parallel.
+        sign = 1.0 if (r % 2 == 0) else -1.0
+        stagger = (y_repeat / 2.0) if (r % 2) else 0.0
+        for k in range(n_repeats):
+            y_c = y0 + k * y_repeat + stagger
+            apex = (row_x, y_c)
+            upper = (row_x + sign * s, y_c + s)
+            lower = (row_x + sign * s, y_c - s)
+            poly = sg.LineString([upper, apex, lower]).buffer(
+                half_k, cap_style=2)
+            if poly.is_empty:
+                continue
+            if not usable.contains(poly):
+                poly = poly.intersection(usable)
+                if poly.is_empty:
+                    continue
+                if poly.geom_type == "MultiPolygon":
+                    polys.extend(
+                        g for g in poly.geoms
+                        if g.geom_type == "Polygon" and not g.is_empty)
+                    continue
+                if poly.geom_type != "Polygon":
+                    continue
+            polys.append(poly)
+    return polys, n_rows, n_repeats
+
+
 def kerf_bend_cutter(mode="lattice", width=60.0, height=40.0, thickness=3.0,
                      kerf=0.5, pitch=6.0, bridge=1.0, angle_deg=45.0,
                      helix_shear=1.5, margin=4.0, nozzle=0.4):
@@ -1021,7 +1114,11 @@ def kerf_bend_cutter(mode="lattice", width=60.0, height=40.0, thickness=3.0,
     positive hex through-holes. ``mode="cross"`` cuts an X-lattice of
     lattice-family bars plus ~30 deg diagonal arms (LivingHingeGenerator
     Cross / KM Cross): arms from each bar endpoint interlock across
-    half-repeat-staggered rows into X intersections.
+    half-repeat-staggered rows into X intersections. ``mode="chevron"``
+    cuts nested 45 deg arrowhead slits (LivingHingeGenerator Chevron):
+    each chevron is one continuous cut of two 45 deg legs; rows
+    alternate direction and half-pitch offset so they interlock into
+    interrupted zigzag lines.
 
     Both FDM floors are validated, not just documented: ``kerf`` must be at
     least one ``nozzle`` width (0.4 mm) or the slicer's minimum feature size
@@ -1058,6 +1155,9 @@ def kerf_bend_cutter(mode="lattice", width=60.0, height=40.0, thickness=3.0,
             width, height, kerf, pitch, bridge, margin)
     elif mode == "cross":
         polys, n_rows, n_slits = _cross_slit_polys(
+            width, height, kerf, pitch, bridge, margin)
+    elif mode == "chevron":
+        polys, n_rows, n_slits = _chevron_slit_polys(
             width, height, kerf, pitch, bridge, margin)
     else:
         shear = helix_shear if mode == "spiral" else 0.0
