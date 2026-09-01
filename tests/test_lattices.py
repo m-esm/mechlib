@@ -169,7 +169,7 @@ def test_auxetic_panel_cell_cap_protects_the_playground():
 # kerf_bend_cutter
 # ---------------------------------------------------------------------------
 
-@pytest.mark.parametrize("mode", ["lattice", "diagonal", "spiral"])
+@pytest.mark.parametrize("mode", ["lattice", "diagonal", "spiral", "wave"])
 def test_kerf_bend_cutter_opens_clean_through_slits(mode):
     width, height, thickness = 60.0, 40.0, 3.0
     cutters = kerf_bend_cutter(mode=mode, width=width, height=height,
@@ -202,12 +202,33 @@ def test_kerf_bend_cutter_modes_produce_different_slit_layouts():
     lattice = kerf_bend_cutter(mode="lattice")[0]
     diagonal = kerf_bend_cutter(mode="diagonal")[0]
     spiral = kerf_bend_cutter(mode="spiral")[0]
-    # Rotating (diagonal) and shearing (spiral) the same base lattice must
+    wave = kerf_bend_cutter(mode="wave")[0]
+    # Rotating (diagonal), shearing (spiral), and waving the slits must
     # actually change the cut geometry, not just relabel it.
     assert abs(lattice.volume - diagonal.volume) > 1e-6 or (
         lattice.bounds.tolist() != diagonal.bounds.tolist())
     assert abs(lattice.volume - spiral.volume) > 1e-6 or (
         lattice.bounds.tolist() != spiral.bounds.tolist())
+    assert abs(lattice.volume - wave.volume) > 1e-6 or (
+        lattice.bounds.tolist() != wave.bounds.tolist())
+    assert abs(diagonal.volume - wave.volume) > 1e-6 or (
+        diagonal.bounds.tolist() != wave.bounds.tolist())
+    assert abs(spiral.volume - wave.volume) > 1e-6 or (
+        spiral.bounds.tolist() != wave.bounds.tolist())
+
+
+def test_kerf_bend_cutter_wave_slits_are_sinusoidal():
+    cutters = kerf_bend_cutter(mode="wave", kerf=0.5, pitch=6.0, bridge=1.0)
+    mesh = cutters[0]
+    assert mesh.metadata["mode"] == "wave"
+    for key in ("min_bend_radius_mm", "kerf", "pitch", "bridge"):
+        assert key in mesh.metadata
+    pieces = mesh.split(only_watertight=False)
+    assert len(pieces) > 1
+    # Straight lattice slits are kerf-wide in X; a sine channel's AABB is
+    # wider because of the wave amplitude.
+    x_spans = [p.extents[0] for p in pieces]
+    assert max(x_spans) > 1.5
 
 
 def test_kerf_bend_cutter_rejects_sub_nozzle_kerf():

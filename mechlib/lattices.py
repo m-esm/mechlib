@@ -10,7 +10,7 @@ from .meshutil import extrude_poly_z, from_manifold, to_manifold
 
 _NOZZLE_WIDTHS = (0.4, 0.8, 1.2)
 _AUXETIC_MODES = ("reentrant", "rotating_squares", "chiral")
-_KERF_MODES = ("lattice", "diagonal", "spiral")
+_KERF_MODES = ("lattice", "diagonal", "spiral", "wave")
 _MAX_CELLS = 2500
 
 
@@ -467,6 +467,54 @@ def _lattice_slit_polys(width, height, kerf, pitch, bridge, margin, shear):
     return polys, n_rows, n_slits
 
 
+def _wave_slit_polys(width, height, kerf, pitch, bridge, margin):
+    """Return staggered sinusoidal kerf channels (LivingHingeGenerator Wave).
+
+    Rows run along Y at ``pitch`` spacing in X, matching the lattice floors
+    and cell cap. Each slit is a sine-wave centreline buffered to ``kerf``
+    width, broken by ``bridge``-wide uncut webs. Odd rows are staggered half
+    a cell along Y and phase-shifted 180 deg so adjacent waves nest.
+    """
+    usable_w = width - 2.0 * margin
+    usable_h = height - 2.0 * margin
+    n_rows = max(1, int(usable_w // pitch))
+    seg_len = pitch - kerf
+    n_slits = max(1, int(usable_h // (seg_len + bridge)))
+    if n_rows * n_slits > _MAX_CELLS:
+        raise ValueError(
+            "kerf_bend_cutter(): wave would cut %d slits (cap %d); "
+            "increase pitch/bridge or shrink the panel"
+            % (n_rows * n_slits, _MAX_CELLS))
+    x0 = -((n_rows - 1) * pitch) / 2.0
+    y0 = -((n_slits - 1) * (seg_len + bridge)) / 2.0
+    # Stay inside the pitch so neighbouring rows do not collide.
+    amp = 0.22 * pitch
+    n_pts = max(16, int(math.ceil(seg_len / 0.4)))
+    polys = []
+    for r in range(n_rows):
+        row_x = x0 + r * pitch
+        stagger = (seg_len + bridge) / 2.0 if (r % 2) else 0.0
+        phase = math.pi if (r % 2) else 0.0
+        for s in range(n_slits):
+            y_c = y0 + s * (seg_len + bridge) + stagger
+            y_lo = y_c - seg_len / 2.0
+            y_hi = y_c + seg_len / 2.0
+            if y_lo < -usable_h / 2.0 - 1e-6:
+                continue
+            if y_hi > usable_h / 2.0 + 1e-6:
+                continue
+            pts = []
+            for i in range(n_pts + 1):
+                t = i / float(n_pts)
+                y = y_lo + t * seg_len
+                x = row_x + amp * math.sin(2.0 * math.pi * t + phase)
+                pts.append((x, y))
+            poly = sg.LineString(pts).buffer(kerf / 2.0, cap_style=2)
+            if not poly.is_empty:
+                polys.append(poly)
+    return polys, n_rows, n_slits
+
+
 def kerf_bend_cutter(mode="lattice", width=60.0, height=40.0, thickness=3.0,
                      kerf=0.5, pitch=6.0, bridge=1.0, angle_deg=45.0,
                      helix_shear=1.5, margin=4.0, nozzle=0.4):
@@ -488,6 +536,10 @@ def kerf_bend_cutter(mode="lattice", width=60.0, height=40.0, thickness=3.0,
     the lattice sideways by ``helix_shear`` mm, producing a helical slit
     pattern so the panel can be curled into a cylindrical wrap while also
     advancing along its axis, the way a spiral-cut tube is scored.
+    ``mode="wave"`` replaces the straight slits with sinusoidal living-hinge
+    channels (LivingHingeGenerator Wave / KM Wave): same staggered
+    row-and-bridge layout, but each kerf follows a sine so the hinge flexes
+    along a wavy web instead of a straight lattice.
 
     Both FDM floors are validated, not just documented: ``kerf`` must be at
     least one ``nozzle`` width (0.4 mm) or the slicer's minimum feature size
@@ -516,9 +568,13 @@ def kerf_bend_cutter(mode="lattice", width=60.0, height=40.0, thickness=3.0,
                           "less than half the panel's shorter side")
     _validate_kerf(kerf, bridge, pitch, nozzle)
 
-    shear = helix_shear if mode == "spiral" else 0.0
-    polys, n_rows, n_slits = _lattice_slit_polys(
-        width, height, kerf, pitch, bridge, margin, shear)
+    if mode == "wave":
+        polys, n_rows, n_slits = _wave_slit_polys(
+            width, height, kerf, pitch, bridge, margin)
+    else:
+        shear = helix_shear if mode == "spiral" else 0.0
+        polys, n_rows, n_slits = _lattice_slit_polys(
+            width, height, kerf, pitch, bridge, margin, shear)
     slit_polys = unary_union(polys)
     if mode == "diagonal":
         slit_polys = shapely.affinity.rotate(slit_polys, angle_deg, origin=(0, 0))

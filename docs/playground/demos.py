@@ -3394,7 +3394,7 @@ def demo_gasket_channel(
 # ---------------------------------------------------------------------------
 
 _LATTICE_AUXETIC_MODES = ("reentrant", "rotating_squares", "chiral")
-_LATTICE_KERF_MODES = ("lattice", "diagonal", "spiral")
+_LATTICE_KERF_MODES = ("lattice", "diagonal", "spiral", "wave")
 
 
 def demo_auxetic_panel(mode_index: int = 0, cell: float = 12.0,
@@ -3407,7 +3407,7 @@ def demo_auxetic_panel(mode_index: int = 0, cell: float = 12.0,
 
 def demo_kerf_bend_cutter(mode_index: int = 0, kerf: float = 0.5,
                           pitch: float = 6.0) -> MeshList:
-    mode = _LATTICE_KERF_MODES[mode_index % 3]
+    mode = _LATTICE_KERF_MODES[mode_index % len(_LATTICE_KERF_MODES)]
     width, height, thickness = 60.0, 40.0, 3.0
     cutters = kerf_bend_cutter(mode=mode, width=width, height=height,
                                thickness=thickness, kerf=kerf, pitch=pitch,
