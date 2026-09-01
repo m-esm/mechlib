@@ -22,7 +22,7 @@ Semi-primitives. No CadQuery. FDM: nozzle-multiple struts, wall>=0.8, kerf>=nozz
 | 04 | kerf_bend_cutter(mode="cross") | kerf | shipped | X-lattice bars + ~30° arms. THIS HOUR. |
 | 05 | kerf_bend_cutter(mode="chevron") | kerf | shipped | nested 45° arrowheads. SHA 2b34903 |
 | 06 | kerf_bend_cutter(mode="diamond") | kerf | shipped | elongated diamond-outline brick-wall slits. |
-| 07 | kerf_bend_cutter(mode="fishbone") | kerf | shipped | herringbone 45/135° rib pairs. SHA 20fbec2 |
+| 07 | kerf_bend_cutter(mode="fishbone") | kerf | shipped | herringbone 45/135° rib pairs. SHA 6bd5243 |
 | 08 | kerf_bend_cutter(mode="meander") | kerf | pending | MDPI meander |
 | 09 | kerf_bend_cutter(mode="biaxial") | kerf | pending | 2-axis wrap |
 | 10 | auxetic_panel(mode="arrowhead") | auxetic | pending | |
