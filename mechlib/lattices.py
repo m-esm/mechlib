@@ -11,7 +11,7 @@ from .meshutil import extrude_poly_z, from_manifold, to_manifold
 _NOZZLE_WIDTHS = (0.4, 0.8, 1.2)
 _AUXETIC_MODES = ("reentrant", "rotating_squares", "chiral")
 _KERF_MODES = ("lattice", "diagonal", "spiral", "wave", "hex", "cross", "chevron",
-               "diamond", "fishbone")
+               "diamond", "fishbone", "meander")
 _MAX_CELLS = 2500
 
 
@@ -1218,6 +1218,47 @@ def _fishbone_slit_polys(width, height, kerf, pitch, bridge, margin):
     return polys, n_rows, n_units
 
 
+def _meander_slit_polys(width, height, kerf, pitch, bridge, margin):
+    """Return one continuous square-wave meander-labyrinth kerf.
+
+    Parallel runs follow local Y at ``pitch`` spacing in X. Horizontal
+    U-turns join successive runs at alternating ends into one serpentine
+    LineString. The turn centreline is inset by ``bridge + kerf / 2`` from
+    the usable panel boundary, preserving a full uncut bridge beyond the
+    buffered slit at both margins.
+    """
+    usable_w = width - 2.0 * margin
+    usable_h = height - 2.0 * margin
+    n_runs = max(1, int(usable_w // pitch))
+    if n_runs > _MAX_CELLS:
+        raise ValueError(
+            "kerf_bend_cutter(): meander would cut %d parallel runs "
+            "(cap %d); increase pitch or shrink the panel"
+            % (n_runs, _MAX_CELLS))
+
+    half_k = kerf / 2.0
+    y_extent = usable_h / 2.0 - bridge - half_k
+    if y_extent <= 0:
+        raise ValueError(
+            "kerf_bend_cutter(): no meander slit fits inside the panel "
+            "margins while retaining the requested bridge")
+
+    x0 = -((n_runs - 1) * pitch) / 2.0
+    points = []
+    for r in range(n_runs):
+        x = x0 + r * pitch
+        y_start = -y_extent if (r % 2 == 0) else y_extent
+        y_end = -y_start
+        # Same-Y connection from the preceding run makes the square U-turn;
+        # alternating run direction moves the next turn to the opposite end.
+        points.append((x, y_start))
+        points.append((x, y_end))
+
+    poly = sg.LineString(points).buffer(
+        half_k, cap_style=2, join_style=2)
+    return [poly], n_runs, 1
+
+
 def kerf_bend_cutter(mode="lattice", width=60.0, height=40.0, thickness=3.0,
                      kerf=0.5, pitch=6.0, bridge=1.0, angle_deg=45.0,
                      helix_shear=1.5, margin=4.0, nozzle=0.4):
@@ -1262,7 +1303,10 @@ def kerf_bend_cutter(mode="lattice", width=60.0, height=40.0, thickness=3.0,
     cuts herringbone living-hinge ribs (LivingHingeGenerator Fishbone):
     separate 45/135 deg rib pairs approach a local-Y spine but leave an
     uncut ``bridge`` at the spine and rib tips, so they do not become
-    continuous chevrons or fuse into adjacent units.
+    continuous chevrons or fuse into adjacent units. ``mode="meander"``
+    cuts one continuous square-wave labyrinth: parallel local-Y runs are
+    joined by square U-turns at alternating ends while an uncut ``bridge``
+    remains at the panel margins.
 
     Both FDM floors are validated, not just documented: ``kerf`` must be at
     least one ``nozzle`` width (0.4 mm) or the slicer's minimum feature size
@@ -1308,6 +1352,9 @@ def kerf_bend_cutter(mode="lattice", width=60.0, height=40.0, thickness=3.0,
             width, height, kerf, pitch, bridge, margin)
     elif mode == "fishbone":
         polys, n_rows, n_slits = _fishbone_slit_polys(
+            width, height, kerf, pitch, bridge, margin)
+    elif mode == "meander":
+        polys, n_rows, n_slits = _meander_slit_polys(
             width, height, kerf, pitch, bridge, margin)
     else:
         shear = helix_shear if mode == "spiral" else 0.0

@@ -338,7 +338,7 @@ USE_CASES = {
         "hexagonal living-hinge edge slits, cross X-lattice living-hinge "
         "slits, chevron nested-arrowhead living-hinge slits, and "
         "diamond-outline brick-wall and fishbone herringbone living-hinge "
-        "slits."
+        "slits, plus a meander-labyrinth continuous square-wave kerf."
     ),
     'kinematic_coupling': (
         "Optical mounts, metrology fixtures, and any plate pair that must "

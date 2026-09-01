@@ -308,7 +308,7 @@ def test_isogrid_panel_cell_cap_protects_the_playground():
 # kerf_bend_cutter
 # ---------------------------------------------------------------------------
 
-@pytest.mark.parametrize("mode", ["lattice", "diagonal", "spiral", "wave", "hex", "cross", "chevron", "diamond", "fishbone"])
+@pytest.mark.parametrize("mode", ["lattice", "diagonal", "spiral", "wave", "hex", "cross", "chevron", "diamond", "fishbone", "meander"])
 def test_kerf_bend_cutter_opens_clean_through_slits(mode):
     width, height, thickness = 60.0, 40.0, 3.0
     cutters = kerf_bend_cutter(mode=mode, width=width, height=height,
@@ -323,10 +323,13 @@ def test_kerf_bend_cutter_opens_clean_through_slits(mode):
     assert_mesh(cut)
     assert cut.volume < slab.volume
 
-    # Every disjoint cut piece is a slit box whose narrow OBB dimension is
-    # exactly the requested kerf (never fused thinner by the boolean).
+    # Meander is deliberately one continuous labyrinth; the older patterns
+    # remain arrays of disjoint slit pieces.
     pieces = cutters[0].split(only_watertight=False)
-    assert len(pieces) > 1
+    if mode == "meander":
+        assert len(pieces) == 1
+    else:
+        assert len(pieces) > 1
     min_widths = [min(p.bounding_box_oriented.primitive.extents) for p in pieces]
     assert min(min_widths) >= 0.5 - 1e-6
 
@@ -352,6 +355,7 @@ def test_kerf_bend_cutter_modes_produce_different_slit_layouts():
     chevron = kerf_bend_cutter(mode="chevron")[0]
     diamond = kerf_bend_cutter(mode="diamond")[0]
     fishbone = kerf_bend_cutter(mode="fishbone")[0]
+    meander = kerf_bend_cutter(mode="meander")[0]
     # Rotating (diagonal), shearing (spiral), waving, hex-edge, cross
     # X-lattice, chevron arrowhead, and diamond brick-wall outline slits
     # must actually change the cut geometry, not just relabel it.
@@ -388,6 +392,35 @@ def test_kerf_bend_cutter_modes_produce_different_slit_layouts():
     assert _kerf_layout_differs(cross, fishbone)
     assert _kerf_layout_differs(chevron, fishbone)
     assert _kerf_layout_differs(diamond, fishbone)
+    assert _kerf_layout_differs(lattice, meander)
+    assert _kerf_layout_differs(wave, meander)
+    assert _kerf_layout_differs(fishbone, meander)
+
+
+def test_kerf_bend_cutter_meander_is_one_square_wave_labyrinth():
+    from mechlib.lattices import _meander_slit_polys
+
+    with pytest.raises(ValueError):
+        kerf_bend_cutter(mode="meander", kerf=0.2)
+    with pytest.raises(ValueError):
+        kerf_bend_cutter(mode="meander", bridge=0.5)
+
+    cutters = kerf_bend_cutter(mode="meander", kerf=0.5, pitch=6.0,
+                               bridge=1.0)
+    mesh = cutters[0]
+    assert mesh.metadata["mode"] == "meander"
+    assert len(mesh.split(only_watertight=False)) == 1
+    slab = boxc((60.0, 40.0, 3.0), center=(0.0, 0.0, 1.5))
+    cut = sub(slab, mesh)
+    assert len(cut.split(only_watertight=False)) == 1
+
+    polys, n_runs, n_paths = _meander_slit_polys(
+        60.0, 40.0, 0.5, 6.0, 1.0, 4.0)
+    assert len(polys) == n_paths == 1
+    assert n_runs > 1
+    # The buffered turn ends stop one bridge inside the usable Y boundary.
+    assert polys[0].bounds[1] == pytest.approx(-16.0 + 1.0)
+    assert polys[0].bounds[3] == pytest.approx(16.0 - 1.0)
 
 
 def test_kerf_bend_cutter_wave_slits_are_sinusoidal():
