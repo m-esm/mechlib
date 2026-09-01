@@ -2773,8 +2773,9 @@ def build():
                 "lattice for single-axis bending or a living hinge, diagonal for "
                 "torsion, spiral for a helical cylindrical wrap, wave for sinusoidal "
                 "channels, hex for hexagonal living-hinge edge slits, cross for "
-                "an X-lattice of bars plus ~30° diagonal arms, and chevron for "
-                "nested 45° arrowhead slits; all "
+                "an X-lattice of bars plus ~30° diagonal arms, chevron for "
+                "nested 45° arrowhead slits, and diamond for elongated "
+                "brick-wall outline rhombi; all "
                 "validate kerf width and bridge width against real FDM printability "
                 "floors before cutting."),
             "origin": "Gap-analysis wave v0.8.0; classic ref: kerf bending (laser-cut plywood furniture)",

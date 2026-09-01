@@ -308,7 +308,7 @@ def test_isogrid_panel_cell_cap_protects_the_playground():
 # kerf_bend_cutter
 # ---------------------------------------------------------------------------
 
-@pytest.mark.parametrize("mode", ["lattice", "diagonal", "spiral", "wave", "hex", "cross", "chevron"])
+@pytest.mark.parametrize("mode", ["lattice", "diagonal", "spiral", "wave", "hex", "cross", "chevron", "diamond"])
 def test_kerf_bend_cutter_opens_clean_through_slits(mode):
     width, height, thickness = 60.0, 40.0, 3.0
     cutters = kerf_bend_cutter(mode=mode, width=width, height=height,
@@ -350,9 +350,10 @@ def test_kerf_bend_cutter_modes_produce_different_slit_layouts():
     hex_ = kerf_bend_cutter(mode="hex")[0]
     cross = kerf_bend_cutter(mode="cross")[0]
     chevron = kerf_bend_cutter(mode="chevron")[0]
+    diamond = kerf_bend_cutter(mode="diamond")[0]
     # Rotating (diagonal), shearing (spiral), waving, hex-edge, cross
-    # X-lattice, and chevron arrowhead slits must actually change the
-    # cut geometry, not just relabel it.
+    # X-lattice, chevron arrowhead, and diamond brick-wall outline slits
+    # must actually change the cut geometry, not just relabel it.
     assert _kerf_layout_differs(lattice, diagonal)
     assert _kerf_layout_differs(lattice, spiral)
     assert _kerf_layout_differs(lattice, wave)
@@ -373,6 +374,13 @@ def test_kerf_bend_cutter_modes_produce_different_slit_layouts():
     assert _kerf_layout_differs(cross, chevron)
     assert _kerf_layout_differs(diagonal, chevron)
     assert _kerf_layout_differs(spiral, chevron)
+    assert _kerf_layout_differs(lattice, diamond)
+    assert _kerf_layout_differs(chevron, diamond)
+    assert _kerf_layout_differs(hex_, diamond)
+    assert _kerf_layout_differs(wave, diamond)
+    assert _kerf_layout_differs(cross, diamond)
+    assert _kerf_layout_differs(diagonal, diamond)
+    assert _kerf_layout_differs(spiral, diamond)
 
 
 def test_kerf_bend_cutter_wave_slits_are_sinusoidal():
@@ -508,6 +516,30 @@ def test_kerf_bend_cutter_chevron_slits_are_nested_arrowheads():
                         bins[target] += 1
                         break
     assert bins[45] >= 1 and bins[135] >= 1
+
+
+def test_kerf_bend_cutter_diamond_slits_are_brick_wall_outlines():
+    cutters = kerf_bend_cutter(mode="diamond", kerf=0.5, pitch=6.0, bridge=1.0)
+    mesh = cutters[0]
+    assert mesh.metadata["mode"] == "diamond"
+    for key in ("min_bend_radius_mm", "kerf", "pitch", "bridge"):
+        assert key in mesh.metadata
+    pieces = mesh.split(only_watertight=False)
+    assert len(pieces) > 1
+    # Lattice slits are kerf-wide in X. A 2:1 rhombus edge spans more
+    # than kerf in X. Edges are the four diagonals (~63/117), not a
+    # vertical lattice family.
+    x_spans = [p.extents[0] for p in pieces]
+    assert max(x_spans) > 1.5
+    bins = {63: 0, 117: 0}
+    for p in pieces:
+        deg = _principal_xy_deg(p)
+        for target in (63, 117):
+            delta = abs((deg - target + 90.0) % 180.0 - 90.0)
+            if delta <= 20.0:
+                bins[target] += 1
+                break
+    assert bins[63] >= 1 and bins[117] >= 1
 
 
 def test_kerf_bend_cutter_rejects_sub_nozzle_kerf():

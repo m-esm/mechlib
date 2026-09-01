@@ -10,7 +10,8 @@ from .meshutil import extrude_poly_z, from_manifold, to_manifold
 
 _NOZZLE_WIDTHS = (0.4, 0.8, 1.2)
 _AUXETIC_MODES = ("reentrant", "rotating_squares", "chiral")
-_KERF_MODES = ("lattice", "diagonal", "spiral", "wave", "hex", "cross", "chevron")
+_KERF_MODES = ("lattice", "diagonal", "spiral", "wave", "hex", "cross", "chevron",
+               "diamond")
 _MAX_CELLS = 2500
 
 
@@ -1082,6 +1083,77 @@ def _chevron_slit_polys(width, height, kerf, pitch, bridge, margin):
     return polys, n_rows, n_repeats
 
 
+def _diamond_slit_polys(width, height, kerf, pitch, bridge, margin):
+    """Return elongated diamond-outline brick-wall slits (LivingHingeGenerator Diamond).
+
+    Running-bond rhombi elongated along local Y (~2:1). ``pitch`` is the
+    short-axis (X) centre-to-centre. Each diamond is four kerf edges
+    shortened so an uncut ``bridge`` remains at the vertices (same
+    edge-inset as ``_hex_slit_polys``). Odd rows offset by half the
+    in-row pitch. Outlines, not filled diamonds.
+    """
+    usable_w = width - 2.0 * margin
+    usable_h = height - 2.0 * margin
+    # Diagonals: short = pitch (X), long = 2*pitch (Y). Row pitch is half
+    # the long diagonal so neighbouring rhombi share an edge in a
+    # running-bond tessellation.
+    dx = pitch
+    dy = 2.0 * pitch
+    pitch_x = pitch
+    pitch_y = dy / 2.0
+    n_cols = max(1, int(usable_w // pitch_x))
+    n_rows = max(1, int(usable_h // pitch_y))
+    n_slits_est = n_cols * n_rows * 4
+    if n_slits_est > _MAX_CELLS:
+        raise ValueError(
+            "kerf_bend_cutter(): diamond would cut %d slits (cap %d); "
+            "increase pitch/bridge or shrink the panel"
+            % (n_slits_est, _MAX_CELLS))
+    x0 = -((n_cols - 1) * pitch_x) / 2.0
+    y0 = -((n_rows - 1) * pitch_y) / 2.0
+    inset = bridge / 2.0
+    usable = sg.box(-usable_w / 2.0, -usable_h / 2.0,
+                    usable_w / 2.0, usable_h / 2.0)
+    seen = set()
+    polys = []
+    for j in range(n_rows):
+        row_off = (pitch_x / 2.0) if (j % 2) else 0.0
+        n_col = n_cols - 1 if (j % 2 and n_cols > 1) else n_cols
+        for i in range(n_col):
+            cx = x0 + i * pitch_x + row_off
+            cy = y0 + j * pitch_y
+            verts = (
+                (cx, cy + dy / 2.0),
+                (cx + dx / 2.0, cy),
+                (cx, cy - dy / 2.0),
+                (cx - dx / 2.0, cy),
+            )
+            for k in range(4):
+                p1 = verts[k]
+                p2 = verts[(k + 1) % 4]
+                a = (round(p1[0], 6), round(p1[1], 6))
+                b = (round(p2[0], 6), round(p2[1], 6))
+                key = (a, b) if a < b else (b, a)
+                if key in seen:
+                    continue
+                seen.add(key)
+                dxe = p2[0] - p1[0]
+                dye = p2[1] - p1[1]
+                length = math.hypot(dxe, dye)
+                if length <= bridge + 1e-9:
+                    continue
+                ux, uy = dxe / length, dye / length
+                q1 = (p1[0] + ux * inset, p1[1] + uy * inset)
+                q2 = (p2[0] - ux * inset, p2[1] - uy * inset)
+                poly = sg.LineString([q1, q2]).buffer(kerf / 2.0, cap_style=2)
+                if poly.is_empty:
+                    continue
+                if not usable.contains(poly):
+                    continue
+                polys.append(poly)
+    return polys, n_rows, n_cols
+
+
 def kerf_bend_cutter(mode="lattice", width=60.0, height=40.0, thickness=3.0,
                      kerf=0.5, pitch=6.0, bridge=1.0, angle_deg=45.0,
                      helix_shear=1.5, margin=4.0, nozzle=0.4):
@@ -1118,7 +1190,11 @@ def kerf_bend_cutter(mode="lattice", width=60.0, height=40.0, thickness=3.0,
     cuts nested 45 deg arrowhead slits (LivingHingeGenerator Chevron):
     each chevron is one continuous cut of two 45 deg legs; rows
     alternate direction and half-pitch offset so they interlock into
-    interrupted zigzag lines.
+    interrupted zigzag lines. ``mode="diamond"`` cuts elongated
+    diamond-outline brick-wall slits (LivingHingeGenerator Diamond): each
+    rhombus is four kerf edges with an uncut ``bridge`` at the vertices;
+    odd rows offset by half the in-row pitch. Diamonds elongate along Y
+    (~2:1); ``pitch`` is the short-axis centre-to-centre.
 
     Both FDM floors are validated, not just documented: ``kerf`` must be at
     least one ``nozzle`` width (0.4 mm) or the slicer's minimum feature size
@@ -1158,6 +1234,9 @@ def kerf_bend_cutter(mode="lattice", width=60.0, height=40.0, thickness=3.0,
             width, height, kerf, pitch, bridge, margin)
     elif mode == "chevron":
         polys, n_rows, n_slits = _chevron_slit_polys(
+            width, height, kerf, pitch, bridge, margin)
+    elif mode == "diamond":
+        polys, n_rows, n_slits = _diamond_slit_polys(
             width, height, kerf, pitch, bridge, margin)
     else:
         shear = helix_shear if mode == "spiral" else 0.0

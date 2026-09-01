@@ -8,7 +8,7 @@ Semi-primitives. No CadQuery. FDM: nozzle-multiple struts, wall>=0.8, kerf>=nozz
 
 - patterns: polar_ring, lighten_cell_poly (rect|hex), lighten_grid_centres, directed_holes
 - auxetic_panel: reentrant, rotating_squares, chiral (hexachiral is a dup, vetoed)
-- kerf_bend_cutter: lattice, diagonal, spiral, wave, hex, cross, chevron (this hour)
+- kerf_bend_cutter: lattice, diagonal, spiral, wave, hex, cross, chevron, diamond
 - honeycomb_panel (47e3460)
 - isogrid_panel (3df5609)
 
@@ -21,7 +21,7 @@ Semi-primitives. No CadQuery. FDM: nozzle-multiple struts, wall>=0.8, kerf>=nozz
 | 03 | kerf_bend_cutter(mode="hex") | kerf | shipped | SHA 7d0cb2a hex living-hinge edge slits |
 | 04 | kerf_bend_cutter(mode="cross") | kerf | shipped | X-lattice bars + ~30° arms. THIS HOUR. |
 | 05 | kerf_bend_cutter(mode="chevron") | kerf | shipped | nested 45° arrowheads. SHA 2b34903 |
-| 06 | kerf_bend_cutter(mode="diamond") | kerf | pending | |
+| 06 | kerf_bend_cutter(mode="diamond") | kerf | shipped | elongated diamond-outline brick-wall slits. |
 | 07 | kerf_bend_cutter(mode="fishbone") | kerf | pending | |
 | 08 | kerf_bend_cutter(mode="meander") | kerf | pending | MDPI meander |
 | 09 | kerf_bend_cutter(mode="biaxial") | kerf | pending | 2-axis wrap |
