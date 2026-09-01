@@ -337,7 +337,8 @@ USE_CASES = {
         "or twist from a flat print, including sinusoidal wave slits, "
         "hexagonal living-hinge edge slits, cross X-lattice living-hinge "
         "slits, chevron nested-arrowhead living-hinge slits, and "
-        "diamond-outline brick-wall living-hinge slits."
+        "diamond-outline brick-wall and fishbone herringbone living-hinge "
+        "slits."
     ),
     'kinematic_coupling': (
         "Optical mounts, metrology fixtures, and any plate pair that must "

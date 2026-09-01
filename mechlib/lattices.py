@@ -11,7 +11,7 @@ from .meshutil import extrude_poly_z, from_manifold, to_manifold
 _NOZZLE_WIDTHS = (0.4, 0.8, 1.2)
 _AUXETIC_MODES = ("reentrant", "rotating_squares", "chiral")
 _KERF_MODES = ("lattice", "diagonal", "spiral", "wave", "hex", "cross", "chevron",
-               "diamond")
+               "diamond", "fishbone")
 _MAX_CELLS = 2500
 
 
@@ -1154,6 +1154,70 @@ def _diamond_slit_polys(width, height, kerf, pitch, bridge, margin):
     return polys, n_rows, n_cols
 
 
+def _fishbone_slit_polys(width, height, kerf, pitch, bridge, margin):
+    """Return paired 45 deg fish-skeleton ribs (LivingHingeGenerator Fishbone).
+
+    Columns lie along local Y and repeat across local X at ``pitch``. Each
+    unit has separate 45/135 deg ribs that approach a virtual point on the
+    Y spine without joining, leaving an uncut ``bridge`` there. Successive
+    units reverse along Y to form a herringbone, while shortened rib tips
+    preserve the web between neighbouring units and columns. This differs
+    from chevron's continuous two-leg arrowheads and alternating columns.
+    """
+    usable_w = width - 2.0 * margin
+    usable_h = height - 2.0 * margin
+    n_rows = max(1, int(usable_w // pitch))
+    n_units = max(1, int(usable_h // pitch))
+    n_est = n_rows * n_units * 2
+    if n_est > _MAX_CELLS:
+        raise ValueError(
+            "kerf_bend_cutter(): fishbone would cut %d slits (cap %d); "
+            "increase pitch/bridge or shrink the panel"
+            % (n_est, _MAX_CELLS))
+
+    x0 = -((n_rows - 1) * pitch) / 2.0
+    y0 = -((n_units - 1) * pitch) / 2.0
+    # Buffer boundaries, rather than just centreline ends, retain roughly
+    # ``bridge`` at the virtual spine and at neighbouring rib tips.
+    inner = (bridge + kerf) / 2.0
+    outer = (pitch - bridge - kerf) / 2.0
+    if outer <= inner:
+        raise ValueError(
+            "kerf_bend_cutter(): fishbone pitch must exceed "
+            "2 * (bridge + kerf) so each rib has positive length")
+    usable = sg.box(-usable_w / 2.0, -usable_h / 2.0,
+                    usable_w / 2.0, usable_h / 2.0)
+    half_k = kerf / 2.0
+    polys = []
+    for r in range(n_rows):
+        spine_x = x0 + r * pitch
+        for k in range(n_units):
+            spine_y = y0 + k * pitch
+            y_sign = 1.0 if (k % 2 == 0) else -1.0
+            for x_sign in (-1.0, 1.0):
+                p1 = (spine_x + x_sign * inner,
+                      spine_y + y_sign * inner)
+                p2 = (spine_x + x_sign * outer,
+                      spine_y + y_sign * outer)
+                poly = sg.LineString([p1, p2]).buffer(
+                    half_k, cap_style=2)
+                if poly.is_empty:
+                    continue
+                if not usable.contains(poly):
+                    poly = poly.intersection(usable)
+                    if poly.is_empty:
+                        continue
+                    if poly.geom_type == "MultiPolygon":
+                        polys.extend(
+                            g for g in poly.geoms
+                            if g.geom_type == "Polygon" and not g.is_empty)
+                        continue
+                    if poly.geom_type != "Polygon":
+                        continue
+                polys.append(poly)
+    return polys, n_rows, n_units
+
+
 def kerf_bend_cutter(mode="lattice", width=60.0, height=40.0, thickness=3.0,
                      kerf=0.5, pitch=6.0, bridge=1.0, angle_deg=45.0,
                      helix_shear=1.5, margin=4.0, nozzle=0.4):
@@ -1194,7 +1258,11 @@ def kerf_bend_cutter(mode="lattice", width=60.0, height=40.0, thickness=3.0,
     diamond-outline brick-wall slits (LivingHingeGenerator Diamond): each
     rhombus is four kerf edges with an uncut ``bridge`` at the vertices;
     odd rows offset by half the in-row pitch. Diamonds elongate along Y
-    (~2:1); ``pitch`` is the short-axis centre-to-centre.
+    (~2:1); ``pitch`` is the short-axis centre-to-centre. ``mode="fishbone"``
+    cuts herringbone living-hinge ribs (LivingHingeGenerator Fishbone):
+    separate 45/135 deg rib pairs approach a local-Y spine but leave an
+    uncut ``bridge`` at the spine and rib tips, so they do not become
+    continuous chevrons or fuse into adjacent units.
 
     Both FDM floors are validated, not just documented: ``kerf`` must be at
     least one ``nozzle`` width (0.4 mm) or the slicer's minimum feature size
@@ -1237,6 +1305,9 @@ def kerf_bend_cutter(mode="lattice", width=60.0, height=40.0, thickness=3.0,
             width, height, kerf, pitch, bridge, margin)
     elif mode == "diamond":
         polys, n_rows, n_slits = _diamond_slit_polys(
+            width, height, kerf, pitch, bridge, margin)
+    elif mode == "fishbone":
+        polys, n_rows, n_slits = _fishbone_slit_polys(
             width, height, kerf, pitch, bridge, margin)
     else:
         shear = helix_shear if mode == "spiral" else 0.0

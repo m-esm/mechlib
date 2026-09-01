@@ -308,7 +308,7 @@ def test_isogrid_panel_cell_cap_protects_the_playground():
 # kerf_bend_cutter
 # ---------------------------------------------------------------------------
 
-@pytest.mark.parametrize("mode", ["lattice", "diagonal", "spiral", "wave", "hex", "cross", "chevron", "diamond"])
+@pytest.mark.parametrize("mode", ["lattice", "diagonal", "spiral", "wave", "hex", "cross", "chevron", "diamond", "fishbone"])
 def test_kerf_bend_cutter_opens_clean_through_slits(mode):
     width, height, thickness = 60.0, 40.0, 3.0
     cutters = kerf_bend_cutter(mode=mode, width=width, height=height,
@@ -351,6 +351,7 @@ def test_kerf_bend_cutter_modes_produce_different_slit_layouts():
     cross = kerf_bend_cutter(mode="cross")[0]
     chevron = kerf_bend_cutter(mode="chevron")[0]
     diamond = kerf_bend_cutter(mode="diamond")[0]
+    fishbone = kerf_bend_cutter(mode="fishbone")[0]
     # Rotating (diagonal), shearing (spiral), waving, hex-edge, cross
     # X-lattice, chevron arrowhead, and diamond brick-wall outline slits
     # must actually change the cut geometry, not just relabel it.
@@ -381,6 +382,12 @@ def test_kerf_bend_cutter_modes_produce_different_slit_layouts():
     assert _kerf_layout_differs(cross, diamond)
     assert _kerf_layout_differs(diagonal, diamond)
     assert _kerf_layout_differs(spiral, diamond)
+    assert _kerf_layout_differs(lattice, fishbone)
+    assert _kerf_layout_differs(wave, fishbone)
+    assert _kerf_layout_differs(hex_, fishbone)
+    assert _kerf_layout_differs(cross, fishbone)
+    assert _kerf_layout_differs(chevron, fishbone)
+    assert _kerf_layout_differs(diamond, fishbone)
 
 
 def test_kerf_bend_cutter_wave_slits_are_sinusoidal():
@@ -540,6 +547,30 @@ def test_kerf_bend_cutter_diamond_slits_are_brick_wall_outlines():
                 bins[target] += 1
                 break
     assert bins[63] >= 1 and bins[117] >= 1
+
+
+def test_kerf_bend_cutter_fishbone_slits_have_paired_diagonal_ribs():
+    cutters = kerf_bend_cutter(mode="fishbone", kerf=0.5, pitch=6.0,
+                               bridge=1.0)
+    mesh = cutters[0]
+    assert mesh.metadata["mode"] == "fishbone"
+    for key in ("min_bend_radius_mm", "kerf", "pitch", "bridge",
+                "n_rows", "n_slits_per_row"):
+        assert key in mesh.metadata
+    pieces = mesh.split(only_watertight=False)
+    assert len(pieces) > 1
+    # Fishbone ribs span X and occur as separate 45/135 deg families,
+    # unlike the kerf-wide vertical lattice and continuous chevrons.
+    assert max(p.extents[0] for p in pieces) > 1.5
+    bins = {45: 0, 135: 0}
+    for p in pieces:
+        deg = _principal_xy_deg(p)
+        for target in (45, 135):
+            delta = abs((deg - target + 90.0) % 180.0 - 90.0)
+            if delta <= 20.0:
+                bins[target] += 1
+                break
+    assert bins[45] >= 1 and bins[135] >= 1
 
 
 def test_kerf_bend_cutter_rejects_sub_nozzle_kerf():

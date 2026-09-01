@@ -3402,7 +3402,7 @@ def demo_gasket_channel(
 # ---------------------------------------------------------------------------
 
 _LATTICE_AUXETIC_MODES = ("reentrant", "rotating_squares", "chiral")
-_LATTICE_KERF_MODES = ("lattice", "diagonal", "spiral", "wave", "hex", "cross", "chevron", "diamond")
+_LATTICE_KERF_MODES = ("lattice", "diagonal", "spiral", "wave", "hex", "cross", "chevron", "diamond", "fishbone")
 
 
 def demo_auxetic_panel(mode_index: int = 0, cell: float = 12.0,
