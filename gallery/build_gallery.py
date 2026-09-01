@@ -10,6 +10,7 @@ import subprocess
 import sys
 import tempfile
 import time
+from datetime import datetime, timezone
 from pathlib import Path
 
 import numpy as np
@@ -3225,6 +3226,17 @@ def build():
         },
     ]
 
+    previous_added = {}
+    index_path = OUTPUT_DIR / "index.json"
+    if index_path.exists():
+        try:
+            old = json.loads(index_path.read_text(encoding="utf-8"))
+            for old_m in old.get("models", []):
+                if old_m.get("file") and old_m.get("added"):
+                    previous_added[old_m["file"]] = old_m["added"]
+        except (OSError, json.JSONDecodeError, TypeError):
+            previous_added = {}
+
     manifest_models = []
     built_demos = []
     animated = []
@@ -3266,6 +3278,8 @@ def build():
             model["file"], model.get("description", ""))
         # Drop any leftover code-usage field from older index builds.
         model.pop("usage", None)
+        model["added"] = previous_added.get(model["file"]) or datetime.now(
+            timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
         manifest_models.append(model)
 
     unbuilt = set(ANIMATE) - set(built_demos)
@@ -3358,7 +3372,6 @@ def build():
         "models": manifest_models,
         "utilities": utilities,
     }
-    index_path = OUTPUT_DIR / "index.json"
     index_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     print("wrote %s" % index_path.relative_to(ROOT))
 

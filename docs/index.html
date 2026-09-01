@@ -1200,6 +1200,7 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
         </div>
         <button class="chip" id="animated-only" type="button" aria-pressed="false">In motion</button>
         <button class="chip" id="tunable-only" type="button" aria-pressed="false">Tunable only</button>
+        <button class="chip" id="latest-added" type="button" aria-pressed="false">Latest added</button>
         <span class="result-count" id="result-count"></span>
       </div>
       <div class="tool-row" id="group-row" aria-label="Shelf"></div>
@@ -1673,7 +1674,7 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
     // ------------------------------------------------------------------
     // Filtering: free text + category + tunable-only, reflected in the hash
     // ------------------------------------------------------------------
-    const filters = { q: "", group: "", category: "", tunable: false, animated: false };
+    const filters = { q: "", group: "", category: "", tunable: false, animated: false, latest: false };
     const sections = new Map();
     const searchInput = document.querySelector("#search");
     const groupRow = document.querySelector("#group-row");
@@ -1681,7 +1682,31 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
     const resultCount = document.querySelector("#result-count");
     const tunableToggle = document.querySelector("#tunable-only");
     const animatedToggle = document.querySelector("#animated-only");
+    const latestToggle = document.querySelector("#latest-added");
     let emptyState = null;
+    let latestSection = null;
+
+    function ensureLatestSection() {
+      if (latestSection) return latestSection;
+      latestSection = document.createElement("section");
+      latestSection.className = "cat-section";
+      latestSection.id = "latest-section";
+      const head = document.createElement("div");
+      head.className = "cat-head";
+      const countLabel = makeTextElement("span", "cat-count", "");
+      head.append(
+        makeTextElement("h2", "", "Latest added"),
+        countLabel,
+        makeTextElement("p", "cat-blurb", "Newest gallery cards first.")
+      );
+      const grid = document.createElement("div");
+      grid.className = "gallery-grid";
+      latestSection.append(head, grid);
+      latestSection._countLabel = countLabel;
+      latestSection._grid = grid;
+      gallery.prepend(latestSection);
+      return latestSection;
+    }
 
     function matches(view) {
       const model = view.model;
@@ -1696,18 +1721,43 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
     function applyFilters() {
       let shown = 0;
       const perCategory = new Map();
-      for (const view of views) {
-        const ok = matches(view);
-        view.card.hidden = !ok;
-        if (ok) {
-          shown += 1;
-          perCategory.set(view.model.category, (perCategory.get(view.model.category) || 0) + 1);
+      if (filters.latest) {
+        const host = ensureLatestSection();
+        host.hidden = false;
+        const sorted = views.slice().sort((a, b) => {
+          const da = a.model.added || "";
+          const db = b.model.added || "";
+          if (da !== db) return db.localeCompare(da);
+          return a.model.name.localeCompare(b.model.name);
+        });
+        for (const view of sorted) {
+          const ok = matches(view);
+          view.card.hidden = !ok;
+          host._grid.append(view.card);
+          if (ok) {
+            shown += 1;
+            perCategory.set(view.model.category, (perCategory.get(view.model.category) || 0) + 1);
+          }
         }
-      }
-      for (const [key, section] of sections) {
-        const count = perCategory.get(key) || 0;
-        section.element.hidden = count === 0;
-        section.countLabel.textContent = `${count} ${count === 1 ? "part" : "parts"}`;
+        host._countLabel.textContent = `${shown} ${shown === 1 ? "part" : "parts"}`;
+        for (const [, section] of sections) section.element.hidden = true;
+      } else {
+        if (latestSection) latestSection.hidden = true;
+        for (const view of views) {
+          const host = sections.get(view.model.category);
+          if (host) host.grid.append(view.card);
+          const ok = matches(view);
+          view.card.hidden = !ok;
+          if (ok) {
+            shown += 1;
+            perCategory.set(view.model.category, (perCategory.get(view.model.category) || 0) + 1);
+          }
+        }
+        for (const [key, section] of sections) {
+          const count = perCategory.get(key) || 0;
+          section.element.hidden = count === 0;
+          section.countLabel.textContent = `${count} ${count === 1 ? "part" : "parts"}`;
+        }
       }
       for (const chip of categoryRow.querySelectorAll(".chip")) {
         const key = chip.dataset.category;
@@ -1722,10 +1772,11 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
       }
       tunableToggle.setAttribute("aria-pressed", String(filters.tunable));
       animatedToggle.setAttribute("aria-pressed", String(filters.animated));
+      latestToggle.setAttribute("aria-pressed", String(filters.latest));
 
       let utilShown = 0;
       const utilitiesRelevant =
-        !filters.tunable && !filters.animated && !filters.category && !filters.group;
+        !filters.tunable && !filters.animated && !filters.category && !filters.group && !filters.latest;
       for (const item of utilityItems) {
         const ok = utilitiesRelevant && (!filters.q || item.haystack.includes(filters.q));
         item.card.hidden = !ok;
@@ -1755,6 +1806,7 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
       if (filters.category) parts.push(`cat=${filters.category}`);
       if (filters.tunable) parts.push("tunable=1");
       if (filters.animated) parts.push("animated=1");
+      if (filters.latest) parts.push("sort=latest");
       const next = parts.length ? `#${parts.join("&")}` : " ";
       history.replaceState(null, "", next === " " ? location.pathname + location.search : next);
     }
@@ -1839,6 +1891,10 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
       });
       animatedToggle.addEventListener("click", () => {
         filters.animated = !filters.animated;
+        applyFilters();
+      });
+      latestToggle.addEventListener("click", () => {
+        filters.latest = !filters.latest;
         applyFilters();
       });
       window.addEventListener("keydown", (event) => {
@@ -2777,6 +2833,7 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
           if (initial.cat) filters.category = initial.cat;
           if (initial.tunable) filters.tunable = true;
           if (initial.animated) filters.animated = true;
+          if (initial.sort === "latest") filters.latest = true;
         }
         applyFilters();
         suppressHash = false;

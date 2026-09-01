@@ -1914,7 +1914,8 @@
           }
         }
       },
-      "applications": "Walking-robot legs, windshield-wiper kinematics, folding-furniture hinges, and any hobby build that needs a guided coupler curve."
+      "applications": "Walking-robot legs, windshield-wiper kinematics, folding-furniture hinges, and any hobby build that needs a guided coupler curve.",
+      "added": "2026-08-06T10:19:37+03:00"
     },
     {
       "file": "toggle_clamp_demo.glb",
@@ -3315,7 +3316,8 @@
           }
         }
       },
-      "applications": "Welding and woodworking hold-downs, drill-press fixtures, and CNC fixture clamps that must lock solid without continuous force."
+      "applications": "Welding and woodworking hold-downs, drill-press fixtures, and CNC fixture clamps that must lock solid without continuous force.",
+      "added": "2026-08-06T10:19:37+03:00"
     },
     {
       "file": "scotch_yoke_demo.glb",
@@ -3896,7 +3898,8 @@
           }
         }
       },
-      "applications": "Pneumatic and hydraulic valve actuators, shaper tables, and any drive that wants pure simple-harmonic stroke from a rotating shaft."
+      "applications": "Pneumatic and hydraulic valve actuators, shaper tables, and any drive that wants pure simple-harmonic stroke from a rotating shaft.",
+      "added": "2026-08-06T10:19:37+03:00"
     },
     {
       "file": "quick_return_demo.glb",
@@ -4477,7 +4480,8 @@
           }
         }
       },
-      "applications": "Metal shapers and slotters, packing machines, and press feeders where the return stroke should run faster than the working stroke."
+      "applications": "Metal shapers and slotters, packing machines, and press feeders where the return stroke should run faster than the working stroke.",
+      "added": "2026-08-06T10:19:37+03:00"
     },
     {
       "file": "peaucellier_linkage_demo.glb",
@@ -7498,7 +7502,8 @@
           }
         }
       },
-      "applications": "Straight-line guides without a slideway: instrument mechanisms, historical drafting machines, and teaching models of exact motion."
+      "applications": "Straight-line guides without a slideway: instrument mechanisms, historical drafting machines, and teaching models of exact motion.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "watt_linkage_demo.glb",
@@ -9169,7 +9174,8 @@
           }
         }
       },
-      "applications": "Beam-engine parallel motion (historical), solid-axle rear suspension links, and approximate straight-line guides in vehicles."
+      "applications": "Beam-engine parallel motion (historical), solid-axle rear suspension links, and approximate straight-line guides in vehicles.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "sarrus_linkage_demo.glb",
@@ -11650,7 +11656,8 @@
           }
         }
       },
-      "applications": "Lift platforms and parallel stages that must rise without twisting; FDM-friendly alternative to linear rails for pure vertical travel."
+      "applications": "Lift platforms and parallel stages that must rise without twisting; FDM-friendly alternative to linear rails for pure vertical travel.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "pantograph_linkage_demo.glb",
@@ -14131,7 +14138,8 @@
           }
         }
       },
-      "applications": "Engraving and sign-cutting pantographs, scale-copying arms, and any setup that traces a shape at a fixed scale ratio."
+      "applications": "Engraving and sign-cutting pantographs, scale-copying arms, and any setup that traces a shape at a fixed scale ratio.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "lazy_tongs_demo.glb",
@@ -18772,7 +18780,8 @@
           }
         }
       },
-      "applications": "Lazy-tongs riveters, scissor lifts, folding gates, and extendable booms that multiply a short squeeze into a long straight stroke."
+      "applications": "Lazy-tongs riveters, scissor lifts, folding gates, and extendable booms that multiply a short squeeze into a long straight stroke.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "slider_crank_demo.glb",
@@ -20173,7 +20182,8 @@
           }
         }
       },
-      "applications": "Piston engines and compressors, bicycle pumps, shapers, and every classic rotary-to-reciprocating conversion."
+      "applications": "Piston engines and compressors, bicycle pumps, shapers, and every classic rotary-to-reciprocating conversion.",
+      "added": "2026-08-07T15:05:45+03:00"
     },
     {
       "file": "chebyshev_linkage_demo.glb",
@@ -21844,7 +21854,8 @@
           }
         }
       },
-      "applications": "Straight-line walking and leg mechanisms, Russian school teaching models, and approximate linear guides with only revolute joints."
+      "applications": "Straight-line walking and leg mechanisms, Russian school teaching models, and approximate linear guides with only revolute joints.",
+      "added": "2026-08-07T15:05:45+03:00"
     },
     {
       "file": "scott_russell_linkage_demo.glb",
@@ -23515,7 +23526,8 @@
           }
         }
       },
-      "applications": "Compact exact straight-line guides, early steam and marine parallel motions, and instruments that can afford one sliding joint."
+      "applications": "Compact exact straight-line guides, early steam and marine parallel motions, and instruments that can afford one sliding joint.",
+      "added": "2026-08-07T15:05:45+03:00"
     },
     {
       "file": "bell_crank_demo.glb",
@@ -25456,7 +25468,8 @@
           }
         }
       },
-      "applications": "Brake and clutch pedals, throttle and shift linkages, print-bed levellers, and any force redirect through a fixed angle."
+      "applications": "Brake and clutch pedals, throttle and shift linkages, print-bed levellers, and any force redirect through a fixed angle.",
+      "added": "2026-08-07T15:05:45+03:00"
     },
     {
       "file": "iris_diaphragm_demo.glb",
@@ -25510,7 +25523,8 @@
           }
         ]
       },
-      "applications": "Camera and projector apertures, laser beam expanders, soft-robot grippers, and printed iris valves for light or air."
+      "applications": "Camera and projector apertures, laser beam expanders, soft-robot grippers, and printed iris valves for light or air.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "collet_chuck_demo.glb",
@@ -25564,7 +25578,8 @@
           }
         ]
       },
-      "applications": "CNC spindle and router collets, lathe workholding, and any on-axis grip that must close concentrically on a round tool or stock."
+      "applications": "CNC spindle and router collets, lathe workholding, and any on-axis grip that must close concentrically on a round tool or stock.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "eccentric_cam_clamp_demo.glb",
@@ -26165,7 +26180,8 @@
           }
         }
       },
-      "applications": "Quick-release workholding on mills and fixtures, bicycle seat and stem clamps, and over-centre cam locks on jigs."
+      "applications": "Quick-release workholding on mills and fixtures, bicycle seat and stem clamps, and over-centre cam locks on jigs.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "bellows_suction_cup_demo.glb",
@@ -26184,7 +26200,8 @@
         20.9,
         19.6
       ],
-      "applications": "TPU pick-and-place end effectors and vacuum handling of smooth parts, with a hose-barb stem for the vacuum line."
+      "applications": "TPU pick-and-place end effectors and vacuum handling of smooth parts, with a hose-barb stem for the vacuum line.",
+      "added": "2026-08-08T02:13:24+03:00"
     },
     {
       "file": "plate_cam_demo.glb",
@@ -26795,7 +26812,8 @@
           }
         }
       },
-      "applications": "Model engines and automata valve timing, packaging-machine motion programs, and any radial cam that must follow a prescribed lift law."
+      "applications": "Model engines and automata valve timing, packaging-machine motion programs, and any radial cam that must follow a prescribed lift law.",
+      "added": "2026-08-06T10:19:37+03:00"
     },
     {
       "file": "snail_cam_demo.glb",
@@ -26859,7 +26877,8 @@
           }
         ]
       },
-      "applications": "Clock strike trains, trip hammers, and slow-wind sudden-release mechanisms that need one drop per revolution."
+      "applications": "Clock strike trains, trip hammers, and slow-wind sudden-release mechanisms that need one drop per revolution.",
+      "added": "2026-08-06T10:19:37+03:00"
     },
     {
       "file": "heart_cam_demo.glb",
@@ -27460,7 +27479,8 @@
           }
         }
       },
-      "applications": "Chronograph hand reset (heart piece), sewing-machine take-up, and any cam that must return a pointer to a unique zero."
+      "applications": "Chronograph hand reset (heart piece), sewing-machine take-up, and any cam that must return a pointer to a unique zero.",
+      "added": "2026-08-06T10:19:37+03:00"
     },
     {
       "file": "barrel_cam_demo.glb",
@@ -28051,7 +28071,8 @@
           }
         }
       },
-      "applications": "Fishing-reel level winds, tool-changer drums, textile traverse mechanisms, and cylindrical groove cams for axial programs."
+      "applications": "Fishing-reel level winds, tool-changer drums, textile traverse mechanisms, and cylindrical groove cams for axial programs.",
+      "added": "2026-08-06T10:19:37+03:00"
     },
     {
       "file": "face_cam_demo.glb",
@@ -28372,7 +28393,8 @@
           }
         }
       },
-      "applications": "Automotive and textile end cams, axial followers on face tracks, and compact lift programs normal to a disc face."
+      "applications": "Automotive and textile end cams, axial followers on face tracks, and compact lift programs normal to a disc face.",
+      "added": "2026-08-07T15:05:45+03:00"
     },
     {
       "file": "roller_follower_demo.glb",
@@ -28391,7 +28413,8 @@
         23.3,
         14.0
       ],
-      "applications": "Valve lifters, pump diaphragm drives, and automata: the pivoted roller lever that rides plate, heart, and snail cams."
+      "applications": "Valve lifters, pump diaphragm drives, and automata: the pivoted roller lever that rides plate, heart, and snail cams.",
+      "added": "2026-08-08T02:13:24+03:00"
     },
     {
       "file": "geneva_pair_demo.glb",
@@ -30840,7 +30863,8 @@
           }
         }
       },
-      "applications": "Movie and film projectors, assembly turrets, indexing tables, and any station that needs dwell then a fixed step per revolution."
+      "applications": "Movie and film projectors, assembly turrets, indexing tables, and any station that needs dwell then a fixed step per revolution.",
+      "added": "2026-08-06T10:19:37+03:00"
     },
     {
       "file": "escapement_demo.glb",
@@ -31970,7 +31994,8 @@
         },
         "closed": true
       },
-      "applications": "Longcase and printed clocks, metronomes, and any build that must release one tooth at a time under a pendulum or balance."
+      "applications": "Longcase and printed clocks, metronomes, and any build that must release one tooth at a time under a pendulum or balance.",
+      "added": "2026-08-06T10:19:37+03:00"
     },
     {
       "file": "intermittent_gear_pair_demo.glb",
@@ -32014,7 +32039,8 @@
           }
         ]
       },
-      "applications": "Mechanical counters, washing-machine timers, odometers, and digit-advance mechanisms that step once per input turn."
+      "applications": "Mechanical counters, washing-machine timers, odometers, and digit-advance mechanisms that step once per input turn.",
+      "added": "2026-08-06T10:19:37+03:00"
     },
     {
       "file": "detent_pair_demo.glb",
@@ -32033,7 +32059,8 @@
         35.7,
         6.0
       ],
-      "applications": "Pan-tilt heads, adjustable arm joints, rotary selectors, and folding-leg locks that click positively into position."
+      "applications": "Pan-tilt heads, adjustable arm joints, rotary selectors, and folding-leg locks that click positively into position.",
+      "added": "2026-08-08T02:13:24+03:00"
     },
     {
       "file": "star_wheel_demo.glb",
@@ -32052,7 +32079,8 @@
         65.4,
         8.0
       ],
-      "applications": "Filling, capping, and sorting machines that meter bottles, cans, or bearings at a fixed pitch."
+      "applications": "Filling, capping, and sorting machines that meter bottles, cans, or bearings at a fixed pitch.",
+      "added": "2026-08-08T02:13:24+03:00"
     },
     {
       "file": "spur_gear_pair_demo.glb",
@@ -32442,7 +32470,8 @@
         },
         "closed": true
       },
-      "applications": "Clockwork and instrument trains, printer extruder gears, and any parallel-shaft reduction that must mesh without clash."
+      "applications": "Clockwork and instrument trains, printer extruder gears, and any parallel-shaft reduction that must mesh without clash.",
+      "added": "2026-08-04T14:55:14+03:00"
     },
     {
       "file": "spur_gear_mesh_demo.glb",
@@ -32673,7 +32702,8 @@
         },
         "closed": true
       },
-      "applications": "Gearboxes, robot joints, and FDM-printed power transmission where you need a single involute gear blank."
+      "applications": "Gearboxes, robot joints, and FDM-printed power transmission where you need a single involute gear blank.",
+      "added": "2026-08-04T16:31:00+03:00"
     },
     {
       "file": "roller_sprocket_demo.glb",
@@ -32737,7 +32767,8 @@
           }
         ]
       },
-      "applications": "Bicycle and conveyor chain drives, 3D-printer motion systems, and roller-chain sprockets matched to a pin envelope."
+      "applications": "Bicycle and conveyor chain drives, 3D-printer motion systems, and roller-chain sprockets matched to a pin envelope.",
+      "added": "2026-08-04T16:31:00+03:00"
     },
     {
       "file": "worm_demo.glb",
@@ -32821,7 +32852,8 @@
           }
         ]
       },
-      "applications": "High-ratio right-angle reducers, tuning knobs, winches, and self-locking stages that should not back-drive."
+      "applications": "High-ratio right-angle reducers, tuning knobs, winches, and self-locking stages that should not back-drive.",
+      "added": "2026-08-04T19:18:31+03:00"
     },
     {
       "file": "spur_gear_sector_demo.glb",
@@ -32905,7 +32937,8 @@
           }
         ]
       },
-      "applications": "Steering sectors, limited-travel instruments, and any place a full gear would waste space when only a few teeth are needed."
+      "applications": "Steering sectors, limited-travel instruments, and any place a full gear would waste space when only a few teeth are needed.",
+      "added": "2026-08-04T19:18:31+03:00"
     },
     {
       "file": "rack_2d_demo.glb",
@@ -32959,7 +32992,8 @@
           }
         ]
       },
-      "applications": "Linear stages, rack-and-pinion steering, and CNC axes that convert rotation into straight travel along a pitch line."
+      "applications": "Linear stages, rack-and-pinion steering, and CNC axes that convert rotation into straight travel along a pitch line.",
+      "added": "2026-08-05T10:39:40+03:00"
     },
     {
       "file": "herringbone_gear_demo.glb",
@@ -34616,7 +34650,8 @@
           }
         }
       },
-      "applications": "Quiet high-load gearboxes, marine and industrial herringbone pairs, and FDM gears that cancel axial thrust from helix angle."
+      "applications": "Quiet high-load gearboxes, marine and industrial herringbone pairs, and FDM gears that cancel axial thrust from helix angle.",
+      "added": "2026-08-06T10:19:37+03:00"
     },
     {
       "file": "cycloidal_drive_demo.glb",
@@ -39447,7 +39482,8 @@
           }
         }
       },
-      "applications": "Robot joint reducers, cobot arms, and compact high-ratio drives where cycloidal geometry packs more torque than a planetary."
+      "applications": "Robot joint reducers, cobot arms, and compact high-ratio drives where cycloidal geometry packs more torque than a planetary.",
+      "added": "2026-08-06T10:19:37+03:00"
     },
     {
       "file": "bevel_gear_pair_demo.glb",
@@ -42688,7 +42724,8 @@
           }
         }
       },
-      "applications": "Differentials, hand drills, right-angle gearboxes, and any intersecting-axis mesh at 90 degrees."
+      "applications": "Differentials, hand drills, right-angle gearboxes, and any intersecting-axis mesh at 90 degrees.",
+      "added": "2026-08-06T10:19:37+03:00"
     },
     {
       "file": "ring_gear_demo.glb",
@@ -42707,7 +42744,8 @@
         57.7,
         8.0
       ],
-      "applications": "Planetary ring gears, internal mesh housings, and turntable drives that run a pinion inside an annulus."
+      "applications": "Planetary ring gears, internal mesh housings, and turntable drives that run a pinion inside an annulus.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "ring_gear_mesh_demo.glb",
@@ -44892,7 +44930,8 @@
           }
         }
       },
-      "applications": "Epicyclic stages, slewing drives, and internal gear pairs where pinion and ring turn the same way."
+      "applications": "Epicyclic stages, slewing drives, and internal gear pairs where pinion and ring turn the same way.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "pip_ratchet_demo.glb",
@@ -44946,7 +44985,8 @@
           }
         ]
       },
-      "applications": "Print-in-place freewheels, one-way knobs, and socket adapters that click when turning the drive way only."
+      "applications": "Print-in-place freewheels, one-way knobs, and socket adapters that click when turning the drive way only.",
+      "added": "2026-08-05T10:39:40+03:00"
     },
     {
       "file": "spring_cartridge_ratchet_demo.glb",
@@ -45010,7 +45050,8 @@
           }
         ]
       },
-      "applications": "Serviceable ratchet wrenches and winch freewheels where pawls and springs are separate replaceable parts."
+      "applications": "Serviceable ratchet wrenches and winch freewheels where pawls and springs are separate replaceable parts.",
+      "added": "2026-08-05T10:39:40+03:00"
     },
     {
       "file": "compliant_clutch_demo.glb",
@@ -45044,7 +45085,8 @@
           }
         ]
       },
-      "applications": "Torque-limiting knobs, safety clutches on feeders, and printed drives that should slip before something breaks."
+      "applications": "Torque-limiting knobs, safety clutches on feeders, and printed drives that should slip before something breaks.",
+      "added": "2026-08-05T10:39:40+03:00"
     },
     {
       "file": "arc_ratchet_demo.glb",
@@ -45078,7 +45120,8 @@
           }
         ]
       },
-      "applications": "Tension-loaded one-way clutches, winch handles, and compact ratchets that use flexure arms instead of rigid pawls."
+      "applications": "Tension-loaded one-way clutches, winch handles, and compact ratchets that use flexure arms instead of rigid pawls.",
+      "added": "2026-08-05T10:39:40+03:00"
     },
     {
       "file": "arc_ratchet_2d_demo.glb",
@@ -45112,7 +45155,8 @@
           }
         ]
       },
-      "applications": "Tension-loaded one-way clutches, winch handles, and compact ratchets that use flexure arms instead of rigid pawls."
+      "applications": "Tension-loaded one-way clutches, winch handles, and compact ratchets that use flexure arms instead of rigid pawls.",
+      "added": "2026-08-05T10:39:40+03:00"
     },
     {
       "file": "ratchet_wheel_pawl_demo.glb",
@@ -45131,7 +45175,8 @@
         49.7,
         6.0
       ],
-      "applications": "Winch drums, come-alongs, windlasses, and webbing tensioners that need a serviceable, high-torque one-way drive."
+      "applications": "Winch drums, come-alongs, windlasses, and webbing tensioners that need a serviceable, high-torque one-way drive.",
+      "added": "2026-08-08T02:13:24+03:00"
     },
     {
       "file": "torque_limiter_demo.glb",
@@ -45185,7 +45230,8 @@
           }
         ]
       },
-      "applications": "Drill and screwdriver clutches, conveyor overload protection, and any shaft that must slip at a set torque."
+      "applications": "Drill and screwdriver clutches, conveyor overload protection, and any shaft that must slip at a set torque.",
+      "added": "2026-08-06T10:19:37+03:00"
     },
     {
       "file": "freewheel_clutch_demo.glb",
@@ -45229,7 +45275,8 @@
           }
         ]
       },
-      "applications": "Bicycle freehubs, starter motors, and overrunning clutches that drive one way and freewheel the other."
+      "applications": "Bicycle freehubs, starter motors, and overrunning clutches that drive one way and freewheel the other.",
+      "added": "2026-08-06T10:19:37+03:00"
     },
     {
       "file": "dog_clutch_demo.glb",
@@ -45550,7 +45597,8 @@
           }
         }
       },
-      "applications": "Motorcycle and gearbox dog rings, PTO engagements, and positive-lock couplings that must not slip once seated."
+      "applications": "Motorcycle and gearbox dog rings, PTO engagements, and positive-lock couplings that must not slip once seated.",
+      "added": "2026-08-07T15:05:45+03:00"
     },
     {
       "file": "oldham_coupling_demo.glb",
@@ -46837,7 +46885,8 @@
           }
         }
       },
-      "applications": "Misaligned parallel shafts on pumps and encoders, and printed couplings that tolerate offset without side load."
+      "applications": "Misaligned parallel shafts on pumps and encoders, and printed couplings that tolerate offset without side load.",
+      "added": "2026-08-06T10:19:37+03:00"
     },
     {
       "file": "oldham_pose_demo.glb",
@@ -46911,7 +46960,8 @@
           }
         ]
       },
-      "applications": "Posing an Oldham coupling through a turn so the floating disc orbits at twice shaft speed: printer stepper-to-screw couplers and scroll-compressor drive trains."
+      "applications": "Posing an Oldham coupling through a turn so the floating disc orbits at twice shaft speed: printer stepper-to-screw couplers and scroll-compressor drive trains.",
+      "added": "2026-08-31T07:21:36+03:00"
     },
     {
       "file": "universal_joint_demo.glb",
@@ -48188,7 +48238,8 @@
           }
         }
       },
-      "applications": "Driveshafts, steering columns, and any angled shaft pair that can live with Cardan speed variation."
+      "applications": "Driveshafts, steering columns, and any angled shaft pair that can live with Cardan speed variation.",
+      "added": "2026-08-06T10:19:37+03:00"
     },
     {
       "file": "hooke_pose_demo.glb",
@@ -48252,7 +48303,8 @@
           }
         ]
       },
-      "applications": "Animating a Cardan joint through a turn so the output lags and leads twice per revolution: driveshafts, steering columns, and socket-wrench extensions at a known bend."
+      "applications": "Animating a Cardan joint through a turn so the output lags and leads twice per revolution: driveshafts, steering columns, and socket-wrench extensions at a known bend.",
+      "added": "2026-08-31T04:12:14+03:00"
     },
     {
       "file": "jaw_coupling_demo.glb",
@@ -48316,7 +48368,8 @@
           }
         ]
       },
-      "applications": "Servo and stepper motor couplings, pump shafts, and general flexible jaw (Lovejoy-style) connections with a spider."
+      "applications": "Servo and stepper motor couplings, pump shafts, and general flexible jaw (Lovejoy-style) connections with a spider.",
+      "added": "2026-08-06T10:19:37+03:00"
     },
     {
       "file": "tripod_cv_joint_demo.glb",
@@ -49995,7 +50048,8 @@
           }
         }
       },
-      "applications": "Front-wheel-drive halfshafts, plunging CV joints, and constant-velocity drives that also allow axial travel."
+      "applications": "Front-wheel-drive halfshafts, plunging CV joints, and constant-velocity drives that also allow axial travel.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "double_cardan_joint_demo.glb",
@@ -50059,7 +50113,8 @@
           }
         ]
       },
-      "applications": "Steering columns and industrial drives that cancel single-U-joint speed fluctuation with two Hooke joints phased 90 degrees."
+      "applications": "Steering columns and industrial drives that cancel single-U-joint speed fluctuation with two Hooke joints phased 90 degrees.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "hirth_coupling_demo.glb",
@@ -50093,7 +50148,8 @@
           }
         ]
       },
-      "applications": "Machine-tool spindles, indexing tables, and face couplings that must locate torque and centerline with radial teeth."
+      "applications": "Machine-tool spindles, indexing tables, and face couplings that must locate torque and centerline with radial teeth.",
+      "added": "2026-08-07T15:05:45+03:00"
     },
     {
       "file": "beam_coupling_demo.glb",
@@ -50112,7 +50168,8 @@
         20.0,
         25.0
       ],
-      "applications": "3D-printer Z axes, CNC builds, and motor-to-leadscrew links that need one cheap part forgiving angular, parallel, and axial misalignment."
+      "applications": "3D-printer Z axes, CNC builds, and motor-to-leadscrew links that need one cheap part forgiving angular, parallel, and axial misalignment.",
+      "added": "2026-08-08T02:13:24+03:00"
     },
     {
       "file": "ball_socket_joint_demo.glb",
@@ -50176,7 +50233,8 @@
           }
         ]
       },
-      "applications": "Control arms, camera gimbals, robotic wrists, and snap-together spherical joints for multi-axis motion."
+      "applications": "Control arms, camera gimbals, robotic wrists, and snap-together spherical joints for multi-axis motion.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "knuckle_hinge_demo.glb",
@@ -50240,7 +50298,8 @@
           }
         ]
       },
-      "applications": "Print-in-place lids and doors, laptop-style hinges, and living hinges that need a hard stop at open or closed."
+      "applications": "Print-in-place lids and doors, laptop-style hinges, and living hinges that need a hard stop at open or closed.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "gimbal_rings_demo.glb",
@@ -51115,7 +51174,8 @@
           }
         }
       },
-      "applications": "Camera and sensor gimbals, gyroscope mounts, and nested rings that free two or three rotation axes."
+      "applications": "Camera and sensor gimbals, gyroscope mounts, and nested rings that free two or three rotation axes.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "clevis_demo.glb",
@@ -51149,7 +51209,8 @@
           }
         ]
       },
-      "applications": "Actuator rod ends, turnbuckles, control links, and any pin joint that couples a fork to an eye."
+      "applications": "Actuator rod ends, turnbuckles, control links, and any pin joint that couples a fork to an eye.",
+      "added": "2026-08-07T15:05:45+03:00"
     },
     {
       "file": "printed_worm_demo.glb",
@@ -51183,7 +51244,8 @@
           }
         ]
       },
-      "applications": "Fully printed worm reducers for robots and turntables, when metal worms are overkill and self-locking is welcome."
+      "applications": "Fully printed worm reducers for robots and turntables, when metal worms are overkill and self-locking is welcome.",
+      "added": "2026-08-05T11:45:45+03:00"
     },
     {
       "file": "flat_worm_pair_demo.glb",
@@ -51217,7 +51279,8 @@
           }
         ]
       },
-      "applications": "Bench-proven multi-start flat worms for FDM gearboxes and high-ratio printed drives that must actually mesh."
+      "applications": "Bench-proven multi-start flat worms for FDM gearboxes and high-ratio printed drives that must actually mesh.",
+      "added": "2026-08-05T11:45:45+03:00"
     },
     {
       "file": "worm_coupon_demo.glb",
@@ -51236,7 +51299,8 @@
         40.9,
         36.7
       ],
-      "applications": "Quick mesh test coupons before committing a full gearbox print; iterate backlash and lead angle on a small pair."
+      "applications": "Quick mesh test coupons before committing a full gearbox print; iterate backlash and lead angle on a small pair.",
+      "added": "2026-08-05T11:45:45+03:00"
     },
     {
       "file": "planet_stage_demo.glb",
@@ -51300,7 +51364,8 @@
           }
         ]
       },
-      "applications": "Robot gearboxes, cordless-tool reducers, and multi-stage planetary transmissions with a fixed ring."
+      "applications": "Robot gearboxes, cordless-tool reducers, and multi-stage planetary transmissions with a fixed ring.",
+      "added": "2026-08-05T11:45:45+03:00"
     },
     {
       "file": "harmonic_drive_demo.glb",
@@ -51334,7 +51399,8 @@
           }
         ]
       },
-      "applications": "Cobot and industrial robot joints, pan-tilt heads, and anywhere you need huge ratio and near-zero backlash in a short package."
+      "applications": "Cobot and industrial robot joints, pan-tilt heads, and anywhere you need huge ratio and near-zero backlash in a short package.",
+      "added": "2026-08-07T15:05:45+03:00"
     },
     {
       "file": "flywheel_demo.glb",
@@ -51353,7 +51419,8 @@
         80.0,
         16.0
       ],
-      "applications": "Punch presses, engines, spin-casters, and gyro demos that smooth shaft speed with a rim-heavy inertia wheel."
+      "applications": "Punch presses, engines, spin-casters, and gyro demos that smooth shaft speed with a rim-heavy inertia wheel.",
+      "added": "2026-08-08T02:13:24+03:00"
     },
     {
       "file": "gerotor_pump_demo.glb",
@@ -51723,7 +51790,8 @@
         },
         "closed": true
       },
-      "applications": "Oil pumps in engines and transmissions, compact hydraulic power packs, and positive-displacement lubrication circuits."
+      "applications": "Oil pumps in engines and transmissions, compact hydraulic power packs, and positive-displacement lubrication circuits.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "hose_barb_demo.glb",
@@ -51787,7 +51855,8 @@
           }
         ]
       },
-      "applications": "Coolant and air tubing on printers and lab gear, barbed hose tails that grip soft tube without a clamp."
+      "applications": "Coolant and air tubing on printers and lab gear, barbed hose tails that grip soft tube without a clamp.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "rotary_spool_valve_demo.glb",
@@ -52128,7 +52197,8 @@
           }
         }
       },
-      "applications": "Pneumatic and hydraulic direction valves, multi-port manifolds, and rotary selectors that route flow by plug angle."
+      "applications": "Pneumatic and hydraulic direction valves, multi-port manifolds, and rotary selectors that route flow by plug angle.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "peristaltic_pump_head_demo.glb",
@@ -52192,7 +52262,8 @@
           }
         ]
       },
-      "applications": "Lab and medical dosing pumps, food-safe fluid transfer, and any pump that must never touch the fluid with gears or seals."
+      "applications": "Lab and medical dosing pumps, food-safe fluid transfer, and any pump that must never touch the fluid with gears or seals.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "external_gear_pump_demo.glb",
@@ -53311,7 +53382,8 @@
           }
         }
       },
-      "applications": "Hydraulic power units, oil transfer pumps, and compact positive-displacement gear pumps for viscous fluids."
+      "applications": "Hydraulic power units, oil transfer pumps, and compact positive-displacement gear pumps for viscous fluids.",
+      "added": "2026-08-07T15:05:45+03:00"
     },
     {
       "file": "check_valve_demo.glb",
@@ -53330,7 +53402,8 @@
         24.0,
         50.6
       ],
-      "applications": "Pump outlet lines, siphon breaks, and air lines that need one- way flow: a bought bearing ball on a conical seat."
+      "applications": "Pump outlet lines, siphon breaks, and air lines that need one- way flow: a bought bearing ball on a conical seat.",
+      "added": "2026-08-08T02:13:24+03:00"
     },
     {
       "file": "scroll_drive_demo.glb",
@@ -53374,7 +53447,8 @@
           }
         ]
       },
-      "applications": "Lathe chuck scroll plates, self-centering three-jaw mechanisms, and any drive that closes jaws equally from one rotation."
+      "applications": "Lathe chuck scroll plates, self-centering three-jaw mechanisms, and any drive that closes jaws equally from one rotation.",
+      "added": "2026-08-06T10:19:37+03:00"
     },
     {
       "file": "differential_screw_demo.glb",
@@ -53418,7 +53492,8 @@
           }
         ]
       },
-      "applications": "Fine-adjustment stages, micrometers, and slow linear motion from two slightly different pitches on one shaft."
+      "applications": "Fine-adjustment stages, micrometers, and slow linear motion from two slightly different pitches on one shaft.",
+      "added": "2026-08-06T10:19:37+03:00"
     },
     {
       "file": "archimedes_screw_demo.glb",
@@ -53462,7 +53537,8 @@
           }
         ]
       },
-      "applications": "Irrigation and drainage lifts, bulk-material conveyors, and demonstration models of the classical water screw."
+      "applications": "Irrigation and drainage lifts, bulk-material conveyors, and demonstration models of the classical water screw.",
+      "added": "2026-08-06T10:19:37+03:00"
     },
     {
       "file": "swash_plate_demo.glb",
@@ -56183,7 +56259,8 @@
           }
         }
       },
-      "applications": "Axial piston pumps and motors, helicopter cyclic control analogues, and multi-piston rotary-to-linear conversion."
+      "applications": "Axial piston pumps and motors, helicopter cyclic control analogues, and multi-piston rotary-to-linear conversion.",
+      "added": "2026-08-07T15:05:45+03:00"
     },
     {
       "file": "screw_jack_demo.glb",
@@ -56494,7 +56571,8 @@
           }
         }
       },
-      "applications": "Car jacks, theater stage lifts, machine levelling feet, and self-locking screw actuators for slow heavy lifts."
+      "applications": "Car jacks, theater stage lifts, machine levelling feet, and self-locking screw actuators for slow heavy lifts.",
+      "added": "2026-08-07T15:05:45+03:00"
     },
     {
       "file": "rack_pinion_demo.glb",
@@ -57339,7 +57417,8 @@
           }
         }
       },
-      "applications": "Steering racks, CNC and plotter axes, camera sliders, and linear stages driven by a spur pinion."
+      "applications": "Steering racks, CNC and plotter axes, camera sliders, and linear stages driven by a spur pinion.",
+      "added": "2026-08-07T15:05:45+03:00"
     },
     {
       "file": "lead_screw_demo.glb",
@@ -57358,7 +57437,8 @@
         20.0,
         60.0
       ],
-      "applications": "Vices, C-clamps, Z-axis stages, and press screws: trapezoidal power threads turning rotation into linear force."
+      "applications": "Vices, C-clamps, Z-axis stages, and press screws: trapezoidal power threads turning rotation into linear force.",
+      "added": "2026-08-08T02:13:24+03:00"
     },
     {
       "file": "linear_way_demo.glb",
@@ -57422,7 +57502,8 @@
           }
         ]
       },
-      "applications": "Machine-tool and 3D-printer linear guides, dovetail slides, and adjustable gibbed carriages."
+      "applications": "Machine-tool and 3D-printer linear guides, dovetail slides, and adjustable gibbed carriages.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "telescoping_stage_demo.glb",
@@ -57486,7 +57567,8 @@
           }
         ]
       },
-      "applications": "Drawer slides, boom extensions, camera columns, and nested tubes that travel farther than any single section."
+      "applications": "Drawer slides, boom extensions, camera columns, and nested tubes that travel farther than any single section.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "timing_pulley_demo.glb",
@@ -57530,7 +57612,8 @@
           }
         ]
       },
-      "applications": "GT2 and similar belt drives on printers and CNC, synchronous shaft coupling without slip."
+      "applications": "GT2 and similar belt drives on printers and CNC, synchronous shaft coupling without slip.",
+      "added": "2026-08-06T10:19:37+03:00"
     },
     {
       "file": "winch_drum_demo.glb",
@@ -57574,7 +57657,8 @@
           }
         ]
       },
-      "applications": "Winches, cranes, fishing reels, and cable drums that need a helical groove so the rope stacks cleanly."
+      "applications": "Winches, cranes, fishing reels, and cable drums that need a helical groove so the rope stacks cleanly.",
+      "added": "2026-08-06T10:19:37+03:00"
     },
     {
       "file": "fusee_demo.glb",
@@ -57618,7 +57702,8 @@
           }
         ]
       },
-      "applications": "Historical clock and watch fusees that equalize spring torque as the mainspring runs down."
+      "applications": "Historical clock and watch fusees that equalize spring torque as the mainspring runs down.",
+      "added": "2026-08-06T10:19:37+03:00"
     },
     {
       "file": "idler_pulley_demo.glb",
@@ -57662,7 +57747,8 @@
           }
         ]
       },
-      "applications": "Belt path redirects on printers and conveyors, free-spinning pulleys that only change direction or take up slack."
+      "applications": "Belt path redirects on printers and conveyors, free-spinning pulleys that only change direction or take up slack.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "eccentric_idler_mount_demo.glb",
@@ -57706,7 +57792,8 @@
           }
         ]
       },
-      "applications": "Belt tension take-up on mills and printers: turn the eccentric to set belt preload without a sliding slot."
+      "applications": "Belt tension take-up on mills and printers: turn the eccentric to set belt preload without a sliding slot.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "belt_tensioner_demo.glb",
@@ -57750,7 +57837,8 @@
           }
         ]
       },
-      "applications": "Automatic belt tensioners on engines and printers, compliant arms that keep constant belt load as the belt stretches."
+      "applications": "Automatic belt tensioners on engines and printers, compliant arms that keep constant belt load as the belt stretches.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "v_belt_pulley_demo.glb",
@@ -57769,7 +57857,8 @@
         63.6,
         21.7
       ],
-      "applications": "Washing machines, drill presses, lathes, and HVAC blowers: wedge-belt power transmission between parallel shafts."
+      "applications": "Washing machines, drill presses, lathes, and HVAC blowers: wedge-belt power transmission between parallel shafts.",
+      "added": "2026-08-08T02:13:24+03:00"
     },
     {
       "file": "drag_chain_link_demo.glb",
@@ -57813,7 +57902,8 @@
           }
         ]
       },
-      "applications": "Cable carriers on CNC and robots; single link of an energy chain that flexes only one way (reverse_bend=True for RBR links that articulate both ways)."
+      "applications": "Cable carriers on CNC and robots; single link of an energy chain that flexes only one way (reverse_bend=True for RBR links that articulate both ways).",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "drag_chain_demo.glb",
@@ -57867,7 +57957,8 @@
           }
         ]
       },
-      "applications": "Full cable-carrier runs protecting wires and hoses on moving axes of machines and 3D printers; reverse_bend/s_bend_at pose RBR S-bend runs that snake between levels."
+      "applications": "Full cable-carrier runs protecting wires and hoses on moving axes of machines and 3D printers; reverse_bend/s_bend_at pose RBR S-bend runs that snake between levels.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "roller_chain_link_demo.glb",
@@ -57911,7 +58002,8 @@
           }
         ]
       },
-      "applications": "Bicycle and industrial roller-chain pitches, printable chain segments matched to a sprocket."
+      "applications": "Bicycle and industrial roller-chain pitches, printable chain segments matched to a sprocket.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "roller_chain_demo.glb",
@@ -57955,7 +58047,8 @@
           }
         ]
       },
-      "applications": "Conveyors, motorcycles, and machine drives that wrap a roller chain around a sprocket."
+      "applications": "Conveyors, motorcycles, and machine drives that wrap a roller chain around a sprocket.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "chain_reverse_demo.glb",
@@ -57999,7 +58092,8 @@
           }
         ]
       },
-      "applications": "Reverse-rotation takeoffs on conveyors, agricultural machinery, and machine drives: an idler sprocket bearing on the back of a chain span turns opposite to the driver."
+      "applications": "Reverse-rotation takeoffs on conveyors, agricultural machinery, and machine drives: an idler sprocket bearing on the back of a chain span turns opposite to the driver.",
+      "added": "2026-08-29T02:29:38+03:00"
     },
     {
       "file": "chain_s_wrap_demo.glb",
@@ -58043,7 +58137,8 @@
           }
         ]
       },
-      "applications": "S-wrap reversing drives on conveyors, mixers, and farm machinery: the chain snakes over the driver and around the outside of the driven sprocket, so the output shaft turns opposite without gears."
+      "applications": "S-wrap reversing drives on conveyors, mixers, and farm machinery: the chain snakes over the driver and around the outside of the driven sprocket, so the output shaft turns opposite without gears.",
+      "added": "2026-08-29T02:29:38+03:00"
     },
     {
       "file": "chain_dual_output_demo.glb",
@@ -58087,7 +58182,8 @@
           }
         ]
       },
-      "applications": "Jackshafts and conveyor lines needing simultaneous forward and reverse take-offs from one chain run: a sprocket inside the loop turns with the driver, an idler on the back of a span turns opposite."
+      "applications": "Jackshafts and conveyor lines needing simultaneous forward and reverse take-offs from one chain run: a sprocket inside the loop turns with the driver, an idler on the back of a span turns opposite.",
+      "added": "2026-08-29T02:29:38+03:00"
     },
     {
       "file": "cross_flexure_demo.glb",
@@ -58131,7 +58227,8 @@
           }
         ]
       },
-      "applications": "Precision instrument pivots, watch balances, and monolithic hinges that flex instead of using a pin."
+      "applications": "Precision instrument pivots, watch balances, and monolithic hinges that flex instead of using a pin.",
+      "added": "2026-08-06T10:19:37+03:00"
     },
     {
       "file": "wave_spring_demo.glb",
@@ -58185,7 +58282,8 @@
           }
         ]
       },
-      "applications": "Compact axial preload in bearings and seals, crest-to-crest springs where a coil spring is too tall."
+      "applications": "Compact axial preload in bearings and seals, crest-to-crest springs where a coil spring is too tall.",
+      "added": "2026-08-06T10:19:37+03:00"
     },
     {
       "file": "bistable_beam_demo.glb",
@@ -58229,7 +58327,8 @@
           }
         ]
       },
-      "applications": "Snap switches, tactile buttons, and mechanisms that click between two stable positions."
+      "applications": "Snap switches, tactile buttons, and mechanisms that click between two stable positions.",
+      "added": "2026-08-06T10:19:37+03:00"
     },
     {
       "file": "belleville_washer_demo.glb",
@@ -58283,7 +58382,8 @@
           }
         ]
       },
-      "applications": "Bolted-joint preload, clutch packs, and high-load short-stroke stacks of disc springs."
+      "applications": "Bolted-joint preload, clutch packs, and high-load short-stroke stacks of disc springs.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "coil_spring_demo.glb",
@@ -58337,7 +58437,8 @@
           }
         ]
       },
-      "applications": "Suspension and return springs, battery contacts, and general helical compression springs in machines."
+      "applications": "Suspension and return springs, battery contacts, and general helical compression springs in machines.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "spiral_power_spring_demo.glb",
@@ -58391,7 +58492,8 @@
           }
         ]
       },
-      "applications": "Clock and toy mainsprings, retractable reels, and flat spiral power springs in a barrel."
+      "applications": "Clock and toy mainsprings, retractable reels, and flat spiral power springs in a barrel.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "leaf_spring_demo.glb",
@@ -58445,7 +58547,8 @@
           }
         ]
       },
-      "applications": "Vehicle suspensions, clamp arms, and multi-leaf springs that carry load in bending."
+      "applications": "Vehicle suspensions, clamp arms, and multi-leaf springs that carry load in bending.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "flexure_stage_demo.glb",
@@ -58499,7 +58602,8 @@
           }
         ]
       },
-      "applications": "Optical and nanopositioning stages, vibration-isolated mounts, and printed straight-line stages without bearings."
+      "applications": "Optical and nanopositioning stages, vibration-isolated mounts, and printed straight-line stages without bearings.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "thread_demo.glb",
@@ -58573,7 +58677,8 @@
           }
         ]
       },
-      "applications": "Printed screws and nuts, lead screws, and any FDM thread that must mate with a real or printed counterpart."
+      "applications": "Printed screws and nuts, lead screws, and any FDM thread that must mate with a real or printed counterpart.",
+      "added": "2026-08-04T16:31:00+03:00"
     },
     {
       "file": "knurl_demo.glb",
@@ -58627,7 +58732,8 @@
           }
         ]
       },
-      "applications": "Thumb screws, adjustment knobs, and grip surfaces that need knurling without a lathe."
+      "applications": "Thumb screws, adjustment knobs, and grip surfaces that need knurling without a lathe.",
+      "added": "2026-08-04T16:31:00+03:00"
     },
     {
       "file": "torsion_spring_demo.glb",
@@ -58681,7 +58787,8 @@
           }
         ]
       },
-      "applications": "Clothes-peg and clip springs, hinge returns, and mechanisms that store energy in twist."
+      "applications": "Clothes-peg and clip springs, hinge returns, and mechanisms that store energy in twist.",
+      "added": "2026-08-04T16:31:00+03:00"
     },
     {
       "file": "threaded_rod_demo.glb",
@@ -58735,7 +58842,8 @@
           }
         ]
       },
-      "applications": "Lead screws, all-thread stand-offs, and display rods where a fast radial-grid thread is enough."
+      "applications": "Lead screws, all-thread stand-offs, and display rods where a fast radial-grid thread is enough.",
+      "added": "2026-08-04T19:18:31+03:00"
     },
     {
       "file": "helix_tube_demo.glb",
@@ -58809,7 +58917,8 @@
           }
         ]
       },
-      "applications": "Spiral cable wraps, decorative helices, and swept tubes along a helical path."
+      "applications": "Spiral cable wraps, decorative helices, and swept tubes along a helical path.",
+      "added": "2026-08-05T10:39:40+03:00"
     },
     {
       "file": "dog_slot_coupling_demo.glb",
@@ -58843,7 +58952,8 @@
           }
         ]
       },
-      "applications": "Lost-motion couplings, indexed drives with backlash on purpose, and angular play between a dog and a slot."
+      "applications": "Lost-motion couplings, indexed drives with backlash on purpose, and angular play between a dog and a slot.",
+      "added": "2026-08-05T10:39:40+03:00"
     },
     {
       "file": "shaft_collar_demo.glb",
@@ -58862,7 +58972,8 @@
         16.0,
         10.0
       ],
-      "applications": "Axially locating bearings, gears, and sprockets on a shaft without machining a shoulder into it."
+      "applications": "Axially locating bearings, gears, and sprockets on a shaft without machining a shoulder into it.",
+      "added": "2026-08-08T02:13:24+03:00"
     },
     {
       "file": "star_knob_demo.glb",
@@ -58881,7 +58992,8 @@
         31.0,
         18.0
       ],
-      "applications": "Jigs, fixtures, machine adjustment points, and camera rigs that are tightened and loosened by hand."
+      "applications": "Jigs, fixtures, machine adjustment points, and camera rigs that are tightened and loosened by hand.",
+      "added": "2026-08-08T02:13:24+03:00"
     },
     {
       "file": "handwheel_demo.glb",
@@ -58900,7 +59012,8 @@
         100.0,
         52.0
       ],
-      "applications": "Manual leadscrew and valve adjustment on screw jacks, indexing tables, and machine axes; the crank variant drives winches."
+      "applications": "Manual leadscrew and valve adjustment on screw jacks, indexing tables, and machine axes; the crank variant drives winches.",
+      "added": "2026-08-08T02:13:24+03:00"
     },
     {
       "file": "fastener_trio_demo.glb",
@@ -58964,7 +59077,8 @@
           }
         ]
       },
-      "applications": "Assembly visualization: pan, socket, and countersunk screws with nuts and washers in CAD layouts."
+      "applications": "Assembly visualization: pan, socket, and countersunk screws with nuts and washers in CAD layouts.",
+      "added": "2026-08-04T16:31:00+03:00"
     },
     {
       "file": "thread_insert_demo.glb",
@@ -58983,7 +59097,8 @@
         9.4,
         6.0
       ],
-      "applications": "Enclosure lids opened repeatedly, motor mounts, and adjustment points that need durable heat-set machine-screw threads."
+      "applications": "Enclosure lids opened repeatedly, motor mounts, and adjustment points that need durable heat-set machine-screw threads.",
+      "added": "2026-08-08T02:13:24+03:00"
     },
     {
       "file": "tslot_nut_demo.glb",
@@ -59002,7 +59117,8 @@
         11.5,
         4.1
       ],
-      "applications": "Bolting printed parts onto 2020/3030/4040 aluminium-extrusion frames and machine-table T-slots."
+      "applications": "Bolting printed parts onto 2020/3030/4040 aluminium-extrusion frames and machine-table T-slots.",
+      "added": "2026-08-08T02:13:24+03:00"
     },
     {
       "file": "shaft_key_demo.glb",
@@ -59021,7 +59137,8 @@
         22.0,
         30.0
       ],
-      "applications": "Gear hubs, hand cranks, and pulley drives that transmit torque through a DIN 6885 sunk key where a D-bore would slip."
+      "applications": "Gear hubs, hand cranks, and pulley drives that transmit torque through a DIN 6885 sunk key where a D-bore would slip.",
+      "added": "2026-08-08T02:13:24+03:00"
     },
     {
       "file": "plain_bushing_demo.glb",
@@ -59075,7 +59192,8 @@
           }
         ]
       },
-      "applications": "Journal bearings in printed machines, flanged sleeve bushings for shafts that only need sliding support."
+      "applications": "Journal bearings in printed machines, flanged sleeve bushings for shafts that only need sliding support.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "thrust_washer_demo.glb",
@@ -59129,7 +59247,8 @@
           }
         ]
       },
-      "applications": "Axial load washers under gears and pulleys, thrust ball cages between rotating faces."
+      "applications": "Axial load washers under gears and pulleys, thrust ball cages between rotating faces.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "printed_ball_bearing_demo.glb",
@@ -59183,7 +59302,8 @@
           }
         ]
       },
-      "applications": "Fully printed radial bearings for light-duty rollers, demo models, and places steel bearings will not fit the budget."
+      "applications": "Fully printed radial bearings for light-duty rollers, demo models, and places steel bearings will not fit the budget.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "press_lid_demo.glb",
@@ -59257,7 +59377,8 @@
           }
         ]
       },
-      "applications": "Battery and electronics boxes, snap-fit instrument lids, and friction-plug covers that press closed without screws."
+      "applications": "Battery and electronics boxes, snap-fit instrument lids, and friction-plug covers that press closed without screws.",
+      "added": "2026-08-04T16:31:00+03:00"
     },
     {
       "file": "clamshell_shiplap_demo.glb",
@@ -59321,7 +59442,8 @@
           }
         ]
       },
-      "applications": "Split enclosures, clamshell housings, and lid-to-base seams that interlock with a shiplap lip."
+      "applications": "Split enclosures, clamshell housings, and lid-to-base seams that interlock with a shiplap lip.",
+      "added": "2026-08-04T16:31:00+03:00"
     },
     {
       "file": "ydovetail_demo.glb",
@@ -59395,7 +59517,8 @@
           }
         ]
       },
-      "applications": "Printable drawer slides, modular plate joins, and self-supporting dovetail tongues that assemble along Y."
+      "applications": "Printable drawer slides, modular plate joins, and self-supporting dovetail tongues that assemble along Y.",
+      "added": "2026-08-04T16:31:00+03:00"
     },
     {
       "file": "snap_pair_demo.glb",
@@ -59449,7 +59572,8 @@
           }
         ]
       },
-      "applications": "Battery doors, access panels, and plastic enclosures that click shut with a catch and finger."
+      "applications": "Battery doors, access panels, and plastic enclosures that click shut with a catch and finger.",
+      "added": "2026-08-04T16:31:00+03:00"
     },
     {
       "file": "nut_slot_demo.glb",
@@ -59513,7 +59637,8 @@
           }
         ]
       },
-      "applications": "Captive hex nuts in printed parts, T-nut slots, and any fastener seat that must not spin."
+      "applications": "Captive hex nuts in printed parts, T-nut slots, and any fastener seat that must not spin.",
+      "added": "2026-08-04T16:31:00+03:00"
     },
     {
       "file": "pins_and_posts_demo.glb",
@@ -59587,7 +59712,8 @@
           }
         ]
       },
-      "applications": "PCB standoffs, locating pins, screw bosses, and alignment features between mating plastic parts."
+      "applications": "PCB standoffs, locating pins, screw bosses, and alignment features between mating plastic parts.",
+      "added": "2026-08-04T16:31:00+03:00"
     },
     {
       "file": "fix_pin_demo.glb",
@@ -59661,7 +59787,8 @@
           }
         ]
       },
-      "applications": "PCB standoffs, locating pins, screw bosses, and alignment features between mating plastic parts."
+      "applications": "PCB standoffs, locating pins, screw bosses, and alignment features between mating plastic parts.",
+      "added": "2026-08-04T16:31:00+03:00"
     },
     {
       "file": "push_pin_demo.glb",
@@ -59705,7 +59832,8 @@
           }
         ]
       },
-      "applications": "Barbed press-fit pins for plastics, axles that push in and stay, and printed rivets with a lead-in."
+      "applications": "Barbed press-fit pins for plastics, axles that push in and stay, and printed rivets with a lead-in.",
+      "added": "2026-08-04T19:18:31+03:00"
     },
     {
       "file": "setscrew_demo.glb",
@@ -59759,7 +59887,8 @@
           }
         ]
       },
-      "applications": "Collar and hub locks on shafts, pulley set-screw seats, and printed bosses that take a radial screw."
+      "applications": "Collar and hub locks on shafts, pulley set-screw seats, and printed bosses that take a radial screw.",
+      "added": "2026-08-04T19:18:31+03:00"
     },
     {
       "file": "annular_snap_demo.glb",
@@ -59778,7 +59907,8 @@
         44.0,
         32.0
       ],
-      "applications": "Bottle-cap and filter-housing lids, pipe couplings, and round enclosure closures that snap together on a circumferential ridge."
+      "applications": "Bottle-cap and filter-housing lids, pipe couplings, and round enclosure closures that snap together on a circumferential ridge.",
+      "added": "2026-08-08T02:13:24+03:00"
     },
     {
       "file": "board_cradle_demo.glb",
@@ -59852,7 +59982,8 @@
           }
         ]
       },
-      "applications": "PCB mounting in instruments and printers: corner standoffs and capture walls around a board outline."
+      "applications": "PCB mounting in instruments and printers: corner standoffs and capture walls around a board outline.",
+      "added": "2026-08-04T14:55:14+03:00"
     },
     {
       "file": "saddle_demo.glb",
@@ -59916,7 +60047,8 @@
           }
         ]
       },
-      "applications": "Cradles for tubes and batteries, ribs that hug a cylinder without a full bore."
+      "applications": "Cradles for tubes and batteries, ribs that hug a cylinder without a full bore.",
+      "added": "2026-08-04T19:18:31+03:00"
     },
     {
       "file": "kinematic_coupling_demo.glb",
@@ -59980,7 +60112,8 @@
           }
         ]
       },
-      "applications": "Optical mounts, metrology fixtures, and any plate pair that must reseat to the same six-point pose every time."
+      "applications": "Optical mounts, metrology fixtures, and any plate pair that must reseat to the same six-point pose every time.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "repeatable_dock_demo.glb",
@@ -60044,7 +60177,8 @@
           }
         ]
       },
-      "applications": "Tool changers, probe docks, and magnetic kinematic mounts that need preload so they do not fall apart when tipped."
+      "applications": "Tool changers, probe docks, and magnetic kinematic mounts that need preload so they do not fall apart when tipped.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "three_point_leveller_demo.glb",
@@ -60108,7 +60242,8 @@
           }
         ]
       },
-      "applications": "Optical tables, printer beds, and surface plates that level with three screws without fighting an over-constrained bolt pattern."
+      "applications": "Optical tables, printer beds, and surface plates that level with three screws without fighting an over-constrained bolt pattern.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "find_vitamin_demo.glb",
@@ -60127,7 +60262,8 @@
         22.0,
         17.0
       ],
-      "applications": "Search the bought-part catalog by family or title when picking a 608 vs 695, an M3 SHCS, or a GA12-N20 envelope for a new product."
+      "applications": "Search the bought-part catalog by family or title when picking a 608 vs 695, an M3 SHCS, or a GA12-N20 envelope for a new product.",
+      "added": "2026-08-31T08:51:04+03:00"
     },
     {
       "file": "vitamin_demo.glb",
@@ -60146,7 +60282,8 @@
         42.3,
         65.2
       ],
-      "applications": "Bought bearings, ISO fasteners, motors, servos, cells, and sensors looked up by address (bearing/608-2rs) so a printed pocket rebinds from one catalog instead of a forked dimension table."
+      "applications": "Bought bearings, ISO fasteners, motors, servos, cells, and sensors looked up by address (bearing/608-2rs) so a printed pocket rebinds from one catalog instead of a forked dimension table.",
+      "added": "2026-09-01T02:28:07+03:00"
     },
     {
       "file": "vitamin_addresses_demo.glb",
@@ -60165,7 +60302,8 @@
         26.0,
         65.2
       ],
-      "applications": "List every catalog address so a staleness gate can prove a posed assembly node still resolves after a catalog refresh."
+      "applications": "List every catalog address so a staleness gate can prove a posed assembly node still resolves after a catalog refresh.",
+      "added": "2026-09-01T04:53:49+03:00"
     },
     {
       "file": "cyl_demo.glb",
@@ -60219,7 +60357,8 @@
           }
         ]
       },
-      "applications": "Bosses, pins, rollers, and any cylindrical stock or cutter axis in a parametric assembly."
+      "applications": "Bosses, pins, rollers, and any cylindrical stock or cutter axis in a parametric assembly.",
+      "added": "2026-08-04T14:55:14+03:00"
     },
     {
       "file": "boxc_demo.glb",
@@ -60273,7 +60412,8 @@
           }
         ]
       },
-      "applications": "Blocks, spacers, and axis-aligned volumes that start most bracket and housing models."
+      "applications": "Blocks, spacers, and axis-aligned volumes that start most bracket and housing models.",
+      "added": "2026-08-04T14:55:14+03:00"
     },
     {
       "file": "rbox_demo.glb",
@@ -60337,7 +60477,8 @@
           }
         ]
       },
-      "applications": "Enclosure walls and buttons with rounded corners that print cleanly and feel finished."
+      "applications": "Enclosure walls and buttons with rounded corners that print cleanly and feel finished.",
+      "added": "2026-08-04T14:55:14+03:00"
     },
     {
       "file": "frustum_demo.glb",
@@ -60401,7 +60542,8 @@
           }
         ]
       },
-      "applications": "Tapers, funnels, draft on molds, and stepped cones between two diameters."
+      "applications": "Tapers, funnels, draft on molds, and stepped cones between two diameters.",
+      "added": "2026-08-04T14:55:14+03:00"
     },
     {
       "file": "sector2d_demo.glb",
@@ -60475,7 +60617,8 @@
           }
         ]
       },
-      "applications": "Pie slices, partial flanges, and sector plates used as 2D profiles before extrusion."
+      "applications": "Pie slices, partial flanges, and sector plates used as 2D profiles before extrusion.",
+      "added": "2026-08-04T14:55:14+03:00"
     },
     {
       "file": "hex_poly_demo.glb",
@@ -60519,7 +60662,8 @@
           }
         ]
       },
-      "applications": "Nut and bolt blanks, hex columns, and across-flats hex stock for wrench-driven parts."
+      "applications": "Nut and bolt blanks, hex columns, and across-flats hex stock for wrench-driven parts.",
+      "added": "2026-08-04T14:55:14+03:00"
     },
     {
       "file": "chamfer_prism_demo.glb",
@@ -60593,7 +60737,8 @@
           }
         ]
       },
-      "applications": "Enclosures with a soft top edge, control knobs, and prisms that need a clean hull chamfer."
+      "applications": "Enclosures with a soft top edge, control knobs, and prisms that need a clean hull chamfer.",
+      "added": "2026-08-04T19:18:31+03:00"
     },
     {
       "file": "seg_cylinder_demo.glb",
@@ -60657,7 +60802,8 @@
           }
         ]
       },
-      "applications": "Struts and links between skew points, space-frame bars, and cylinders that do not share an axis-aligned path."
+      "applications": "Struts and links between skew points, space-frame bars, and cylinders that do not share an axis-aligned path.",
+      "added": "2026-08-04T19:18:31+03:00"
     },
     {
       "file": "extrude_twist_demo.glb",
@@ -60741,7 +60887,8 @@
           }
         ]
       },
-      "applications": "Twisted columns, augers, and decorative or functional solids swept with continuous rotation."
+      "applications": "Twisted columns, augers, and decorative or functional solids swept with continuous rotation.",
+      "added": "2026-08-04T14:55:14+03:00"
     },
     {
       "file": "swept_keyed_bore_demo.glb",
@@ -60815,7 +60962,8 @@
           }
         ]
       },
-      "applications": "D-shaft hubs, keyed bores with free-rotation clearance, and sockets that must drive a shaft only over a limited angle."
+      "applications": "D-shaft hubs, keyed bores with free-rotation clearance, and sockets that must drive a shaft only over a limited angle.",
+      "added": "2026-08-04T14:55:14+03:00"
     },
     {
       "file": "loft_demo.glb",
@@ -60899,7 +61047,8 @@
           }
         ]
       },
-      "applications": "Organic housings, fairings, and solids that blend unequal cross-sections along a path."
+      "applications": "Organic housings, fairings, and solids that blend unequal cross-sections along a path.",
+      "added": "2026-08-04T19:18:31+03:00"
     },
     {
       "file": "teardrop_demo.glb",
@@ -60973,7 +61122,8 @@
           }
         ]
       },
-      "applications": "Horizontal bores in FDM parts that would otherwise need support: axles, cable holes, and fastener clearances."
+      "applications": "Horizontal bores in FDM parts that would otherwise need support: axles, cable holes, and fastener clearances.",
+      "added": "2026-08-04T16:31:00+03:00"
     },
     {
       "file": "ss_bore_demo.glb",
@@ -61037,7 +61187,8 @@
           }
         ]
       },
-      "applications": "Clamshell shaft cradles and support-light upper bores in split housings."
+      "applications": "Clamshell shaft cradles and support-light upper bores in split housings.",
+      "added": "2026-08-04T16:31:00+03:00"
     },
     {
       "file": "dbore_demo.glb",
@@ -61111,7 +61262,8 @@
           }
         ]
       },
-      "applications": "Double-D motor and pot shafts, keyed hubs, and sockets that must transmit torque without a set screw."
+      "applications": "Double-D motor and pot shafts, keyed hubs, and sockets that must transmit torque without a set screw.",
+      "added": "2026-08-04T16:31:00+03:00"
     },
     {
       "file": "counterbore_demo.glb",
@@ -61175,7 +61327,8 @@
           }
         ]
       },
-      "applications": "Socket-head and pan-head screw seats, flush fastener pockets in plates and brackets."
+      "applications": "Socket-head and pan-head screw seats, flush fastener pockets in plates and brackets.",
+      "added": "2026-08-04T16:31:00+03:00"
     },
     {
       "file": "bearing_seat_demo.glb",
@@ -61219,7 +61372,8 @@
           }
         ]
       },
-      "applications": "608 and similar skate-bearing pockets in robots, printers, and rollers that need a retained race."
+      "applications": "608 and similar skate-bearing pockets in robots, printers, and rollers that need a retained race.",
+      "added": "2026-08-04T16:31:00+03:00"
     },
     {
       "file": "crush_ribs_demo.glb",
@@ -61303,7 +61457,8 @@
           }
         ]
       },
-      "applications": "Press-fit captures for PCBs, sensors, and rectangular inserts that should grip without glue."
+      "applications": "Press-fit captures for PCBs, sensors, and rectangular inserts that should grip without glue.",
+      "added": "2026-08-04T16:31:00+03:00"
     },
     {
       "file": "slot_cutter_demo.glb",
@@ -61377,7 +61532,8 @@
           }
         ]
       },
-      "applications": "Blade and tab slots in FDM parts, dog-bone relief so square inserts seat fully."
+      "applications": "Blade and tab slots in FDM parts, dog-bone relief so square inserts seat fully.",
+      "added": "2026-08-04T19:18:31+03:00"
     },
     {
       "file": "tapered_cavity_demo.glb",
@@ -61451,7 +61607,8 @@
           }
         ]
       },
-      "applications": "Lightened legs and hollow structures whose roofs print without bridging failures."
+      "applications": "Lightened legs and hollow structures whose roofs print without bridging failures.",
+      "added": "2026-08-04T19:18:31+03:00"
     },
     {
       "file": "u_channel_between_demo.glb",
@@ -61525,7 +61682,8 @@
           }
         ]
       },
-      "applications": "Wire ways, cable channels, and open U runs that snake between arbitrary points on a panel."
+      "applications": "Wire ways, cable channels, and open U runs that snake between arbitrary points on a panel.",
+      "added": "2026-08-04T19:18:31+03:00"
     },
     {
       "file": "revolved_gable_cavity_demo.glb",
@@ -61609,7 +61767,8 @@
           }
         ]
       },
-      "applications": "Annular chambers under self-supporting roofs, plumbing voids, and lightened rings."
+      "applications": "Annular chambers under self-supporting roofs, plumbing voids, and lightened rings.",
+      "added": "2026-08-04T19:18:31+03:00"
     },
     {
       "file": "oring_groove_demo.glb",
@@ -61673,7 +61832,8 @@
           }
         ]
       },
-      "applications": "Face-seal glands on lids and flanges, AS568 O-ring seats designed for correct squeeze and fill."
+      "applications": "Face-seal glands on lids and flanges, AS568 O-ring seats designed for correct squeeze and fill.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "labyrinth_seal_demo.glb",
@@ -61737,7 +61897,8 @@
           }
         ]
       },
-      "applications": "Dust and splash seals on printed rotating shafts, non-contact comb seals where elastomer is unwanted."
+      "applications": "Dust and splash seals on printed rotating shafts, non-contact comb seals where elastomer is unwanted.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "gasket_channel_demo.glb",
@@ -61801,7 +61962,8 @@
           }
         ]
       },
-      "applications": "Enclosure lids and irregular flanges that seal with cord-stock gasket rather than a circular O-ring."
+      "applications": "Enclosure lids and irregular flanges that seal with cord-stock gasket rather than a circular O-ring.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "lighten_grid_demo.glb",
@@ -61875,7 +62037,8 @@
           }
         ]
       },
-      "applications": "Weight-saving panels on robots and drones, hex lattices that keep stiffness while cutting plastic."
+      "applications": "Weight-saving panels on robots and drones, hex lattices that keep stiffness while cutting plastic.",
+      "added": "2026-08-04T16:31:00+03:00"
     },
     {
       "file": "directed_holes_demo.glb",
@@ -61949,7 +62112,8 @@
           }
         ]
       },
-      "applications": "Shower heads, spray nozzles, and multi-axis hole patterns aimed along arbitrary vectors."
+      "applications": "Shower heads, spray nozzles, and multi-axis hole patterns aimed along arbitrary vectors.",
+      "added": "2026-08-04T19:18:31+03:00"
     },
     {
       "file": "auxetic_panel_demo.glb",
@@ -62003,7 +62167,8 @@
           }
         ]
       },
-      "applications": "Impact pads, expandable meshes, medical and sports structures that widen when stretched."
+      "applications": "Impact pads, expandable meshes, medical and sports structures that widen when stretched.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "honeycomb_panel_demo.glb",
@@ -62047,7 +62212,8 @@
           }
         ]
       },
-      "applications": "Sandwich skins, drone-frame ribs, and lightened covers that need a regular hex core with a solid rim, not an auxetic bowtie."
+      "applications": "Sandwich skins, drone-frame ribs, and lightened covers that need a regular hex core with a solid rim, not an auxetic bowtie.",
+      "added": "2026-09-01T21:28:16+03:00"
     },
     {
       "file": "kerf_bend_cutter_demo.glb",
@@ -62101,7 +62267,8 @@
           }
         ]
       },
-      "applications": "Living hinges, foldable enclosures, and kerf-bent panels that roll or twist from a flat print."
+      "applications": "Living hinges, foldable enclosures, and kerf-bent panels that roll or twist from a flat print.",
+      "added": "2026-08-06T15:11:27+03:00"
     },
     {
       "file": "text_polygon_demo.glb",
@@ -62175,7 +62342,8 @@
           }
         ]
       },
-      "applications": "Raised labels on parts, nameplates, and logos that must print with counters preserved."
+      "applications": "Raised labels on parts, nameplates, and logos that must print with counters preserved.",
+      "added": "2026-08-04T16:31:00+03:00"
     },
     {
       "file": "text_block_demo.glb",
@@ -62249,7 +62417,8 @@
           }
         ]
       },
-      "applications": "Multi-line plaques, version labels, and stacked raised text on enclosures and tools."
+      "applications": "Multi-line plaques, version labels, and stacked raised text on enclosures and tools.",
+      "added": "2026-08-04T19:18:31+03:00"
     }
   ],
   "utilities": [
