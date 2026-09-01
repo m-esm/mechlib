@@ -10,7 +10,7 @@ from .meshutil import extrude_poly_z, from_manifold, to_manifold
 
 _NOZZLE_WIDTHS = (0.4, 0.8, 1.2)
 _AUXETIC_MODES = ("reentrant", "rotating_squares", "chiral")
-_KERF_MODES = ("lattice", "diagonal", "spiral", "wave", "hex")
+_KERF_MODES = ("lattice", "diagonal", "spiral", "wave", "hex", "cross")
 _MAX_CELLS = 2500
 
 
@@ -891,6 +891,104 @@ def _hex_slit_polys(width, height, kerf, pitch, bridge, margin):
     return polys, n_cols, n_rows
 
 
+def _cross_slit_polys(width, height, kerf, pitch, bridge, margin):
+    """Return X-lattice living-hinge slits (LivingHingeGenerator Cross / KM Cross).
+
+    Lattice-family bars along local Y (kerf-wide in X) plus diagonal arms
+    from each bar endpoint at approximately 30 deg. Odd rows offset by
+    half the Y-repeat so arms from adjacent rows cross into X
+    intersections. Arm length is ~46% of bar length. Bars whose centres
+    land on a usable-Y edge are truncated at their midpoint so the
+    repeat fits inside the solid rim (``margin``).
+    """
+    usable_w = width - 2.0 * margin
+    usable_h = height - 2.0 * margin
+    n_rows = max(1, int(usable_w // pitch))
+    bar_len = pitch - kerf
+    y_repeat = bar_len + bridge
+    n_repeats = max(1, int(usable_h // y_repeat))
+    # Each unit is a bar plus up to four arms.
+    n_est = n_rows * (n_repeats + 1) * 5
+    if n_est > _MAX_CELLS:
+        raise ValueError(
+            "kerf_bend_cutter(): cross would cut %d slits (cap %d); "
+            "increase pitch/bridge or shrink the panel"
+            % (n_est, _MAX_CELLS))
+    x0 = -((n_rows - 1) * pitch) / 2.0
+    span = n_repeats * y_repeat
+    y_min = -span / 2.0
+    arm_len = 0.46 * bar_len
+    # Keep arm buffers from fusing onto the bar so split() still sees
+    # the 30/150 deg family as its own pieces.
+    arm_inset = kerf
+    usable = sg.box(-usable_w / 2.0, -usable_h / 2.0,
+                    usable_w / 2.0, usable_h / 2.0)
+    half_k = kerf / 2.0
+
+    def _add_bar(polys, x, y0, y1):
+        if y1 - y0 <= kerf:
+            return
+        poly = sg.box(x - half_k, y0, x + half_k, y1)
+        if poly.is_empty:
+            return
+        if not usable.contains(poly):
+            poly = poly.intersection(usable)
+            if poly.is_empty or poly.geom_type not in ("Polygon", "MultiPolygon"):
+                return
+        polys.append(poly)
+
+    def _add_arm(polys, x, y, angle_deg):
+        if arm_len <= arm_inset + 1e-9:
+            return
+        a = math.radians(angle_deg)
+        ca, sa = math.cos(a), math.sin(a)
+        p1 = (x + ca * arm_inset, y + sa * arm_inset)
+        p2 = (x + ca * arm_len, y + sa * arm_len)
+        poly = sg.LineString([p1, p2]).buffer(half_k, cap_style=2)
+        if poly.is_empty:
+            return
+        if not usable.contains(poly):
+            return
+        polys.append(poly)
+
+    polys = []
+    for r in range(n_rows):
+        row_x = x0 + r * pitch
+        stagger = (y_repeat / 2.0) if (r % 2) else 0.0
+        # Even rows: bars centred on k * y_repeat, including the two
+        # usable-Y edges (those two are truncated at their midpoint).
+        # Odd rows: offset half a repeat; those centres sit inside.
+        if r % 2:
+            k0, k1 = 0, n_repeats
+        else:
+            k0, k1 = 0, n_repeats + 1
+        for k in range(k0, k1):
+            y_c = y_min + k * y_repeat + stagger
+            y_lo = y_c - bar_len / 2.0
+            y_hi = y_c + bar_len / 2.0
+            at_lo_edge = (not (r % 2)) and k == 0
+            at_hi_edge = (not (r % 2)) and k == n_repeats
+            if at_lo_edge:
+                y_lo = y_c  # midpoint truncation
+            if at_hi_edge:
+                y_hi = y_c
+            if y_lo < -usable_h / 2.0 - 1e-6:
+                y_lo = -usable_h / 2.0
+            if y_hi > usable_h / 2.0 + 1e-6:
+                y_hi = usable_h / 2.0
+            if y_hi - y_lo <= kerf:
+                continue
+            _add_bar(polys, row_x, y_lo, y_hi)
+            # Arms from remaining endpoints, ~30 deg from +X.
+            if not at_lo_edge:
+                _add_arm(polys, row_x, y_lo, -30.0)
+                _add_arm(polys, row_x, y_lo, 210.0)
+            if not at_hi_edge:
+                _add_arm(polys, row_x, y_hi, 30.0)
+                _add_arm(polys, row_x, y_hi, 150.0)
+    return polys, n_rows, n_repeats
+
+
 def kerf_bend_cutter(mode="lattice", width=60.0, height=40.0, thickness=3.0,
                      kerf=0.5, pitch=6.0, bridge=1.0, angle_deg=45.0,
                      helix_shear=1.5, margin=4.0, nozzle=0.4):
@@ -920,7 +1018,10 @@ def kerf_bend_cutter(mode="lattice", width=60.0, height=40.0, thickness=3.0,
     each edge of a flat-top hex tiling is a kerf slit shortened so an uncut
     ``bridge`` remains at the vertices, in three orientations at 0/60/120 deg.
     ``pitch`` is hex centre-to-centre. This is not ``honeycomb_panel``'s
-    positive hex through-holes.
+    positive hex through-holes. ``mode="cross"`` cuts an X-lattice of
+    lattice-family bars plus ~30 deg diagonal arms (LivingHingeGenerator
+    Cross / KM Cross): arms from each bar endpoint interlock across
+    half-repeat-staggered rows into X intersections.
 
     Both FDM floors are validated, not just documented: ``kerf`` must be at
     least one ``nozzle`` width (0.4 mm) or the slicer's minimum feature size
@@ -954,6 +1055,9 @@ def kerf_bend_cutter(mode="lattice", width=60.0, height=40.0, thickness=3.0,
             width, height, kerf, pitch, bridge, margin)
     elif mode == "hex":
         polys, n_rows, n_slits = _hex_slit_polys(
+            width, height, kerf, pitch, bridge, margin)
+    elif mode == "cross":
+        polys, n_rows, n_slits = _cross_slit_polys(
             width, height, kerf, pitch, bridge, margin)
     else:
         shear = helix_shear if mode == "spiral" else 0.0

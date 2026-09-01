@@ -308,7 +308,7 @@ def test_isogrid_panel_cell_cap_protects_the_playground():
 # kerf_bend_cutter
 # ---------------------------------------------------------------------------
 
-@pytest.mark.parametrize("mode", ["lattice", "diagonal", "spiral", "wave", "hex"])
+@pytest.mark.parametrize("mode", ["lattice", "diagonal", "spiral", "wave", "hex", "cross"])
 def test_kerf_bend_cutter_opens_clean_through_slits(mode):
     width, height, thickness = 60.0, 40.0, 3.0
     cutters = kerf_bend_cutter(mode=mode, width=width, height=height,
@@ -348,8 +348,9 @@ def test_kerf_bend_cutter_modes_produce_different_slit_layouts():
     spiral = kerf_bend_cutter(mode="spiral")[0]
     wave = kerf_bend_cutter(mode="wave")[0]
     hex_ = kerf_bend_cutter(mode="hex")[0]
-    # Rotating (diagonal), shearing (spiral), waving, and hex-edge slits must
-    # actually change the cut geometry, not just relabel it.
+    cross = kerf_bend_cutter(mode="cross")[0]
+    # Rotating (diagonal), shearing (spiral), waving, hex-edge, and cross
+    # X-lattice slits must actually change the cut geometry, not just relabel it.
     assert _kerf_layout_differs(lattice, diagonal)
     assert _kerf_layout_differs(lattice, spiral)
     assert _kerf_layout_differs(lattice, wave)
@@ -359,6 +360,11 @@ def test_kerf_bend_cutter_modes_produce_different_slit_layouts():
     assert _kerf_layout_differs(wave, hex_)
     assert _kerf_layout_differs(diagonal, hex_)
     assert _kerf_layout_differs(spiral, hex_)
+    assert _kerf_layout_differs(lattice, cross)
+    assert _kerf_layout_differs(wave, cross)
+    assert _kerf_layout_differs(hex_, cross)
+    assert _kerf_layout_differs(diagonal, cross)
+    assert _kerf_layout_differs(spiral, cross)
 
 
 def test_kerf_bend_cutter_wave_slits_are_sinusoidal():
@@ -413,6 +419,29 @@ def test_kerf_bend_cutter_hex_slits_have_three_orientations():
                 bins[target] += 1
                 break
     assert bins[0] >= 1 and bins[60] >= 1 and bins[120] >= 1
+
+
+def test_kerf_bend_cutter_cross_slits_have_x_lattice_arms():
+    cutters = kerf_bend_cutter(mode="cross", kerf=0.5, pitch=6.0, bridge=1.0)
+    mesh = cutters[0]
+    assert mesh.metadata["mode"] == "cross"
+    for key in ("min_bend_radius_mm", "kerf", "pitch", "bridge"):
+        assert key in mesh.metadata
+    pieces = mesh.split(only_watertight=False)
+    assert len(pieces) > 1
+    # Lattice slits are kerf-wide in X and long in Y. Cross arms run at
+    # ~30/150, so some pieces span more than kerf in X.
+    x_spans = [p.extents[0] for p in pieces]
+    assert max(x_spans) > 1.5
+    bins = {30: 0, 90: 0, 150: 0}
+    for p in pieces:
+        deg = _principal_xy_deg(p)
+        for target in (30, 90, 150):
+            delta = abs((deg - target + 90.0) % 180.0 - 90.0)
+            if delta <= 20.0:
+                bins[target] += 1
+                break
+    assert bins[30] >= 1 and bins[150] >= 1 and bins[90] >= 1
 
 
 def test_kerf_bend_cutter_rejects_sub_nozzle_kerf():
