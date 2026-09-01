@@ -1,4 +1,4 @@
-"""Project-agnostic 2D metamaterial cells: honeycomb and auxetic panels, kerf-bend cutters."""
+"""Project-agnostic 2D metamaterial cells: honeycomb, isogrid, auxetic panels, kerf-bend cutters."""
 
 import math
 
@@ -556,6 +556,170 @@ def honeycomb_panel(width=60.0, height=60.0, thickness=3.0, cell=12.0,
 
 
 # ---------------------------------------------------------------------------
+# NASA-style isogrid (triangular through-ribs)
+# ---------------------------------------------------------------------------
+
+def _eq_triangle(cx, cy, side, up=True):
+    """Equilateral triangle centred at ``(cx, cy)``. ``up`` points the apex +Y."""
+    r = side / math.sqrt(3.0)
+    if up:
+        verts = (
+            (cx, cy + r),
+            (cx - side / 2.0, cy - r / 2.0),
+            (cx + side / 2.0, cy - r / 2.0),
+        )
+    else:
+        verts = (
+            (cx, cy - r),
+            (cx - side / 2.0, cy + r / 2.0),
+            (cx + side / 2.0, cy + r / 2.0),
+        )
+    return sg.Polygon(verts)
+
+
+def _isogrid_unit(bounds, cell, strut_t):
+    """Place equilateral-triangle through-holes on a triangular lattice.
+
+    ``cell`` is the wall-centreline triangle side and the vertex pitch. Ribs
+    run at 0/60/120 deg. Each hole is the same triangle inset by
+    ``strut_t / 2`` so a shared wall prints at ``strut_t``. Both up- and
+    down-pointing cells are punched so the remaining material is the
+    NASA-style isogrid (not a flat-top hex honeycomb). Returns hole
+    polygons that sit fully inside ``bounds``.
+    """
+    inner_s = cell - strut_t * math.sqrt(3.0)
+    if inner_s <= 0:
+        raise ValueError(
+            "isogrid_panel(): cell=%.3g mm is not larger than strut_t=%.3g mm; "
+            "the cells would fuse solid" % (cell, strut_t))
+    pitch_x = cell
+    pitch_y = cell * math.sqrt(3.0) / 2.0
+    r_inner = inner_s / math.sqrt(3.0)
+    hole_ext_x = inner_s / 2.0
+    hole_ext_y = r_inner
+    minx, miny, maxx, maxy = bounds
+    inner_w = (maxx - minx) - 2.0 * hole_ext_x
+    inner_h = (maxy - miny) - 2.0 * hole_ext_y
+    if inner_w <= 0 or inner_h <= 0:
+        raise ValueError(
+            "isogrid_panel(): no triangle cell fits inside the bordered "
+            "interior; increase the panel or shrink cell/border")
+    n_cols = max(2, int(inner_w // pitch_x) + 2)
+    n_rows = max(2, int(inner_h // pitch_y) + 2)
+    n_est = (n_cols - 1) * (n_rows - 1) * 2
+    if n_est > _MAX_CELLS:
+        raise ValueError(
+            "isogrid grid would build %d cells (cap %d); increase cell or "
+            "shrink the panel" % (n_est, _MAX_CELLS))
+    x0 = -((n_cols - 1) * pitch_x) / 2.0
+    y0 = -((n_rows - 1) * pitch_y) / 2.0
+    interior = sg.box(minx, miny, maxx, maxy)
+
+    def _vert(i, j):
+        return (x0 + i * pitch_x + (j % 2) * (pitch_x / 2.0),
+                y0 + j * pitch_y)
+
+    holes = []
+    for j in range(n_rows - 1):
+        for i in range(n_cols - 1):
+            a = _vert(i, j)
+            b = _vert(i + 1, j)
+            c = _vert(i, j + 1)
+            d = _vert(i + 1, j + 1)
+            if j % 2 == 0:
+                pairs = ((a, b, c, True), (b, c, d, False))
+            else:
+                pairs = ((a, b, d, True), (a, c, d, False))
+            for p0, p1, p2, up in pairs:
+                cx = (p0[0] + p1[0] + p2[0]) / 3.0
+                cy = (p0[1] + p1[1] + p2[1]) / 3.0
+                hole = _eq_triangle(cx, cy, inner_s, up=up)
+                if interior.contains(hole):
+                    holes.append(hole)
+    if not holes:
+        raise ValueError(
+            "isogrid_panel(): no triangle cell fits inside the bordered "
+            "interior; increase the panel or shrink cell/border")
+    nx = n_cols - 1
+    ny = n_rows - 1
+    return holes, nx, ny, pitch_x, pitch_y
+
+
+def isogrid_panel(width=60.0, height=60.0, thickness=3.0, cell=12.0,
+                  strut_t=1.2, border=3.0, nozzle=0.4, snap_strut=True):
+    """Build a NASA-style isogrid panel (triangular through-cells, rib sheet).
+
+    A rectangular slab with a grid of equilateral-triangle through-holes.
+    The remaining material is ribs at 0/60/120 deg: ``cell`` is the
+    wall-centreline triangle side and the vertex pitch, and ``strut_t`` is
+    the printed rib thickness. Distinct from ``honeycomb_panel``, whose
+    cells are flat-top hexagons.
+
+    A solid ``border``-wide rim is left around the tiled holes so the panel
+    edge is never a row of half-cells; the actual rim (panel edge to the
+    nearest hole) is reported in ``metadata["border_actual"]`` and is always
+    >= the requested ``border``, because an integer cell count rarely fills
+    the interior exactly. ``strut_t`` is snapped to the nearest integer
+    multiple of ``nozzle`` (one of 0.4 / 0.8 / 1.2 mm) by default; pass
+    ``snap_strut=False`` to get a ``ValueError`` with the corrected value
+    instead of silent snapping. The panel sits flat with its bottom face at
+    z=0 and centred on the XY origin; print it flat, cell layer down, no
+    supports needed. Cell counts are capped so a default-sized panel builds
+    in well under a second. Units are mm.
+    """
+    if width <= 0 or height <= 0 or thickness < 0.8:
+        raise ValueError("isogrid_panel(): width/height must be positive and "
+                          "thickness must be at least 0.8 mm")
+    if cell <= 0:
+        raise ValueError("isogrid_panel(): cell must be positive")
+    if border <= 0 or border >= min(width, height) / 2.0:
+        raise ValueError("isogrid_panel(): border must be positive and less "
+                          "than half the panel's shorter side")
+    _validate_nozzle(nozzle)
+    strut_t = _snap_strut(strut_t, nozzle, snap_strut, "strut_t")
+    if cell < 4.0 * strut_t:
+        raise ValueError(
+            "isogrid_panel(): cell=%.3g mm is too small for strut_t=%.3g mm; "
+            "the struts would fuse solid (need cell >= 4*strut_t)"
+            % (cell, strut_t))
+
+    bounds = _usable_bounds(width, height, border)
+    holes, nx, ny, px, py = _isogrid_unit(bounds, cell, strut_t)
+    hole_union = unary_union(holes)
+    hminx, hminy, hmaxx, hmaxy = hole_union.bounds
+    border_actual = min(width / 2.0 + hminx, width / 2.0 - hmaxx,
+                        height / 2.0 + hminy, height / 2.0 - hmaxy)
+    if border_actual < border - 1e-6:
+        raise ValueError(
+            "isogrid_panel(): tiled cells overflow the requested border "
+            "(actual %.3g mm < requested %.3g mm); increase border or "
+            "shrink cell" % (border_actual, border))
+
+    panel = sg.box(-width / 2.0, -height / 2.0, width / 2.0, height / 2.0)
+    combined = panel.difference(hole_union)
+    if combined.geom_type not in ("Polygon", "MultiPolygon"):
+        raise ValueError("isogrid_panel(): degenerate panel geometry")
+    combined = _prune_holes(combined)
+    hole_count = _count_holes(combined)
+
+    mesh = _extrude(combined, thickness)
+    mesh.metadata.update({
+        "mode": "triangle",
+        "cell_size": cell,
+        "cells_x": nx,
+        "cells_y": ny,
+        "cell_count": len(holes),
+        "pitch_x": px,
+        "pitch_y": py,
+        "strut_t": strut_t,
+        "border_actual": border_actual,
+        "hole_count": hole_count,
+        "poisson_ratio_sign": 1,
+    })
+    return mesh
+
+
+# ---------------------------------------------------------------------------
 # Kerf bend cutters
 # ---------------------------------------------------------------------------
 
@@ -749,5 +913,6 @@ def kerf_bend_cutter(mode="lattice", width=60.0, height=40.0, thickness=3.0,
 __all__ = (
     "auxetic_panel",
     "honeycomb_panel",
+    "isogrid_panel",
     "kerf_bend_cutter",
 )

@@ -323,6 +323,11 @@ USE_CASES = {
         "Camera and projector apertures, laser beam expanders, soft-robot "
         "grippers, and printed iris valves for light or air."
     ),
+    'isogrid_panel': (
+        "Satellite payload skins, aircraft isogrid tanks, and printed "
+        "lightened sheets that want triangular through-cells with 0/60/120 "
+        "ribs and a solid rim, not a hex honeycomb."
+    ),
     'jaw_coupling': (
         "Servo and stepper motor couplings, pump shafts, and general flexible "
         "jaw (Lovejoy-style) connections with a spider."
@@ -827,6 +832,7 @@ GALLERY_FILE_TO_API = {
     'idler_pulley_demo.glb': 'idler_pulley',
     'intermittent_gear_pair_demo.glb': 'intermittent_gear_pair',
     'iris_diaphragm_demo.glb': 'iris_diaphragm',
+    'isogrid_panel_demo.glb': 'isogrid_panel',
     'jaw_coupling_demo.glb': 'jaw_coupling',
     'kerf_bend_cutter_demo.glb': 'kerf_bend_cutter',
     'kinematic_coupling_demo.glb': 'kinematic_coupling',

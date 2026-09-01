@@ -1,0 +1,46 @@
+# mechlib pattern / lattice / kerf backlog
+
+Hourly Pawl cron (`mechlib-pattern-lattice-hourly` `444870752857`) ships one pending row per tick.
+nbg1 owns research (add/replace/veto). Pawl implements only; do not invent slugs.
+Semi-primitives. No CadQuery. FDM: nozzle-multiple struts, wall>=0.8, kerf>=nozzle.
+
+## Already in library (do not re-ship)
+
+- patterns: polar_ring, lighten_cell_poly (rect|hex), lighten_grid_centres, directed_holes
+- auxetic_panel: reentrant, rotating_squares, chiral (hexachiral is a dup, vetoed)
+- kerf_bend_cutter: lattice, diagonal, spiral, wave (b6af289)
+- honeycomb_panel (47e3460)
+- isogrid_panel (this hour)
+
+## Queue
+
+| id | api | kind | status | note |
+| --- | --- | --- | --- | --- |
+| 01 | honeycomb_panel | 2d-lattice | shipped | SHA 47e3460 |
+| 02 | isogrid_panel | 2d-lattice | shipped | NASA triangular rib sheet. THIS HOUR. |
+| 03 | kerf_bend_cutter(mode="hex") | kerf | pending | next after isogrid |
+| 04 | kerf_bend_cutter(mode="cross") | kerf | pending | |
+| 05 | kerf_bend_cutter(mode="chevron") | kerf | pending | |
+| 06 | kerf_bend_cutter(mode="diamond") | kerf | pending | |
+| 07 | kerf_bend_cutter(mode="fishbone") | kerf | pending | |
+| 08 | kerf_bend_cutter(mode="meander") | kerf | pending | MDPI meander |
+| 09 | kerf_bend_cutter(mode="biaxial") | kerf | pending | 2-axis wrap |
+| 10 | auxetic_panel(mode="arrowhead") | auxetic | pending | |
+| 11 | auxetic_panel(mode="star") | auxetic | pending | |
+| 12 | auxetic_panel(mode="anti_tetrachiral") | auxetic | pending | |
+| 13 | auxetic_panel(mode="houndstooth") | auxetic | pending | |
+| 14 | kagome_lattice | 2d-lattice | pending | |
+| 15 | bcc_lattice | 3d-strut | pending | |
+| 16 | octet_truss | 3d-strut | pending | |
+| 17 | kelvin_cell | 3d-strut | pending | |
+| 18 | cubic_lattice | 3d-strut | pending | |
+| 19 | gyroid_lattice | tpms | pending | keep; wall>=1.2 cell>=8 |
+| 20 | honeycomb_core | 2.5d | pending | != honeycomb_panel sheet |
+| 21 | lattice_flexure(kind="x") | flexure | pending | |
+| 22 | lattice_flexure(kind="v") | flexure | pending | |
+
+## Vetoed (do not ship)
+
+hexachiral (dup of chiral), Schwarz P, Schwarz D, bezier, fabric, circle, snake, Voronoi, Miura, Yoshimura, rotating_triangles, living_hinge_panel (= mode=lattice already).
+
+Sources: LivingHingeGenerator, MDPI meander, FFF review, NASA isogrid PA+CF, BCC FFF truss.

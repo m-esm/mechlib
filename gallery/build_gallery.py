@@ -143,7 +143,7 @@ from mechlib.mechanisms import handwheel, shaft_collar, star_knob
 from mechlib.pulleys import v_belt_pulley
 from mechlib.ratchets import ratchet_wheel_pawl
 from mechlib.joints import ball_socket_joint, clevis, gimbal_rings, knuckle_hinge
-from mechlib.lattices import auxetic_panel, honeycomb_panel, kerf_bend_cutter
+from mechlib.lattices import auxetic_panel, honeycomb_panel, isogrid_panel, kerf_bend_cutter
 from mechlib.linear import (
     archimedes_screw,
     differential_screw,
@@ -2744,6 +2744,21 @@ def build():
                 "transversely (positive Poisson), the opposite of auxetic_panel."),
             "origin": "Gap-analysis wave v0.11.x; classic ref: regular hexagonal honeycomb core",
             "demo": "demo_honeycomb_panel",
+        },
+        {
+            "file": "isogrid_panel_demo.glb",
+            "name": "isogrid_panel",
+            "module": "mechlib.lattices",
+            "signature": signature(isogrid_panel),
+            "description": (
+                "A flat NASA-style isogrid sheet: equilateral-triangle "
+                "through-cells with ribs at 0/60/120 deg and a solid border "
+                "frame, so the edge is never a row of half-cells. cell is the "
+                "wall-centreline triangle side and vertex pitch; strut_t is "
+                "the printed rib. Distinct from honeycomb_panel (flat-top hex "
+                "holes). Print flat, no supports."),
+            "origin": "Gap-analysis wave v0.11.x; classic ref: NASA isogrid (triangular rib sheet)",
+            "demo": "demo_isogrid_panel",
         },
         {
             "file": "kerf_bend_cutter_demo.glb",
