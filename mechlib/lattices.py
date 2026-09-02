@@ -11,7 +11,7 @@ from .meshutil import extrude_poly_z, from_manifold, to_manifold
 _NOZZLE_WIDTHS = (0.4, 0.8, 1.2)
 _AUXETIC_MODES = (
     "reentrant", "rotating_squares", "arrowhead", "star", "chiral",
-    "anti_tetrachiral")
+    "anti_tetrachiral", "houndstooth")
 _KERF_MODES = ("lattice", "diagonal", "spiral", "wave", "hex", "cross", "chevron",
                "diamond", "fishbone", "meander", "biaxial")
 _MAX_CELLS = 2500
@@ -274,6 +274,55 @@ def _star_unit(bounds, cell, strut_t):
     return material, nx, ny, pitch_x, pitch_y
 
 
+def _houndstooth_unit(bounds, cell, strut_t):
+    """Build interlocking L / broken-chevron houndstooth NPR struts.
+
+    Each repeat is a pair of L-hooks in opposite corners (bottom-left and
+    top-right), each a broken chevron whose inner corner pokes into the void
+    as a re-entrant notch. Neighbouring cells share the mid-edge endpoints,
+    so the tiled sheet is one connected network. Stretching along X opens
+    those notches and drives the complementary hooks apart along Y: the
+    FFF-review houndstooth negative-Poisson cell. The diagonal L pairing is
+    not a rotation of the re-entrant bowtie, the double-arrowhead, or the
+    hexagram star.
+    """
+    pitch_x = cell
+    pitch_y = cell
+    minx, miny, maxx, maxy = bounds
+    nx = max(1, int((maxx - minx) // pitch_x))
+    ny = max(1, int((maxy - miny) // pitch_y))
+    if nx * ny > _MAX_CELLS:
+        raise ValueError(
+            "houndstooth grid would build %d cells (cap %d); increase cell or "
+            "shrink the panel" % (nx * ny, _MAX_CELLS))
+    x0 = -((nx - 1) * pitch_x) / 2.0
+    y0 = -((ny - 1) * pitch_y) / 2.0
+    segs = []
+    half = pitch_x / 2.0
+    # Corner of each L sits this far in from the cell centre, so the two
+    # hooks stay apart and the re-entrant poke has room to open.
+    arm = 0.22 * cell
+    poke = 0.14 * cell
+    for cx, cy in _grid_centres(nx, ny, pitch_x, pitch_y, x0, y0):
+        segs.append(sg.LineString([
+            (cx - half, cy),
+            (cx - arm, cy),
+            (cx - arm - poke, cy - poke),
+            (cx, cy - arm),
+            (cx, cy - half),
+        ]))
+        segs.append(sg.LineString([
+            (cx + half, cy),
+            (cx + arm, cy),
+            (cx + arm + poke, cy + poke),
+            (cx, cy + arm),
+            (cx, cy + half),
+        ]))
+    material = unary_union(
+        [s.buffer(strut_t / 2.0, cap_style=2, join_style=2) for s in segs])
+    return material, nx, ny, pitch_x, pitch_y
+
+
 def _rotating_squares_unit(bounds, cell, strut_t, hinge_t):
     """Build the rotating-squares skeleton: rigid squares, corner-only hinges.
 
@@ -453,7 +502,7 @@ def auxetic_panel(mode="reentrant", width=60.0, height=60.0, thickness=3.0,
     Ordinary sheet material gets thinner when you stretch it. These panels do
     the opposite: their internal cell topology, not the base material,
     supplies the negative Poisson's ratio, so a rectangle of ordinary PLA or
-    PETG stretched along X measurably widens along Y too. Six topologies
+    PETG stretched along X measurably widens along Y too. Seven topologies
     are supported. ``"reentrant"`` is a bowtie/inverted-honeycomb lattice
     (concave hexagon cells whose splayed struts hinge open under tension).
     ``"rotating_squares"`` is rigid square islands joined only at their
@@ -471,7 +520,9 @@ def auxetic_panel(mode="reentrant", width=60.0, height=60.0, thickness=3.0,
     pulling the panel spins every node in the same rotational sense.
     ``"anti_tetrachiral"`` instead places circular nodes on a square grid and
     alternates the tangent side in a checkerboard, so neighbouring nodes
-    rotate in opposite senses.
+    rotate in opposite senses. ``"houndstooth"`` tiles interlocking L-shaped
+    broken-chevrons whose inner corners are re-entrant, so stretching along
+    X opens the notches and expands the panel along Y.
 
     All modes fill a solid ``border``-wide frame around the tiled interior so
     the panel edge is a continuous rim, never a row of half-cut cells; the
@@ -529,6 +580,10 @@ def auxetic_panel(mode="reentrant", width=60.0, height=60.0, thickness=3.0,
         extra = {}
     elif mode == "star":
         material, nx, ny, px, py = _star_unit(bounds, cell, strut_t)
+        overlap = strut_t
+        extra = {}
+    elif mode == "houndstooth":
+        material, nx, ny, px, py = _houndstooth_unit(bounds, cell, strut_t)
         overlap = strut_t
         extra = {}
     elif mode == "anti_tetrachiral":

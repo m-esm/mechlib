@@ -2723,11 +2723,12 @@ def build():
             "description": (
                 "A flat panel that gets WIDER, not narrower, when you stretch it: "
                 "its internal cell topology supplies a negative Poisson's ratio "
-                "instead of the base plastic. Six interchangeable cell types "
+                "instead of the base plastic. Seven interchangeable cell types "
                 "(reentrant bowtie honeycomb, rigid rotating squares on corner "
                 "hinges, Grima double-arrowhead cells, Grima star-shaped "
                 "honeycomb cells, a chiral node-and-tangent-ligament grid, "
-                "and an anti-tetrachiral opposite-sense square grid) trade off "
+                "an anti-tetrachiral opposite-sense square grid, and "
+                "houndstooth interlocking-L / broken-chevron cells) trade off "
                 "stiffness, hinge fatigue life, and print complexity for the same "
                 "auxetic effect."),
             "origin": "Gap-analysis wave v0.8.0; classic ref: auxetic re-entrant honeycomb (Lakes, 1987)",
