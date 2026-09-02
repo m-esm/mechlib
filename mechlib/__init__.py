@@ -157,7 +157,7 @@ from .indexing import (
     star_wheel,
 )
 from .joints import ball_socket_joint, clevis, gimbal_rings, knuckle_hinge
-from .lattices import auxetic_panel, bcc_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kerf_bend_cutter
+from .lattices import auxetic_panel, bcc_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kerf_bend_cutter, octet_truss
 from .linear import (
     archimedes_screw,
     differential_screw,

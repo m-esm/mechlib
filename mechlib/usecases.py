@@ -65,6 +65,12 @@ USE_CASES = {
         "cubic strut truss, not a flat 2D lightening sheet like honeycomb_panel "
         "or isogrid_panel."
     ),
+    'octet_truss': (
+        "Lightweight sandwich cores, stiff robotic frames, and load-bearing "
+        "metamaterial blocks that need a true octet/FCC face-diagonal network "
+        "of tetrahedral and octahedral cells rather than BCC body diagonals or "
+        "a cubic edge grid."
+    ),
     'beam_coupling': (
         "3D-printer Z axes, CNC builds, and motor-to-leadscrew links "
         "that need one cheap part forgiving angular, parallel, and "
@@ -789,6 +795,7 @@ GALLERY_FILE_TO_API = {
     'ball_socket_joint_demo.glb': 'ball_socket_joint',
     'barrel_cam_demo.glb': 'barrel_cam',
     'bcc_lattice_demo.glb': 'bcc_lattice',
+    'octet_truss_demo.glb': 'octet_truss',
     'bearing_seat_demo.glb': 'bearing_seat',
     'bell_crank_demo.glb': 'bell_crank',
     'belleville_washer_demo.glb': 'belleville_washer',

@@ -144,7 +144,7 @@ from mechlib.mechanisms import handwheel, shaft_collar, star_knob
 from mechlib.pulleys import v_belt_pulley
 from mechlib.ratchets import ratchet_wheel_pawl
 from mechlib.joints import ball_socket_joint, clevis, gimbal_rings, knuckle_hinge
-from mechlib.lattices import auxetic_panel, bcc_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kerf_bend_cutter
+from mechlib.lattices import auxetic_panel, bcc_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kerf_bend_cutter, octet_truss
 from mechlib.linear import (
     archimedes_screw,
     differential_screw,
@@ -2797,6 +2797,21 @@ def build():
                 "profile or light support."),
             "origin": "Gap-analysis wave v0.11.x; classic ref: BCC FFF metamaterial truss",
             "demo": "demo_bcc_lattice",
+        },
+        {
+            "file": "octet_truss_demo.glb",
+            "name": "octet_truss",
+            "module": "mechlib.lattices",
+            "signature": signature(octet_truss),
+            "description": (
+                "A true octet/FCC truss whose shared corner and face-centre "
+                "nodes connect only along cube-face diagonals, forming rigid "
+                "tetrahedral and octahedral cells. strut_d is nozzle-snapped "
+                "and node_d blends the joints. Unlike BCC this has no body-"
+                "centre nodes or body-diagonal struts; unlike a cubic grid it "
+                "has no axis-aligned edges. metadata reports relative_density."),
+            "origin": "Classic octet truss / FCC nearest-neighbour lattice",
+            "demo": "demo_octet_truss",
         },
         {
             "file": "kerf_bend_cutter_demo.glb",

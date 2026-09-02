@@ -62351,6 +62351,51 @@
       "added": "2026-09-02T04:49:25Z"
     },
     {
+      "file": "octet_truss_demo.glb",
+      "name": "octet_truss",
+      "module": "mechlib.lattices",
+      "signature": "octet_truss(nx=2, ny=2, nz=2, cell=12.0, strut_d=1.6, node_d=None, sections=12, nozzle=0.4, snap_strut=True)",
+      "description": "A true octet/FCC truss whose shared corner and face-centre nodes connect only along cube-face diagonals, forming rigid tetrahedral and octahedral cells. strut_d is nozzle-snapped and node_d blends the joints. Unlike BCC this has no body-centre nodes or body-diagonal struts; unlike a cubic grid it has no axis-aligned edges. metadata reports relative_density.",
+      "origin": "Classic octet truss / FCC nearest-neighbour lattice",
+      "build_ms": 230,
+      "category": "lattices",
+      "group": "blocks",
+      "rank": 26,
+      "parts": 1,
+      "size_mm": [
+        26.4,
+        26.4,
+        26.4
+      ],
+      "play": {
+        "demo": "demo_octet_truss",
+        "params": [
+          {
+            "name": "cell",
+            "label": "Cell",
+            "unit": "mm",
+            "type": "float",
+            "default": 12.0,
+            "min": 8.0,
+            "max": 16.0,
+            "step": 2.0
+          },
+          {
+            "name": "strut_d",
+            "label": "Strut D",
+            "unit": "mm",
+            "type": "float",
+            "default": 1.6,
+            "min": 0.8,
+            "max": 2.4,
+            "step": 0.4
+          }
+        ]
+      },
+      "applications": "Lightweight sandwich cores, stiff robotic frames, and load-bearing metamaterial blocks that need a true octet/FCC face-diagonal network of tetrahedral and octahedral cells rather than BCC body diagonals or a cubic edge grid.",
+      "added": "2026-09-02T06:05:26Z"
+    },
+    {
       "file": "kerf_bend_cutter_demo.glb",
       "name": "kerf_bend_cutter",
       "module": "mechlib.lattices",

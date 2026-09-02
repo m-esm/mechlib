@@ -1,9 +1,10 @@
 import math
 
+import numpy as np
 import pytest
 import trimesh
 
-from mechlib.lattices import auxetic_panel, bcc_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kerf_bend_cutter
+from mechlib.lattices import _octet_graph, auxetic_panel, bcc_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kerf_bend_cutter, octet_truss
 from mechlib.meshutil import sub, uni
 from mechlib.prim import boxc
 
@@ -861,3 +862,85 @@ def test_bcc_lattice_rejects_bad_arguments():
 def test_bcc_lattice_cell_cap_protects_the_playground():
     with pytest.raises(ValueError):
         bcc_lattice(nx=5, ny=5, nz=5, cell=12.0)  # 125 > 64-cell cap
+
+
+# ---------------------------------------------------------------------------
+# octet_truss (FCC face-diagonal truss)
+# ---------------------------------------------------------------------------
+
+def test_octet_mesh():
+    block = octet_truss(nx=2, ny=2, nz=2)
+    assert_mesh(block)
+    assert block.is_winding_consistent
+    assert len(block.split(only_watertight=False)) == 1
+    assert block.metadata["mode"] == "octet"
+
+
+def test_octet_graph():
+    nx, ny, nz = 3, 2, 1
+    nodes, edges = _octet_graph(nx, ny, nz, 10.0)
+    expected_nodes = {
+        (x, y, z)
+        for z in range(2 * nz + 1)
+        for y in range(2 * ny + 1)
+        for x in range(2 * nx + 1)
+        if (x + y + z) % 2 == 0
+    }
+    expected_edges = set()
+    for node in expected_nodes:
+        for offset in ((1, 1, 0), (1, -1, 0),
+                       (1, 0, 1), (1, 0, -1),
+                       (0, 1, 1), (0, 1, -1)):
+            other = tuple(node[i] + offset[i] for i in range(3))
+            if other in expected_nodes:
+                expected_edges.add(tuple(sorted((node, other))))
+
+    assert set(nodes) == expected_nodes
+    assert edges == expected_edges
+    assert len(edges) == len(set(edges))
+    assert all(sum(delta == 0 for delta in np.subtract(a, b)) == 1
+               and sorted(abs(delta) for delta in np.subtract(a, b)) == [0, 1, 1]
+               for a, b in edges)
+
+    block = octet_truss(nx=nx, ny=ny, nz=nz, cell=10.0, strut_d=1.2)
+    assert block.metadata["node_count"] == len(expected_nodes)
+    assert block.metadata["strut_count"] == len(expected_edges)
+
+
+def test_octet_degree():
+    _nodes, edges = _octet_graph(2, 2, 2, 12.0)
+    centre = (2, 2, 2)
+    neighbours = {b if a == centre else a for a, b in edges if centre in (a, b)}
+    assert len(neighbours) == 12
+
+
+def test_octet_bounds_density():
+    block = octet_truss(nx=2, ny=3, nz=1, cell=12.0,
+                        strut_d=1.5, node_d=2.4)
+    lo, hi = block.bounds
+    assert lo[0] == pytest.approx(-hi[0], abs=1e-6)
+    assert lo[1] == pytest.approx(-hi[1], abs=1e-6)
+    assert lo[2] == pytest.approx(-1.2, abs=1e-6)
+    assert hi[2] == pytest.approx(12.0 + 1.2, abs=1e-6)
+    assert block.metadata["strut_d"] == pytest.approx(1.6)
+    assert block.metadata["node_d"] == pytest.approx(2.4)
+    assert block.metadata["cell_count"] == 6
+    assert 0.0 < block.metadata["relative_density"] < 0.5
+
+
+def test_octet_density_growth():
+    thin = octet_truss(nx=1, ny=1, nz=1, strut_d=1.2)
+    thick = octet_truss(nx=1, ny=1, nz=1, strut_d=2.0)
+    assert thick.metadata["relative_density"] > thin.metadata["relative_density"]
+
+
+def test_octet_bad_args():
+    for kwargs in ({"nx": 0}, {"ny": True}, {"sections": 5},
+                   {"sections": 6.5}, {"strut_d": 0.4}, {"nozzle": 0.6},
+                   {"cell": 3.0, "strut_d": 1.6}, {"node_d": 0}):
+        with pytest.raises(ValueError):
+            octet_truss(**kwargs)
+    with pytest.raises(ValueError):
+        octet_truss(strut_d=1.5, snap_strut=False)
+    with pytest.raises(ValueError):
+        octet_truss(nx=5, ny=5, nz=5)

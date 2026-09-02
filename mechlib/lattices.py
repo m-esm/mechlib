@@ -1932,6 +1932,114 @@ def bcc_lattice(nx=2, ny=2, nz=2, cell=12.0, strut_d=1.6, node_d=None,
     return mesh
 
 
+# ---------------------------------------------------------------------------
+# 3D octet / face-centred-cubic (FCC) strut lattice
+# ---------------------------------------------------------------------------
+
+def _octet_graph(nx, ny, nz, cell):
+    """Return the shared FCC nodes and undirected face-diagonal edges."""
+    nodes = {
+        (ix, iy, iz): np.array((ix, iy, iz), dtype=float) * (cell / 2.0)
+        for iz in range(2 * nz + 1)
+        for iy in range(2 * ny + 1)
+        for ix in range(2 * nx + 1)
+        if (ix + iy + iz) % 2 == 0
+    }
+    offsets = []
+    for a in (-1, 1):
+        for b in (-1, 1):
+            offsets.extend(((a, b, 0), (a, 0, b), (0, a, b)))
+
+    edges = set()
+    for key in nodes:
+        for offset in offsets:
+            neighbour = tuple(key[axis] + offset[axis] for axis in range(3))
+            if neighbour in nodes:
+                edges.add(tuple(sorted((key, neighbour))))
+    return nodes, edges
+
+
+def octet_truss(nx=2, ny=2, nz=2, cell=12.0, strut_d=1.6, node_d=None,
+                 sections=12, nozzle=0.4, snap_strut=True):
+    """Build a true octet-truss (FCC face-diagonal) lattice.
+
+    Nodes occupy half-cell integer coordinates whose index sum is even: cube
+    corners plus face centres, the finite face-centred-cubic graph. Each node
+    connects only to in-bounds nearest neighbours at permutations of
+    ``(+/-1, +/-1, 0)`` in that half-cell grid. The resulting tetrahedral and
+    octahedral cells distinguish this structure from BCC body diagonals and a
+    cubic edge grid.
+
+    ``strut_d`` snaps to the ``nozzle`` grid by default. ``node_d`` defaults
+    to 1.5 times the realised strut diameter and is never allowed below it.
+    The block follows ``bcc_lattice`` conventions: centred in X/Y, nominal
+    bottom nodes at z=0, and relative density measured against the requested
+    cell-block volume. Units are mm.
+    """
+    for name, val in (("nx", nx), ("ny", ny), ("nz", nz)):
+        if isinstance(val, bool) or not isinstance(val, int) or val < 1:
+            raise ValueError("octet_truss(): %s must be a positive integer" % name)
+    if nx * ny * nz > _MAX_STRUT_CELLS:
+        raise ValueError(
+            "octet_truss(): nx*ny*nz=%d exceeds the %d-cell playground cap; a "
+            "larger strut union is too heavy to preview interactively"
+            % (nx * ny * nz, _MAX_STRUT_CELLS))
+    if cell <= 0:
+        raise ValueError("octet_truss(): cell must be positive")
+    if isinstance(sections, bool) or not isinstance(sections, int) or sections < 6:
+        raise ValueError("octet_truss(): sections must be an integer at least 6")
+    _validate_nozzle(nozzle)
+    strut_d = _snap_strut(strut_d, nozzle, snap_strut, "strut_d")
+    if strut_d < 0.8:
+        raise ValueError(
+            "octet_truss(): strut_d=%.3g mm is below the 0.8 mm FDM wall floor; "
+            "use a bigger strut or a wider nozzle" % strut_d)
+    if node_d is None:
+        node_d = 1.5 * strut_d
+    elif node_d <= 0:
+        raise ValueError("octet_truss(): node_d must be positive")
+    node_d = max(node_d, strut_d)
+    # Face diagonals are spaced on a half-cell grid. Keeping three realised
+    # strut diameters across a cell leaves an open octahedral/tetrahedral void
+    # after cylinders and joint spheres blend, instead of approaching a slab.
+    if cell < 3.0 * strut_d:
+        raise ValueError(
+            "octet_truss(): cell=%.3g mm is too small for strut_d=%.3g mm; the "
+            "face-diagonal network fuses toward a solid (need cell >= 3*strut_d)"
+            % (cell, strut_d))
+
+    nodes, edges = _octet_graph(nx, ny, nz, cell)
+    solids = [
+        _strut(nodes[a], nodes[b], strut_d / 2.0, sections)
+        for a, b in sorted(edges)
+    ]
+    for pos in nodes.values():
+        joint = trimesh.creation.icosphere(subdivisions=1, radius=node_d / 2.0)
+        joint.apply_translation(pos)
+        solids.append(joint)
+
+    mesh = uni(solids)
+    if not mesh.is_watertight or not mesh.is_winding_consistent:
+        mesh = from_manifold(to_manifold(mesh))
+    mesh.apply_translation((-nx * cell / 2.0, -ny * cell / 2.0, 0.0))
+
+    bbox_vol = (nx * cell) * (ny * cell) * (nz * cell)
+    mesh.metadata.update({
+        "mode": "octet",
+        "cell_size": cell,
+        "cells_x": nx,
+        "cells_y": ny,
+        "cells_z": nz,
+        "cell_count": nx * ny * nz,
+        "strut_count": len(edges),
+        "node_count": len(nodes),
+        "strut_d": strut_d,
+        "node_d": node_d,
+        "relative_density": float(mesh.volume / bbox_vol) if bbox_vol else 0.0,
+    })
+    return mesh
+
+
 __all__ = (
     "auxetic_panel",
     "bcc_lattice",
@@ -1939,4 +2047,5 @@ __all__ = (
     "isogrid_panel",
     "kagome_panel",
     "kerf_bend_cutter",
+    "octet_truss",
 )
