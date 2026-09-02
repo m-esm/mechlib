@@ -33,7 +33,7 @@ Semi-primitives. No CadQuery. FDM: nozzle-multiple struts, wall>=0.8, kerf>=nozz
 | 15 | bcc_lattice | 3d-strut | shipped | Body-centred-cubic strut truss, 8 half-diagonals/cell to shared centre node. SHA 479856a986f90ebcaa8c55c8fa80f5d4db1a9070 |
 | 16 | octet_truss | 3d-strut | shipped | FCC face-diagonal tetrahedral/octahedral strut network. SHA 01fdddb138d5a2df2ba228e2f1390686ac978e83 |
 | 17 | kelvin_cell | 3d-strut | shipped | Truncated-octahedron 24-node, 36-strut open-cell frame. SHA 55251cbc23acfe612cbc0b3e6e6d71e224e04566 |
-| 18 | cubic_lattice | 3d-strut | in_progress | Pawl implementation 2026-09-02 15:48 EEST. |
+| 18 | cubic_lattice | 3d-strut | shipped | Simple-cubic X/Y/Z edge truss with shared grid nodes. SHA e8f12a895686ebb2f139bd0d2d91491ae6a77df2 |
 | 19 | gyroid_lattice | tpms | pending | keep; wall>=1.2 cell>=8 |
 | 20 | honeycomb_core | 2.5d | pending | != honeycomb_panel sheet |
 | 21 | lattice_flexure(kind="x") | flexure | pending | |
