@@ -144,7 +144,7 @@ from mechlib.mechanisms import handwheel, shaft_collar, star_knob
 from mechlib.pulleys import v_belt_pulley
 from mechlib.ratchets import ratchet_wheel_pawl
 from mechlib.joints import ball_socket_joint, clevis, gimbal_rings, knuckle_hinge
-from mechlib.lattices import auxetic_panel, bcc_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kerf_bend_cutter, octet_truss
+from mechlib.lattices import auxetic_panel, bcc_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kelvin_cell, kerf_bend_cutter, octet_truss
 from mechlib.linear import (
     archimedes_screw,
     differential_screw,
@@ -2812,6 +2812,21 @@ def build():
                 "has no axis-aligned edges. metadata reports relative_density."),
             "origin": "Classic octet truss / FCC nearest-neighbour lattice",
             "demo": "demo_octet_truss",
+        },
+        {
+            "file": "kelvin_cell_demo.glb",
+            "name": "kelvin_cell",
+            "module": "mechlib.lattices",
+            "signature": signature(kelvin_cell),
+            "description": (
+                "A single Kelvin tetrakaidecahedral strut cell built from the "
+                "exact truncated-octahedron edge graph: 24 nodes and 36 equal "
+                "struts surrounding six square and eight regular hexagonal "
+                "faces. cell is its vertex-to-vertex span on each principal "
+                "axis; strut_d is nozzle-snapped and node_d blends the joints. "
+                "metadata reports relative_density against that cubic span."),
+            "origin": "Kelvin cell / truncated-octahedron open-cell foam model",
+            "demo": "demo_kelvin_cell",
         },
         {
             "file": "kerf_bend_cutter_demo.glb",

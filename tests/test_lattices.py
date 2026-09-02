@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 import trimesh
 
-from mechlib.lattices import _octet_graph, auxetic_panel, bcc_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kerf_bend_cutter, octet_truss
+from mechlib.lattices import _kelvin_graph, _octet_graph, auxetic_panel, bcc_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kelvin_cell, kerf_bend_cutter, octet_truss
 from mechlib.meshutil import sub, uni
 from mechlib.prim import boxc
 
@@ -944,3 +944,63 @@ def test_octet_bad_args():
         octet_truss(strut_d=1.5, snap_strut=False)
     with pytest.raises(ValueError):
         octet_truss(nx=5, ny=5, nz=5)
+
+
+# ---------------------------------------------------------------------------
+# kelvin_cell (truncated-octahedron strut cell)
+# ---------------------------------------------------------------------------
+
+def test_kelvin_graph_topology():
+    nodes, edges = _kelvin_graph(20.0)
+    assert len(nodes) == 24
+    assert len(edges) == 36
+    assert len(edges) == len(set(edges))
+    assert all(a != b and a in nodes and b in nodes for a, b in edges)
+    degree = {node: 0 for node in nodes}
+    for a, b in edges:
+        degree[a] += 1
+        degree[b] += 1
+        assert np.linalg.norm(nodes[a] - nodes[b]) == pytest.approx(
+            20.0 * math.sqrt(2.0) / 4.0)
+    assert set(degree.values()) == {3}
+
+
+def test_kelvin_mesh():
+    mesh = kelvin_cell()
+    assert_mesh(mesh)
+    assert mesh.is_winding_consistent
+    assert len(mesh.split(only_watertight=False)) == 1
+    assert mesh.metadata["mode"] == "kelvin"
+    assert mesh.metadata["node_count"] == 24
+    assert mesh.metadata["strut_count"] == 36
+
+
+def test_kelvin_bounds_metadata():
+    mesh = kelvin_cell(cell=20.0, strut_d=1.5, node_d=2.4)
+    lo, hi = mesh.bounds
+    assert lo[0] == pytest.approx(-hi[0], abs=1e-6)
+    assert lo[1] == pytest.approx(-hi[1], abs=1e-6)
+    assert lo[2] == pytest.approx(-1.2, abs=1e-6)
+    assert hi[2] == pytest.approx(21.2, abs=1e-6)
+    assert mesh.metadata["cell_size"] == pytest.approx(20.0)
+    assert mesh.metadata["strut_d"] == pytest.approx(1.6)
+    assert mesh.metadata["node_d"] == pytest.approx(2.4)
+    assert 0.0 < mesh.metadata["relative_density"] < 0.5
+
+
+def test_kelvin_bad_args():
+    assert kelvin_cell(strut_d=1.5).metadata["strut_d"] == pytest.approx(1.6)
+    assert kelvin_cell(node_d=0.8).metadata["node_d"] == pytest.approx(1.6)
+    for kwargs in ({"cell": 0}, {"sections": 5}, {"sections": 6.5},
+                   {"strut_d": 0.4}, {"nozzle": 0.6}, {"node_d": 0},
+                   {"cell": 8.0, "strut_d": 1.6}):
+        with pytest.raises(ValueError):
+            kelvin_cell(**kwargs)
+    with pytest.raises(ValueError):
+        kelvin_cell(strut_d=1.5, snap_strut=False)
+
+
+def test_kelvin_density_growth():
+    thin = kelvin_cell(strut_d=1.2)
+    thick = kelvin_cell(strut_d=2.0)
+    assert thick.metadata["relative_density"] > thin.metadata["relative_density"]

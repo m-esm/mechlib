@@ -157,7 +157,7 @@ from .indexing import (
     star_wheel,
 )
 from .joints import ball_socket_joint, clevis, gimbal_rings, knuckle_hinge
-from .lattices import auxetic_panel, bcc_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kerf_bend_cutter, octet_truss
+from .lattices import auxetic_panel, bcc_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kelvin_cell, kerf_bend_cutter, octet_truss
 from .linear import (
     archimedes_screw,
     differential_screw,
@@ -504,6 +504,7 @@ __all__ = (
     "honeycomb_panel",
     "isogrid_panel",
     "kagome_panel",
+    "kelvin_cell",
     "kerf_bend_cutter",
     # gap-analysis wave v0.9.0
     "slider_crank_pose",

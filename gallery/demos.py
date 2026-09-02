@@ -138,7 +138,7 @@ from mechlib.indexing import (
     intermittent_gear_pair,
 )
 from mechlib.joints import ball_socket_joint, clevis, gimbal_rings, knuckle_hinge
-from mechlib.lattices import auxetic_panel, bcc_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kerf_bend_cutter, octet_truss
+from mechlib.lattices import auxetic_panel, bcc_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kelvin_cell, kerf_bend_cutter, octet_truss
 from mechlib.linear import (
     archimedes_screw,
     differential_screw,
@@ -980,6 +980,10 @@ PLAY: dict = {
     },
     "demo_octet_truss": {
         "cell": (8.0, 16.0, 2.0),
+        "strut_d": (0.8, 2.4, 0.4),
+    },
+    "demo_kelvin_cell": {
+        "cell": (12.0, 28.0, 2.0),
         "strut_d": (0.8, 2.4, 0.4),
     },
     "demo_kerf_bend_cutter": {
@@ -3453,6 +3457,11 @@ def demo_bcc_lattice(cell: float = 12.0, strut_d: float = 1.6) -> MeshList:
 def demo_octet_truss(cell: float = 12.0, strut_d: float = 1.6) -> MeshList:
     block = octet_truss(nx=2, ny=2, nz=2, cell=cell, strut_d=strut_d)
     return [("octet_truss", block, PALETTE[4])]
+
+
+def demo_kelvin_cell(cell: float = 20.0, strut_d: float = 1.6) -> MeshList:
+    block = kelvin_cell(cell=cell, strut_d=strut_d)
+    return [("kelvin_cell", block, PALETTE[3])]
 
 
 def demo_kerf_bend_cutter(mode_index: int = 0, kerf: float = 0.5,

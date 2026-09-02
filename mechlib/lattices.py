@@ -1,5 +1,5 @@
 """Project-agnostic metamaterial cells: honeycomb, isogrid, auxetic panels,
-kerf-bend cutters (all 2D-extruded), plus 3D strut lattices (bcc_lattice)."""
+kerf-bend cutters (all 2D-extruded), plus 3D strut lattices."""
 
 import math
 
@@ -2040,6 +2040,102 @@ def octet_truss(nx=2, ny=2, nz=2, cell=12.0, strut_d=1.6, node_d=None,
     return mesh
 
 
+# ---------------------------------------------------------------------------
+# Kelvin tetrakaidecahedral (truncated-octahedron) strut cell
+# ---------------------------------------------------------------------------
+
+def _kelvin_graph(cell):
+    """Return the 24 vertices and 36 edges of one truncated octahedron."""
+    integer_nodes = set()
+    for zero_axis in range(3):
+        other_axes = [axis for axis in range(3) if axis != zero_axis]
+        for one_axis, two_axis in (other_axes, reversed(other_axes)):
+            for one_sign in (-1, 1):
+                for two_sign in (-1, 1):
+                    point = [0, 0, 0]
+                    point[one_axis] = one_sign
+                    point[two_axis] = 2 * two_sign
+                    integer_nodes.add(tuple(point))
+
+    scale = cell / 4.0
+    nodes = {
+        key: np.array((key[0] * scale,
+                       key[1] * scale,
+                       key[2] * scale + cell / 2.0))
+        for key in integer_nodes
+    }
+    keys = sorted(nodes)
+    edges = {
+        (a, b)
+        for index, a in enumerate(keys)
+        for b in keys[index + 1:]
+        if sum((a[axis] - b[axis]) ** 2 for axis in range(3)) == 2
+    }
+    return nodes, edges
+
+
+def kelvin_cell(cell=20.0, strut_d=1.6, node_d=None,
+                sections=12, nozzle=0.4, snap_strut=True):
+    """Build one Kelvin (truncated-octahedron) 3D strut cell.
+
+    ``cell`` is the vertex-to-vertex bounding span along each principal axis.
+    The exact vertex set is the permutations of ``(0, +/-1, +/-2)``, scaled
+    to that span. Its 36 equal edges bound six square and eight regular
+    hexagonal faces. X/Y are centred and the nominal lowest graph vertices
+    lie at z=0; round joint spheres may extend beyond those nominal bounds.
+
+    ``strut_d`` snaps to the ``nozzle`` grid by default. ``node_d`` defaults
+    to 1.5 times the realised strut diameter and is never allowed below it.
+    Units are mm.
+    """
+    if cell <= 0:
+        raise ValueError("kelvin_cell(): cell must be positive")
+    if isinstance(sections, bool) or not isinstance(sections, int) or sections < 6:
+        raise ValueError("kelvin_cell(): sections must be an integer at least 6")
+    _validate_nozzle(nozzle)
+    strut_d = _snap_strut(strut_d, nozzle, snap_strut, "strut_d")
+    if strut_d < 0.8:
+        raise ValueError(
+            "kelvin_cell(): strut_d=%.3g mm is below the 0.8 mm FDM wall floor; "
+            "use a bigger strut or a wider nozzle" % strut_d)
+    if node_d is None:
+        node_d = 1.5 * strut_d
+    elif node_d <= 0:
+        raise ValueError("kelvin_cell(): node_d must be positive")
+    node_d = max(node_d, strut_d)
+    if cell < 4.0 * node_d:
+        raise ValueError(
+            "kelvin_cell(): cell=%.3g mm is too small for node_d=%.3g mm; "
+            "the joints collapse the open faces (need cell >= 4*node_d)"
+            % (cell, node_d))
+
+    nodes, edges = _kelvin_graph(cell)
+    solids = [
+        _strut(nodes[a], nodes[b], strut_d / 2.0, sections)
+        for a, b in sorted(edges)
+    ]
+    for pos in nodes.values():
+        joint = trimesh.creation.icosphere(subdivisions=1, radius=node_d / 2.0)
+        joint.apply_translation(pos)
+        solids.append(joint)
+
+    mesh = uni(solids)
+    if not mesh.is_watertight or not mesh.is_winding_consistent:
+        mesh = from_manifold(to_manifold(mesh))
+
+    bbox_vol = cell ** 3
+    mesh.metadata.update({
+        "mode": "kelvin",
+        "cell_size": cell,
+        "strut_count": len(edges),
+        "node_count": len(nodes),
+        "strut_d": strut_d,
+        "node_d": node_d,
+        "relative_density": float(mesh.volume / bbox_vol),
+    })
+    return mesh
+
+
 __all__ = (
     "auxetic_panel",
     "bcc_lattice",
@@ -2047,5 +2143,6 @@ __all__ = (
     "isogrid_panel",
     "kagome_panel",
     "kerf_bend_cutter",
+    "kelvin_cell",
     "octet_truss",
 )

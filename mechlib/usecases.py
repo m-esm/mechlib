@@ -71,6 +71,12 @@ USE_CASES = {
         "of tetrahedral and octahedral cells rather than BCC body diagonals or "
         "a cubic edge grid."
     ),
+    'kelvin_cell': (
+        "Open-cell foam coupons, isotropic energy absorbers, and lightweight "
+        "cores that need the 24-node, 36-edge Kelvin tetrakaidecahedral cell "
+        "with six square and eight hexagonal faces rather than BCC or FCC "
+        "connectivity."
+    ),
     'beam_coupling': (
         "3D-printer Z axes, CNC builds, and motor-to-leadscrew links "
         "that need one cheap part forgiving angular, parallel, and "
@@ -796,6 +802,7 @@ GALLERY_FILE_TO_API = {
     'barrel_cam_demo.glb': 'barrel_cam',
     'bcc_lattice_demo.glb': 'bcc_lattice',
     'octet_truss_demo.glb': 'octet_truss',
+    'kelvin_cell_demo.glb': 'kelvin_cell',
     'bearing_seat_demo.glb': 'bearing_seat',
     'bell_crank_demo.glb': 'bell_crank',
     'belleville_washer_demo.glb': 'belleville_washer',
