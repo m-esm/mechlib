@@ -26,7 +26,7 @@ Semi-primitives. No CadQuery. FDM: nozzle-multiple struts, wall>=0.8, kerf>=nozz
 | 08 | kerf_bend_cutter(mode="meander") | kerf | shipped | MDPI meander |
 | 09 | kerf_bend_cutter(mode="biaxial") | kerf | shipped | 2-axis wrap. SHA dca0357dbb6a0658a43507a9f8b5a896521cdbe3 |
 | 10 | auxetic_panel(mode="arrowhead") | auxetic | shipped | Grima double-arrowhead NPR cells. THIS HOUR. |
-| 11 | auxetic_panel(mode="star") | auxetic | shipped | Grima star-shaped honeycomb NPR cells. THIS HOUR. |
+| 11 | auxetic_panel(mode="star") | auxetic | shipped | Grima star-shaped honeycomb NPR cells. SHA 9bad3d1 |
 | 12 | auxetic_panel(mode="anti_tetrachiral") | auxetic | pending | |
 | 13 | auxetic_panel(mode="houndstooth") | auxetic | pending | |
 | 14 | kagome_lattice | 2d-lattice | pending | |
