@@ -144,7 +144,7 @@ from mechlib.mechanisms import handwheel, shaft_collar, star_knob
 from mechlib.pulleys import v_belt_pulley
 from mechlib.ratchets import ratchet_wheel_pawl
 from mechlib.joints import ball_socket_joint, clevis, gimbal_rings, knuckle_hinge
-from mechlib.lattices import auxetic_panel, bcc_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kelvin_cell, kerf_bend_cutter, octet_truss
+from mechlib.lattices import auxetic_panel, bcc_lattice, cubic_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kelvin_cell, kerf_bend_cutter, octet_truss
 from mechlib.linear import (
     archimedes_screw,
     differential_screw,
@@ -2797,6 +2797,21 @@ def build():
                 "profile or light support."),
             "origin": "Gap-analysis wave v0.11.x; classic ref: BCC FFF metamaterial truss",
             "demo": "demo_bcc_lattice",
+        },
+        {
+            "file": "cubic_lattice_demo.glb",
+            "name": "cubic_lattice",
+            "module": "mechlib.lattices",
+            "signature": signature(cubic_lattice),
+            "description": (
+                "A simple-cubic 3D strut lattice with one shared node at each "
+                "rectangular-grid point and unique round struts only along X, "
+                "Y, and Z cube edges. strut_d is nozzle-snapped and node_d "
+                "blends the joints. Unlike BCC it has no body-centre nodes or "
+                "body diagonals; unlike octet/FCC it has no face diagonals. "
+                "metadata reports exact graph counts and relative_density."),
+            "origin": "Simple-cubic edge lattice / orthogonal space frame",
+            "demo": "demo_cubic_lattice",
         },
         {
             "file": "octet_truss_demo.glb",

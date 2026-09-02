@@ -4,9 +4,12 @@ import numpy as np
 import pytest
 import trimesh
 
-from mechlib.lattices import _kelvin_graph, _octet_graph, auxetic_panel, bcc_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kelvin_cell, kerf_bend_cutter, octet_truss
+import mechlib
+from gallery import demos
+from mechlib.lattices import _cubic_graph, _kelvin_graph, _octet_graph, auxetic_panel, bcc_lattice, cubic_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kelvin_cell, kerf_bend_cutter, octet_truss
 from mechlib.meshutil import sub, uni
 from mechlib.prim import boxc
+from mechlib.usecases import GALLERY_FILE_TO_API, use_case
 
 
 def assert_mesh(mesh):
@@ -862,6 +865,84 @@ def test_bcc_lattice_rejects_bad_arguments():
 def test_bcc_lattice_cell_cap_protects_the_playground():
     with pytest.raises(ValueError):
         bcc_lattice(nx=5, ny=5, nz=5, cell=12.0)  # 125 > 64-cell cap
+
+
+# ---------------------------------------------------------------------------
+# cubic_lattice (simple-cubic edge truss)
+# ---------------------------------------------------------------------------
+
+def test_cubic_lattice_watertight_single_body_and_oriented_bounds():
+    nx, ny, nz, cell = 3, 2, 1, 12.0
+    block = cubic_lattice(nx=nx, ny=ny, nz=nz, cell=cell,
+                          strut_d=1.6, node_d=2.4)
+    assert_mesh(block)
+    assert block.is_winding_consistent
+    assert len(block.split(only_watertight=False)) == 1
+    lo, hi = block.bounds
+    assert lo[0] == pytest.approx(-hi[0], abs=1e-6)
+    assert lo[1] == pytest.approx(-hi[1], abs=1e-6)
+    assert lo[2] == pytest.approx(-1.2, abs=1e-6)
+    assert hi[2] == pytest.approx(nz * cell + 1.2, abs=1e-6)
+
+
+def test_cubic_lattice_graph_has_shared_nodes_and_unique_axis_edges():
+    nx, ny, nz = 3, 2, 1
+    nodes, edges = _cubic_graph(nx, ny, nz, 10.0)
+    expected_nodes = (nx + 1) * (ny + 1) * (nz + 1)
+    expected_edges = (
+        nx * (ny + 1) * (nz + 1)
+        + (nx + 1) * ny * (nz + 1)
+        + (nx + 1) * (ny + 1) * nz
+    )
+    assert len(nodes) == expected_nodes
+    assert len(edges) == expected_edges
+    assert len(edges) == len(set(edges))
+    assert all(sorted(abs(delta) for delta in np.subtract(a, b)) == [0, 0, 1]
+               for a, b in edges)
+
+    block = cubic_lattice(nx=nx, ny=ny, nz=nz, cell=10.0, strut_d=1.2)
+    assert block.metadata["mode"] == "cubic"
+    assert block.metadata["cell_size"] == pytest.approx(10.0)
+    assert block.metadata["cells_x"] == nx
+    assert block.metadata["cells_y"] == ny
+    assert block.metadata["cells_z"] == nz
+    assert block.metadata["cell_count"] == nx * ny * nz
+    assert block.metadata["node_count"] == expected_nodes
+    assert block.metadata["strut_count"] == expected_edges
+    assert 0.0 < block.metadata["relative_density"] < 0.5
+
+
+def test_cubic_lattice_nozzle_snap_and_rejection():
+    snapped = cubic_lattice(nx=1, ny=1, nz=1, strut_d=1.5)
+    assert snapped.metadata["strut_d"] == pytest.approx(1.6)
+    wide_nozzle = cubic_lattice(nx=1, ny=1, nz=1, strut_d=1.2, nozzle=0.8)
+    realised = wide_nozzle.metadata["strut_d"]
+    assert realised >= 0.8
+    assert realised / 0.8 == pytest.approx(round(realised / 0.8))
+    with pytest.raises(ValueError):
+        cubic_lattice(nx=1, ny=1, nz=1, strut_d=1.5, snap_strut=False)
+
+
+def test_cubic_lattice_rejects_bad_arguments():
+    for kwargs in ({"nx": 0}, {"ny": True}, {"nz": 1.5},
+                   {"sections": 5}, {"sections": True}, {"sections": 6.5},
+                   {"strut_d": 0.4}, {"nozzle": 0.6}, {"node_d": 0},
+                   {"cell": 3.0, "strut_d": 1.6},
+                   {"cell": 10.0, "node_d": 6.0}):
+        with pytest.raises(ValueError):
+            cubic_lattice(**kwargs)
+    with pytest.raises(ValueError):
+        cubic_lattice(nx=5, ny=5, nz=5)
+
+
+def test_cubic_lattice_public_use_case_and_gallery_contract():
+    assert mechlib.cubic_lattice is cubic_lattice
+    assert "cubic_lattice" in mechlib.__all__
+    assert "x/y/z" in use_case("cubic_lattice").lower()
+    assert GALLERY_FILE_TO_API["cubic_lattice_demo.glb"] == "cubic_lattice"
+    assert "demo_cubic_lattice" in demos.PLAY
+    names = [name for name, _mesh, _color in demos.demo_cubic_lattice()]
+    assert names == ["cubic_lattice"]
 
 
 # ---------------------------------------------------------------------------

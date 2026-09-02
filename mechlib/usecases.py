@@ -65,6 +65,11 @@ USE_CASES = {
         "cubic strut truss, not a flat 2D lightening sheet like honeycomb_panel "
         "or isogrid_panel."
     ),
+    'cubic_lattice': (
+        "Orthogonal machine guards, rectilinear lightweight cores, and test "
+        "coupons that need a simple-cubic network of shared nodes and X/Y/Z "
+        "edge struts rather than BCC body diagonals or octet face diagonals."
+    ),
     'octet_truss': (
         "Lightweight sandwich cores, stiff robotic frames, and load-bearing "
         "metamaterial blocks that need a true octet/FCC face-diagonal network "
@@ -801,6 +806,7 @@ GALLERY_FILE_TO_API = {
     'ball_socket_joint_demo.glb': 'ball_socket_joint',
     'barrel_cam_demo.glb': 'barrel_cam',
     'bcc_lattice_demo.glb': 'bcc_lattice',
+    'cubic_lattice_demo.glb': 'cubic_lattice',
     'octet_truss_demo.glb': 'octet_truss',
     'kelvin_cell_demo.glb': 'kelvin_cell',
     'bearing_seat_demo.glb': 'bearing_seat',

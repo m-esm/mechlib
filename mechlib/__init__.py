@@ -157,7 +157,7 @@ from .indexing import (
     star_wheel,
 )
 from .joints import ball_socket_joint, clevis, gimbal_rings, knuckle_hinge
-from .lattices import auxetic_panel, bcc_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kelvin_cell, kerf_bend_cutter, octet_truss
+from .lattices import auxetic_panel, bcc_lattice, cubic_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kelvin_cell, kerf_bend_cutter, octet_truss
 from .linear import (
     archimedes_screw,
     differential_screw,
@@ -501,6 +501,7 @@ __all__ = (
     "gasket_channel",
     "auxetic_panel",
     "bcc_lattice",
+    "cubic_lattice",
     "honeycomb_panel",
     "isogrid_panel",
     "kagome_panel",

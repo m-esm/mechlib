@@ -1808,6 +1808,102 @@ def _strut(a, b, radius, sections):
     return trimesh.creation.cylinder(radius=radius, segment=[a, b], sections=sections)
 
 
+def _cubic_graph(nx, ny, nz, cell):
+    """Return shared grid nodes and unique axis-aligned cube-edge struts."""
+    nodes = {
+        (ix, iy, iz): np.array((ix, iy, iz), dtype=float) * cell
+        for iz in range(nz + 1)
+        for iy in range(ny + 1)
+        for ix in range(nx + 1)
+    }
+    edges = set()
+    for key in nodes:
+        for axis in range(3):
+            neighbour = list(key)
+            neighbour[axis] += 1
+            neighbour = tuple(neighbour)
+            if neighbour in nodes:
+                edges.add((key, neighbour))
+    return nodes, edges
+
+
+def cubic_lattice(nx=2, ny=2, nz=2, cell=12.0, strut_d=1.6, node_d=None,
+                  sections=12, nozzle=0.4, snap_strut=True):
+    """Build a simple-cubic 3D strut lattice as one watertight mesh.
+
+    Shared nodes occupy the rectangular ``(nx+1) * (ny+1) * (nz+1)`` grid.
+    Each node connects only to its in-bounds neighbour along X, Y, or Z, so
+    every strut is one unique cube edge. There are no BCC body-centre nodes,
+    body diagonals, or octet/FCC face diagonals.
+
+    ``strut_d`` snaps to the ``nozzle`` grid by default. ``node_d`` defaults
+    to 1.5 times the realised strut diameter and is never allowed below it.
+    The block is centred in X/Y, its nominal lower nodes lie at z=0, and
+    relative density is measured against the requested cell-block volume.
+    Units are mm.
+    """
+    for name, val in (("nx", nx), ("ny", ny), ("nz", nz)):
+        if isinstance(val, bool) or not isinstance(val, int) or val < 1:
+            raise ValueError("cubic_lattice(): %s must be a positive integer" % name)
+    if nx * ny * nz > _MAX_STRUT_CELLS:
+        raise ValueError(
+            "cubic_lattice(): nx*ny*nz=%d exceeds the %d-cell playground cap; "
+            "a larger strut union is too heavy to preview interactively"
+            % (nx * ny * nz, _MAX_STRUT_CELLS))
+    if cell <= 0:
+        raise ValueError("cubic_lattice(): cell must be positive")
+    if isinstance(sections, bool) or not isinstance(sections, int) or sections < 6:
+        raise ValueError("cubic_lattice(): sections must be an integer at least 6")
+    _validate_nozzle(nozzle)
+    strut_d = _snap_strut(strut_d, nozzle, snap_strut, "strut_d")
+    if strut_d < 0.8:
+        raise ValueError(
+            "cubic_lattice(): strut_d=%.3g mm is below the 0.8 mm FDM wall floor; "
+            "use a bigger strut or a wider nozzle" % strut_d)
+    if node_d is None:
+        node_d = 1.5 * strut_d
+    elif node_d <= 0:
+        raise ValueError("cubic_lattice(): node_d must be positive")
+    node_d = max(node_d, strut_d)
+    min_cell = max(3.0 * strut_d, 2.0 * node_d)
+    if cell < min_cell:
+        raise ValueError(
+            "cubic_lattice(): cell=%.3g mm is too small for strut_d=%.3g mm "
+            "and node_d=%.3g mm; the square openings collapse (need cell >= %.3g mm)"
+            % (cell, strut_d, node_d, min_cell))
+
+    nodes, edges = _cubic_graph(nx, ny, nz, cell)
+    solids = [
+        _strut(nodes[a], nodes[b], strut_d / 2.0, sections)
+        for a, b in sorted(edges)
+    ]
+    for pos in nodes.values():
+        joint = trimesh.creation.icosphere(subdivisions=1, radius=node_d / 2.0)
+        joint.apply_translation(pos)
+        solids.append(joint)
+
+    mesh = uni(solids)
+    if not mesh.is_watertight or not mesh.is_winding_consistent:
+        mesh = from_manifold(to_manifold(mesh))
+    mesh.apply_translation((-nx * cell / 2.0, -ny * cell / 2.0, 0.0))
+
+    bbox_vol = (nx * cell) * (ny * cell) * (nz * cell)
+    mesh.metadata.update({
+        "mode": "cubic",
+        "cell_size": cell,
+        "cells_x": nx,
+        "cells_y": ny,
+        "cells_z": nz,
+        "cell_count": nx * ny * nz,
+        "strut_count": len(edges),
+        "node_count": len(nodes),
+        "strut_d": strut_d,
+        "node_d": node_d,
+        "relative_density": float(mesh.volume / bbox_vol) if bbox_vol else 0.0,
+    })
+    return mesh
+
+
 def bcc_lattice(nx=2, ny=2, nz=2, cell=12.0, strut_d=1.6, node_d=None,
                 sections=12, nozzle=0.4, snap_strut=True):
     """Build a 3D body-centred-cubic (BCC) strut lattice as one watertight mesh.
@@ -2139,6 +2235,7 @@ def kelvin_cell(cell=20.0, strut_d=1.6, node_d=None,
 __all__ = (
     "auxetic_panel",
     "bcc_lattice",
+    "cubic_lattice",
     "honeycomb_panel",
     "isogrid_panel",
     "kagome_panel",
