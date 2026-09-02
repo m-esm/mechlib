@@ -138,7 +138,7 @@ from mechlib.indexing import (
     intermittent_gear_pair,
 )
 from mechlib.joints import ball_socket_joint, clevis, gimbal_rings, knuckle_hinge
-from mechlib.lattices import auxetic_panel, bcc_lattice, cubic_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kelvin_cell, kerf_bend_cutter, octet_truss
+from mechlib.lattices import auxetic_panel, bcc_lattice, cubic_lattice, gyroid_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kelvin_cell, kerf_bend_cutter, octet_truss
 from mechlib.linear import (
     archimedes_screw,
     differential_screw,
@@ -981,6 +981,10 @@ PLAY: dict = {
     "demo_cubic_lattice": {
         "cell": (8.0, 16.0, 2.0),
         "strut_d": (0.8, 2.4, 0.4),
+    },
+    "demo_gyroid_lattice": {
+        "cell": (8.0, 16.0, 2.0),
+        "wall": (1.2, 2.4, 0.4),
     },
     "demo_octet_truss": {
         "cell": (8.0, 16.0, 2.0),
@@ -3461,6 +3465,12 @@ def demo_bcc_lattice(cell: float = 12.0, strut_d: float = 1.6) -> MeshList:
 def demo_cubic_lattice(cell: float = 12.0, strut_d: float = 1.6) -> MeshList:
     block = cubic_lattice(nx=3, ny=3, nz=2, cell=cell, strut_d=strut_d)
     return [("cubic_lattice", block, PALETTE[6])]
+
+
+def demo_gyroid_lattice(cell: float = 12.0, wall: float = 1.2) -> MeshList:
+    block = gyroid_lattice(width=24.0, depth=24.0, height=24.0,
+                           cell=cell, wall=wall, resolution=16)
+    return [("gyroid_lattice", block, PALETTE[9])]
 
 
 def demo_octet_truss(cell: float = 12.0, strut_d: float = 1.6) -> MeshList:

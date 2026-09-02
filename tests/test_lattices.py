@@ -6,7 +6,7 @@ import trimesh
 
 import mechlib
 from gallery import demos
-from mechlib.lattices import _cubic_graph, _kelvin_graph, _octet_graph, auxetic_panel, bcc_lattice, cubic_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kelvin_cell, kerf_bend_cutter, octet_truss
+from mechlib.lattices import _cubic_graph, _kelvin_graph, _octet_graph, auxetic_panel, bcc_lattice, cubic_lattice, gyroid_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kelvin_cell, kerf_bend_cutter, octet_truss
 from mechlib.meshutil import sub, uni
 from mechlib.prim import boxc
 from mechlib.usecases import GALLERY_FILE_TO_API, use_case
@@ -943,6 +943,55 @@ def test_cubic_lattice_public_use_case_and_gallery_contract():
     assert "demo_cubic_lattice" in demos.PLAY
     names = [name for name, _mesh, _color in demos.demo_cubic_lattice()]
     assert names == ["cubic_lattice"]
+
+
+# ---------------------------------------------------------------------------
+# gyroid_lattice (TPMS sheet)
+# ---------------------------------------------------------------------------
+
+def test_gyroid_mesh():
+    mesh = gyroid_lattice()
+    assert_mesh(mesh)
+    assert mesh.is_winding_consistent
+    assert len(mesh.split(only_watertight=False)) == 1
+    assert mesh.euler_number < -20  # many handles, not a solid box or strut tree
+    assert np.allclose(mesh.bounds, [[-12.0, -12.0, 0.0],
+                                     [12.0, 12.0, 24.0]])
+    assert 0.15 < mesh.metadata["relative_density"] < 0.5
+
+
+def test_gyroid_metadata_and_density():
+    thin = gyroid_lattice(wall=1.2)
+    thick = gyroid_lattice(wall=2.0)
+    assert thin.metadata["mode"] == "gyroid"
+    assert thin.metadata["dimensions"] == pytest.approx((24.0, 24.0, 24.0))
+    assert thin.metadata["cell"] == pytest.approx(12.0)
+    assert thin.metadata["wall"] == pytest.approx(1.2)
+    assert thin.metadata["resolution"] == 16
+    assert thin.metadata["cells_x"] == pytest.approx(2.0)
+    assert thick.metadata["relative_density"] > thin.metadata["relative_density"]
+
+
+def test_gyroid_rejects_bad_args():
+    for kwargs in ({"width": 0}, {"depth": "24"}, {"height": True},
+                   {"height": float("nan")}, {"cell": 7.9}, {"wall": 1.19},
+                   {"cell": 8.0, "wall": 3.0}, {"width": 10.0, "cell": 12.0},
+                   {"resolution": 7}, {"resolution": 12.5},
+                   {"resolution": True},
+                   {"cell": 16.0, "wall": 1.2, "resolution": 12},
+                   {"width": 120.0, "depth": 120.0, "height": 120.0}):
+        with pytest.raises(ValueError):
+            gyroid_lattice(**kwargs)
+
+
+def test_gyroid_public_contract():
+    assert mechlib.gyroid_lattice is gyroid_lattice
+    assert "gyroid_lattice" in mechlib.__all__
+    assert "tpms" in use_case("gyroid_lattice").lower()
+    assert GALLERY_FILE_TO_API["gyroid_lattice_demo.glb"] == "gyroid_lattice"
+    assert "demo_gyroid_lattice" in demos.PLAY
+    names = [name for name, _mesh, _color in demos.demo_gyroid_lattice()]
+    assert names == ["gyroid_lattice"]
 
 
 # ---------------------------------------------------------------------------

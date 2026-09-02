@@ -144,7 +144,7 @@ from mechlib.mechanisms import handwheel, shaft_collar, star_knob
 from mechlib.pulleys import v_belt_pulley
 from mechlib.ratchets import ratchet_wheel_pawl
 from mechlib.joints import ball_socket_joint, clevis, gimbal_rings, knuckle_hinge
-from mechlib.lattices import auxetic_panel, bcc_lattice, cubic_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kelvin_cell, kerf_bend_cutter, octet_truss
+from mechlib.lattices import auxetic_panel, bcc_lattice, cubic_lattice, gyroid_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kelvin_cell, kerf_bend_cutter, octet_truss
 from mechlib.linear import (
     archimedes_screw,
     differential_screw,
@@ -2827,6 +2827,22 @@ def build():
                 "has no axis-aligned edges. metadata reports relative_density."),
             "origin": "Classic octet truss / FCC nearest-neighbour lattice",
             "demo": "demo_octet_truss",
+        },
+        {
+            "file": "gyroid_lattice_demo.glb",
+            "name": "gyroid_lattice",
+            "module": "mechlib.lattices",
+            "signature": signature(gyroid_lattice),
+            "description": (
+                "A rectangular open-cell TPMS gyroid sheet generated from the "
+                "periodic implicit surface and thickened to a printable wall. "
+                "Its continuous curved sheet separates two interpenetrating "
+                "passage networks, unlike cubic, BCC, or octet strut graphs. "
+                "The block is clipped closed at its six faces and metadata "
+                "reports realised dimensions, wall, resolution, and relative "
+                "density."),
+            "origin": "Schoen gyroid triply-periodic minimal surface",
+            "demo": "demo_gyroid_lattice",
         },
         {
             "file": "kelvin_cell_demo.glb",

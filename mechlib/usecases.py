@@ -70,6 +70,12 @@ USE_CASES = {
         "coupons that need a simple-cubic network of shared nodes and X/Y/Z "
         "edge struts rather than BCC body diagonals or octet face diagonals."
     ),
+    'gyroid_lattice': (
+        "Lightweight heat-exchanger cores, impact absorbers, tissue scaffolds, "
+        "and stiffness-tuned infill coupons that need a continuous TPMS gyroid "
+        "sheet separating two connected passage networks rather than a strut "
+        "graph or closed-cell foam."
+    ),
     'octet_truss': (
         "Lightweight sandwich cores, stiff robotic frames, and load-bearing "
         "metamaterial blocks that need a true octet/FCC face-diagonal network "
@@ -807,6 +813,7 @@ GALLERY_FILE_TO_API = {
     'barrel_cam_demo.glb': 'barrel_cam',
     'bcc_lattice_demo.glb': 'bcc_lattice',
     'cubic_lattice_demo.glb': 'cubic_lattice',
+    'gyroid_lattice_demo.glb': 'gyroid_lattice',
     'octet_truss_demo.glb': 'octet_truss',
     'kelvin_cell_demo.glb': 'kelvin_cell',
     'bearing_seat_demo.glb': 'bearing_seat',

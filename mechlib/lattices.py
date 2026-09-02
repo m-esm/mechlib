@@ -2,7 +2,9 @@
 kerf-bend cutters (all 2D-extruded), plus 3D strut lattices."""
 
 import math
+import numbers
 
+import manifold3d
 import numpy as np
 import shapely.affinity
 import shapely.geometry as sg
@@ -18,6 +20,8 @@ _AUXETIC_MODES = (
 _KERF_MODES = ("lattice", "diagonal", "spiral", "wave", "hex", "cross", "chevron",
                "diamond", "fishbone", "meander", "biaxial")
 _MAX_CELLS = 2500
+_MAX_GYROID_SAMPLES = 350000
+_GYROID_DISTANCE_COMPENSATION = 1.1
 
 
 def _extrude(poly, height):
@@ -1797,6 +1801,156 @@ def kerf_bend_cutter(mode="lattice", width=60.0, height=40.0, thickness=3.0,
 
 
 # ---------------------------------------------------------------------------
+# 3D triply-periodic minimal-surface (TPMS) lattice
+# ---------------------------------------------------------------------------
+
+def _gyroid_sheet_sdf(x, y, z, width, depth, height, cell, wall):
+    """Positive-inside approximate SDF for a box-clipped gyroid sheet."""
+    zc = z - height / 2.0
+    k = 2.0 * math.pi / cell
+    sx, cx = math.sin(k * x), math.cos(k * x)
+    sy, cy = math.sin(k * y), math.cos(k * y)
+    sz, cz = math.sin(k * zc), math.cos(k * zc)
+
+    # Schoen gyroid level set. Dividing by its physical-space gradient turns
+    # the field into a first-order signed-distance estimate, so ``wall`` is a
+    # millimetre thickness rather than an arbitrary isovalue.
+    field = sx * cy + sy * cz + sz * cx
+    gx = k * (cx * cy - sz * sx)
+    gy = k * (cy * cz - sx * sy)
+    gz = k * (cz * cx - sy * sz)
+    gradient = max(math.sqrt(gx * gx + gy * gy + gz * gz), 1e-12)
+    # The field/gradient quotient is first-order: across the finite 0.6+ mm
+    # offset it underestimates physical thickness by about 5-8 percent. A
+    # conservative factor keeps the realised interior sheet at or above the
+    # requested printable wall instead of merely labelling a thinner mesh.
+    sheet = (wall * _GYROID_DISTANCE_COMPENSATION) / 2.0 - abs(field) / gradient
+
+    # Intersection with the requested rectangular block. Including this box
+    # SDF closes every cut sheet edge at the six faces, unlike extracting the
+    # gyroid field alone and then truncating its triangles.
+    box = min(width / 2.0 - abs(x),
+              depth / 2.0 - abs(y),
+              height / 2.0 - abs(zc))
+    return min(sheet, box)
+
+
+def gyroid_lattice(width=24.0, depth=24.0, height=24.0, cell=12.0,
+                   wall=1.2, resolution=16):
+    """Build a rectangular open-cell TPMS gyroid sheet as one printable body.
+
+    The zero set is Schoen's periodic gyroid equation, thickened equally on
+    both sides into a sheet and clipped to ``width`` x ``depth`` x ``height``.
+    This is a continuous curved wall separating two interpenetrating passage
+    networks, not a strut graph or a solid block. X/Y are centred and the
+    block sits on z=0. Units are mm.
+
+    ``resolution`` is the number of level-set samples per ``cell``. It must be
+    fine enough that the grid edge is no larger than ``wall``; the complexity
+    cap rejects previews whose sampled volume would be too expensive for the
+    browser playground. Metadata reports realised mesh dimensions, cell and
+    wall, resolution, period counts, and relative density.
+    """
+    values = (("width", width), ("depth", depth), ("height", height),
+              ("cell", cell), ("wall", wall))
+    for name, value in values:
+        if (isinstance(value, bool) or not isinstance(value, numbers.Real)
+                or not math.isfinite(float(value))):
+            raise ValueError(
+                "gyroid_lattice(): %s must be a finite real number" % name)
+        if value <= 0:
+            raise ValueError("gyroid_lattice(): %s must be positive" % name)
+    width, depth, height = float(width), float(depth), float(height)
+    cell, wall = float(cell), float(wall)
+
+    if cell < 8.0:
+        raise ValueError(
+            "gyroid_lattice(): cell=%.3g mm is below the 8.0 mm printable floor"
+            % cell)
+    if wall < 1.2:
+        raise ValueError(
+            "gyroid_lattice(): wall=%.3g mm is below the 1.2 mm printable floor"
+            % wall)
+    if wall > cell / 3.0:
+        raise ValueError(
+            "gyroid_lattice(): wall=%.3g mm is too thick for cell=%.3g mm; "
+            "use wall <= cell/3 to preserve both open passage networks"
+            % (wall, cell))
+    for name, value in (("width", width), ("depth", depth),
+                        ("height", height)):
+        if value < cell:
+            raise ValueError(
+                "gyroid_lattice(): %s=%.3g mm must span at least one cell "
+                "(%.3g mm)" % (name, value, cell))
+    if (isinstance(resolution, bool) or not isinstance(resolution, int)
+            or resolution < 8 or resolution > 32):
+        raise ValueError(
+            "gyroid_lattice(): resolution must be an integer from 8 to 32")
+    edge = cell / resolution
+    if edge > wall:
+        raise ValueError(
+            "gyroid_lattice(): resolution=%d is too low for cell=%.3g mm and "
+            "wall=%.3g mm; need at least %d samples per cell"
+            % (resolution, cell, wall, math.ceil(cell / wall)))
+
+    grid_shape = tuple(math.ceil(size / edge) + 1
+                       for size in (width, depth, height))
+    sample_count = math.prod(grid_shape)
+    if sample_count > _MAX_GYROID_SAMPLES:
+        raise ValueError(
+            "gyroid_lattice(): preview needs %d level-set samples (cap %d); "
+            "shrink the block or lower resolution"
+            % (sample_count, _MAX_GYROID_SAMPLES))
+
+    def sdf(x, y, z):
+        return _gyroid_sheet_sdf(
+            x, y, z, width, depth, height, cell, wall)
+
+    manifold = manifold3d.Manifold.level_set(
+        sdf,
+        [-width / 2.0, -depth / 2.0, 0.0,
+         width / 2.0, depth / 2.0, height],
+        edge,
+    )
+    mesh = from_manifold(manifold)
+    if len(mesh.faces) == 0 or mesh.volume <= 0:
+        raise ValueError(
+            "gyroid_lattice(): parameters produced no printable sheet body")
+
+    # A clipped periodic surface can leave tiny closed corner chips when the
+    # box face crosses a lobe just beyond its neck. They are not part of the
+    # printable connected sheet, so retain the dominant body deterministically.
+    components = mesh.split(only_watertight=False)
+    removed = max(0, len(components) - 1)
+    if removed:
+        mesh = max(components, key=lambda component: component.volume)
+    if not mesh.is_watertight or not mesh.is_winding_consistent:
+        mesh = from_manifold(to_manifold(mesh))
+
+    realised = tuple(float(value) for value in mesh.extents)
+    bbox_volume = width * depth * height
+    mesh.metadata.update({
+        "mode": "gyroid",
+        "dimensions": realised,
+        "width": realised[0],
+        "depth": realised[1],
+        "height": realised[2],
+        "cell": cell,
+        "cell_size": cell,
+        "wall": wall,
+        "wall_thickness": wall,
+        "resolution": resolution,
+        "cells_x": width / cell,
+        "cells_y": depth / cell,
+        "cells_z": height / cell,
+        "sample_count": sample_count,
+        "components_removed": removed,
+        "relative_density": float(mesh.volume / bbox_volume),
+    })
+    return mesh
+
+
+# ---------------------------------------------------------------------------
 # 3D body-centred-cubic (BCC) strut lattice
 # ---------------------------------------------------------------------------
 
@@ -2236,6 +2390,7 @@ __all__ = (
     "auxetic_panel",
     "bcc_lattice",
     "cubic_lattice",
+    "gyroid_lattice",
     "honeycomb_panel",
     "isogrid_panel",
     "kagome_panel",
