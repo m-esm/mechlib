@@ -30,7 +30,7 @@ Semi-primitives. No CadQuery. FDM: nozzle-multiple struts, wall>=0.8, kerf>=nozz
 | 12 | auxetic_panel(mode="anti_tetrachiral") | auxetic | shipped | Opposite-sense square-grid NPR cells. THIS HOUR. |
 | 13 | auxetic_panel(mode="houndstooth") | auxetic | shipped | interlocking L / broken-chevron NPR cells. SHA d122a6bdc5c1335650aac7979a2cd1ac63c0dc4d |
 | 14 | kagome_lattice | 2d-lattice | shipped | Shipped as kagome_panel: 2D Kagome tri+hex lightening sheet. |
-| 15 | bcc_lattice | 3d-strut | pending | |
+| 15 | bcc_lattice | 3d-strut | in_progress | Pawl building body-centred-cubic strut truss |
 | 16 | octet_truss | 3d-strut | pending | |
 | 17 | kelvin_cell | 3d-strut | pending | |
 | 18 | cubic_lattice | 3d-strut | pending | |

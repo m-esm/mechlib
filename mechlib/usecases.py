@@ -59,6 +59,12 @@ USE_CASES = {
         "Fishing-reel level winds, tool-changer drums, textile traverse "
         "mechanisms, and cylindrical groove cams for axial programs."
     ),
+    'bcc_lattice': (
+        "3D-printed lightweight cores, energy-absorbing crush structures, and "
+        "stiffness-tuned infill blocks that want a volumetric body-centred-"
+        "cubic strut truss, not a flat 2D lightening sheet like honeycomb_panel "
+        "or isogrid_panel."
+    ),
     'beam_coupling': (
         "3D-printer Z axes, CNC builds, and motor-to-leadscrew links "
         "that need one cheap part forgiving angular, parallel, and "
@@ -782,6 +788,7 @@ GALLERY_FILE_TO_API = {
     'auxetic_panel_demo.glb': 'auxetic_panel',
     'ball_socket_joint_demo.glb': 'ball_socket_joint',
     'barrel_cam_demo.glb': 'barrel_cam',
+    'bcc_lattice_demo.glb': 'bcc_lattice',
     'bearing_seat_demo.glb': 'bearing_seat',
     'bell_crank_demo.glb': 'bell_crank',
     'belleville_washer_demo.glb': 'belleville_washer',

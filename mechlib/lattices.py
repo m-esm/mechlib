@@ -1,12 +1,15 @@
-"""Project-agnostic 2D metamaterial cells: honeycomb, isogrid, auxetic panels, kerf-bend cutters."""
+"""Project-agnostic metamaterial cells: honeycomb, isogrid, auxetic panels,
+kerf-bend cutters (all 2D-extruded), plus 3D strut lattices (bcc_lattice)."""
 
 import math
 
+import numpy as np
 import shapely.affinity
 import shapely.geometry as sg
+import trimesh
 from shapely.ops import unary_union
 
-from .meshutil import extrude_poly_z, from_manifold, to_manifold
+from .meshutil import extrude_poly_z, from_manifold, to_manifold, uni
 
 _NOZZLE_WIDTHS = (0.4, 0.8, 1.2)
 _AUXETIC_MODES = (
@@ -1793,8 +1796,145 @@ def kerf_bend_cutter(mode="lattice", width=60.0, height=40.0, thickness=3.0,
     return [mesh]
 
 
+# ---------------------------------------------------------------------------
+# 3D body-centred-cubic (BCC) strut lattice
+# ---------------------------------------------------------------------------
+
+_MAX_STRUT_CELLS = 64  # nx*ny*nz cap: a strut union past this is a heavy playground toy
+
+
+def _strut(a, b, radius, sections):
+    """A capped cylinder solid spanning two 3D points."""
+    return trimesh.creation.cylinder(radius=radius, segment=[a, b], sections=sections)
+
+
+def bcc_lattice(nx=2, ny=2, nz=2, cell=12.0, strut_d=1.6, node_d=None,
+                sections=12, nozzle=0.4, snap_strut=True):
+    """Build a 3D body-centred-cubic (BCC) strut lattice as one watertight mesh.
+
+    Each cubic ``cell`` carries eight round struts running from its eight
+    corner nodes to a single body-centre node (the eight half body-diagonals),
+    and corner nodes are shared with the neighbouring cells so the tiled block
+    is one continuous space-frame. This is the classic printed metamaterial
+    truss used for lightweight cores, energy-absorbing crush structures, and
+    stiffness-tuned infill blocks -- distinct from the flat 2D lightening
+    sheets (``honeycomb_panel`` / ``isogrid_panel`` / ``kagome_panel``), which
+    are single-layer extrusions, not a volumetric strut network.
+
+    ``strut_d`` is the round strut diameter; it snaps to the nearest integer
+    multiple of ``nozzle`` (0.4 / 0.8 / 1.2 mm) by default so a strut prints as
+    a clean 1x/2x/3x extrusion stack rather than a wobbly single pass (pass
+    ``snap_strut=False`` to get a ``ValueError`` with the corrected value).
+    ``node_d`` is the joint-sphere diameter that blends the eight struts at a
+    node; it defaults to ``1.5 * strut_d`` and is clamped to be at least
+    ``strut_d`` so a joint is never thinner than the struts it fuses.
+
+    The block is centred on the origin in X and Y and sits with its bottom
+    nodes at ``z=0``. ``metadata`` reports the realised strut/node diameters,
+    the cell counts, the strut count, and the ``relative_density`` (solid
+    volume / bounding-box volume) -- the number you tune a lattice core by.
+
+    Note on print orientation: the half body-diagonal struts rise at ~35 deg
+    from the print bed, a shallow overhang, so a BCC block usually wants either
+    a slow-overhang profile or light support; that is a slicer choice, not a
+    geometry defect. Units are mm.
+    """
+    for name, val in (("nx", nx), ("ny", ny), ("nz", nz)):
+        if not isinstance(val, int) or val < 1:
+            raise ValueError("bcc_lattice(): %s must be a positive integer" % name)
+    if nx * ny * nz > _MAX_STRUT_CELLS:
+        raise ValueError(
+            "bcc_lattice(): nx*ny*nz=%d exceeds the %d-cell playground cap; a "
+            "larger strut union is too heavy to preview interactively"
+            % (nx * ny * nz, _MAX_STRUT_CELLS))
+    if cell <= 0:
+        raise ValueError("bcc_lattice(): cell must be positive")
+    if sections < 6:
+        raise ValueError("bcc_lattice(): sections must be at least 6 for a round strut")
+    _validate_nozzle(nozzle)
+    strut_d = _snap_strut(strut_d, nozzle, snap_strut, "strut_d")
+    if strut_d < 0.8:
+        raise ValueError(
+            "bcc_lattice(): strut_d=%.3g mm is below the 0.8 mm FDM wall floor; "
+            "use a bigger strut or a wider nozzle" % strut_d)
+    if node_d is None:
+        node_d = 1.5 * strut_d
+    node_d = max(node_d, strut_d)
+    # Struts must not fuse into a solid: the closest approach between two
+    # half-diagonals sharing a corner is what limits how fine the cell can go.
+    if cell < 3.0 * strut_d:
+        raise ValueError(
+            "bcc_lattice(): cell=%.3g mm is too small for strut_d=%.3g mm; the "
+            "struts fuse into a solid block (need cell >= 3*strut_d)"
+            % (cell, strut_d))
+
+    strut_r = strut_d / 2.0
+    node_r = node_d / 2.0
+
+    # Node coordinates. Corner nodes on the (nx+1)x(ny+1)x(nz+1) integer grid;
+    # body-centre nodes at each cell's middle. A dict de-duplicates the shared
+    # corners so the union is over unique solids only.
+    nodes = {}
+
+    def node_key(ix, iy, iz):
+        # half-integer indexing (x2) keeps corner and centre keys exact ints
+        return (ix, iy, iz)
+
+    for k in range(nz + 1):
+        for j in range(ny + 1):
+            for i in range(nx + 1):
+                key = node_key(2 * i, 2 * j, 2 * k)
+                nodes[key] = (i * cell, j * cell, k * cell)
+
+    struts = []
+    for k in range(nz):
+        for j in range(ny):
+            for i in range(nx):
+                cx, cy, cz = (i + 0.5) * cell, (j + 0.5) * cell, (k + 0.5) * cell
+                ckey = node_key(2 * i + 1, 2 * j + 1, 2 * k + 1)
+                nodes[ckey] = (cx, cy, cz)
+                centre = np.array([cx, cy, cz])
+                for dk in (0, 1):
+                    for dj in (0, 1):
+                        for di in (0, 1):
+                            corner = np.array([(i + di) * cell,
+                                               (j + dj) * cell,
+                                               (k + dk) * cell])
+                            struts.append((corner, centre))
+
+    # Solids: one capped cylinder per strut + one joint sphere per unique node.
+    solids = [_strut(a, b, strut_r, sections) for (a, b) in struts]
+    for pos in nodes.values():
+        solids.append(trimesh.creation.icosphere(subdivisions=1, radius=node_r))
+        solids[-1].apply_translation(pos)
+
+    mesh = uni(solids)
+    if not mesh.is_watertight:
+        mesh = from_manifold(to_manifold(mesh))
+
+    # Centre in X/Y, drop bottom nodes to z=0.
+    mesh.apply_translation((-nx * cell / 2.0, -ny * cell / 2.0, 0.0))
+
+    bbox_vol = (nx * cell) * (ny * cell) * (nz * cell)
+    mesh.metadata.update({
+        "mode": "bcc",
+        "cell_size": cell,
+        "cells_x": nx,
+        "cells_y": ny,
+        "cells_z": nz,
+        "cell_count": nx * ny * nz,
+        "strut_count": len(struts),
+        "node_count": len(nodes),
+        "strut_d": strut_d,
+        "node_d": node_d,
+        "relative_density": float(mesh.volume / bbox_vol) if bbox_vol else 0.0,
+    })
+    return mesh
+
+
 __all__ = (
     "auxetic_panel",
+    "bcc_lattice",
     "honeycomb_panel",
     "isogrid_panel",
     "kagome_panel",

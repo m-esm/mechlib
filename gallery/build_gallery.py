@@ -144,7 +144,7 @@ from mechlib.mechanisms import handwheel, shaft_collar, star_knob
 from mechlib.pulleys import v_belt_pulley
 from mechlib.ratchets import ratchet_wheel_pawl
 from mechlib.joints import ball_socket_joint, clevis, gimbal_rings, knuckle_hinge
-from mechlib.lattices import auxetic_panel, honeycomb_panel, isogrid_panel, kagome_panel, kerf_bend_cutter
+from mechlib.lattices import auxetic_panel, bcc_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kerf_bend_cutter
 from mechlib.linear import (
     archimedes_screw,
     differential_screw,
@@ -2779,6 +2779,24 @@ def build():
                 "and isogrid_panel (triangle holes only). Print flat, no supports."),
             "origin": "Gap-analysis wave v0.11.x; classic ref: Kagome / trihexagonal lattice",
             "demo": "demo_kagome_panel",
+        },
+        {
+            "file": "bcc_lattice_demo.glb",
+            "name": "bcc_lattice",
+            "module": "mechlib.lattices",
+            "signature": signature(bcc_lattice),
+            "description": (
+                "A 3D body-centred-cubic strut lattice: each cubic cell has "
+                "eight round struts from its corners to a shared body-centre "
+                "node, corners shared with neighbours so the tiled block is one "
+                "continuous space-frame. strut_d is the round strut diameter "
+                "(nozzle-snapped); node_d blends the joints. Unlike the flat "
+                "honeycomb/isogrid/kagome sheets this is a volumetric truss for "
+                "lightweight cores and crush structures. metadata reports "
+                "relative_density. Shallow body-diagonal overhangs want a slow "
+                "profile or light support."),
+            "origin": "Gap-analysis wave v0.11.x; classic ref: BCC FFF metamaterial truss",
+            "demo": "demo_bcc_lattice",
         },
         {
             "file": "kerf_bend_cutter_demo.glb",

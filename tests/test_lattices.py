@@ -3,7 +3,7 @@ import math
 import pytest
 import trimesh
 
-from mechlib.lattices import auxetic_panel, honeycomb_panel, isogrid_panel, kagome_panel, kerf_bend_cutter
+from mechlib.lattices import auxetic_panel, bcc_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kerf_bend_cutter
 from mechlib.meshutil import sub, uni
 from mechlib.prim import boxc
 
@@ -788,3 +788,76 @@ def test_kerf_bend_cutter_cap_protects_the_playground():
     with pytest.raises(ValueError):
         kerf_bend_cutter(mode="lattice", width=400.0, height=400.0,
                          kerf=0.4, pitch=1.5, bridge=0.8)
+
+
+# ---------------------------------------------------------------------------
+# bcc_lattice (3D strut truss)
+# ---------------------------------------------------------------------------
+
+def test_bcc_lattice_watertight_and_single_body():
+    block = bcc_lattice(nx=2, ny=2, nz=2, cell=12.0, strut_d=1.6)
+    assert_mesh(block)
+    assert block.is_winding_consistent
+    assert len(block.split(only_watertight=False)) == 1
+    assert block.metadata["mode"] == "bcc"
+
+
+def test_bcc_lattice_struts_and_nodes_count_correctly():
+    nx, ny, nz = 3, 2, 1
+    block = bcc_lattice(nx=nx, ny=ny, nz=nz, cell=10.0, strut_d=1.2)
+    # 8 half-diagonal struts per cell.
+    assert block.metadata["strut_count"] == 8 * nx * ny * nz
+    # (nx+1)(ny+1)(nz+1) shared corners + one body-centre per cell.
+    expect_nodes = (nx + 1) * (ny + 1) * (nz + 1) + nx * ny * nz
+    assert block.metadata["node_count"] == expect_nodes
+
+
+def test_bcc_lattice_sits_on_bed_and_centres_in_plane():
+    nx, ny, nz, cell = 3, 3, 2, 12.0
+    block = bcc_lattice(nx=nx, ny=ny, nz=nz, cell=cell, strut_d=1.6, node_d=2.4)
+    lo, hi = block.bounds
+    # Bottom nodes drop to z=0 (spheres dip half a node diameter below).
+    assert lo[2] == pytest.approx(-1.2, abs=1e-6)
+    assert hi[2] == pytest.approx(nz * cell + 1.2, abs=1e-6)
+    # Centred in X and Y.
+    assert lo[0] == pytest.approx(-hi[0], abs=1e-6)
+    assert lo[1] == pytest.approx(-hi[1], abs=1e-6)
+
+
+def test_bcc_lattice_relative_density_is_a_small_fraction():
+    block = bcc_lattice(nx=2, ny=2, nz=2, cell=12.0, strut_d=1.6)
+    rd = block.metadata["relative_density"]
+    # An open strut truss is mostly air: well under half solid, and non-trivial.
+    assert 0.0 < rd < 0.5
+
+
+def test_bcc_lattice_strut_d_snaps_to_nozzle_grid_by_default():
+    block = bcc_lattice(nx=1, ny=1, nz=1, cell=12.0, strut_d=1.5)
+    assert block.metadata["strut_d"] == pytest.approx(1.6)
+
+
+def test_bcc_lattice_strut_d_off_grid_raises_without_snap():
+    with pytest.raises(ValueError):
+        bcc_lattice(nx=1, ny=1, nz=1, cell=12.0, strut_d=1.5, snap_strut=False)
+
+
+def test_bcc_lattice_denser_struts_raise_relative_density():
+    thin = bcc_lattice(nx=2, ny=2, nz=2, cell=12.0, strut_d=1.2)
+    thick = bcc_lattice(nx=2, ny=2, nz=2, cell=12.0, strut_d=2.0)
+    assert thick.metadata["relative_density"] > thin.metadata["relative_density"]
+
+
+def test_bcc_lattice_rejects_bad_arguments():
+    with pytest.raises(ValueError):
+        bcc_lattice(nx=0)
+    with pytest.raises(ValueError):
+        bcc_lattice(nx=2, ny=2, nz=2, cell=3.0, strut_d=1.6)  # cell < 3*strut_d
+    with pytest.raises(ValueError):
+        bcc_lattice(strut_d=0.4)  # below the 0.8 mm wall floor
+    with pytest.raises(ValueError):
+        bcc_lattice(nozzle=0.6)
+
+
+def test_bcc_lattice_cell_cap_protects_the_playground():
+    with pytest.raises(ValueError):
+        bcc_lattice(nx=5, ny=5, nz=5, cell=12.0)  # 125 > 64-cell cap
