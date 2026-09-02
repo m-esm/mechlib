@@ -3401,7 +3401,8 @@ def demo_gasket_channel(
 # Lattices and kerf patterns (gap-analysis wave v0.8.0)
 # ---------------------------------------------------------------------------
 
-_LATTICE_AUXETIC_MODES = ("reentrant", "rotating_squares", "arrowhead", "chiral")
+_LATTICE_AUXETIC_MODES = (
+    "reentrant", "rotating_squares", "arrowhead", "star", "chiral")
 _LATTICE_KERF_MODES = ("lattice", "diagonal", "spiral", "wave", "hex", "cross", "chevron", "diamond", "fishbone", "meander", "biaxial")
 
 

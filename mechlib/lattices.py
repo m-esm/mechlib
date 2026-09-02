@@ -9,7 +9,8 @@ from shapely.ops import unary_union
 from .meshutil import extrude_poly_z, from_manifold, to_manifold
 
 _NOZZLE_WIDTHS = (0.4, 0.8, 1.2)
-_AUXETIC_MODES = ("reentrant", "rotating_squares", "arrowhead", "chiral")
+_AUXETIC_MODES = (
+    "reentrant", "rotating_squares", "arrowhead", "star", "chiral")
 _KERF_MODES = ("lattice", "diagonal", "spiral", "wave", "hex", "cross", "chevron",
                "diamond", "fishbone", "meander", "biaxial")
 _MAX_CELLS = 2500
@@ -221,6 +222,57 @@ def _arrowhead_unit(bounds, cell, strut_t):
     return material, nx, ny, pitch_x, pitch_y
 
 
+def _star_unit(bounds, cell, strut_t):
+    """Build Grima hexagram cells on a connected triangular lattice.
+
+    Each cell is the outline of two overlapping equilateral triangles, giving
+    a six-pointed star with re-entrant vertices around its central hexagon.
+    Cell centres lie on a triangular (hexagonal-neighbour) lattice, with the
+    star tip radius set to half the centre pitch. Opposing tips of all six
+    neighbours therefore coincide exactly, joining the cells into one sheet.
+    Under an in-plane pull those re-entrant star vertices open and the rows
+    spread transversely, producing the negative-Poisson Grima mechanism.
+    """
+    pitch_x = cell
+    pitch_y = cell * math.sqrt(3.0) / 2.0
+    radius = cell / 2.0
+    extent_y = radius * math.sqrt(3.0) / 2.0
+    minx, miny, maxx, maxy = bounds
+    # A mitred buffer around each 60-degree tip projects one full strut_t
+    # beyond the centreline vertex, so reserve that material on every edge.
+    usable_w = maxx - minx - 2.0 * strut_t
+    usable_h = maxy - miny - 2.0 * strut_t
+    # Odd rows shift by half a pitch. Centre the combined even/odd-row span
+    # so both row parities retain the requested border at opposite edges.
+    nx = max(1, int((usable_w - pitch_x / 2.0 - 2.0 * radius) // pitch_x) + 1)
+    ny = max(1, int((usable_h - 2.0 * extent_y) // pitch_y) + 1)
+    if nx * ny > _MAX_CELLS:
+        raise ValueError(
+            "star grid would build %d cells (cap %d); increase cell or "
+            "shrink the panel" % (nx * ny, _MAX_CELLS))
+    row_offset_span = pitch_x / 2.0 if ny > 1 else 0.0
+    x0 = -((nx - 1) * pitch_x + row_offset_span) / 2.0
+    y0 = -((ny - 1) * pitch_y) / 2.0
+    segs = []
+    for j in range(ny):
+        row_off = pitch_x / 2.0 if (j % 2) else 0.0
+        for i in range(nx):
+            cx = x0 + i * pitch_x + row_off
+            cy = y0 + j * pitch_y
+            points = [
+                (cx + radius * math.cos(math.radians(60.0 * k)),
+                 cy + radius * math.sin(math.radians(60.0 * k)))
+                for k in range(6)
+            ]
+            segs.append(sg.LineString([
+                points[0], points[2], points[4], points[0]]))
+            segs.append(sg.LineString([
+                points[1], points[3], points[5], points[1]]))
+    material = unary_union(
+        [s.buffer(strut_t / 2.0, cap_style=2, join_style=2) for s in segs])
+    return material, nx, ny, pitch_x, pitch_y
+
+
 def _rotating_squares_unit(bounds, cell, strut_t, hinge_t):
     """Build the rotating-squares skeleton: rigid squares, corner-only hinges.
 
@@ -351,7 +403,7 @@ def auxetic_panel(mode="reentrant", width=60.0, height=60.0, thickness=3.0,
     Ordinary sheet material gets thinner when you stretch it. These panels do
     the opposite: their internal cell topology, not the base material,
     supplies the negative Poisson's ratio, so a rectangle of ordinary PLA or
-    PETG stretched along X measurably widens along Y too. Four topologies
+    PETG stretched along X measurably widens along Y too. Five topologies
     are supported. ``"reentrant"`` is a bowtie/inverted-honeycomb lattice
     (concave hexagon cells whose splayed struts hinge open under tension).
     ``"rotating_squares"`` is rigid square islands joined only at their
@@ -361,7 +413,10 @@ def auxetic_panel(mode="reentrant", width=60.0, height=60.0, thickness=3.0,
     below the library's normal 0.8 mm minimum-wall rule, because that IS the
     compliant feature. ``"arrowhead"`` uses opposing inverted-triangle
     arrowheads sharing a waist; pulling along X opens their concave notches
-    and expands the panel along Y. ``"chiral"`` is a hexagonal grid of
+    and expands the panel along Y. ``"star"`` tiles Grima six-pointed
+    hexagram outlines on a hexagonal lattice; pulling a row opens the
+    re-entrant star vertices and spreads adjacent rows. ``"chiral"`` is a
+    hexagonal grid of
     circular nodes joined by ligaments tangent (not radial) to each node, so
     pulling the panel spins every node in the same rotational sense.
 
@@ -416,6 +471,10 @@ def auxetic_panel(mode="reentrant", width=60.0, height=60.0, thickness=3.0,
         extra = {"square_side": sq, "hinge_t": hinge_t}
     elif mode == "arrowhead":
         material, nx, ny, px, py = _arrowhead_unit(bounds, cell, strut_t)
+        overlap = strut_t
+        extra = {}
+    elif mode == "star":
+        material, nx, ny, px, py = _star_unit(bounds, cell, strut_t)
         overlap = strut_t
         extra = {}
     else:  # chiral

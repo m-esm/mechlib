@@ -2723,9 +2723,10 @@ def build():
             "description": (
                 "A flat panel that gets WIDER, not narrower, when you stretch it: "
                 "its internal cell topology supplies a negative Poisson's ratio "
-                "instead of the base plastic. Four interchangeable cell types "
+                "instead of the base plastic. Five interchangeable cell types "
                 "(reentrant bowtie honeycomb, rigid rotating squares on corner "
-                "hinges, Grima double-arrowhead cells, and a chiral "
+                "hinges, Grima double-arrowhead cells, Grima star-shaped "
+                "honeycomb cells, and a chiral "
                 "node-and-tangent-ligament grid) trade off "
                 "stiffness, hinge fatigue life, and print complexity for the same "
                 "auxetic effect."),
