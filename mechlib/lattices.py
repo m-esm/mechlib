@@ -783,6 +783,164 @@ def honeycomb_panel(width=60.0, height=60.0, thickness=3.0, cell=12.0,
 
 
 # ---------------------------------------------------------------------------
+# Kagome (trihexagonal) lightening sheet
+# ---------------------------------------------------------------------------
+
+def _kagome_hex(cx, cy, circum_r):
+    """Regular hexagon, vertex on +X, circumradius ``circum_r``."""
+    pts = [
+        (cx + circum_r * math.cos(math.radians(60.0 * k)),
+         cy + circum_r * math.sin(math.radians(60.0 * k)))
+        for k in range(6)
+    ]
+    return sg.Polygon(pts)
+
+
+def _kagome_unit(bounds, cell, strut_t):
+    """Place hexagon + triangle through-holes of a Kagome (3.6.3.6) tiling.
+
+    Coarse vertices sit on a triangular lattice of spacing ``cell``. The six
+    edge midpoints around each vertex form a hexagon hole; the three midpoints
+    of each coarse triangle form a triangle hole. Both families are inset by
+    ``strut_t / 2`` so remaining walls print at ``strut_t``. Distinct from
+    honeycomb_panel (hex holes only) and isogrid_panel (triangle holes only).
+    """
+    pitch_x = cell
+    pitch_y = cell * math.sqrt(3.0) / 2.0
+    minx, miny, maxx, maxy = bounds
+    pad = cell / 2.0
+    nx = max(2, int((maxx - minx - 2.0 * pad) // pitch_x) + 1)
+    ny = max(2, int((maxy - miny - 2.0 * pad) // pitch_y) + 1)
+    n_est = nx * ny * 3
+    if n_est > _MAX_CELLS:
+        raise ValueError(
+            "kagome grid would build ~%d holes (cap %d); increase cell or "
+            "shrink the panel" % (n_est, _MAX_CELLS))
+    x0 = -((nx - 1) * pitch_x) / 2.0
+    y0 = -((ny - 1) * pitch_y) / 2.0
+
+    def _vert(i, j):
+        return (x0 + i * pitch_x + (j % 2) * (pitch_x / 2.0),
+                y0 + j * pitch_y)
+
+    interior = sg.box(minx, miny, maxx, maxy)
+    inset = strut_t / 2.0
+    hex_holes = []
+    tri_holes = []
+    for j in range(ny):
+        for i in range(nx):
+            vx, vy = _vert(i, j)
+            hex_hole = _kagome_hex(vx, vy, cell / 2.0).buffer(-inset)
+            if (hex_hole is not None and not hex_hole.is_empty
+                    and hex_hole.geom_type in ("Polygon", "MultiPolygon")
+                    and interior.contains(hex_hole)):
+                hex_holes.append(hex_hole)
+
+    def _mid(p, q):
+        return ((p[0] + q[0]) / 2.0, (p[1] + q[1]) / 2.0)
+
+    def _add_tri(p0, p1, p2):
+        tri = sg.Polygon([_mid(p0, p1), _mid(p1, p2), _mid(p2, p0)])
+        tri = tri.buffer(-inset)
+        if (tri is not None and not tri.is_empty
+                and tri.geom_type in ("Polygon", "MultiPolygon")
+                and interior.contains(tri)):
+            tri_holes.append(tri)
+
+    for j in range(ny - 1):
+        for i in range(nx - 1):
+            a = _vert(i, j)
+            b = _vert(i + 1, j)
+            c = _vert(i, j + 1)
+            d = _vert(i + 1, j + 1)
+            if j % 2 == 0:
+                _add_tri(a, b, c)
+                _add_tri(b, c, d)
+            else:
+                _add_tri(a, b, d)
+                _add_tri(a, c, d)
+
+    holes = hex_holes + tri_holes
+    if not holes:
+        raise ValueError(
+            "kagome_panel(): no Kagome cell fits inside the bordered interior; "
+            "increase the panel or shrink cell/border")
+    return holes, nx, ny, pitch_x, pitch_y, len(hex_holes), len(tri_holes)
+
+
+def kagome_panel(width=60.0, height=60.0, thickness=3.0, cell=12.0,
+                 strut_t=1.2, border=3.0, nozzle=0.4, snap_strut=True):
+    """Build a flat Kagome (trihexagonal) lightening panel.
+
+    A rectangular slab with through-holes of **both** equilateral triangles
+    and regular hexagons (the 3.6.3.6 Kagome tiling). ``cell`` is the coarse
+    triangular-lattice vertex pitch (hex-hole centre spacing); ``strut_t`` is
+    the printed wall between a triangle and a neighbouring hex. Distinct from
+    ``honeycomb_panel`` (hex holes only) and ``isogrid_panel`` (triangle holes
+    only). Stretching the panel in-plane makes it thinner transversely
+    (positive Poisson). Use this for lightening a printed sheet.
+
+    A solid ``border``-wide rim is left around the tiled holes so the panel
+    edge is never a row of half-cells; the actual rim is reported in
+    ``metadata["border_actual"]``. ``strut_t`` snaps to the nearest integer
+    multiple of ``nozzle`` (0.4 / 0.8 / 1.2 mm) by default. The panel sits
+    flat with its bottom face at z=0. Print flat, no supports. Units are mm.
+    """
+    if width <= 0 or height <= 0 or thickness < 0.8:
+        raise ValueError("kagome_panel(): width/height must be positive and "
+                          "thickness must be at least 0.8 mm")
+    if cell <= 0:
+        raise ValueError("kagome_panel(): cell must be positive")
+    if border <= 0 or border >= min(width, height) / 2.0:
+        raise ValueError("kagome_panel(): border must be positive and less "
+                          "than half the panel's shorter side")
+    _validate_nozzle(nozzle)
+    strut_t = _snap_strut(strut_t, nozzle, snap_strut, "strut_t")
+    if cell < 4.0 * strut_t:
+        raise ValueError(
+            "kagome_panel(): cell=%.3g mm is too small for strut_t=%.3g mm; "
+            "the struts would fuse solid (need cell >= 4*strut_t)"
+            % (cell, strut_t))
+
+    bounds = _usable_bounds(width, height, border)
+    holes, nx, ny, px, py, n_hex, n_tri = _kagome_unit(bounds, cell, strut_t)
+    hole_union = unary_union(holes)
+    hminx, hminy, hmaxx, hmaxy = hole_union.bounds
+    border_actual = min(width / 2.0 + hminx, width / 2.0 - hmaxx,
+                        height / 2.0 + hminy, height / 2.0 - hmaxy)
+    if border_actual < border - 1e-6:
+        raise ValueError(
+            "kagome_panel(): tiled cells overflow the requested border "
+            "(actual %.3g mm < requested %.3g mm); increase border or "
+            "shrink cell" % (border_actual, border))
+
+    panel = sg.box(-width / 2.0, -height / 2.0, width / 2.0, height / 2.0)
+    combined = panel.difference(hole_union)
+    if combined.geom_type not in ("Polygon", "MultiPolygon"):
+        raise ValueError("kagome_panel(): degenerate panel geometry")
+    combined = _prune_holes(combined)
+    hole_count = _count_holes(combined)
+
+    mesh = _extrude(combined, thickness)
+    mesh.metadata.update({
+        "mode": "kagome",
+        "cell_size": cell,
+        "cells_x": nx,
+        "cells_y": ny,
+        "cell_count": len(holes),
+        "hex_holes": n_hex,
+        "tri_holes": n_tri,
+        "pitch_x": px,
+        "pitch_y": py,
+        "strut_t": strut_t,
+        "border_actual": border_actual,
+        "hole_count": hole_count,
+        "poisson_ratio_sign": 1,
+    })
+    return mesh
+
+
+# ---------------------------------------------------------------------------
 # NASA-style isogrid (triangular through-ribs)
 # ---------------------------------------------------------------------------
 
@@ -1639,5 +1797,6 @@ __all__ = (
     "auxetic_panel",
     "honeycomb_panel",
     "isogrid_panel",
+    "kagome_panel",
     "kerf_bend_cutter",
 )

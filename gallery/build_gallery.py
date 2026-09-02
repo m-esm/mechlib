@@ -144,7 +144,7 @@ from mechlib.mechanisms import handwheel, shaft_collar, star_knob
 from mechlib.pulleys import v_belt_pulley
 from mechlib.ratchets import ratchet_wheel_pawl
 from mechlib.joints import ball_socket_joint, clevis, gimbal_rings, knuckle_hinge
-from mechlib.lattices import auxetic_panel, honeycomb_panel, isogrid_panel, kerf_bend_cutter
+from mechlib.lattices import auxetic_panel, honeycomb_panel, isogrid_panel, kagome_panel, kerf_bend_cutter
 from mechlib.linear import (
     archimedes_screw,
     differential_screw,
@@ -2763,6 +2763,22 @@ def build():
                 "holes). Print flat, no supports."),
             "origin": "Gap-analysis wave v0.11.x; classic ref: NASA isogrid (triangular rib sheet)",
             "demo": "demo_isogrid_panel",
+        },
+        {
+            "file": "kagome_panel_demo.glb",
+            "name": "kagome_panel",
+            "module": "mechlib.lattices",
+            "signature": signature(kagome_panel),
+            "description": (
+                "A flat Kagome (trihexagonal) lightening sheet whose through-holes "
+                "are BOTH equilateral triangles and regular hexagons in the 3.6.3.6 "
+                "tiling, with a solid border frame so the edge is never a row of "
+                "half-cells. cell is the coarse vertex pitch (hex-hole centre "
+                "spacing); strut_t is the printed wall between a triangle and a "
+                "neighbouring hex. Distinct from honeycomb_panel (hex holes only) "
+                "and isogrid_panel (triangle holes only). Print flat, no supports."),
+            "origin": "Gap-analysis wave v0.11.x; classic ref: Kagome / trihexagonal lattice",
+            "demo": "demo_kagome_panel",
         },
         {
             "file": "kerf_bend_cutter_demo.glb",

@@ -330,6 +330,11 @@ USE_CASES = {
         "lightened sheets that want triangular through-cells with 0/60/120 "
         "ribs and a solid rim, not a hex honeycomb."
     ),
+    'kagome_panel': (
+        "Lightweight printed skins and drone/robot ribs that want a Kagome "
+        "trihexagonal lattice with both triangular and hexagonal through-cells "
+        "and a solid rim, not a plain hex honeycomb or a triangle-only isogrid."
+    ),
     'jaw_coupling': (
         "Servo and stepper motor couplings, pump shafts, and general flexible "
         "jaw (Lovejoy-style) connections with a spider."
@@ -840,6 +845,7 @@ GALLERY_FILE_TO_API = {
     'intermittent_gear_pair_demo.glb': 'intermittent_gear_pair',
     'iris_diaphragm_demo.glb': 'iris_diaphragm',
     'isogrid_panel_demo.glb': 'isogrid_panel',
+    'kagome_panel_demo.glb': 'kagome_panel',
     'jaw_coupling_demo.glb': 'jaw_coupling',
     'kerf_bend_cutter_demo.glb': 'kerf_bend_cutter',
     'kinematic_coupling_demo.glb': 'kinematic_coupling',
