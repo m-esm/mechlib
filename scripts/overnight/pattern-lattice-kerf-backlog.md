@@ -28,7 +28,7 @@ Semi-primitives. No CadQuery. FDM: nozzle-multiple struts, wall>=0.8, kerf>=nozz
 | 10 | auxetic_panel(mode="arrowhead") | auxetic | shipped | Grima double-arrowhead NPR cells. THIS HOUR. |
 | 11 | auxetic_panel(mode="star") | auxetic | shipped | Grima star-shaped honeycomb NPR cells. SHA 9bad3d1 |
 | 12 | auxetic_panel(mode="anti_tetrachiral") | auxetic | shipped | Opposite-sense square-grid NPR cells. THIS HOUR. |
-| 13 | auxetic_panel(mode="houndstooth") | auxetic | shipped | interlocking L / broken-chevron NPR cells. THIS HOUR. |
+| 13 | auxetic_panel(mode="houndstooth") | auxetic | shipped | interlocking L / broken-chevron NPR cells. SHA d122a6bdc5c1335650aac7979a2cd1ac63c0dc4d |
 | 14 | kagome_lattice | 2d-lattice | pending | |
 | 15 | bcc_lattice | 3d-strut | pending | |
 | 16 | octet_truss | 3d-strut | pending | |
