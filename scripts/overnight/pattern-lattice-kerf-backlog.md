@@ -32,7 +32,7 @@ Semi-primitives. No CadQuery. FDM: nozzle-multiple struts, wall>=0.8, kerf>=nozz
 | 14 | kagome_lattice | 2d-lattice | shipped | Shipped as kagome_panel: 2D Kagome tri+hex lightening sheet. |
 | 15 | bcc_lattice | 3d-strut | shipped | Body-centred-cubic strut truss, 8 half-diagonals/cell to shared centre node. SHA 479856a986f90ebcaa8c55c8fa80f5d4db1a9070 |
 | 16 | octet_truss | 3d-strut | shipped | FCC face-diagonal tetrahedral/octahedral strut network. SHA 01fdddb138d5a2df2ba228e2f1390686ac978e83 |
-| 17 | kelvin_cell | 3d-strut | in_progress | |
+| 17 | kelvin_cell | 3d-strut | shipped | Truncated-octahedron 24-node, 36-strut open-cell frame. SHA 55251cbc23acfe612cbc0b3e6e6d71e224e04566 |
 | 18 | cubic_lattice | 3d-strut | pending | |
 | 19 | gyroid_lattice | tpms | pending | keep; wall>=1.2 cell>=8 |
 | 20 | honeycomb_core | 2.5d | pending | != honeycomb_panel sheet |
