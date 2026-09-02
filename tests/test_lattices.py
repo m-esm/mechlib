@@ -19,7 +19,8 @@ def assert_mesh(mesh):
 # ---------------------------------------------------------------------------
 
 @pytest.mark.parametrize(
-    "mode", ["reentrant", "rotating_squares", "arrowhead", "star", "chiral"])
+    "mode", ["reentrant", "rotating_squares", "arrowhead", "star", "chiral",
+             "anti_tetrachiral"])
 def test_auxetic_panel_watertight_and_single_body(mode):
     panel = auxetic_panel(mode=mode, width=60.0, height=60.0, cell=12.0)
     assert_mesh(panel)
@@ -29,7 +30,8 @@ def test_auxetic_panel_watertight_and_single_body(mode):
 
 
 @pytest.mark.parametrize(
-    "mode", ["reentrant", "rotating_squares", "arrowhead", "star", "chiral"])
+    "mode", ["reentrant", "rotating_squares", "arrowhead", "star", "chiral",
+             "anti_tetrachiral"])
 def test_auxetic_panel_hole_count_matches_euler_characteristic(mode):
     # A flat extruded slab with N separate through-holes is topologically a
     # genus-N solid, so euler_number == 2 - 2*N. The panel's own 2D
@@ -69,6 +71,14 @@ def test_star_layout_differs_from_reentrant_and_arrowhead():
                               cell=12.0)
     assert star.volume != pytest.approx(reentrant.volume, rel=0.01)
     assert star.volume != pytest.approx(arrowhead.volume, rel=0.01)
+
+
+def test_anti_tetrachiral_layout_differs_from_chiral():
+    anti = auxetic_panel(mode="anti_tetrachiral", width=60.0, height=60.0,
+                         cell=12.0)
+    chiral = auxetic_panel(mode="chiral", width=60.0, height=60.0,
+                           cell=12.0)
+    assert anti.volume != pytest.approx(chiral.volume, rel=0.01)
 
 
 def test_rotating_squares_islands_are_corner_connected_only():

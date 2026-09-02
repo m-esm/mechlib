@@ -958,7 +958,7 @@ PLAY: dict = {
         "lid_d": (28.0, 50.0, 4.0),
     },
     "demo_auxetic_panel": {
-        "mode_index": (0, 2, 1),
+        "mode_index": (0, 5, 1),
         "cell": (8.0, 16.0, 2.0),
         "strut_t": (0.4, 1.2, 0.4),
     },
@@ -3402,7 +3402,8 @@ def demo_gasket_channel(
 # ---------------------------------------------------------------------------
 
 _LATTICE_AUXETIC_MODES = (
-    "reentrant", "rotating_squares", "arrowhead", "star", "chiral")
+    "reentrant", "rotating_squares", "arrowhead", "star", "chiral",
+    "anti_tetrachiral")
 _LATTICE_KERF_MODES = ("lattice", "diagonal", "spiral", "wave", "hex", "cross", "chevron", "diamond", "fishbone", "meander", "biaxial")
 
 

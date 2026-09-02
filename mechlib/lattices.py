@@ -10,7 +10,8 @@ from .meshutil import extrude_poly_z, from_manifold, to_manifold
 
 _NOZZLE_WIDTHS = (0.4, 0.8, 1.2)
 _AUXETIC_MODES = (
-    "reentrant", "rotating_squares", "arrowhead", "star", "chiral")
+    "reentrant", "rotating_squares", "arrowhead", "star", "chiral",
+    "anti_tetrachiral")
 _KERF_MODES = ("lattice", "diagonal", "spiral", "wave", "hex", "cross", "chevron",
                "diamond", "fishbone", "meander", "biaxial")
 _MAX_CELLS = 2500
@@ -395,6 +396,55 @@ def _chiral_unit(bounds, cell, strut_t, node_r):
     return material, nx, ny, pitch_x, pitch_y, len(nodes)
 
 
+def _anti_tetrachiral_unit(bounds, cell, strut_t, node_r):
+    """Build anti-tetrachiral cells: square-grid nodes, alternating tangents.
+
+    Every interior node has four ligaments to its orthogonal neighbours. A
+    checkerboard sign chooses which parallel tangent joins each pair: all four
+    contacts around one node torque it in one sense, while the contacts around
+    each neighbouring node torque it in the opposite sense. This alternating
+    rotation is the anti-tetrachiral mechanism and distinguishes it from the
+    same-sense triangular-grid chiral topology.
+    """
+    pitch_x = cell
+    pitch_y = cell
+    minx, miny, maxx, maxy = bounds
+    nx = max(2, int((maxx - minx - 2.0 * node_r) // pitch_x) + 1)
+    ny = max(2, int((maxy - miny - 2.0 * node_r) // pitch_y) + 1)
+    if nx * ny > _MAX_CELLS:
+        raise ValueError(
+            "anti_tetrachiral grid would build %d nodes (cap %d); increase "
+            "cell or shrink the panel" % (nx * ny, _MAX_CELLS))
+    x0 = -((nx - 1) * pitch_x) / 2.0
+    y0 = -((ny - 1) * pitch_y) / 2.0
+    nodes = {
+        (i, j): (x0 + i * pitch_x, y0 + j * pitch_y)
+        for j in range(ny)
+        for i in range(nx)
+    }
+    ligaments = []
+    for (i, j), (x0n, y0n) in nodes.items():
+        tangent_side = 1.0 if (i + j) % 2 == 0 else -1.0
+        for di, dj in ((1, 0), (0, 1)):
+            other = (i + di, j + dj)
+            if other not in nodes:
+                continue
+            x1, y1 = nodes[other]
+            dx, dy = x1 - x0n, y1 - y0n
+            length = math.hypot(dx, dy)
+            ux, uy = dx / length, dy / length
+            px = -uy * node_r * tangent_side
+            py = ux * node_r * tangent_side
+            ligaments.append(sg.LineString([
+                (x0n + px, y0n + py), (x1 + px, y1 + py)]))
+    circles = [sg.Point(x, y).buffer(node_r, resolution=16)
+               for x, y in nodes.values()]
+    ligament_polys = [ln.buffer(strut_t / 2.0, cap_style=2, join_style=2)
+                      for ln in ligaments]
+    material = unary_union(circles + ligament_polys)
+    return material, nx, ny, pitch_x, pitch_y, len(nodes)
+
+
 def auxetic_panel(mode="reentrant", width=60.0, height=60.0, thickness=3.0,
                   cell=12.0, strut_t=1.2, hinge_t=0.6, node_r=None,
                   border=3.0, nozzle=0.4, snap_strut=True):
@@ -403,7 +453,7 @@ def auxetic_panel(mode="reentrant", width=60.0, height=60.0, thickness=3.0,
     Ordinary sheet material gets thinner when you stretch it. These panels do
     the opposite: their internal cell topology, not the base material,
     supplies the negative Poisson's ratio, so a rectangle of ordinary PLA or
-    PETG stretched along X measurably widens along Y too. Five topologies
+    PETG stretched along X measurably widens along Y too. Six topologies
     are supported. ``"reentrant"`` is a bowtie/inverted-honeycomb lattice
     (concave hexagon cells whose splayed struts hinge open under tension).
     ``"rotating_squares"`` is rigid square islands joined only at their
@@ -419,13 +469,17 @@ def auxetic_panel(mode="reentrant", width=60.0, height=60.0, thickness=3.0,
     hexagonal grid of
     circular nodes joined by ligaments tangent (not radial) to each node, so
     pulling the panel spins every node in the same rotational sense.
+    ``"anti_tetrachiral"`` instead places circular nodes on a square grid and
+    alternates the tangent side in a checkerboard, so neighbouring nodes
+    rotate in opposite senses.
 
     All modes fill a solid ``border``-wide frame around the tiled interior so
     the panel edge is a continuous rim, never a row of half-cut cells; the
     frame is fitted to the tiled cells' actual extent (reported in
     ``metadata["border_actual"]``, always >= the requested ``border``)
     because an integer cell count rarely divides the interior exactly.
-    ``strut_t`` (and, for chiral, the ligament width) must print as clean
+    ``strut_t`` (and, for chiral or anti-tetrachiral, the ligament width)
+    must print as clean
     single- or double-perimeter walls, so it is snapped to the nearest
     integer multiple of ``nozzle`` (one of 0.4 / 0.8 / 1.2 mm) by default;
     pass ``snap_strut=False`` to get a ``ValueError`` with the corrected
@@ -477,6 +531,16 @@ def auxetic_panel(mode="reentrant", width=60.0, height=60.0, thickness=3.0,
         material, nx, ny, px, py = _star_unit(bounds, cell, strut_t)
         overlap = strut_t
         extra = {}
+    elif mode == "anti_tetrachiral":
+        node_r_eff = node_r if node_r is not None else 0.3 * cell
+        if node_r_eff <= strut_t:
+            raise ValueError(
+                "auxetic_panel(): node_r must exceed strut_t so ligaments "
+                "stay tangent instead of crossing the node")
+        material, nx, ny, px, py, n_nodes = _anti_tetrachiral_unit(
+            bounds, cell, strut_t, node_r_eff)
+        overlap = node_r_eff
+        extra = {"node_r": node_r_eff, "node_count": n_nodes}
     else:  # chiral
         node_r_eff = node_r if node_r is not None else 0.3 * cell
         if node_r_eff <= strut_t:

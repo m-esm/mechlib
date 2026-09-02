@@ -7,7 +7,7 @@ Semi-primitives. No CadQuery. FDM: nozzle-multiple struts, wall>=0.8, kerf>=nozz
 ## Already in library (do not re-ship)
 
 - patterns: polar_ring, lighten_cell_poly (rect|hex), lighten_grid_centres, directed_holes
-- auxetic_panel: reentrant, rotating_squares, arrowhead, star, chiral (hexachiral is a dup, vetoed)
+- auxetic_panel: reentrant, rotating_squares, arrowhead, star, chiral, anti_tetrachiral (hexachiral is a dup, vetoed)
 - kerf_bend_cutter: lattice, diagonal, spiral, wave, hex, cross, chevron, diamond, fishbone
 - honeycomb_panel (47e3460)
 - isogrid_panel (3df5609)
@@ -27,7 +27,7 @@ Semi-primitives. No CadQuery. FDM: nozzle-multiple struts, wall>=0.8, kerf>=nozz
 | 09 | kerf_bend_cutter(mode="biaxial") | kerf | shipped | 2-axis wrap. SHA dca0357dbb6a0658a43507a9f8b5a896521cdbe3 |
 | 10 | auxetic_panel(mode="arrowhead") | auxetic | shipped | Grima double-arrowhead NPR cells. THIS HOUR. |
 | 11 | auxetic_panel(mode="star") | auxetic | shipped | Grima star-shaped honeycomb NPR cells. SHA 9bad3d1 |
-| 12 | auxetic_panel(mode="anti_tetrachiral") | auxetic | pending | |
+| 12 | auxetic_panel(mode="anti_tetrachiral") | auxetic | shipped | Opposite-sense square-grid NPR cells. THIS HOUR. |
 | 13 | auxetic_panel(mode="houndstooth") | auxetic | pending | |
 | 14 | kagome_lattice | 2d-lattice | pending | |
 | 15 | bcc_lattice | 3d-strut | pending | |
