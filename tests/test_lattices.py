@@ -18,7 +18,7 @@ def assert_mesh(mesh):
 # auxetic_panel
 # ---------------------------------------------------------------------------
 
-@pytest.mark.parametrize("mode", ["reentrant", "rotating_squares", "chiral"])
+@pytest.mark.parametrize("mode", ["reentrant", "rotating_squares", "arrowhead", "chiral"])
 def test_auxetic_panel_watertight_and_single_body(mode):
     panel = auxetic_panel(mode=mode, width=60.0, height=60.0, cell=12.0)
     assert_mesh(panel)
@@ -27,7 +27,7 @@ def test_auxetic_panel_watertight_and_single_body(mode):
     assert panel.metadata["mode"] == mode
 
 
-@pytest.mark.parametrize("mode", ["reentrant", "rotating_squares", "chiral"])
+@pytest.mark.parametrize("mode", ["reentrant", "rotating_squares", "arrowhead", "chiral"])
 def test_auxetic_panel_hole_count_matches_euler_characteristic(mode):
     # A flat extruded slab with N separate through-holes is topologically a
     # genus-N solid, so euler_number == 2 - 2*N. The panel's own 2D
@@ -49,6 +49,14 @@ def test_reentrant_cell_grid_matches_requested_cell_size():
         panel.metadata["cells_x"] * panel.metadata["cells_y"])
     assert panel.metadata["cells_x"] >= 5
     assert panel.metadata["cells_y"] >= 5
+
+
+def test_arrowhead_layout_differs_from_reentrant():
+    arrowhead = auxetic_panel(mode="arrowhead", width=60.0, height=60.0,
+                              cell=12.0)
+    reentrant = auxetic_panel(mode="reentrant", width=60.0, height=60.0,
+                              cell=12.0)
+    assert arrowhead.volume != pytest.approx(reentrant.volume, rel=0.01)
 
 
 def test_rotating_squares_islands_are_corner_connected_only():

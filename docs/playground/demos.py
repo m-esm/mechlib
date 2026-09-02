@@ -3401,13 +3401,13 @@ def demo_gasket_channel(
 # Lattices and kerf patterns (gap-analysis wave v0.8.0)
 # ---------------------------------------------------------------------------
 
-_LATTICE_AUXETIC_MODES = ("reentrant", "rotating_squares", "chiral")
+_LATTICE_AUXETIC_MODES = ("reentrant", "rotating_squares", "arrowhead", "chiral")
 _LATTICE_KERF_MODES = ("lattice", "diagonal", "spiral", "wave", "hex", "cross", "chevron", "diamond", "fishbone", "meander", "biaxial")
 
 
 def demo_auxetic_panel(mode_index: int = 0, cell: float = 12.0,
                        strut_t: float = 1.2) -> MeshList:
-    mode = _LATTICE_AUXETIC_MODES[mode_index % 3]
+    mode = _LATTICE_AUXETIC_MODES[mode_index % len(_LATTICE_AUXETIC_MODES)]
     panel = auxetic_panel(mode=mode, width=60.0, height=60.0, thickness=3.0,
                           cell=cell, strut_t=strut_t)
     return [("auxetic_panel", panel, PALETTE[5])]

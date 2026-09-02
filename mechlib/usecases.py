@@ -47,7 +47,7 @@ USE_CASES = {
     ),
     'auxetic_panel': (
         "Impact pads, expandable meshes, medical and sports structures that "
-        "widen when stretched."
+        "widen when stretched, including Grima arrowhead NPR cells."
     ),
     'ball_socket_joint': (
         "Control arms, camera gimbals, robotic wrists, and snap-together "

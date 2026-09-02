@@ -9,7 +9,7 @@ from shapely.ops import unary_union
 from .meshutil import extrude_poly_z, from_manifold, to_manifold
 
 _NOZZLE_WIDTHS = (0.4, 0.8, 1.2)
-_AUXETIC_MODES = ("reentrant", "rotating_squares", "chiral")
+_AUXETIC_MODES = ("reentrant", "rotating_squares", "arrowhead", "chiral")
 _KERF_MODES = ("lattice", "diagonal", "spiral", "wave", "hex", "cross", "chevron",
                "diamond", "fishbone", "meander", "biaxial")
 _MAX_CELLS = 2500
@@ -179,6 +179,48 @@ def _reentrant_unit(bounds, cell, strut_t):
     return material, nx, ny, pitch_x, pitch_y
 
 
+def _arrowhead_unit(bounds, cell, strut_t):
+    """Build a tiled double-arrowhead skeleton from inverted triangles.
+
+    Each repeat has opposing upper and lower arrowheads sharing a narrow
+    central waist.  Their outer shoulders are shared with the neighbouring
+    columns and their tips with the neighbouring rows, producing a connected
+    rectangular tessellation.  Pulling the shoulders apart along X opens the
+    concave notches about the waist and drives the tips apart along Y: the
+    classic Grima double-arrowhead negative-Poisson mechanism.  Unlike the
+    re-entrant bowtie's 30-degree splayed hexagons, this cell is made from two
+    steep inverted-triangle outlines and has two enclosed openings per repeat.
+    """
+    pitch_x = cell
+    pitch_y = cell
+    shoulder_y = 0.18 * cell
+    minx, miny, maxx, maxy = bounds
+    nx = max(1, int((maxx - minx) // pitch_x))
+    ny = max(1, int((maxy - miny) // pitch_y))
+    if nx * ny > _MAX_CELLS:
+        raise ValueError(
+            "arrowhead grid would build %d cells (cap %d); increase cell or "
+            "shrink the panel" % (nx * ny, _MAX_CELLS))
+    x0 = -((nx - 1) * pitch_x) / 2.0
+    y0 = -((ny - 1) * pitch_y) / 2.0
+    segs = []
+    half_x = pitch_x / 2.0
+    half_y = pitch_y / 2.0
+    for cx, cy in _grid_centres(nx, ny, pitch_x, pitch_y, x0, y0):
+        top = (cx, cy + half_y)
+        waist = (cx, cy)
+        bottom = (cx, cy - half_y)
+        upper_l = (cx - half_x, cy + shoulder_y)
+        upper_r = (cx + half_x, cy + shoulder_y)
+        lower_l = (cx - half_x, cy - shoulder_y)
+        lower_r = (cx + half_x, cy - shoulder_y)
+        segs.append(sg.LineString([top, upper_l, waist, upper_r, top]))
+        segs.append(sg.LineString([waist, lower_l, bottom, lower_r, waist]))
+    material = unary_union(
+        [s.buffer(strut_t / 2.0, cap_style=2, join_style=2) for s in segs])
+    return material, nx, ny, pitch_x, pitch_y
+
+
 def _rotating_squares_unit(bounds, cell, strut_t, hinge_t):
     """Build the rotating-squares skeleton: rigid squares, corner-only hinges.
 
@@ -309,7 +351,7 @@ def auxetic_panel(mode="reentrant", width=60.0, height=60.0, thickness=3.0,
     Ordinary sheet material gets thinner when you stretch it. These panels do
     the opposite: their internal cell topology, not the base material,
     supplies the negative Poisson's ratio, so a rectangle of ordinary PLA or
-    PETG stretched along X measurably widens along Y too. Three topologies
+    PETG stretched along X measurably widens along Y too. Four topologies
     are supported. ``"reentrant"`` is a bowtie/inverted-honeycomb lattice
     (concave hexagon cells whose splayed struts hinge open under tension).
     ``"rotating_squares"`` is rigid square islands joined only at their
@@ -317,9 +359,11 @@ def auxetic_panel(mode="reentrant", width=60.0, height=60.0, thickness=3.0,
     (the classic Grima-Evans mechanism); its corner hinge is the fatigue
     weak point and defaults to a thinner ``hinge_t=0.6`` mm on purpose, well
     below the library's normal 0.8 mm minimum-wall rule, because that IS the
-    compliant feature. ``"chiral"`` is a hexagonal grid of circular nodes
-    joined by ligaments tangent (not radial) to each node, so pulling the
-    panel spins every node in the same rotational sense.
+    compliant feature. ``"arrowhead"`` uses opposing inverted-triangle
+    arrowheads sharing a waist; pulling along X opens their concave notches
+    and expands the panel along Y. ``"chiral"`` is a hexagonal grid of
+    circular nodes joined by ligaments tangent (not radial) to each node, so
+    pulling the panel spins every node in the same rotational sense.
 
     All modes fill a solid ``border``-wide frame around the tiled interior so
     the panel edge is a continuous rim, never a row of half-cut cells; the
@@ -370,6 +414,10 @@ def auxetic_panel(mode="reentrant", width=60.0, height=60.0, thickness=3.0,
             bounds, cell, strut_t, hinge_t)
         overlap = hinge_t
         extra = {"square_side": sq, "hinge_t": hinge_t}
+    elif mode == "arrowhead":
+        material, nx, ny, px, py = _arrowhead_unit(bounds, cell, strut_t)
+        overlap = strut_t
+        extra = {}
     else:  # chiral
         node_r_eff = node_r if node_r is not None else 0.3 * cell
         if node_r_eff <= strut_t:
