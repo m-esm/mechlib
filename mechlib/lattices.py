@@ -790,6 +790,121 @@ def honeycomb_panel(width=60.0, height=60.0, thickness=3.0, cell=12.0,
 
 
 # ---------------------------------------------------------------------------
+# Hexagonal sandwich core (2.5D open-cell, not a thin lightening sheet)
+# ---------------------------------------------------------------------------
+
+def _honeycomb_core_skin(width, depth, skin_t, z0):
+    """A solid rectangular bond skin, thickness ``skin_t``, bottom face at z0."""
+    rect = sg.box(-width / 2.0, -depth / 2.0, width / 2.0, depth / 2.0)
+    slab = _extrude(rect, skin_t)
+    slab.apply_translation((0.0, 0.0, z0))
+    return slab
+
+
+def honeycomb_core(width=60.0, depth=60.0, height=15.0, cell=8.0,
+                   wall_t=1.2, skin_t=0.0, skin="none", nozzle=0.4,
+                   snap_strut=True):
+    """Build a hexagonal sandwich CORE: a tall open-cell hex-wall network with
+    a clean single-wall perimeter and optional integral bond skins.
+
+    Unlike ``honeycomb_panel`` (a thin, wide-rim lightening *sheet* with hex
+    through-holes), this is a 2.5D sandwich *core*: the hex cells are open
+    tubes whose axis runs through the full ``height`` (the core depth, meant
+    to be tall relative to ``wall_t``), the perimeter is exactly one ``wall_t``
+    frame rather than a wide solid rim, and you can bond thin skins onto the
+    +Z and/or -Z faces to make a closed sandwich. ``skin`` is one of
+    ``"none"`` (open both faces, ready for external skins), ``"top"``,
+    ``"bottom"``, or ``"both"``; each requested skin adds a solid
+    ``skin_t``-thick slab outside the core walls, so the returned total height
+    is ``height`` plus the added skins (reported in
+    ``metadata["total_height"]``).
+
+    ``cell`` is the centre-to-centre pitch and the across-flats of the wall
+    centreline, so a shared wall between two cells is ``wall_t`` thick.
+    ``wall_t`` is snapped to the nearest integer multiple of ``nozzle`` (one of
+    0.4 / 0.8 / 1.2 mm) by default and must be at least 0.8 mm (the FDM min
+    wall); pass ``snap_strut=False`` to get a ``ValueError`` with the corrected
+    value instead of silent snapping. The core sits with its bottom face at
+    z=0 and is centred on the XY origin; print it cells-up (the walls are
+    self-supporting vertical extrusions, no supports needed). Cell counts are
+    capped so a default core builds well under a second. Units are mm.
+    """
+    if width <= 0 or depth <= 0:
+        raise ValueError("honeycomb_core(): width/depth must be positive")
+    if height < 1.6:
+        raise ValueError("honeycomb_core(): height (core depth) must be at "
+                         "least 1.6 mm; this is a tall core, not a sheet")
+    if cell <= 0:
+        raise ValueError("honeycomb_core(): cell must be positive")
+    if skin not in ("none", "top", "bottom", "both"):
+        raise ValueError("honeycomb_core(): skin must be one of "
+                         "'none' / 'top' / 'bottom' / 'both', got %r" % (skin,))
+    _validate_nozzle(nozzle)
+    wall_t = _snap_strut(wall_t, nozzle, snap_strut, "wall_t")
+    if wall_t < 0.8 - 1e-6:
+        raise ValueError(
+            "honeycomb_core(): wall_t=%.3g mm is below the 0.8 mm FDM min wall; "
+            "use wall_t >= 0.8 (e.g. 0.8 or 1.2 for a 0.4 nozzle)" % (wall_t,))
+    if skin != "none":
+        if skin_t < 0.8 - 1e-6:
+            raise ValueError(
+                "honeycomb_core(): skin_t=%.3g mm is below the 0.8 mm FDM min "
+                "wall; use skin_t >= 0.8 or skin='none'" % (skin_t,))
+    if cell < 4.0 * wall_t:
+        raise ValueError(
+            "honeycomb_core(): cell=%.3g mm is too small for wall_t=%.3g mm; "
+            "the walls would fuse solid (need cell >= 4*wall_t)"
+            % (cell, wall_t))
+
+    # A clean single-wall perimeter: place interior-contained hex holes with a
+    # border of exactly wall_t, then punch them from the full rectangle so the
+    # panel edge is a continuous wall_t frame (no wide solid rim).
+    bounds = _usable_bounds(width, depth, wall_t)
+    holes, nx, ny, px, py = _honeycomb_unit(bounds, cell, wall_t)
+    rect = sg.box(-width / 2.0, -depth / 2.0, width / 2.0, depth / 2.0)
+    walls_2d = rect.difference(unary_union(holes))
+    if walls_2d.geom_type not in ("Polygon", "MultiPolygon"):
+        raise ValueError("honeycomb_core(): degenerate core geometry")
+    walls_2d = _prune_holes(walls_2d)
+    hole_count = _count_holes(walls_2d)
+
+    core = _extrude(walls_2d, height)
+    parts = [core]
+    total_height = height
+    if skin in ("bottom", "both"):
+        parts.insert(0, _honeycomb_core_skin(width, depth, skin_t, -skin_t))
+        total_height += skin_t
+        # shift everything up so the assembly bottom face sits at z=0
+        for p in parts:
+            p.apply_translation((0.0, 0.0, skin_t))
+    if skin in ("top", "both"):
+        z0 = height + (skin_t if skin == "both" else 0.0)
+        parts.append(_honeycomb_core_skin(width, depth, skin_t, z0))
+        total_height += skin_t
+
+    mesh = uni(parts) if len(parts) > 1 else parts[0]
+    if not mesh.is_watertight:
+        mesh = from_manifold(to_manifold(mesh))
+    mesh.metadata.update({
+        "kind": "sandwich_core",
+        "cell_size": cell,
+        "cells_x": nx,
+        "cells_y": ny,
+        "cell_count": len(holes),
+        "pitch_x": px,
+        "pitch_y": py,
+        "wall_t": wall_t,
+        "core_height": height,
+        "skin": skin,
+        "skin_t": skin_t if skin != "none" else 0.0,
+        "total_height": total_height,
+        "hole_count": hole_count,
+        "open_cell": skin != "both",
+    })
+    return mesh
+
+
+# ---------------------------------------------------------------------------
 # Kagome (trihexagonal) lightening sheet
 # ---------------------------------------------------------------------------
 

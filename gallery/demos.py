@@ -138,7 +138,7 @@ from mechlib.indexing import (
     intermittent_gear_pair,
 )
 from mechlib.joints import ball_socket_joint, clevis, gimbal_rings, knuckle_hinge
-from mechlib.lattices import auxetic_panel, bcc_lattice, cubic_lattice, gyroid_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kelvin_cell, kerf_bend_cutter, octet_truss
+from mechlib.lattices import auxetic_panel, bcc_lattice, cubic_lattice, gyroid_lattice, honeycomb_core, honeycomb_panel, isogrid_panel, kagome_panel, kelvin_cell, kerf_bend_cutter, octet_truss
 from mechlib.linear import (
     archimedes_screw,
     differential_screw,
@@ -965,6 +965,10 @@ PLAY: dict = {
     "demo_honeycomb_panel": {
         "cell": (8.0, 16.0, 2.0),
         "strut_t": (0.4, 1.2, 0.4),
+    },
+    "demo_honeycomb_core": {
+        "cell": (6.0, 12.0, 2.0),
+        "height": (8.0, 24.0, 4.0),
     },
     "demo_isogrid_panel": {
         "cell": (8.0, 16.0, 2.0),
@@ -3443,6 +3447,12 @@ def demo_honeycomb_panel(cell: float = 12.0, strut_t: float = 1.2) -> MeshList:
     panel = honeycomb_panel(width=60.0, height=60.0, thickness=3.0,
                             cell=cell, strut_t=strut_t)
     return [("honeycomb_panel", panel, PALETTE[6])]
+
+
+def demo_honeycomb_core(cell: float = 8.0, height: float = 15.0) -> MeshList:
+    core = honeycomb_core(width=54.0, depth=44.0, height=height, cell=cell,
+                          wall_t=1.2, skin_t=1.2, skin="bottom")
+    return [("honeycomb_core", core, PALETTE[9])]
 
 
 def demo_isogrid_panel(cell: float = 12.0, strut_t: float = 1.2) -> MeshList:

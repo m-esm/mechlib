@@ -6,7 +6,7 @@ import trimesh
 
 import mechlib
 from gallery import demos
-from mechlib.lattices import _cubic_graph, _kelvin_graph, _octet_graph, auxetic_panel, bcc_lattice, cubic_lattice, gyroid_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kelvin_cell, kerf_bend_cutter, octet_truss
+from mechlib.lattices import _cubic_graph, _kelvin_graph, _octet_graph, auxetic_panel, bcc_lattice, cubic_lattice, gyroid_lattice, honeycomb_core, honeycomb_panel, isogrid_panel, kagome_panel, kelvin_cell, kerf_bend_cutter, octet_truss
 from mechlib.meshutil import sub, uni
 from mechlib.prim import boxc
 from mechlib.usecases import GALLERY_FILE_TO_API, use_case
@@ -279,6 +279,76 @@ def test_honeycomb_panel_cell_cap_protects_the_playground():
     with pytest.raises(ValueError):
         honeycomb_panel(width=400.0, height=400.0,
                         cell=2.0, strut_t=0.4, border=3.0)
+
+
+# ---------------------------------------------------------------------------
+# honeycomb_core (2.5D sandwich core, distinct from honeycomb_panel sheet)
+# ---------------------------------------------------------------------------
+
+@pytest.mark.parametrize("skin", ["none", "top", "bottom", "both"])
+def test_honeycomb_core_watertight_all_skins(skin):
+    core = honeycomb_core(width=50.0, depth=40.0, height=15.0, cell=8.0,
+                          wall_t=1.2, skin_t=1.2, skin=skin)
+    assert core.is_watertight
+    assert core.is_winding_consistent
+    assert core.metadata["kind"] == "sandwich_core"
+    assert core.metadata["skin"] == skin
+    # bottom face always sits at z=0
+    assert core.bounds[0][2] == pytest.approx(0.0, abs=1e-6)
+
+
+def test_honeycomb_core_is_tall_not_a_thin_sheet():
+    core = honeycomb_core(width=50.0, depth=50.0, height=18.0, cell=8.0)
+    z_span = core.bounds[1][2] - core.bounds[0][2]
+    # the core runs the full requested height, unlike the ~3 mm panel sheet
+    assert z_span == pytest.approx(18.0, abs=1e-6)
+    assert core.metadata["core_height"] == 18.0
+    assert core.metadata["total_height"] == pytest.approx(18.0)
+    assert core.metadata["open_cell"] is True
+
+
+def test_honeycomb_core_skins_add_to_total_height():
+    core = honeycomb_core(width=50.0, depth=40.0, height=15.0, cell=8.0,
+                          wall_t=1.2, skin_t=1.2, skin="both")
+    assert core.metadata["total_height"] == pytest.approx(15.0 + 2 * 1.2)
+    assert core.bounds[1][2] - core.bounds[0][2] == pytest.approx(17.4, abs=1e-6)
+    # both skins => closed sandwich, no longer open-cell
+    assert core.metadata["open_cell"] is False
+
+
+def test_honeycomb_core_perimeter_is_single_wall_not_wide_rim():
+    # the outer frame is exactly wall_t, so a probe just inside the edge hits
+    # a hex void, not a wide solid border like honeycomb_panel
+    wall_t = 1.2
+    core = honeycomb_core(width=50.0, depth=50.0, height=12.0, cell=10.0,
+                          wall_t=wall_t, skin="none")
+    from mechlib.meshutil import overlap_volume
+    # thin slab covering the outer 0.5 mm ring is solid (the wall)
+    edge = boxc((0.6, 44.0, 20.0), center=(24.7, 0.0, 6.0))
+    assert overlap_volume(core, edge) > 0.1
+    # a slab 3 mm inboard of the edge is mostly void (single-wall perimeter)
+    inboard = boxc((0.6, 30.0, 20.0), center=(21.0, 0.0, 6.0))
+    assert overlap_volume(core, inboard) < overlap_volume(core, edge)
+
+
+def test_honeycomb_core_wall_t_snaps_to_nozzle_grid_by_default():
+    core = honeycomb_core(wall_t=1.1, snap_strut=True)
+    assert core.metadata["wall_t"] == pytest.approx(1.2)
+
+
+def test_honeycomb_core_rejects_bad_arguments():
+    with pytest.raises(ValueError):
+        honeycomb_core(wall_t=0.4)  # below 0.8 mm FDM min wall
+    with pytest.raises(ValueError):
+        honeycomb_core(height=1.0)  # too short to be a core
+    with pytest.raises(ValueError):
+        honeycomb_core(cell=3.0, wall_t=1.2)  # cell < 4*wall_t, walls fuse
+    with pytest.raises(ValueError):
+        honeycomb_core(nozzle=0.5)  # not a real nozzle width
+    with pytest.raises(ValueError):
+        honeycomb_core(skin="side")  # not a valid skin mode
+    with pytest.raises(ValueError):
+        honeycomb_core(skin="top", skin_t=0.4)  # skin below min wall
 
 
 # ---------------------------------------------------------------------------

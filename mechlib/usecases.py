@@ -330,6 +330,12 @@ USE_CASES = {
         "Nut and bolt blanks, hex columns, and across-flats hex stock for "
         "wrench-driven parts."
     ),
+    'honeycomb_core': (
+        "Sandwich-panel cores, drone and RC wing infill, crash-box energy "
+        "absorbers, and stiff-yet-light bulkheads that need a tall open-cell "
+        "hex-tube core with a single-wall perimeter and optional bond skins, "
+        "not a thin lightening sheet like honeycomb_panel."
+    ),
     'honeycomb_panel': (
         "Sandwich skins, drone-frame ribs, and lightened covers that need a "
         "regular hex core with a solid rim, not an auxetic bowtie."
@@ -872,6 +878,7 @@ GALLERY_FILE_TO_API = {
     'herringbone_gear_demo.glb': 'herringbone_gear',
     'hex_poly_demo.glb': 'hex_poly',
     'honeycomb_panel_demo.glb': 'honeycomb_panel',
+    'honeycomb_core_demo.glb': 'honeycomb_core',
     'hirth_coupling_demo.glb': 'hirth_coupling',
     'hooke_pose_demo.glb': 'hooke_pose',
     'hose_barb_demo.glb': 'hose_barb',

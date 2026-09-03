@@ -144,7 +144,7 @@ from mechlib.mechanisms import handwheel, shaft_collar, star_knob
 from mechlib.pulleys import v_belt_pulley
 from mechlib.ratchets import ratchet_wheel_pawl
 from mechlib.joints import ball_socket_joint, clevis, gimbal_rings, knuckle_hinge
-from mechlib.lattices import auxetic_panel, bcc_lattice, cubic_lattice, gyroid_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kelvin_cell, kerf_bend_cutter, octet_truss
+from mechlib.lattices import auxetic_panel, bcc_lattice, cubic_lattice, gyroid_lattice, honeycomb_core, honeycomb_panel, isogrid_panel, kagome_panel, kelvin_cell, kerf_bend_cutter, octet_truss
 from mechlib.linear import (
     archimedes_screw,
     differential_screw,
@@ -2748,6 +2748,22 @@ def build():
                 "transversely (positive Poisson), the opposite of auxetic_panel."),
             "origin": "Gap-analysis wave v0.11.x; classic ref: regular hexagonal honeycomb core",
             "demo": "demo_honeycomb_panel",
+        },
+        {
+            "file": "honeycomb_core_demo.glb",
+            "name": "honeycomb_core",
+            "module": "mechlib.lattices",
+            "signature": signature(honeycomb_core),
+            "description": (
+                "A tall hexagonal SANDWICH CORE (not a thin lightening sheet): "
+                "open hex tubes running through the full height, a clean "
+                "single-wall perimeter, and optional integral bond skins on the "
+                "top/bottom faces (skin='none'/'top'/'bottom'/'both'). cell is "
+                "the pitch and wall-centreline across-flats; wall_t is the "
+                "shared printed wall (>=0.8 mm). Print cells-up, self-supporting, "
+                "no supports. Distinct from honeycomb_panel's thin wide-rim sheet."),
+            "origin": "Gap-analysis wave v0.12.x; classic ref: hexagonal sandwich-panel core",
+            "demo": "demo_honeycomb_core",
         },
         {
             "file": "isogrid_panel_demo.glb",
