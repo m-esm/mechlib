@@ -35,7 +35,7 @@ Semi-primitives. No CadQuery. FDM: nozzle-multiple struts, wall>=0.8, kerf>=nozz
 | 17 | kelvin_cell | 3d-strut | shipped | Truncated-octahedron 24-node, 36-strut open-cell frame. SHA 55251cbc23acfe612cbc0b3e6e6d71e224e04566 |
 | 18 | cubic_lattice | 3d-strut | shipped | Simple-cubic X/Y/Z edge truss with shared grid nodes. SHA e8f12a895686ebb2f139bd0d2d91491ae6a77df2 |
 | 19 | gyroid_lattice | tpms | shipped | TPMS gyroid sheet; wall>=1.2 cell>=8. SHA cf1b37fdb8caddf5bf3eff30d32ed34e6d4e95e5 |
-| 20 | honeycomb_core | 2.5d | pending | != honeycomb_panel sheet |
+| 20 | honeycomb_core | 2.5d | shipped | SHA b08ccb9 tall open-cell hex-tube sandwich core, single-wall rim + optional bond skins; != honeycomb_panel sheet |
 | 21 | lattice_flexure(kind="x") | flexure | pending | |
 | 22 | lattice_flexure(kind="v") | flexure | pending | |
 
