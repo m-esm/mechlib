@@ -125,9 +125,19 @@ USE_CASES = {
         "PCB mounting in instruments and printers: corner standoffs and "
         "capture walls around a board outline."
     ),
+    'bolt_mesh': (
+        "Head-down bolt stand-ins for printer-frame stacks, jig layouts, and "
+        "CAD envelopes that need a shank-plus-head body before the ISO "
+        "fastener is bought."
+    ),
     'boxc': (
         "Blocks, spacers, and axis-aligned volumes that start most bracket "
         "and housing models."
+    ),
+    'cam_profile_2d': (
+        "Radial plate-cam pitch curves for automata, packaging-machine lift "
+        "programs, and model-engine valve timing, extruded into a thin blank "
+        "before a hub is added."
     ),
     'chain_dual_output': (
         "Jackshafts and conveyor lines needing simultaneous forward and "
@@ -147,6 +157,10 @@ USE_CASES = {
     'chamfer_prism': (
         "Enclosures with a soft top edge, control knobs, and prisms that need "
         "a clean hull chamfer."
+    ),
+    'chamfer_cutter': (
+        "45-degree end chamfers on printed pins, foot-pegs, and shaft tips so "
+        "the lead-in starts without a sharp lip."
     ),
     'chebyshev_linkage': (
         "Straight-line walking and leg mechanisms, Russian school teaching "
@@ -179,6 +193,10 @@ USE_CASES = {
     'counterbore': (
         "Socket-head and pan-head screw seats, flush fastener pockets in "
         "plates and brackets."
+    ),
+    'countersink': (
+        "Countersunk lead-ins on printed nuts and screw seats so a machine "
+        "screw starts without chewing the thread crest."
     ),
     'cross_flexure': (
         "Precision instrument pivots, watch balances, and monolithic hinges "
@@ -250,6 +268,18 @@ USE_CASES = {
         "Hydraulic power units, oil transfer pumps, and compact "
         "positive-displacement gear pumps for viscous fluids."
     ),
+    'extrude_down': (
+        "Downward extrusion of a housing outline from a mating top plane: "
+        "lids, lips, and pockets whose Z extent is measured from a face."
+    ),
+    'extrude_poly_z': (
+        "Polygon-to-solid between two world Z planes: wall segments, "
+        "MultiPolygon window frames, and stacked housing slices."
+    ),
+    'extrude_snapped': (
+        "Near-tangent 2D profiles that would triangulate as non-volumes: snap "
+        "vertices to 1e-6 then extrude clean printable walls."
+    ),
     'extrude_twist': (
         "Twisted columns, augers, and decorative or functional solids swept "
         "with continuous rotation."
@@ -286,6 +316,10 @@ USE_CASES = {
         "Tapers, funnels, draft on molds, and stepped cones between two "
         "diameters."
     ),
+    'gable_roof': (
+        "Self-supporting 45-degree roofs over wall openings in FDM housings "
+        "so a doorway or cable slot prints without a ceiling of support."
+    ),
     'gasket_channel': (
         "Enclosure lids and irregular flanges that seal with cord-stock "
         "gasket rather than a circular O-ring."
@@ -318,6 +352,11 @@ USE_CASES = {
         "Chronograph hand reset (heart piece), sewing-machine take-up, and "
         "any cam that must return a pointer to a unique zero."
     ),
+    'helix_solid': (
+        "Helical flights, thread bands, and Archimedean screw blades swept "
+        "from a closed radius-Z polygon: augers, printed threads, and spiral "
+        "ramps."
+    ),
     'helix_tube': (
         "Spiral cable wraps, decorative helices, and swept tubes along a "
         "helical path."
@@ -325,6 +364,15 @@ USE_CASES = {
     'herringbone_gear': (
         "Quiet high-load gearboxes, marine and industrial herringbone pairs, "
         "and FDM gears that cancel axial thrust from helix angle."
+    ),
+    'hex_corner_chamfer': (
+        "45-degree corner breaks on printed hex nuts that keep the wrench "
+        "flats while knocking off the sharp across-corners."
+    ),
+    'hex_nut_mesh': (
+        "Hex-nut envelopes on printed jigs, fixture stacks, and exploded CAD "
+        "views where across-flats, height, and bore must match a captured "
+        "M3 to M8 nut."
     ),
     'hex_poly': (
         "Nut and bolt blanks, hex columns, and across-flats hex stock for "
@@ -355,6 +403,11 @@ USE_CASES = {
     'intermittent_gear_pair': (
         "Mechanical counters, washing-machine timers, odometers, and "
         "digit-advance mechanisms that step once per input turn."
+    ),
+    'internal_gear_2d': (
+        "Annular involute ring-gear blanks for planetary stages, robot-wrist "
+        "reducers, and harmonic-drive circular splines, extruded into a "
+        "printable internal gear."
     ),
     'iris_diaphragm': (
         "Camera and projector apertures, laser beam expanders, soft-robot "
@@ -418,6 +471,10 @@ USE_CASES = {
     'linear_way': (
         "Machine-tool and 3D-printer linear guides, dovetail slides, and "
         "adjustable gibbed carriages."
+    ),
+    'link_bar': (
+        "Flat-printed coupler bars for four-bars, walking-robot legs, and "
+        "wiper linkages: capsule stock with a pin bore at each centre-distance."
     ),
     'loft': (
         "Organic housings, fairings, and solids that blend unequal "
@@ -596,6 +653,10 @@ USE_CASES = {
         "Blade and tab slots in FDM parts, dog-bone relief so square inserts "
         "seat fully."
     ),
+    'slot_neg': (
+        "Obround pedestal slots in chassis plates for belt-tension travel and "
+        "pan-axis adjustment, cut with extra travel at each end."
+    ),
     'snail_cam': (
         "Clock strike trains, trip hammers, and slow-wind sudden-release "
         "mechanisms that need one drop per revolution."
@@ -704,6 +765,11 @@ USE_CASES = {
         "Clothes-peg and clip springs, hinge returns, and mechanisms that "
         "store energy in twist."
     ),
+    'trochoid_profile_2d': (
+        "Cycloidal-disc lobe profiles for robot-joint reducers: the shortened "
+        "epitrochoid that stays tangent to a pin ring, extruded as a disc "
+        "coupon."
+    ),
     'tripod_cv_joint': (
         "Front-wheel-drive halfshafts, plunging CV joints, and "
         "constant-velocity drives that also allow axial travel."
@@ -728,6 +794,10 @@ USE_CASES = {
     'watt_linkage': (
         "Beam-engine parallel motion (historical), solid-axle rear suspension "
         "links, and approximate straight-line guides in vehicles."
+    ),
+    'washer_mesh': (
+        "Flat washer envelopes under bolt heads and nuts in printed assemblies, "
+        "so stack height and outer diameter are visible before hardware lands."
     ),
     'wave_spring': (
         "Compact axial preload in bearings and seals, crest-to-crest springs "
@@ -972,6 +1042,22 @@ GALLERY_FILE_TO_API = {
     'worm_coupon_demo.glb': 'worm_coupon',
     'worm_demo.glb': 'worm',
     'ydovetail_demo.glb': 'ydovetail',
+    'bolt_mesh_demo.glb': 'bolt_mesh',
+    'cam_profile_2d_demo.glb': 'cam_profile_2d',
+    'chamfer_cutter_demo.glb': 'chamfer_cutter',
+    'countersink_demo.glb': 'countersink',
+    'extrude_down_demo.glb': 'extrude_down',
+    'extrude_poly_z_demo.glb': 'extrude_poly_z',
+    'extrude_snapped_demo.glb': 'extrude_snapped',
+    'gable_roof_demo.glb': 'gable_roof',
+    'helix_solid_demo.glb': 'helix_solid',
+    'hex_corner_chamfer_demo.glb': 'hex_corner_chamfer',
+    'hex_nut_mesh_demo.glb': 'hex_nut_mesh',
+    'internal_gear_2d_demo.glb': 'internal_gear_2d',
+    'link_bar_demo.glb': 'link_bar',
+    'slot_neg_demo.glb': 'slot_neg',
+    'trochoid_profile_2d_demo.glb': 'trochoid_profile_2d',
+    'washer_mesh_demo.glb': 'washer_mesh',
 }
 
 

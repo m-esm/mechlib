@@ -25472,6 +25472,26 @@
       "added": "2026-08-07T15:05:45+03:00"
     },
     {
+      "file": "link_bar_demo.glb",
+      "name": "link_bar",
+      "module": "mechlib.linkages",
+      "signature": "link_bar(length, width, thickness, bore_d, clearance=0.25)",
+      "description": "A flat-printable capsule linkage bar with a pin bore at each centre-distance.",
+      "origin": "Shared bar primitive behind mechlib.linkages.",
+      "build_ms": 3,
+      "category": "linkages",
+      "group": "movements",
+      "rank": 0,
+      "parts": 1,
+      "size_mm": [
+        38.0,
+        8.0,
+        4.0
+      ],
+      "applications": "Flat-printed coupler bars for four-bars, walking-robot legs, and wiper linkages: capsule stock with a pin bore at each centre-distance.",
+      "added": "2026-09-04T21:46:18Z"
+    },
+    {
       "file": "iris_diaphragm_demo.glb",
       "name": "iris_diaphragm",
       "module": "mechlib.grippers",
@@ -28415,6 +28435,26 @@
       ],
       "applications": "Valve lifters, pump diaphragm drives, and automata: the pivoted roller lever that rides plate, heart, and snail cams.",
       "added": "2026-08-08T02:13:24+03:00"
+    },
+    {
+      "file": "cam_profile_2d_demo.glb",
+      "name": "cam_profile_2d",
+      "module": "mechlib.cams",
+      "signature": "cam_profile_2d(base_r=10.0, segments=(('shm', 6.0, 90.0), ('dwell', 0.0, 90.0), ('cycloidal', -6.0, 120.0), ('dwell', 0.0, 60.0)), roller_r=0.0, n=96)",
+      "description": "A radial plate-cam pitch curve synthesized from SHM, dwell, and cycloidal segments, extruded thin for display.",
+      "origin": "Cam motion-law synthesis in mechlib.cams.",
+      "build_ms": 1,
+      "category": "cams",
+      "group": "movements",
+      "rank": 2,
+      "parts": 1,
+      "size_mm": [
+        26.1,
+        27.3,
+        4.0
+      ],
+      "applications": "Radial plate-cam pitch curves for automata, packaging-machine lift programs, and model-engine valve timing, extruded into a thin blank before a hub is added.",
+      "added": "2026-09-04T21:46:18Z"
     },
     {
       "file": "geneva_pair_demo.glb",
@@ -44934,6 +44974,46 @@
       "added": "2026-08-06T15:11:27+03:00"
     },
     {
+      "file": "internal_gear_2d_demo.glb",
+      "name": "internal_gear_2d",
+      "module": "mechlib.gears",
+      "signature": "internal_gear_2d(z=40, m=1.5, pa_deg=20.0, rim=3.0, bl=0.35, z_pinion=None, add=None, ded=None, steps=18, simplify=0.005)",
+      "description": "An annular involute ring-gear profile with inward teeth, extruded into a printable internal gear blank.",
+      "origin": "Swept-envelope internal involute in mechlib.gears.",
+      "build_ms": 28,
+      "category": "gears",
+      "group": "movements",
+      "rank": 4,
+      "parts": 1,
+      "size_mm": [
+        33.7,
+        33.7,
+        4.0
+      ],
+      "applications": "Annular involute ring-gear blanks for planetary stages, robot-wrist reducers, and harmonic-drive circular splines, extruded into a printable internal gear.",
+      "added": "2026-09-04T21:46:18Z"
+    },
+    {
+      "file": "trochoid_profile_2d_demo.glb",
+      "name": "trochoid_profile_2d",
+      "module": "mechlib.gears",
+      "signature": "trochoid_profile_2d(pins, pin_circle_r, pin_d, ecc, clearance=0.0, samples=None)",
+      "description": "A shortened-epitrochoid cycloidal disc profile, extruded as a thin disc coupon.",
+      "origin": "Closed-form cycloidal disc in mechlib.gears.",
+      "build_ms": 1,
+      "category": "gears",
+      "group": "movements",
+      "rank": 4,
+      "parts": 1,
+      "size_mm": [
+        24.5,
+        24.9,
+        4.0
+      ],
+      "applications": "Cycloidal-disc lobe profiles for robot-joint reducers: the shortened epitrochoid that stays tangent to a pin ring, extruded as a disc coupon.",
+      "added": "2026-09-04T21:46:18Z"
+    },
+    {
       "file": "pip_ratchet_demo.glb",
       "name": "print-in-place accordion ratchet",
       "module": "mechlib.ratchets",
@@ -59016,6 +59096,26 @@
       "added": "2026-08-08T02:13:24+03:00"
     },
     {
+      "file": "helix_solid_demo.glb",
+      "name": "helix_solid",
+      "module": "mechlib.mechanisms",
+      "signature": "helix_solid(prof, lead, turns, seg)",
+      "description": "A closed radius-Z polygon swept along a capped watertight helix: a thread band or auger flight.",
+      "origin": "Extracted from parviz src/threads.py.",
+      "build_ms": 1,
+      "category": "mechanisms",
+      "group": "elements",
+      "rank": 16,
+      "parts": 1,
+      "size_mm": [
+        12.0,
+        12.0,
+        13.6
+      ],
+      "applications": "Helical flights, thread bands, and Archimedean screw blades swept from a closed radius-Z polygon: augers, printed threads, and spiral ramps.",
+      "added": "2026-09-04T21:46:18Z"
+    },
+    {
       "file": "fastener_trio_demo.glb",
       "name": "fastener_mesh + nut + washer",
       "module": "mechlib.fasteners",
@@ -59139,6 +59239,66 @@
       ],
       "applications": "Gear hubs, hand cranks, and pulley drives that transmit torque through a DIN 6885 sunk key where a D-bore would slip.",
       "added": "2026-08-08T02:13:24+03:00"
+    },
+    {
+      "file": "bolt_mesh_demo.glb",
+      "name": "bolt_mesh",
+      "module": "mechlib.fasteners",
+      "signature": "bolt_mesh(shank_r, shank_l, head_r, head_h)",
+      "description": "A head-down vertical bolt stand-in: cylindrical head and shank for fit-check layouts.",
+      "origin": "Extracted from parviz src/standins/_common.py.",
+      "build_ms": 4,
+      "category": "fasteners",
+      "group": "elements",
+      "rank": 17,
+      "parts": 1,
+      "size_mm": [
+        6.0,
+        6.0,
+        19.0
+      ],
+      "applications": "Head-down bolt stand-ins for printer-frame stacks, jig layouts, and CAD envelopes that need a shank-plus-head body before the ISO fastener is bought.",
+      "added": "2026-09-04T21:46:18Z"
+    },
+    {
+      "file": "hex_nut_mesh_demo.glb",
+      "name": "hex_nut_mesh",
+      "module": "mechlib.fasteners",
+      "signature": "hex_nut_mesh(af, h, bore_d)",
+      "description": "A hex-nut stand-in from across-flats, height, and bore diameter.",
+      "origin": "Extracted from parviz src/standins/_common.py.",
+      "build_ms": 3,
+      "category": "fasteners",
+      "group": "elements",
+      "rank": 17,
+      "parts": 1,
+      "size_mm": [
+        6.4,
+        5.5,
+        2.6
+      ],
+      "applications": "Hex-nut envelopes on printed jigs, fixture stacks, and exploded CAD views where across-flats, height, and bore must match a captured M3 to M8 nut.",
+      "added": "2026-09-04T21:46:18Z"
+    },
+    {
+      "file": "washer_mesh_demo.glb",
+      "name": "washer_mesh",
+      "module": "mechlib.fasteners",
+      "signature": "washer_mesh(od, id_, h)",
+      "description": "A flat annular washer stand-in for stack-height and outer-diameter checks.",
+      "origin": "Extracted from parviz src/standins/_common.py.",
+      "build_ms": 4,
+      "category": "fasteners",
+      "group": "elements",
+      "rank": 17,
+      "parts": 1,
+      "size_mm": [
+        8.0,
+        8.0,
+        1.0
+      ],
+      "applications": "Flat washer envelopes under bolt heads and nuts in printed assemblies, so stack height and outer diameter are visible before hardware lands.",
+      "added": "2026-09-04T21:46:18Z"
     },
     {
       "file": "plain_bushing_demo.glb",
@@ -60826,6 +60986,26 @@
       "added": "2026-08-04T19:18:31+03:00"
     },
     {
+      "file": "extrude_down_demo.glb",
+      "name": "extrude_down",
+      "module": "mechlib.prim",
+      "signature": "extrude_down(poly2d, h, top=0.0)",
+      "description": "A hexagon extruded downward from a top plane into a short prism.",
+      "origin": "Primitive extrusion helper in mechlib.prim.",
+      "build_ms": 1,
+      "category": "prim",
+      "group": "blocks",
+      "rank": 22,
+      "parts": 1,
+      "size_mm": [
+        16.0,
+        18.5,
+        4.0
+      ],
+      "applications": "Downward extrusion of a housing outline from a mating top plane: lids, lips, and pockets whose Z extent is measured from a face.",
+      "added": "2026-09-04T21:46:18Z"
+    },
+    {
       "file": "extrude_twist_demo.glb",
       "name": "extrude_twist",
       "module": "mechlib.sweep",
@@ -61986,6 +62166,106 @@
       "added": "2026-08-06T15:11:27+03:00"
     },
     {
+      "file": "gable_roof_demo.glb",
+      "name": "gable_roof",
+      "module": "mechlib.cutters",
+      "signature": "gable_roof(x0, xlen, yc, w, ztop, rise)",
+      "description": "A two-slope self-supporting roof over a wall opening so the slot prints without ceiling support.",
+      "origin": "Extracted from finnish-doors src/projects/klonk/housings.py.",
+      "build_ms": 1,
+      "category": "cutters",
+      "group": "blocks",
+      "rank": 24,
+      "parts": 1,
+      "size_mm": [
+        20.0,
+        12.0,
+        16.0
+      ],
+      "applications": "Self-supporting 45-degree roofs over wall openings in FDM housings so a doorway or cable slot prints without a ceiling of support.",
+      "added": "2026-09-04T21:46:18Z"
+    },
+    {
+      "file": "chamfer_cutter_demo.glb",
+      "name": "chamfer_cutter",
+      "module": "mechlib.cutters",
+      "signature": "chamfer_cutter(r, ch)",
+      "description": "A 45-degree end chamfer cut into a pin with the outside-ring cutter.",
+      "origin": "Extracted from parviz src/standins/foot_pin.py.",
+      "build_ms": 9,
+      "category": "cutters",
+      "group": "blocks",
+      "rank": 24,
+      "parts": 1,
+      "size_mm": [
+        12.0,
+        12.0,
+        12.0
+      ],
+      "applications": "45-degree end chamfers on printed pins, foot-pegs, and shaft tips so the lead-in starts without a sharp lip.",
+      "added": "2026-09-04T21:46:18Z"
+    },
+    {
+      "file": "countersink_demo.glb",
+      "name": "countersink",
+      "module": "mechlib.cutters",
+      "signature": "countersink(nut, z_face, up, r_th, cs_r=4.5)",
+      "description": "A 45-degree bore lead-in cut into a hex-nut stand-in down to the thread crest radius.",
+      "origin": "Extracted from parviz src/standins/m8_nut.py.",
+      "build_ms": 7,
+      "category": "cutters",
+      "group": "blocks",
+      "rank": 24,
+      "parts": 1,
+      "size_mm": [
+        15.0,
+        13.0,
+        6.5
+      ],
+      "applications": "Countersunk lead-ins on printed nuts and screw seats so a machine screw starts without chewing the thread crest.",
+      "added": "2026-09-04T21:46:18Z"
+    },
+    {
+      "file": "slot_neg_demo.glb",
+      "name": "slot_neg",
+      "module": "mechlib.cutters",
+      "signature": "slot_neg(x, y, radius, height, zc, extra_travel=0.0)",
+      "description": "An obround pedestal slot cut through a chassis plate, with extra travel at each end.",
+      "origin": "Extracted from parviz src/chassis.py.",
+      "build_ms": 2,
+      "category": "cutters",
+      "group": "blocks",
+      "rank": 24,
+      "parts": 1,
+      "size_mm": [
+        20.0,
+        12.0,
+        4.0
+      ],
+      "applications": "Obround pedestal slots in chassis plates for belt-tension travel and pan-axis adjustment, cut with extra travel at each end.",
+      "added": "2026-09-04T21:46:18Z"
+    },
+    {
+      "file": "hex_corner_chamfer_demo.glb",
+      "name": "hex_corner_chamfer",
+      "module": "mechlib.cutters",
+      "signature": "hex_corner_chamfer(nut, z_face, up, r_circ, ch=0.6)",
+      "description": "45-degree corner chamfers on a hex nut that preserve the wrench flats.",
+      "origin": "Extracted from parviz src/standins/m8_nut.py.",
+      "build_ms": 9,
+      "category": "cutters",
+      "group": "blocks",
+      "rank": 24,
+      "parts": 1,
+      "size_mm": [
+        15.0,
+        13.0,
+        6.5
+      ],
+      "applications": "45-degree corner breaks on printed hex nuts that keep the wrench flats while knocking off the sharp across-corners.",
+      "added": "2026-09-04T21:46:18Z"
+    },
+    {
       "file": "lighten_grid_demo.glb",
       "name": "lighten_grid panel",
       "module": "mechlib.patterns",
@@ -62619,6 +62899,46 @@
       },
       "applications": "Multi-line plaques, version labels, and stacked raised text on enclosures and tools.",
       "added": "2026-08-04T19:18:31+03:00"
+    },
+    {
+      "file": "extrude_poly_z_demo.glb",
+      "name": "extrude_poly_z",
+      "module": "mechlib.meshutil",
+      "signature": "extrude_poly_z(poly2d, z0, z1)",
+      "description": "A rectangle extruded between two world Z planes into a slab.",
+      "origin": "Extracted from finnish-doors src/projects/klonk/housings.py.",
+      "build_ms": 0,
+      "category": "meshutil",
+      "group": "blocks",
+      "rank": 28,
+      "parts": 1,
+      "size_mm": [
+        16.0,
+        10.0,
+        4.0
+      ],
+      "applications": "Polygon-to-solid between two world Z planes: wall segments, MultiPolygon window frames, and stacked housing slices.",
+      "added": "2026-09-04T21:46:18Z"
+    },
+    {
+      "file": "extrude_snapped_demo.glb",
+      "name": "extrude_snapped",
+      "module": "mechlib.meshutil",
+      "signature": "extrude_snapped(poly2d, z0, z1)",
+      "description": "Two near-neighbour polygons snapped to 1e-6 then extruded as separate volumes.",
+      "origin": "Extracted from torque-lever build.py.",
+      "build_ms": 1,
+      "category": "meshutil",
+      "group": "blocks",
+      "rank": 28,
+      "parts": 2,
+      "size_mm": [
+        19.0,
+        6.0,
+        4.0
+      ],
+      "applications": "Near-tangent 2D profiles that would triangulate as non-volumes: snap vertices to 1e-6 then extrude clean printable walls.",
+      "added": "2026-09-04T21:46:18Z"
     }
   ],
   "utilities": [

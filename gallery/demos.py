@@ -21,6 +21,7 @@ from mechlib import find_vitamin, vitamin, vitamin_addresses
 from mechlib.cams import (
     barrel_cam,
     cam_lift,
+    cam_profile_2d,
     face_cam,
     heart_cam,
     plate_cam,
@@ -63,15 +64,20 @@ from mechlib.couplings import (
 from mechlib.cutters import (
     bearing_seat,
     blind_socket,
+    chamfer_cutter,
     counterbore,
+    countersink,
     crush_ribs,
     dbore,
     dbore_hub,
+    gable_roof,
     gasket_channel,
+    hex_corner_chamfer,
     labyrinth_seal,
     oring_groove,
     revolved_gable_cavity,
     slot_cutter,
+    slot_neg,
     ss_bore,
     teardrop,
     tapered_cavity,
@@ -85,7 +91,7 @@ from mechlib.drives import (
     worm_coupon,
     worm_wheel_band,
 )
-from mechlib.fasteners import fastener_mesh, hex_nut_mesh, washer_mesh
+from mechlib.fasteners import bolt_mesh, fastener_mesh, hex_nut_mesh, washer_mesh
 from mechlib.fixtures import (
     board_cradle,
     kinematic_coupling,
@@ -114,6 +120,7 @@ from mechlib.gears import (
     bevel_gear_pair,
     cycloidal_drive,
     herringbone_gear,
+    internal_gear_2d,
     mesh_phase,
     rack_2d,
     ring_gear,
@@ -122,6 +129,7 @@ from mechlib.gears import (
     spur_gear_2d,
     spur_gear,
     spur_gear_mesh,
+    trochoid_profile_2d,
     worm,
 )
 from mechlib.grippers import (
@@ -152,6 +160,7 @@ from mechlib.linkages import (
     chebyshev_linkage,
     four_bar,
     lazy_tongs,
+    link_bar,
     pantograph_linkage,
     peaucellier_linkage,
     quick_return,
@@ -164,6 +173,7 @@ from mechlib.linkages import (
 )
 from mechlib.mechanisms import (
     dog_slot_coupling,
+    helix_solid,
     helix_tube,
     knurl,
     tap,
@@ -171,9 +181,9 @@ from mechlib.mechanisms import (
     threaded_rod,
     torsion_spring_mesh,
 )
-from mechlib.meshutil import sub, uni
+from mechlib.meshutil import extrude_poly_z, extrude_snapped, sub, uni
 from mechlib.patterns import directed_holes, lighten_cell_poly, lighten_grid_centres, polar_ring
-from mechlib.prim import boxc, chamfer_prism, cyl, frustum, hex_poly, rbox, sector2d, seg_cylinder
+from mechlib.prim import boxc, chamfer_prism, cyl, extrude_down, frustum, hex_poly, rbox, sector2d, seg_cylinder
 from mechlib.pulleys import (
     belt_tensioner,
     eccentric_idler_mount,
@@ -3888,3 +3898,150 @@ def demo_check_valve() -> MeshList:
 def demo_bellows_suction_cup(folds: int = 2) -> MeshList:
     mesh = bellows_suction_cup(folds=int(folds))
     return [("bellows_suction_cup", mesh, PALETTE[8])]
+
+
+# --- bosl2-style API use-case slice 1 ---------------------------------------
+
+
+def demo_bolt_mesh(
+    shank_r: float = 1.5,
+    shank_l: float = 16.0,
+    head_r: float = 3.0,
+    head_h: float = 3.0,
+) -> MeshList:
+    return [("bolt", bolt_mesh(shank_r, shank_l, head_r, head_h), PALETTE[5])]
+
+
+def demo_hex_nut_mesh(
+    af: float = 5.5, h: float = 2.6, bore_d: float = 3.0
+) -> MeshList:
+    return [("hex_nut", hex_nut_mesh(af, h, bore_d), PALETTE[3])]
+
+
+def demo_washer_mesh(
+    od: float = 8.0, id_: float = 3.4, h: float = 1.0
+) -> MeshList:
+    return [("washer", washer_mesh(od, id_, h), PALETTE[12])]
+
+
+def demo_cam_profile_2d(
+    base_r: float = 10.0, roller_r: float = 0.0, n: int = 48, extrude_h: float = 4.0
+) -> MeshList:
+    segments = (
+        ("shm", 6.0, 90.0),
+        ("dwell", 0.0, 90.0),
+        ("cycloidal", -6.0, 120.0),
+        ("dwell", 0.0, 60.0),
+    )
+    mesh = trimesh.creation.extrude_polygon(
+        cam_profile_2d(base_r=base_r, segments=segments, roller_r=roller_r, n=n),
+        extrude_h,
+    )
+    return [("cam_profile", mesh, PALETTE[0])]
+
+
+def demo_internal_gear_2d(
+    z: int = 16, m: float = 1.5, rim: float = 3.0, extrude_h: float = 4.0
+) -> MeshList:
+    mesh = trimesh.creation.extrude_polygon(
+        internal_gear_2d(z=int(z), m=m, rim=rim, steps=8), extrude_h
+    )
+    return [("internal_gear", mesh, PALETTE[7])]
+
+
+def demo_trochoid_profile_2d(
+    pins: int = 8,
+    pin_circle_r: float = 14.0,
+    pin_d: float = 5.0,
+    ecc: float = 1.2,
+    extrude_h: float = 4.0,
+) -> MeshList:
+    mesh = trimesh.creation.extrude_polygon(
+        trochoid_profile_2d(
+            int(pins), pin_circle_r, pin_d, ecc, samples=120
+        ),
+        extrude_h,
+    )
+    return [("trochoid_disc", mesh, PALETTE[4])]
+
+
+def demo_link_bar(
+    length: float = 30.0,
+    width: float = 8.0,
+    thickness: float = 4.0,
+    bore_d: float = 3.0,
+) -> MeshList:
+    return [("link_bar", link_bar(length, width, thickness, bore_d), PALETTE[2])]
+
+
+def demo_helix_solid(
+    lead: float = 4.0, turns: float = 3.0, seg: int = 24
+) -> MeshList:
+    prof = np.array([(4.0, -0.8), (6.0, -0.4), (6.0, 0.4), (4.0, 0.8)])
+    return [("helix_band", helix_solid(prof, lead, turns, int(seg)), PALETTE[12])]
+
+
+def demo_gable_roof(
+    xlen: float = 12.0, w: float = 12.0, ztop: float = 8.0, rise: float = 4.0
+) -> MeshList:
+    wall = boxc((20.0, 6.0, 16.0), (0.0, 0.0, 8.0))
+    opening = boxc((xlen, 8.0, ztop), (0.0, 0.0, ztop / 2.0))
+    roof = gable_roof(-xlen / 2.0, xlen, 0.0, w, ztop, rise)
+    return [("gabled_opening", uni([sub(wall, opening), roof]), PALETTE[7])]
+
+
+def demo_chamfer_cutter(r: float = 6.0, ch: float = 1.5, h: float = 12.0) -> MeshList:
+    pin = cyl(r, h)
+    pin.apply_translation((0.0, 0.0, h / 2.0))
+    cutter = chamfer_cutter(r, ch)
+    cutter.apply_translation((0.0, 0.0, h - ch))
+    return [("chamfered_pin", sub(pin, cutter), PALETTE[1])]
+
+
+def demo_countersink(
+    af: float = 13.0, h: float = 6.5, bore_d: float = 6.8, r_th: float = 4.1
+) -> MeshList:
+    nut = hex_nut_mesh(af, h, bore_d)
+    return [("countersunk_nut", countersink(nut, h, 1, r_th), PALETTE[3])]
+
+
+def demo_slot_neg(
+    radius: float = 2.0,
+    height: float = 6.0,
+    extra_travel: float = 2.0,
+    plate_w: float = 20.0,
+    plate_d: float = 12.0,
+    plate_h: float = 4.0,
+) -> MeshList:
+    plate = boxc((plate_w, plate_d, plate_h), (0.0, 0.0, plate_h / 2.0))
+    cutter = slot_neg(0.0, 0.0, radius, height, plate_h / 2.0, extra_travel)
+    return [("slotted_plate", sub(plate, cutter), PALETTE[7])]
+
+
+def demo_hex_corner_chamfer(
+    af: float = 13.0, h: float = 6.5, bore_d: float = 6.8, ch: float = 0.6
+) -> MeshList:
+    nut = hex_nut_mesh(af, h, bore_d)
+    r_circ = af / math.sqrt(3.0)
+    return [
+        ("chamfered_hex_nut", hex_corner_chamfer(nut, h, 1, r_circ, ch), PALETTE[3])
+    ]
+
+
+def demo_extrude_down(af: float = 16.0, h: float = 4.0, top: float = 0.0) -> MeshList:
+    mesh = extrude_down(hex_poly(af=af), h, top=top)
+    return [("extruded_down_hex", mesh, PALETTE[5])]
+
+
+def demo_extrude_poly_z(w: float = 16.0, d: float = 10.0, z0: float = 2.0, z1: float = 6.0) -> MeshList:
+    mesh = extrude_poly_z(sg.box(-w / 2.0, -d / 2.0, w / 2.0, d / 2.0), z0, z1)
+    return [("extruded_slab", mesh, PALETTE[1])]
+
+
+def demo_extrude_snapped(z0: float = 0.0, z1: float = 4.0) -> MeshList:
+    poly = sg.box(-6.0, -3.0, 6.0, 3.0).union(sg.Point(10.0, 0.0).buffer(3.0))
+    volumes = extrude_snapped(poly, z0, z1)
+    return [
+        ("snapped_%d" % i, mesh, PALETTE[i % len(PALETTE)])
+        for i, mesh in enumerate(volumes)
+    ]

@@ -1,5 +1,5 @@
 ---
-state: promoted
+state: building
 lens: outside-in
 created: 2026-09-03
 metric: public API names covered by USE_CASES or ALIASES
@@ -11,7 +11,7 @@ evidence:
   - design/roadmap/evidence/2026-09-03-bosl2-gears-helical-figures.png
   - design/roadmap/evidence/2026-09-03-mechlib-gallery-no-function-index.png
   - design/roadmap/evidence/2026-09-03-uncovered-public-api.txt
-slices: 0/3
+slices: 1/3
 after:
 ---
 # BOSL2-style use case for every public name
@@ -46,6 +46,6 @@ Utility API list — one-line situation, no fake GLB.
 
 ## Slices
 
-- [ ] Geometry-producing uncovered names get a use case + gallery demo: `bolt_mesh`, `hex_nut_mesh`, `washer_mesh`, `cam_profile_2d`, `internal_gear_2d`, `trochoid_profile_2d`, `link_bar`, `helix_solid`, `gable_roof`, `chamfer_cutter`, `countersink`, `slot_neg`, `hex_corner_chamfer`, `extrude_down`, `extrude_poly_z`, `extrude_snapped`, `solid_cube`, `void_cube`.
+- [x] Geometry-producing uncovered names get a use case + gallery demo: `bolt_mesh`, `hex_nut_mesh`, `washer_mesh`, `cam_profile_2d`, `internal_gear_2d`, `trochoid_profile_2d`, `link_bar`, `helix_solid`, `gable_roof`, `chamfer_cutter`, `countersink`, `slot_neg`, `hex_corner_chamfer`, `extrude_down`, `extrude_poly_z`, `extrude_snapped`. `solid_cube` / `void_cube` deferred to slice 3 (boolean mesh probes already on the Utility API list; a fake GLB would drop GOAL measure 2 below 100%).
 - [ ] Pose/kinematics uncovered names get a use case (demo only if a mesh is honest): `four_bar_pose`, `lazy_tongs_pose`, `tripod_pose`, `cycloidal_pose`, `escapement_pose`, `geneva_wheel_angle`, `iris_control_range`, `cam_lift`, `cv_velocity_fluctuation`, `cv_velocity_ratio`, `quick_return_ratio`.
 - [ ] Remaining helpers/constants (`uni`, `sub`, `DEFAULT_SEGMENTS`, `ideg`, `rot2`, …) get one-line use cases and stay on the Utility API list; measure reads 263/263.
