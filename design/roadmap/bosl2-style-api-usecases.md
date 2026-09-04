@@ -1,5 +1,5 @@
 ---
-state: proposed
+state: promoted
 lens: outside-in
 created: 2026-09-03
 metric: public API names covered by USE_CASES or ALIASES
