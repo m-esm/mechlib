@@ -60306,6 +60306,26 @@
       "added": "2026-09-01T04:53:49+03:00"
     },
     {
+      "file": "wiper_kit_demo.glb",
+      "name": "wiper_kit",
+      "module": "mechlib.vitamins",
+      "signature": "demo_wiper_kit(spacing=8.0); servo from get(address: 'str') -> 'Vitamin'",
+      "description": "A wall-button single-pivot wiper kit: printed arm, zn and zp frame halves, and an aim stencil, laid out beside the bought MG90S servo envelope rebound from vitamin(\"servo/mg90s\"). The frame halves sandwich the servo and the arm hub bores onto its horn; bodies are spread on the plate as a printable kit.",
+      "origin": "Kit demo for the wiper_kit use case; servo is a bought-part envelope (display mesh, not a printed STL).",
+      "build_ms": 24,
+      "category": "vitamins",
+      "group": "elements",
+      "rank": 21,
+      "parts": 5,
+      "size_mm": [
+        228.6,
+        30.0,
+        9.8
+      ],
+      "applications": "Wall-button single-pivot wiper kits (printed arm, zn and zp frame halves, aim stencil) that rebind the bought servo from vitamin(\"servo/sg90\") and vitamin(\"servo/mg90s\") instead of a forked envelope table.",
+      "added": "2026-09-04T04:00:45Z"
+    },
+    {
       "file": "cyl_demo.glb",
       "name": "cyl",
       "module": "mechlib.prim",

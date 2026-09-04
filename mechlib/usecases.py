@@ -968,6 +968,7 @@ GALLERY_FILE_TO_API = {
     'watt_linkage_demo.glb': 'watt_linkage',
     'wave_spring_demo.glb': 'wave_spring',
     'winch_drum_demo.glb': 'grooved_drum',
+    'wiper_kit_demo.glb': 'wiper_kit',
     'worm_coupon_demo.glb': 'worm_coupon',
     'worm_demo.glb': 'worm',
     'ydovetail_demo.glb': 'ydovetail',

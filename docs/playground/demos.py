@@ -138,7 +138,7 @@ from mechlib.indexing import (
     intermittent_gear_pair,
 )
 from mechlib.joints import ball_socket_joint, clevis, gimbal_rings, knuckle_hinge
-from mechlib.lattices import auxetic_panel, bcc_lattice, honeycomb_panel, isogrid_panel, kagome_panel, kerf_bend_cutter, octet_truss
+from mechlib.lattices import auxetic_panel, bcc_lattice, cubic_lattice, gyroid_lattice, honeycomb_core, honeycomb_panel, isogrid_panel, kagome_panel, kelvin_cell, kerf_bend_cutter, octet_truss
 from mechlib.linear import (
     archimedes_screw,
     differential_screw,
@@ -966,6 +966,10 @@ PLAY: dict = {
         "cell": (8.0, 16.0, 2.0),
         "strut_t": (0.4, 1.2, 0.4),
     },
+    "demo_honeycomb_core": {
+        "cell": (6.0, 12.0, 2.0),
+        "height": (8.0, 24.0, 4.0),
+    },
     "demo_isogrid_panel": {
         "cell": (8.0, 16.0, 2.0),
         "strut_t": (0.4, 1.2, 0.4),
@@ -978,8 +982,20 @@ PLAY: dict = {
         "cell": (8.0, 16.0, 2.0),
         "strut_d": (0.8, 2.4, 0.4),
     },
+    "demo_cubic_lattice": {
+        "cell": (8.0, 16.0, 2.0),
+        "strut_d": (0.8, 2.4, 0.4),
+    },
+    "demo_gyroid_lattice": {
+        "cell": (8.0, 16.0, 2.0),
+        "wall": (1.2, 2.4, 0.4),
+    },
     "demo_octet_truss": {
         "cell": (8.0, 16.0, 2.0),
+        "strut_d": (0.8, 2.4, 0.4),
+    },
+    "demo_kelvin_cell": {
+        "cell": (12.0, 28.0, 2.0),
         "strut_d": (0.8, 2.4, 0.4),
     },
     "demo_kerf_bend_cutter": {
@@ -1624,6 +1640,69 @@ def demo_vitamin_addresses(spacing: float = 10.0) -> MeshList:
             mesh.apply_translation((cursor - float(mesh.bounds[0][0]), 0.0, 0.0))
         cursor = float(mesh.bounds[1][0]) + spacing
         out.append((name, mesh, PALETTE[i % len(PALETTE)]))
+    return out
+
+
+def _wiper_frame_half(width, depth, thick, win_w, win_d, hole_dx, hole_d):
+    """One printed wiper frame half: a rounded plate with the servo window and
+    four mount holes cut through."""
+    plate = rbox((width, depth, thick), center=(0.0, 0.0, thick / 2.0), r=4.0)
+    window = boxc((win_w, win_d, thick + 2.0), center=(0.0, 0.0, thick / 2.0))
+    body = sub(plate, window)
+    for sx in (-hole_dx, hole_dx):
+        for sy in (depth / 2.0 - 4.0, -depth / 2.0 + 4.0):
+            hole = cyl(hole_d / 2.0, thick + 2.0,
+                       center=(sx, sy, thick / 2.0), sections=32)
+            body = sub(body, hole)
+    return body
+
+
+def _wiper_arm(length, w, thick, hub_r, bore_d):
+    """Printed wiper blade with a hub bored for the servo horn."""
+    blade = rbox((length, w, thick), center=(0.0, 0.0, thick / 2.0), r=w * 0.4)
+    hub_x = -length / 2.0 + hub_r * 0.6
+    hub = cyl(hub_r, thick, center=(hub_x, 0.0, thick / 2.0), sections=64)
+    arm = uni([blade, hub])
+    bore = cyl(bore_d / 2.0, thick + 2.0,
+               center=(hub_x, 0.0, thick / 2.0), sections=32)
+    return sub(arm, bore)
+
+
+def _wiper_stencil(width, depth, thick, aim_r):
+    """Thin aim/tape template: a plate with the press-point hole and a slot."""
+    plate = rbox((width, depth, thick), center=(0.0, 0.0, thick / 2.0), r=3.0)
+    aim = cyl(aim_r, thick + 2.0, center=(0.0, 0.0, thick / 2.0), sections=48)
+    slot = boxc((width * 0.5, 2.4, thick + 2.0),
+                center=(0.0, depth / 4.0, thick / 2.0))
+    return sub(sub(plate, aim), slot)
+
+
+def demo_wiper_kit(spacing: float = 8.0) -> MeshList:
+    """Wall-button single-pivot wiper kit: printed arm, zn/zp frame halves and
+    an aim stencil, laid out beside the bought MG90S servo envelope rebound from
+    ``vitamin("servo/mg90s")``. The frame halves sandwich the servo; the arm
+    hub bores onto its horn. Bodies are spread on the plate so the demo reads as
+    a printable kit, not an assembled interference fit."""
+    servo = vitamin("servo/mg90s").envelope()
+    ear = float(vitamin("servo/mg90s").dims.get("ear_span", 32.6))
+    zn = _wiper_frame_half(ear + 4.0, 20.0, 5.0, 23.0, 13.0, ear / 2.0, 2.0)
+    zp = _wiper_frame_half(ear + 4.0, 20.0, 4.0, 23.0, 13.0, ear / 2.0, 2.0)
+    arm = _wiper_arm(58.0, 9.0, 3.5, 7.0, 4.9)
+    stencil = _wiper_stencil(40.0, 30.0, 1.5, 2.0)
+    entries = [
+        ("zn_frame_half", zn, PALETTE[7]),
+        ("servo_mg90s", servo, PALETTE[10]),
+        ("zp_frame_half", zp, PALETTE[1]),
+        ("arm", arm, PALETTE[4]),
+        ("stencil", stencil, PALETTE[5]),
+    ]
+    out: MeshList = []
+    cursor = None
+    for name, mesh, color in entries:
+        if cursor is not None:
+            mesh.apply_translation((cursor - float(mesh.bounds[0][0]), 0.0, 0.0))
+        cursor = float(mesh.bounds[1][0]) + spacing
+        out.append((name, mesh, color))
     return out
 
 
@@ -3433,6 +3512,12 @@ def demo_honeycomb_panel(cell: float = 12.0, strut_t: float = 1.2) -> MeshList:
     return [("honeycomb_panel", panel, PALETTE[6])]
 
 
+def demo_honeycomb_core(cell: float = 8.0, height: float = 15.0) -> MeshList:
+    core = honeycomb_core(width=54.0, depth=44.0, height=height, cell=cell,
+                          wall_t=1.2, skin_t=1.2, skin="bottom")
+    return [("honeycomb_core", core, PALETTE[9])]
+
+
 def demo_isogrid_panel(cell: float = 12.0, strut_t: float = 1.2) -> MeshList:
     panel = isogrid_panel(width=60.0, height=60.0, thickness=3.0,
                           cell=cell, strut_t=strut_t)
@@ -3450,9 +3535,25 @@ def demo_bcc_lattice(cell: float = 12.0, strut_d: float = 1.6) -> MeshList:
     return [("bcc_lattice", block, PALETTE[5])]
 
 
+def demo_cubic_lattice(cell: float = 12.0, strut_d: float = 1.6) -> MeshList:
+    block = cubic_lattice(nx=3, ny=3, nz=2, cell=cell, strut_d=strut_d)
+    return [("cubic_lattice", block, PALETTE[6])]
+
+
+def demo_gyroid_lattice(cell: float = 12.0, wall: float = 1.2) -> MeshList:
+    block = gyroid_lattice(width=24.0, depth=24.0, height=24.0,
+                           cell=cell, wall=wall, resolution=16)
+    return [("gyroid_lattice", block, PALETTE[9])]
+
+
 def demo_octet_truss(cell: float = 12.0, strut_d: float = 1.6) -> MeshList:
     block = octet_truss(nx=2, ny=2, nz=2, cell=cell, strut_d=strut_d)
     return [("octet_truss", block, PALETTE[4])]
+
+
+def demo_kelvin_cell(cell: float = 20.0, strut_d: float = 1.6) -> MeshList:
+    block = kelvin_cell(cell=cell, strut_d=strut_d)
+    return [("kelvin_cell", block, PALETTE[3])]
 
 
 def demo_kerf_bend_cutter(mode_index: int = 0, kerf: float = 0.5,

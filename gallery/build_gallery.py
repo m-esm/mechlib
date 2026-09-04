@@ -1323,6 +1323,24 @@ def build():
             "demo": "demo_vitamin_addresses",
         },
         {
+            "file": "wiper_kit_demo.glb",
+            "name": "wiper_kit",
+            "module": "mechlib.vitamins",
+            "signature": "demo_wiper_kit(spacing=8.0); servo from %s" % signature(vitamin),
+            "description": (
+                "A wall-button single-pivot wiper kit: printed arm, zn and zp "
+                "frame halves, and an aim stencil, laid out beside the bought "
+                "MG90S servo envelope rebound from vitamin(\"servo/mg90s\"). The "
+                "frame halves sandwich the servo and the arm hub bores onto its "
+                "horn; bodies are spread on the plate as a printable kit."
+            ),
+            "origin": (
+                "Kit demo for the wiper_kit use case; servo is a bought-part "
+                "envelope (display mesh, not a printed STL)."
+            ),
+            "demo": "demo_wiper_kit",
+        },
+        {
             "file": "worm_demo.glb",
             "name": "worm + helical wheel",
             "module": "mechlib.gears",
