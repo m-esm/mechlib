@@ -1,0 +1,13 @@
+cwd: /Users/moshe/Desktop/myprojects/mechlib
+measured: 2026-09-06
+command:
+python3 -c "from pathlib import Path; n=0; p=Path('design/critiques');
+files=list(p.glob('*.md')) if p.exists() else []
+for f in files:
+    t=f.read_text(encoding='utf-8').lower()
+    if 'sliced' in t or 'printed' in t: n+=1
+print(n)"
+result: 0
+critiques_md_count: 1
+hits: []
+GOAL.md number 3 target: 20

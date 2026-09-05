@@ -1,0 +1,17 @@
+{
+  "name": "gallery-stl-no-print-proof",
+  "base": "https://m-esm.github.io/mechlib/",
+  "viewports": ["desktop"],
+  "steps": [
+    {"goto": "/", "settle": 5.0},
+    {"waitFor": ".model-card", "timeout": 25000},
+    {"shot": "gallery-loaded"},
+    {"fill": "#search", "value": "spur_gear"},
+    {"wait": 1200},
+    {"shot": "search-spur-gear"},
+    {"clickText": "Tune"},
+    {"waitFor": ".playground-modal.open", "timeout": 10000},
+    {"wait": 1500},
+    {"shot": "playground-download-stl"}
+  ]
+}
