@@ -37,6 +37,11 @@ USE_CASES = {
         "enclosure closures that snap together on a circumferential "
         "ridge."
     ),
+    'approach_clear': (
+        "Jumper-socket and connector mouths: march a probe toward the "
+        "opening along the insertion axis and report free travel before "
+        "the shell clips the plug."
+    ),
     'arc_ratchet_2d': (
         "Tension-loaded one-way clutches, winch handles, and compact ratchets "
         "that use flexure arms instead of rigid pawls."
@@ -44,6 +49,17 @@ USE_CASES = {
     'archimedes_screw': (
         "Irrigation and drainage lifts, bulk-material conveyors, and "
         "demonstration models of the classical water screw."
+    ),
+    'AS568_CS_MM': (
+        "Face-seal and piston O-ring glands on pump lids, hydraulic "
+        "fittings, and enclosure flanges: the five ISO 3601 / AS568 "
+        "cross-sections (1.78 to 6.99 mm) a designer picks before calling "
+        "oring_groove."
+    ),
+    'audit': (
+        "Robot and fixture assemblies: pairwise overlap and sub-clearance "
+        "audit of named bodies so a gearbox or clamp cannot ship with two "
+        "solids occupying the same volume."
     ),
     'auxetic_panel': (
         "Impact pads, expandable meshes, medical and sports structures that "
@@ -58,6 +74,10 @@ USE_CASES = {
     'barrel_cam': (
         "Fishing-reel level winds, tool-changer drums, textile traverse "
         "mechanisms, and cylindrical groove cams for axial programs."
+    ),
+    'bbox_overlap': (
+        "Cheap first-pass clash filter on printer-frame stacks and gearbox "
+        "housings: skip the boolean when two part AABBs do not even overlap."
     ),
     'bcc_lattice': (
         "3D-printed lightweight cores, energy-absorbing crush structures, and "
@@ -130,6 +150,11 @@ USE_CASES = {
         "CAD envelopes that need a shank-plus-head body before the ISO "
         "fastener is bought."
     ),
+    'bore_pierces': (
+        "Motor and fastener bores in printed hubs: probe along the real "
+        "hole axis so a teardrop or counterbore actually opens both faces "
+        "instead of leaving a membrane."
+    ),
     'boxc': (
         "Blocks, spacers, and axis-aligned volumes that start most bracket "
         "and housing models."
@@ -166,6 +191,11 @@ USE_CASES = {
         "Straight-line walking and leg mechanisms, Russian school teaching "
         "models, and approximate linear guides with only revolute joints."
     ),
+    'check_ratchet_sense_and_sweep': (
+        "Spring-cartridge ratchet wrenches and winch freewheels: gate rest "
+        "clearance, drive-way engagement, overrun cam-in, and one-tooth "
+        "freewheel at full pawl retraction."
+    ),
     'check_valve': (
         "Pump outlet lines, siphon breaks, and air lines that need one- "
         "way flow: a bought bearing ball on a conical seat."
@@ -174,9 +204,18 @@ USE_CASES = {
         "Split enclosures, clamshell housings, and lid-to-base seams that "
         "interlock with a shiplap lip."
     ),
+    'clear': (
+        "Keep-out and cavity probes in housings: confirm sample points sit "
+        "outside the solid so a motor well or wire channel is actually empty."
+    ),
     'clevis': (
         "Actuator rod ends, turnbuckles, control links, and any pin joint "
         "that couples a fork to an eye."
+    ),
+    'coarse_pitch': (
+        "Printed M3 to M8 screws and nuts: pick a nozzle-printable coarse "
+        "metric pitch so M3/M4 threads still form on a 0.4 mm nozzle while "
+        "M5 to M8 keep stock ISO pitch."
     ),
     'coil_spring': (
         "Suspension and return springs, battery contacts, and general helical "
@@ -206,6 +245,11 @@ USE_CASES = {
         "Press-fit captures for PCBs, sensors, and rectangular inserts that "
         "should grip without glue."
     ),
+    'cube_rotations': (
+        "Orienting a rectangular battery, PCB, or coupon on the bed: the 24 "
+        "cube rotations that try every face-down, edge-aligned pose before "
+        "packing."
+    ),
     'cycloidal_drive': (
         "Robot joint reducers, cobot arms, and compact high-ratio drives "
         "where cycloidal geometry packs more torque than a planetary."
@@ -217,6 +261,16 @@ USE_CASES = {
     'dbore': (
         "Double-D motor and pot shafts, keyed hubs, and sockets that must "
         "transmit torque without a set screw."
+    ),
+    'decimate': (
+        "Heavy worm and gear meshes before a gallery GLB or STEP export: "
+        "vertex-cluster on a grid so the file ships without losing watertight "
+        "volume."
+    ),
+    'DEFAULT_SEGMENTS': (
+        "Starter plate-cam program for automata and packaging lifts: SHM "
+        "rise, dwell, cycloidal return, dwell, summing to 360 degrees so "
+        "plate_cam has a closed lift law without writing segments from scratch."
     ),
     'detent_pair': (
         "Pan-tilt heads, adjustable arm joints, rotary selectors, and "
@@ -268,6 +322,15 @@ USE_CASES = {
         "Hydraulic power units, oil transfer pumps, and compact "
         "positive-displacement gear pumps for viscous fluids."
     ),
+    'export_assembly': (
+        "Turntable and robot assemblies handed to a machine shop: write "
+        "already-posed named meshes as one STEP so the mill sees the printed "
+        "stack, not a triangle soup."
+    ),
+    'export_stl': (
+        "Printer-bound parts: write STL only after float32 watertight repair "
+        "so a slicer does not get a non-volume housing or gear."
+    ),
     'extrude_down': (
         "Downward extrusion of a housing outline from a mating top plane: "
         "lids, lips, and pockets whose Z extent is measured from a face."
@@ -292,6 +355,11 @@ USE_CASES = {
         "Assembly visualization: pan, socket, and countersunk screws with "
         "nuts and washers in CAD layouts."
     ),
+    'fit_transform': (
+        "Bought motors and bearings dropped onto printed placeholders: "
+        "rigid-fit the calipered mesh onto the oriented dummy so the pocket "
+        "follows the real envelope."
+    ),
     'flat_worm': (
         "Bench-proven multi-start flat worms for FDM gearboxes and high-ratio "
         "printed drives that must actually mesh."
@@ -315,6 +383,10 @@ USE_CASES = {
     'frustum': (
         "Tapers, funnels, draft on molds, and stepped cones between two "
         "diameters."
+    ),
+    'from_manifold': (
+        "After a CSG cut on a gearbox housing: convert the manifold3d solid "
+        "back to trimesh for export, coloring, and gallery GLB write."
     ),
     'gable_roof': (
         "Self-supporting 45-degree roofs over wall openings in FDM housings "
@@ -396,9 +468,27 @@ USE_CASES = {
         "Coolant and air tubing on printers and lab gear, barbed hose tails "
         "that grip soft tube without a clamp."
     ),
+    'ideg': (
+        "Involute spur and internal gears: convert a pressure-angle into the "
+        "involute polar offset tan(alpha)-alpha so tooth flanks land on the "
+        "pitch circle."
+    ),
     'idler_pulley': (
         "Belt path redirects on printers and conveyors, free-spinning pulleys "
         "that only change direction or take up slack."
+    ),
+    'inflate': (
+        "Window-frame and housing clearances: offset vertices along normals "
+        "by a print gap so a lid still closes after FDM shrinkage."
+    ),
+    'inside': (
+        "Solid-body probes in printed walls: confirm sample points sit "
+        "inside the mesh so a rib or boss still has meat after CSG."
+    ),
+    'inter': (
+        "Shared volume of two mating parts: manifold intersection used to "
+        "keep only the overlap of a tab and a wall, or to measure a designed "
+        "contact."
     ),
     'intermittent_gear_pair': (
         "Mechanical counters, washing-machine timers, odometers, and "
@@ -408,6 +498,11 @@ USE_CASES = {
         "Annular involute ring-gear blanks for planetary stages, robot-wrist "
         "reducers, and harmonic-drive circular splines, extruded into a "
         "printable internal gear."
+    ),
+    'internal_mesh_phase': (
+        "Planetary and harmonic ring meshes: the extra rotation that seats a "
+        "pinion tooth into an internal ring, which mesh_phase (external) gets "
+        "wrong by 180 degrees."
     ),
     'iris_diaphragm': (
         "Camera and projector apertures, laser beam expanders, soft-robot "
@@ -452,6 +547,15 @@ USE_CASES = {
         "Dust and splash seals on printed rotating shafts, non-contact comb "
         "seals where elastomer is unwanted."
     ),
+    'largest': (
+        "Boolean leftovers on housings: keep the largest watertight body "
+        "after a split so a severed sprue or tessellation sliver does not "
+        "ship as the part."
+    ),
+    'largest_poly': (
+        "Window-frame and gasket outlines: pick the largest Shapely polygon "
+        "from a MultiPolygon so the outer wall, not a hole, gets extruded."
+    ),
     'lazy_tongs': (
         "Lazy-tongs riveters, scissor lifts, folding gates, and extendable "
         "booms that multiply a short squeeze into a long straight stroke."
@@ -480,6 +584,30 @@ USE_CASES = {
         "Organic housings, fairings, and solids that blend unequal "
         "cross-sections along a path."
     ),
+    'lobe_cavity_polys': (
+        "Lightened tripod legs and hollow lobes: 2D cores (optional rib "
+        "crosses) subtracted from a thick section so the print stays a shell "
+        "with print-safe cavities."
+    ),
+    'mesh_from_tris': (
+        "Hand-built tooth and thread flanks: stitch a triangle list into a "
+        "watertight trimesh after involute or helix math, before CSG."
+    ),
+    'min_distance': (
+        "Running clearance between a pawl and a ratchet wheel, or a cover "
+        "and a spinning gear: sampled surface distance when a boolean would "
+        "miss a thin rub."
+    ),
+    'MOTION_LAWS': (
+        "Valve-timing and packaging-machine plate cams that must pick dwell, "
+        "linear, SHM, or cycloidal rise per segment when synthesizing a "
+        "closed radial program."
+    ),
+    'nut_ac': (
+        "Hex-nut pockets and wrench access: convert ISO across-flats to "
+        "across-corners so an M3 to M8 nut can spin in its well and a socket "
+        "still fits."
+    ),
     'nut_slot': (
         "Captive hex nuts in printed parts, T-nut slots, and any fastener "
         "seat that must not spin."
@@ -493,9 +621,22 @@ USE_CASES = {
         "orbits at twice shaft speed: printer stepper-to-screw couplers "
         "and scroll-compressor drive trains."
     ),
+    'orient': (
+        "Bosses and teardrop bores aimed along a face normal: rotate a "
+        "+Z-built cutter so it points at the wall it must pierce."
+    ),
     'oring_groove': (
         "Face-seal glands on lids and flanges, AS568 O-ring seats designed "
         "for correct squeeze and fill."
+    ),
+    'overlap_volume': (
+        "Designed contacts vs crashes in a clamp or gearbox: intersection "
+        "volume in mm3 so a blessed seat kiss is capped and a body dig fails "
+        "the gate."
+    ),
+    'pack_by_category': (
+        "Bambu plates for a clamp kit: group meshes by category (hardware vs "
+        "printed) then shelf-pack each group onto its own plate."
     ),
     'pantograph_linkage': (
         "Engraving and sign-cutting pantographs, scale-copying arms, and any "
@@ -509,6 +650,18 @@ USE_CASES = {
         "Lab and medical dosing pumps, food-safe fluid transfer, and any pump "
         "that must never touch the fluid with gears or seals."
     ),
+    'pick_length': (
+        "BOM screws through a window frame or lid stack: next standard SHCS "
+        "length that is at most 0.6 mm short of the measured span."
+    ),
+    'place': (
+        "2D tooth and gasket profiles: center a polygon on a bolt circle or "
+        "hub so extrusion lands on the shaft axis."
+    ),
+    'place_right': (
+        "Right-aligned labels and ratchet pawl blanks: park a 2D profile "
+        "against a right edge and center it vertically before extrude."
+    ),
     'plain_bushing': (
         "Journal bearings in printed machines, flanged sleeve bushings for "
         "shafts that only need sliding support."
@@ -520,6 +673,10 @@ USE_CASES = {
     'plate_cam': (
         "Model engines and automata valve timing, packaging-machine motion "
         "programs, and any radial cam that must follow a prescribed lift law."
+    ),
+    'polar_ring': (
+        "Bolt circles on flanges and planet-pin rings: n evenly spaced XY "
+        "points at radius r, with a phase for tooth timing."
     ),
     'press_lid': (
         "Battery and electronics boxes, snap-fit instrument lids, and "
@@ -577,6 +734,10 @@ USE_CASES = {
         "Epicyclic stages, slewing drives, and internal gear pairs where "
         "pinion and ring turn the same way."
     ),
+    'ring_pts': (
+        "Helical sweeps and gaskets: resample a 2D outline to evenly spaced "
+        "3D points at height Z for a loft or helix path."
+    ),
     'roller_chain': (
         "Conveyors, motorcycles, and machine drives that wrap a roller chain "
         "around a sprocket."
@@ -596,6 +757,10 @@ USE_CASES = {
     'rotary_spool_valve': (
         "Pneumatic and hydraulic direction valves, multi-port manifolds, and "
         "rotary selectors that route flow by plug angle."
+    ),
+    'rot2': (
+        "2D gear and cam profiles: rotate XY point lists by a mesh-phase or "
+        "cam angle before extrusion."
     ),
     'saddle': (
         "Cradles for tubes and batteries, ribs that hug a cylinder without a "
@@ -633,6 +798,10 @@ USE_CASES = {
         "Struts and links between skew points, space-frame bars, and "
         "cylinders that do not share an axis-aligned path."
     ),
+    'self_thickness': (
+        "Printed walls and gear rims: first-percentile and minimum ray "
+        "thickness so a 0.4 mm nozzle still has meat after lightening."
+    ),
     'setscrew': (
         "Collar and hub locks on shafts, pulley set-screw seats, and printed "
         "bosses that take a radial screw."
@@ -644,6 +813,15 @@ USE_CASES = {
     'shaft_key': (
         "Gear hubs, hand cranks, and pulley drives that transmit torque "
         "through a DIN 6885 sunk key where a D-bore would slip."
+    ),
+    'shelf_pack': (
+        "Print-bed layouts for a multi-part clamp or robot kit: pack "
+        "brim-grown footprints onto 256 mm plates with a gap, splitting onto "
+        "extra plates when the bed fills."
+    ),
+    'slicer_area': (
+        "Lightened tripod legs: predicted per-layer extrusion area from "
+        "perimeter plus infill so a hollow lobe does not become an empty layer."
     ),
     'slider_crank': (
         "Piston engines and compressors, bicycle pumps, shapers, and every "
@@ -661,9 +839,19 @@ USE_CASES = {
         "Clock strike trains, trip hammers, and slow-wind sudden-release "
         "mechanisms that need one drop per revolution."
     ),
+    'SnapSpec': (
+        "Battery doors and enclosure catches: the unified catch and "
+        "cantilever finger dims (arm width, thickness, gap, drop, hook) that "
+        "snap_catch and snap_finger share so both sides of a click-shut lid "
+        "match."
+    ),
     'snap_catch': (
         "Battery doors, access panels, and plastic enclosures that click shut "
         "with a catch and finger."
+    ),
+    'solid_cube': (
+        "Local solidity probes in a boss or rim: a small cube that must stay "
+        "mostly solid after CSG, catching a wall that was accidentally hollowed."
     ),
     'spiral_power_spring': (
         "Clock and toy mainsprings, retractable reels, and flat spiral power "
@@ -696,6 +884,10 @@ USE_CASES = {
     'star_wheel': (
         "Filling, capping, and sorting machines that meter bottles, "
         "cans, or bearings at a fixed pitch."
+    ),
+    'sub': (
+        "Holes, pockets, and gland cutters: subtract a teardrop bore or nut "
+        "slot from a housing through manifold3d."
     ),
     'swash_plate': (
         "Axial piston pumps and motors, helicopter cyclic control analogues, "
@@ -757,6 +949,10 @@ USE_CASES = {
         "Welding and woodworking hold-downs, drill-press fixtures, and CNC "
         "fixture clamps that must lock solid without continuous force."
     ),
+    'to_manifold': (
+        "Before CSG on a printed gearbox: convert a trimesh body to "
+        "manifold3d so union and subtract stay watertight."
+    ),
     'torque_limiter': (
         "Drill and screwdriver clutches, conveyor overload protection, and "
         "any shaft that must slip at a set torque."
@@ -778,6 +974,10 @@ USE_CASES = {
         "Wire ways, cable channels, and open U runs that snake between "
         "arbitrary points on a panel."
     ),
+    'uni': (
+        "Housing halves, rib unions, and multi-body bosses: manifold union "
+        "of several watertight meshes into one printable solid."
+    ),
     'universal_joint': (
         "Driveshafts, steering columns, and any angled shaft pair that can "
         "live with Cardan speed variation."
@@ -790,6 +990,10 @@ USE_CASES = {
     'v_belt_pulley': (
         "Washing machines, drill presses, lathes, and HVAC blowers: "
         "wedge-belt power transmission between parallel shafts."
+    ),
+    'void_cube': (
+        "Cavity and bore probes: a small cube that must stay void after CSG, "
+        "catching a membrane that sealed a motor well or fastener hole."
     ),
     'watt_linkage': (
         "Beam-engine parallel motion (historical), solid-axle rear suspension "
@@ -820,6 +1024,10 @@ USE_CASES = {
     'ydovetail': (
         "Printable drawer slides, modular plate joins, and self-supporting "
         "dovetail tongues that assemble along Y."
+    ),
+    'zmin0': (
+        "Bed-ready STLs: translate a part so min-Z is zero before export, so "
+        "a gear or housing sits on the print bed instead of floating."
     ),
 }
 
