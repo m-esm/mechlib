@@ -105,6 +105,7 @@ from mechlib.flexures import (
     coil_spring,
     cross_flexure,
     flexure_stage,
+    lattice_flexure,
     leaf_spring,
     spiral_power_spring,
     wave_spring,
@@ -702,6 +703,10 @@ PLAY: dict = {
     "demo_cross_flexure": {
         "gap": (6, 16, 1),
         "blade_angle_deg": (20, 55, 5),
+    },
+    "demo_lattice_flexure": {
+        "cols": (2, 4, 1),
+        "lig_t": (0.4, 0.7, 0.1),
     },
     "demo_wave_spring": {
         "waves": (2, 6, 1),
@@ -2756,6 +2761,11 @@ def demo_cross_flexure(gap: float = 10.0,
                        blade_angle_deg: float = 45.0) -> MeshList:
     flex = cross_flexure(gap=gap, blade_angle_deg=blade_angle_deg)
     return [("cross_flexure_pivot", flex, PALETTE[2])]
+
+
+def demo_lattice_flexure(cols: int = 4, lig_t: float = 0.6) -> MeshList:
+    flex = lattice_flexure(kind="x", cols=cols, lig_t=lig_t)
+    return [("distributed_x_flexure", flex, PALETTE[6])]
 
 
 def demo_wave_spring(waves: int = 3, turns: int = 2,

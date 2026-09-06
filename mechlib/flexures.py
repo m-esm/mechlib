@@ -67,6 +67,83 @@ def cross_flexure(block_w=22.0, block_d=16.0, block_h=6.0, gap=10.0,
     return uni(parts)
 
 
+def lattice_flexure(kind, block_w=22.0, block_d=16.0, block_h=6.0,
+                    gap=10.0, lig_t=0.6, rows=3, cols=4,
+                    apex_deg=90.0, embed=1.5):
+    """Build a distributed-compliance crossed-truss flexural pivot.
+
+    ``kind="x"`` fills the gap between two rigid anchor blocks with a grid
+    of X cells.  Each cell has two diagonal ligament walls on separate
+    X-offset planes, leaving a ``2.2 * lig_t`` print-open slot between them.
+    Rows repeat along Z and columns along Y; alternating each wall's slope
+    by row makes continuous zigzag load paths between the blocks.  Roots
+    sink ``embed`` mm into both blocks and the web keeps a 0.8 mm rim inside
+    their footprint.  ``lig_t`` is a fatigue-critical living-hinge thickness
+    and is deliberately not nozzle-snapped; oversize it for more than a few
+    dozen cycles.  Print with the ligament walls vertical so layer lines run
+    along the members.  Units are mm.  ``apex_deg`` is reserved for the
+    unimplemented ``kind="v"`` variant.
+    """
+    if kind not in {"x", "v"}:
+        raise ValueError("lattice_flexure(): kind must be 'x' or 'v'")
+    if kind == "v":
+        raise ValueError("lattice_flexure(): kind='v' is not implemented")
+    if block_w <= 0 or block_d <= 0 or gap <= 0 or embed <= 0:
+        raise ValueError("lattice_flexure(): dimensions must be positive")
+    if block_h < 1.2:
+        raise ValueError("lattice_flexure(): block_h must be at least 1.2")
+    if embed < 0.8:
+        raise ValueError("lattice_flexure(): embed must be at least 0.8")
+    if lig_t < 0.4:
+        raise ValueError("lattice_flexure(): lig_t must be at least 0.4")
+    if lig_t >= block_h or lig_t >= min(block_w, block_d):
+        raise ValueError("lattice_flexure(): lig_t is too thick for the part")
+    if rows < 1 or cols < 1:
+        raise ValueError("gap/block too small for one X cell")
+    rows = int(round(rows))
+    cols = int(round(cols))
+
+    cell = gap / rows
+    gap_clear = 2.2 * lig_t
+    web_w = 2.0 * lig_t + gap_clear
+    web_d = cols * cell
+    if web_w > block_w - 1.6 or web_d > block_d - 1.6:
+        raise ValueError("web overhangs block; reduce rows/cols or grow block")
+    if 2.0 * lig_t + gap_clear > cell:
+        raise ValueError("lattice_flexure(): X cell is too small for ligament slot")
+
+    parts = [
+        boxc((block_w, block_d, block_h), center=(0, 0, -block_h / 2.0)),
+        boxc((block_w, block_d, block_h),
+             center=(0, 0, gap + block_h / 2.0)),
+    ]
+    x_offset = (lig_t + gap_clear) / 2.0
+    y_min = -web_d / 2.0
+    for row in range(rows):
+        z0 = row * cell - (embed if row == 0 else 0.0)
+        z1 = (row + 1) * cell + (embed if row == rows - 1 else 0.0)
+        for col in range(cols):
+            y0 = y_min + col * cell
+            y1 = y0 + cell
+            for layer in (-1, 1):
+                rising = (row % 2 == 0) == (layer < 0)
+                ya, yb = (y0, y1) if rising else (y1, y0)
+                dy = yb - ya
+                dz = z1 - z0
+                member = boxc((lig_t, lig_t,
+                               math.hypot(dy, dz) + lig_t))
+                member.apply_transform(tf.rotation_matrix(
+                    -math.atan2(dy, dz), (1, 0, 0)))
+                member.apply_translation((layer * x_offset,
+                                          (ya + yb) / 2.0,
+                                          (z0 + z1) / 2.0))
+                parts.append(member)
+    mesh = uni(parts)
+    if not mesh.is_watertight:
+        mesh = from_manifold(to_manifold(mesh))
+    return mesh
+
+
 def wave_spring(d=30.0, waves=3, turns=2, strip_w=3.0, strip_t=0.8,
                 amplitude=1.0, crest_fuse=0.15, sections=96):
     """Build a crest-to-crest wave spring (Smalley-style) around the Z axis.
@@ -840,6 +917,7 @@ def flexure_stage(travel=2.0, blade_t=1.0, blade_len=25.0, width=60.0,
 
 __all__ = (
     "cross_flexure",
+    "lattice_flexure",
     "wave_spring",
     "bistable_beam",
     "belleville_washer",

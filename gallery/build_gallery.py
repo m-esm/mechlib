@@ -109,6 +109,7 @@ from mechlib.flexures import (
     coil_spring,
     cross_flexure,
     flexure_stage,
+    lattice_flexure,
     leaf_spring,
     spiral_power_spring,
     wave_spring,
@@ -2013,6 +2014,20 @@ def build():
             "origin": ("Mechanical-movements wave v0.6.0; classic ref: "
                        "cross-spring pivot (Bendix Free-Flex)"),
             "demo": "demo_cross_flexure",
+        },
+        {
+            "file": "lattice_flexure_demo.glb",
+            "name": "lattice_flexure",
+            "module": "mechlib.flexures",
+            "signature": signature(lattice_flexure),
+            "description": (
+                "A monolithic distributed-compliance pivot: repeating X cells "
+                "join two rigid anchors with crossed, print-separated ligament "
+                "walls. The multi-cell web spreads strain for more travel and "
+                "fatigue life than a single cross-spring pivot."),
+            "origin": ("Pattern/lattice/kerf backlog id 21; classic ref: "
+                       "Howell distributed-compliance mechanism"),
+            "demo": "demo_lattice_flexure",
         },
         {
             "file": "wave_spring_demo.glb",

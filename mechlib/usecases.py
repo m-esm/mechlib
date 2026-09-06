@@ -556,6 +556,11 @@ USE_CASES = {
         "Window-frame and gasket outlines: pick the largest Shapely polygon "
         "from a MultiPolygon so the outer wall, not a hole, gets extruded."
     ),
+    'lattice_flexure': (
+        "Distributed-compliance pivots for optical mounts, precision stages, "
+        "and printed joints that need more travel and fatigue life than a "
+        "single cross-spring blade."
+    ),
     'lazy_tongs': (
         "Lazy-tongs riveters, scissor lifts, folding gates, and extendable "
         "booms that multiply a short squeeze into a long straight stroke."
@@ -1182,6 +1187,7 @@ GALLERY_FILE_TO_API = {
     'knuckle_hinge_demo.glb': 'knuckle_hinge',
     'knurl_demo.glb': 'knurl',
     'labyrinth_seal_demo.glb': 'labyrinth_seal',
+    'lattice_flexure_demo.glb': 'lattice_flexure',
     'lazy_tongs_demo.glb': 'lazy_tongs',
     'leaf_spring_demo.glb': 'leaf_spring',
     'lighten_grid_demo.glb': 'lighten_grid_centres',

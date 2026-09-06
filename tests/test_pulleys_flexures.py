@@ -4,7 +4,12 @@ import numpy as np
 import pytest
 import trimesh
 
-from mechlib.flexures import bistable_beam, cross_flexure, wave_spring
+from mechlib.flexures import (
+    bistable_beam,
+    cross_flexure,
+    lattice_flexure,
+    wave_spring,
+)
 from mechlib.pulleys import grooved_drum, timing_pulley
 
 
@@ -107,6 +112,52 @@ def test_cross_flexure_blades_clear_each_other_and_land_on_blocks():
     assert len(pieces) == 2
     with pytest.raises(ValueError):
         cross_flexure(blade_angle_deg=70.0, gap=14.0)
+
+
+def test_lattice_flexure_is_one_distributed_watertight_part():
+    flex = lattice_flexure(kind="x")
+    assert_mesh(flex)
+    assert len(flex.split(only_watertight=False)) == 1
+    assert flex.bounds[1][2] - flex.bounds[0][2] == pytest.approx(22.0)
+
+    slab = trimesh.creation.box(extents=(40.0, 30.0, 0.2))
+    slab.apply_translation((0, 0, 5.0))
+    slice_mesh = trimesh.boolean.intersection([flex, slab], engine="manifold")
+    pieces = [p for p in slice_mesh.split(only_watertight=False)
+              if p.volume > 1e-3]
+    assert len(pieces) > 2
+    left_inner = max(p.bounds[1][0] for p in pieces
+                     if p.centroid[0] < 0)
+    right_inner = min(p.bounds[0][0] for p in pieces
+                      if p.centroid[0] > 0)
+    assert right_inner - left_inner == pytest.approx(2.2 * 0.6)
+
+
+@pytest.mark.parametrize("kwargs", [
+    {"lig_t": 0.3},
+    {"lig_t": 6.0},
+    {"block_w": 0.5},
+    {"block_h": 1.0},
+    {"block_w": 0.0},
+    {"block_d": 0.0},
+    {"gap": 0.0},
+    {"embed": 0.7},
+    {"embed": 0.0},
+    {"rows": 1, "cols": 2},
+    {"rows": 5},
+    {"rows": 0},
+    {"cols": 0},
+])
+def test_lattice_flexure_rejects_bad_x_dimensions(kwargs):
+    with pytest.raises(ValueError):
+        lattice_flexure(kind="x", **kwargs)
+
+
+def test_lattice_flexure_rejects_unimplemented_and_unknown_kinds():
+    with pytest.raises(ValueError, match="kind='v' is not implemented"):
+        lattice_flexure(kind="v")
+    with pytest.raises(ValueError, match="kind must be 'x' or 'v'"):
+        lattice_flexure(kind="diamond")
 
 
 def test_wave_spring_single_and_multi_turn_geometry():
