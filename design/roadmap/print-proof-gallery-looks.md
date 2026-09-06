@@ -1,5 +1,5 @@
 ---
-state: proposed
+state: killed
 lens: journey
 created: 2026-09-06
 metric: design/critiques/*.md that state a gallery demo was sliced or printed
