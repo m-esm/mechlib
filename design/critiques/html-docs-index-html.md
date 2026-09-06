@@ -39,7 +39,7 @@ Not seen in these shots: playground/Tune modal, live param retune, STL download,
 
 ## debt
 
-- [ ] SEV=high `new THREE.WebGLRenderer` runs before `fetch("./models/index.json")`. A failed WebGL context leaves VERSION “loading”, PARTS “-”, an empty `#gallery`, and an empty Utility API, with no on-page error. Confirmed by uiwalk `--disable-gpu` (desktop+mobile 02-hero).
+- [x] SEV=high `new THREE.WebGLRenderer` runs before `fetch("./models/index.json")`. A failed WebGL context leaves VERSION “loading”, PARTS “-”, an empty `#gallery`, and an empty Utility API, with no on-page error. Confirmed by uiwalk `--disable-gpu` (desktop+mobile 02-hero). Fixed: constructor is try/caught; catalog fetch still runs; on-page banner + card status when WebGL is missing.
 - [ ] SEV=med At 390×844 the install line clips at `github.com/m-esm/mecl` with no wrap or overflow cue; Copy is the only way to recover the URL.
 - [ ] SEV=med At 390×844 the search placeholder clips (`descriptio`) and `press /` occupies the field on a phone that has no slash shortcut.
 - [ ] SEV=med The category chip row clips with no overflow hint: desktop cuts `Pumps & valves`, mobile cuts `Grippers & cla`.

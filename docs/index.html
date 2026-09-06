@@ -1247,15 +1247,23 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
     const utilities = document.querySelector("#utilities");
     const versionLabel = document.querySelector("#version");
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    let renderer = null;
+    let webglError = null;
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.15;
+    } catch (error) {
+      // A missing GPU/WebGL context must not abort the module: version, cards,
+      // and Utility API still come from models/index.json.
+      webglError = error;
+      renderer = null;
+    }
     const loader = new GLTFLoader();
     const views = [];
     const clock = new THREE.Clock();
-
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.15;
 
     function makeTextElement(tag, className, text) {
       const element = document.createElement(tag);
@@ -1372,6 +1380,11 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
 
     function loadView(view) {
       if (view.started) return;
+      if (!renderer) {
+        view.started = true;
+        view.status.textContent = "3D preview unavailable";
+        return;
+      }
       view.started = true;
       view.status.textContent = "loading model";
       loader.load(
@@ -2723,6 +2736,7 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
     }, { rootMargin: "240px 0px" });
 
     function resizeRenderer() {
+      if (!renderer) return;
       const width = window.innerWidth;
       const height = window.innerHeight;
       const pixelRatio = renderer.getPixelRatio();
@@ -2734,6 +2748,7 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
     }
 
     function render(time) {
+      if (!renderer) return;
       resizeRenderer();
       const delta = Math.min(clock.getDelta(), 0.1);
       renderer.setScissorTest(false);
@@ -2837,6 +2852,14 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
         }
         applyFilters();
         suppressHash = false;
+        if (webglError) {
+          const banner = makeTextElement(
+            "p",
+            "fatal-error",
+            `3D preview unavailable (${webglError.message}). Catalog and Utility API still listed below.`
+          );
+          gallery.prepend(banner);
+        }
         if (initial && initial.part) {
           const target = document.querySelector(`#part-${CSS.escape(initial.part)}`);
           if (target) {
@@ -2852,7 +2875,7 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
     }
 
     initialize();
-    requestAnimationFrame(render);
+    if (renderer) requestAnimationFrame(render);
 
     if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
       const watchedUrls = [
