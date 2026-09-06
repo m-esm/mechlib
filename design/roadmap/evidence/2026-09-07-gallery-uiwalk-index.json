@@ -1,0 +1,127 @@
+{
+ "viewports": {
+  "desktop": {
+   "steps": [
+    {
+     "step": 0,
+     "kind": "goto",
+     "detail": "/",
+     "ms": 5239,
+     "result": "ok"
+    },
+    {
+     "step": 1,
+     "kind": "waitFor",
+     "detail": "#search",
+     "ms": 19,
+     "result": "ok"
+    },
+    {
+     "step": 2,
+     "kind": "eval",
+     "detail": "(() => { const n = document.querySelectorAll('.model-card').",
+     "ms": 5,
+     "result": "cards=190 text=MECHLIB SOURCE \u2197 Parametric mechanical components for Python. Every part below is a function that returns a watertight,"
+    },
+    {
+     "step": 3,
+     "kind": "shot",
+     "detail": "hero",
+     "ms": 97,
+     "result": "/tmp/mechlib-gallery-404-shots/desktop/03-hero.png"
+    },
+    {
+     "step": 4,
+     "kind": "fill",
+     "detail": "#search",
+     "ms": 7,
+     "result": "ok"
+    },
+    {
+     "step": 5,
+     "kind": "wait",
+     "detail": "1500",
+     "ms": 1502,
+     "result": "ok"
+    },
+    {
+     "step": 6,
+     "kind": "eval",
+     "detail": "(() => { const cards=[...document.querySelectorAll('.model-c",
+     "ms": 9,
+     "result": "count=0 OF 190 PARTS cards=190 names=[\"LINKAGES\u00b701mechlib.linkagesfour_bar2 live params9 bodies53.5 \u00d7 45 \u00d7 19.5 mmanimated3D preview unavailableTune \u2699four_bar(l_ground=25.0, l_crank=12.5, l_coupler=25"
+    },
+    {
+     "step": 7,
+     "kind": "shot",
+     "detail": "search-lattice-flexure",
+     "ms": 80,
+     "result": "/tmp/mechlib-gallery-404-shots/desktop/07-search-lattice-flexure.png"
+    },
+    {
+     "step": 8,
+     "kind": "fill",
+     "detail": "#search",
+     "ms": 4,
+     "result": "ok"
+    },
+    {
+     "step": 9,
+     "kind": "wait",
+     "detail": "1500",
+     "ms": 1502,
+     "result": "ok"
+    },
+    {
+     "step": 10,
+     "kind": "eval",
+     "detail": "(() => { const cards=[...document.querySelectorAll('.model-c",
+     "ms": 7,
+     "result": "count=0 OF 190 PARTS cards=190 names=[\"LINKAGES\u00b701mechlib.linkagesfour_bar2 live params9 bodies53.5 \u00d7 45 \u00d7 19.5 mmanimated3D preview unavailableTune \u2699four_bar(l_ground=25.0, l_crank=12.5, l_coupler=25"
+    },
+    {
+     "step": 11,
+     "kind": "shot",
+     "detail": "search-honeycomb-core",
+     "ms": 189,
+     "result": "/tmp/mechlib-gallery-404-shots/desktop/11-search-honeycomb-core.png"
+    },
+    {
+     "step": 12,
+     "kind": "fill",
+     "detail": "#search",
+     "ms": 3,
+     "result": "ok"
+    },
+    {
+     "step": 13,
+     "kind": "wait",
+     "detail": "1500",
+     "ms": 1502,
+     "result": "ok"
+    },
+    {
+     "step": 14,
+     "kind": "eval",
+     "detail": "(() => { const cards=[...document.querySelectorAll('.model-c",
+     "ms": 7,
+     "result": "count=0 OF 190 PARTS cards=190 names=[\"LINKAGES\u00b701mechlib.linkagesfour_bar2 live params9 bodies53.5 \u00d7 45 \u00d7 19.5 mmanimated3D preview unavailableTune \u2699four_bar(l_ground=25.0, l_crank=12.5, l_coupler=25"
+    },
+    {
+     "step": 15,
+     "kind": "shot",
+     "detail": "search-gyroid-lattice",
+     "ms": 115,
+     "result": "/tmp/mechlib-gallery-404-shots/desktop/15-search-gyroid-lattice.png"
+    }
+   ],
+   "console_errors": [
+    "error: THREE.WebGLRenderer: A WebGL context could not be created. Reason:  Could not create a WebGL context, VENDOR = 0xffff, DEVICE = 0xffff, GL_VENDOR = Disabled, GL_RENDERER = Disabled, Sandboxed = no, Optimus = no, AMD switchable = no, Reset notification strategy = 0x000",
+    "error: THREE.WebGLRenderer: A WebGL context could not be created. Reason:  Could not create a WebGL context, VENDOR = 0xffff, DEVICE = 0xffff, GL_VENDOR = Disabled, GL_RENDERER = Disabled, Sandboxed = no, Optimus = no, AMD switchable = no, Reset notification strategy = 0x000",
+    "error: THREE.WebGLRenderer: Error creating WebGL context."
+   ],
+   "failed_requests": []
+  }
+ },
+ "label": "gallery-mapped-glb-404"
+}

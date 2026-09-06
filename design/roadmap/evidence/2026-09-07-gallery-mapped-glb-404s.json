@@ -1,0 +1,52 @@
+{
+  "when": "2026-09-06T23:07:23.243510+00:00",
+  "live_index_url": "https://m-esm.github.io/mechlib/models/index.json",
+  "live_index_bytes": 1417790,
+  "live_index_models": 190,
+  "mapped_glbs": 195,
+  "local_disk_glbs": 193,
+  "metric_mapped_absent_from_live_index": 5,
+  "metric_mapped_http_404": 2,
+  "gaps": [
+    {
+      "file": "cubic_lattice_demo.glb",
+      "api": "cubic_lattice",
+      "http": 200,
+      "bytes": 259276,
+      "in_live_index": false,
+      "on_local_disk": true
+    },
+    {
+      "file": "gyroid_lattice_demo.glb",
+      "api": "gyroid_lattice",
+      "http": 200,
+      "bytes": 1483704,
+      "in_live_index": false,
+      "on_local_disk": true
+    },
+    {
+      "file": "honeycomb_core_demo.glb",
+      "api": "honeycomb_core",
+      "http": 404,
+      "bytes": 0,
+      "in_live_index": false,
+      "on_local_disk": false
+    },
+    {
+      "file": "kelvin_cell_demo.glb",
+      "api": "kelvin_cell",
+      "http": 200,
+      "bytes": 120864,
+      "in_live_index": false,
+      "on_local_disk": true
+    },
+    {
+      "file": "lattice_flexure_demo.glb",
+      "api": "lattice_flexure",
+      "http": 404,
+      "bytes": 0,
+      "in_live_index": false,
+      "on_local_disk": false
+    }
+  ]
+}
