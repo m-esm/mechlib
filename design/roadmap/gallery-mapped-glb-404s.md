@@ -1,5 +1,5 @@
 ---
-state: promoted
+state: building
 lens: telemetry
 created: 2026-09-07
 metric: GALLERY_FILE_TO_API keys absent from live Pages models/index.json
@@ -12,7 +12,7 @@ evidence:
   - design/roadmap/evidence/2026-09-07-gallery-search-honeycomb-core.png
   - design/roadmap/evidence/2026-09-07-gallery-search-gyroid-lattice.png
   - design/roadmap/evidence/2026-09-07-gallery-uiwalk-index.json
-slices: 0/3
+slices: 1/3
 after:
 ---
 # Live gallery 404s for mapped demo GLBs
@@ -33,6 +33,6 @@ Every key in `GALLERY_FILE_TO_API` is a row in live `models/index.json` and retu
 
 ## Slices
 
-- [ ] Build and commit the two missing GLBs (`honeycomb_core_demo.glb`, `lattice_flexure_demo.glb`) under `docs/models/`. Direct URLs stop 404ing.
+- [x] Build and commit the two missing GLBs (`honeycomb_core_demo.glb`, `lattice_flexure_demo.glb`) under `docs/models/`. Direct URLs stop 404ing.
 - [ ] Rebuild `docs/models/index.json` so the three already-200 GLBs (`cubic_lattice`, `gyroid_lattice`, `kelvin_cell`) are catalog rows. Live search stops returning 0/190.
 - [ ] Gate: fail CI when a `GALLERY_FILE_TO_API` key is absent from `docs/models/` or from `index.json`, so Pages cannot drift again. Measure reads 0.
