@@ -1,5 +1,5 @@
 ---
-state: proposed
+state: promoted
 lens: telemetry
 created: 2026-09-07
 metric: GALLERY_FILE_TO_API keys absent from live Pages models/index.json
