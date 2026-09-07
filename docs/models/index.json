@@ -62751,6 +62751,141 @@
       "added": "2026-08-06T15:11:27+03:00"
     },
     {
+      "file": "cubic_lattice_demo.glb",
+      "name": "cubic_lattice",
+      "module": "mechlib.lattices",
+      "signature": "cubic_lattice(nx=2, ny=2, nz=2, cell=12.0, strut_d=1.6, node_d=None, sections=12, nozzle=0.4, snap_strut=True)",
+      "description": "A simple-cubic 3D strut lattice with one shared node at each rectangular-grid point and unique round struts only along X, Y, and Z cube edges. strut_d is nozzle-snapped and node_d blends the joints. Unlike BCC it has no body-centre nodes or body diagonals; unlike octet/FCC it has no face diagonals. metadata reports exact graph counts and relative_density.",
+      "origin": "Simple-cubic edge lattice / orthogonal space frame",
+      "build_ms": 79,
+      "category": "lattices",
+      "group": "blocks",
+      "rank": 26,
+      "parts": 1,
+      "size_mm": [
+        38.4,
+        38.4,
+        26.4
+      ],
+      "play": {
+        "demo": "demo_cubic_lattice",
+        "params": [
+          {
+            "name": "cell",
+            "label": "Cell",
+            "unit": "mm",
+            "type": "float",
+            "default": 12.0,
+            "min": 8.0,
+            "max": 16.0,
+            "step": 2.0
+          },
+          {
+            "name": "strut_d",
+            "label": "Strut D",
+            "unit": "mm",
+            "type": "float",
+            "default": 1.6,
+            "min": 0.8,
+            "max": 2.4,
+            "step": 0.4
+          }
+        ]
+      },
+      "applications": "Orthogonal machine guards, rectilinear lightweight cores, and test coupons that need a simple-cubic network of shared nodes and X/Y/Z edge struts rather than BCC body diagonals or octet face diagonals.",
+      "added": "2026-09-07T23:35:01Z"
+    },
+    {
+      "file": "gyroid_lattice_demo.glb",
+      "name": "gyroid_lattice",
+      "module": "mechlib.lattices",
+      "signature": "gyroid_lattice(width=24.0, depth=24.0, height=24.0, cell=12.0, wall=1.2, resolution=16)",
+      "description": "A rectangular open-cell TPMS gyroid sheet generated from the periodic implicit surface and thickened to a printable wall. Its continuous curved sheet separates two interpenetrating passage networks, unlike cubic, BCC, or octet strut graphs. The block is clipped closed at its six faces and metadata reports realised dimensions, wall, resolution, and relative density.",
+      "origin": "Schoen gyroid triply-periodic minimal surface",
+      "build_ms": 232,
+      "category": "lattices",
+      "group": "blocks",
+      "rank": 26,
+      "parts": 1,
+      "size_mm": [
+        24.0,
+        24.0,
+        24.0
+      ],
+      "play": {
+        "demo": "demo_gyroid_lattice",
+        "params": [
+          {
+            "name": "cell",
+            "label": "Cell",
+            "unit": "mm",
+            "type": "float",
+            "default": 12.0,
+            "min": 8.0,
+            "max": 16.0,
+            "step": 2.0
+          },
+          {
+            "name": "wall",
+            "label": "Wall",
+            "unit": "mm",
+            "type": "float",
+            "default": 1.2,
+            "min": 1.2,
+            "max": 2.4,
+            "step": 0.4
+          }
+        ]
+      },
+      "applications": "Lightweight heat-exchanger cores, impact absorbers, tissue scaffolds, and stiffness-tuned infill coupons that need a continuous TPMS gyroid sheet separating two connected passage networks rather than a strut graph or closed-cell foam.",
+      "added": "2026-09-07T23:35:01Z"
+    },
+    {
+      "file": "kelvin_cell_demo.glb",
+      "name": "kelvin_cell",
+      "module": "mechlib.lattices",
+      "signature": "kelvin_cell(cell=20.0, strut_d=1.6, node_d=None, sections=12, nozzle=0.4, snap_strut=True)",
+      "description": "A single Kelvin tetrakaidecahedral strut cell built from the exact truncated-octahedron edge graph: 24 nodes and 36 equal struts surrounding six square and eight regular hexagonal faces. cell is its vertex-to-vertex span on each principal axis; strut_d is nozzle-snapped and node_d blends the joints. metadata reports relative_density against that cubic span.",
+      "origin": "Kelvin cell / truncated-octahedron open-cell foam model",
+      "build_ms": 46,
+      "category": "lattices",
+      "group": "blocks",
+      "rank": 26,
+      "parts": 1,
+      "size_mm": [
+        22.4,
+        22.4,
+        22.4
+      ],
+      "play": {
+        "demo": "demo_kelvin_cell",
+        "params": [
+          {
+            "name": "cell",
+            "label": "Cell",
+            "unit": "mm",
+            "type": "float",
+            "default": 20.0,
+            "min": 12.0,
+            "max": 28.0,
+            "step": 2.0
+          },
+          {
+            "name": "strut_d",
+            "label": "Strut D",
+            "unit": "mm",
+            "type": "float",
+            "default": 1.6,
+            "min": 0.8,
+            "max": 2.4,
+            "step": 0.4
+          }
+        ]
+      },
+      "applications": "Open-cell foam coupons, isotropic energy absorbers, and lightweight cores that need the 24-node, 36-edge Kelvin tetrakaidecahedral cell with six square and eight hexagonal faces rather than BCC or FCC connectivity.",
+      "added": "2026-09-07T23:35:01Z"
+    },
+    {
       "file": "text_polygon_demo.glb",
       "name": "text_polygon",
       "module": "mechlib.text",
