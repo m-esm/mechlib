@@ -1,0 +1,14 @@
+$ python3 scripts/backlog_provenance.py -v      # 2026-09-08, main @ b035f97
+04	kerf_bend_cutter(mode="cross")	no-sha
+06	kerf_bend_cutter(mode="diamond")	no-sha
+08	kerf_bend_cutter(mode="meander")	no-sha
+10	auxetic_panel(mode="arrowhead")	no-sha
+12	auxetic_panel(mode="anti_tetrachiral")	no-sha
+14	kagome_lattice	api-missing
+21	lattice_flexure(kind="x")	no-sha
+7
+exit=1
+
+Rows 04/10/12 say "THIS HOUR" instead of a commit. Rows 06/08/21 carry prose
+only. Row 14 names kagome_lattice, which is not on mechlib.__all__ (the code
+shipped as kagome_panel), so the row cannot be resolved to the API it claims.

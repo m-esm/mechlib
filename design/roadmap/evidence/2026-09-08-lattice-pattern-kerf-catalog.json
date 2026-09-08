@@ -1,0 +1,98 @@
+{
+  "measured_at": "2026-09-08T09:03:47+00:00",
+  "source": "https://m-esm.github.io/mechlib/models/index.json",
+  "gallery_version": "0.11.0",
+  "live_models_total": 195,
+  "family_modules": [
+    "mechlib.lattices",
+    "mechlib.patterns"
+  ],
+  "family_card_count": 14,
+  "family_cards_with_added_date": 14,
+  "family_cards": [
+    {
+      "file": "directed_holes_demo.glb",
+      "module": "mechlib.patterns",
+      "added": "2026-08-04",
+      "name": "directed_holes"
+    },
+    {
+      "file": "lighten_grid_demo.glb",
+      "module": "mechlib.patterns",
+      "added": "2026-08-04",
+      "name": "lighten_grid panel"
+    },
+    {
+      "file": "roller_sprocket_demo.glb",
+      "module": "mechlib.gears / mechlib.patterns",
+      "added": "2026-08-04",
+      "name": "roller_sprocket_2d + polar_ring"
+    },
+    {
+      "file": "auxetic_panel_demo.glb",
+      "module": "mechlib.lattices",
+      "added": "2026-08-06",
+      "name": "auxetic_panel"
+    },
+    {
+      "file": "kerf_bend_cutter_demo.glb",
+      "module": "mechlib.lattices",
+      "added": "2026-08-06",
+      "name": "kerf_bend_cutter"
+    },
+    {
+      "file": "honeycomb_panel_demo.glb",
+      "module": "mechlib.lattices",
+      "added": "2026-09-01",
+      "name": "honeycomb_panel"
+    },
+    {
+      "file": "bcc_lattice_demo.glb",
+      "module": "mechlib.lattices",
+      "added": "2026-09-02",
+      "name": "bcc_lattice"
+    },
+    {
+      "file": "isogrid_panel_demo.glb",
+      "module": "mechlib.lattices",
+      "added": "2026-09-02",
+      "name": "isogrid_panel"
+    },
+    {
+      "file": "kagome_panel_demo.glb",
+      "module": "mechlib.lattices",
+      "added": "2026-09-02",
+      "name": "kagome_panel"
+    },
+    {
+      "file": "octet_truss_demo.glb",
+      "module": "mechlib.lattices",
+      "added": "2026-09-02",
+      "name": "octet_truss"
+    },
+    {
+      "file": "cubic_lattice_demo.glb",
+      "module": "mechlib.lattices",
+      "added": "2026-09-07",
+      "name": "cubic_lattice"
+    },
+    {
+      "file": "gyroid_lattice_demo.glb",
+      "module": "mechlib.lattices",
+      "added": "2026-09-07",
+      "name": "gyroid_lattice"
+    },
+    {
+      "file": "kelvin_cell_demo.glb",
+      "module": "mechlib.lattices",
+      "added": "2026-09-07",
+      "name": "kelvin_cell"
+    },
+    {
+      "file": "honeycomb_core_demo.glb",
+      "module": "mechlib.lattices",
+      "added": "2026-09-08",
+      "name": "honeycomb_core"
+    }
+  ]
+}
