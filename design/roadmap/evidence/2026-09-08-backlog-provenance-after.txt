@@ -1,0 +1,11 @@
+$ python3 scripts/backlog_provenance.py -v     # after slice, 2026-09-08
+0
+$ echo $?
+0
+
+All 22 rows resolve: every shipped row names a function on mechlib.__all__ and
+a SHA that `git cat-file -e <sha>^{commit}` finds in this repo. Row 22
+(lattice_flexure(kind="v")) is still pending and is not checked.
+
+Negative control, same tick: reverting row 04 back to "THIS HOUR" makes the
+script print 1, exit 1, and tests/test_backlog_provenance.py fail.

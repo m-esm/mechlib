@@ -1,5 +1,5 @@
 ---
-state: proposed
+state: shipped
 lens: telemetry
 created: 2026-09-08
 metric: pattern/lattice/kerf backlog rows whose claimed state cannot be resolved to code plus a commit
@@ -12,7 +12,9 @@ evidence:
   - design/roadmap/evidence/2026-09-08-gallery-latest-uiwalk.json
   - design/roadmap/evidence/2026-09-08-gallery-latest-order.png
   - design/roadmap/evidence/2026-09-08-gallery-latest-lattice.png
-slices: 0/3
+  - design/roadmap/evidence/2026-09-08-backlog-provenance-after.txt
+slices: 3/3
+after: 0
 ---
 # The pattern/lattice/kerf backlog cannot prove what it shipped
 
@@ -50,10 +52,23 @@ drift a second time.
 
 ## Slices
 
-- [ ] Backfill the 6 `no-sha` rows (04, 06, 08, 10, 12, 21) with the real commits, found
+- [x] Backfill the 6 `no-sha` rows (04, 06, 08, 10, 12, 21) with the real commits, found
       by `git log --oneline -S<mode-string> -- mechlib/lattices.py mechlib/flexures.py`.
       Measure drops from 7 to 1.
-- [ ] Fix row 14 to name the shipped API `kagome_panel` and its commit. Measure reads 0.
-- [ ] Wire `scripts/backlog_provenance.py` into the same CI job as the gallery drift gate,
+- [x] Fix row 14 to name the shipped API `kagome_panel` and its commit. Measure reads 0.
+- [x] Wire `scripts/backlog_provenance.py` into the same CI job as the gallery drift gate,
       and make the hourly cron append the SHA it just committed instead of `THIS HOUR`,
       so a new row cannot land unverifiable.
+
+## Shipped 2026-09-08
+
+Gate is `tests/test_backlog_provenance.py` (runs in the existing CI job; the
+workflow now checks out with `fetch-depth: 0` so historic SHAs resolve). The
+rule it enforces is written into the backlog file's own header, so the hourly
+cron reads it before marking a row. Negative-tested: reverting row 04 to
+`THIS HOUR` makes the measure print 1 and the test fail; restored, it prints 0
+and 142 backlog/lattice/flexure/usecase tests pass.
+
+Rows fixed: 04 `SHA 3694df1`, 06 `SHA 53204ba`, 08 `SHA d1882e5`,
+10 `SHA 16184d5`, 12 `SHA e9833c9`, 21 `SHA 5563753`, and row 14 renamed from
+the never-shipped `kagome_lattice` to the real `kagome_panel` `SHA 434302b`.
