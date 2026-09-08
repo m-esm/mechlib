@@ -41,7 +41,7 @@ Not seen in these shots: Latest added, Utility API rows, STL that actually downl
 ## debt
 
 - [x] SEV=high `new THREE.WebGLRenderer` runs before `fetch("./models/index.json")`. A failed WebGL context leaves VERSION “loading”, PARTS “-”, an empty `#gallery`, and an empty Utility API, with no on-page error. Confirmed by uiwalk `--disable-gpu` (desktop+mobile 02-hero). Fixed: constructor is try/caught; catalog fetch still runs; on-page banner + card status when WebGL is missing.
-- [ ] SEV=high Tune playground runtime boot failed on live Pages: `ImportError: cannot import name 'cubic_lattice' from 'mechlib.lattices'` (Did you mean: `bcc_lattice`?). Desktop 16-tune and mobile 16-tune: FOUR_BAR modal opens with empty preview, sliders, Play/Copy/Download STL, and a red traceback. Hero promises “retune it live”; this walk could not.
+- [x] SEV=high Tune playground runtime boot failed on live Pages: `ImportError: cannot import name 'cubic_lattice' from 'mechlib.lattices'` (Did you mean: `bcc_lattice`?). Cause: `docs/playground/demos.py` imported `cubic_lattice` while `docs/wheels/mechlib-0.11.0-py3-none-any.whl` was still the 2026-09-02 bcc-only build. Rebuilt the wheel from current `mechlib/` so Tune exec of demos.py can import.
 - [ ] SEV=med At 390×844 the install line clips at `github.com/m-esm/mecl` with no wrap or overflow cue; Copy is the only way to recover the URL.
 - [ ] SEV=med At 390×844 the search placeholder clips (`descriptio`) and `press /` occupies the field on a phone that has no slash shortcut.
 - [ ] SEV=med The category chip row clips with no overflow hint: desktop cuts `Pumps & valves`, mobile cuts `Grippers & cla`.
