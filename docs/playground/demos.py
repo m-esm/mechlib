@@ -978,7 +978,7 @@ PLAY: dict = {
     },
     "demo_honeycomb_core": {
         "cell": (6.0, 12.0, 2.0),
-        "height": (8.0, 24.0, 4.0),
+        "height": (8.0, 24.0, 1.0),
     },
     "demo_isogrid_panel": {
         "cell": (8.0, 16.0, 2.0),

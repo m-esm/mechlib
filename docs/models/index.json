@@ -62886,6 +62886,94 @@
       "added": "2026-09-07T23:35:01Z"
     },
     {
+      "file": "honeycomb_core_demo.glb",
+      "name": "honeycomb_core",
+      "module": "mechlib.lattices",
+      "signature": "honeycomb_core(width=60.0, depth=60.0, height=15.0, cell=8.0, wall_t=1.2, skin_t=0.0, skin='none', nozzle=0.4, snap_strut=True)",
+      "description": "A tall hexagonal SANDWICH CORE (not a thin lightening sheet): open hex tubes running through the full height, a clean single-wall perimeter, and optional integral bond skins on the top/bottom faces (skin='none'/'top'/'bottom'/'both'). cell is the pitch and wall-centreline across-flats; wall_t is the shared printed wall (>=0.8 mm). Print cells-up, self-supporting, no supports. Distinct from honeycomb_panel's thin wide-rim sheet.",
+      "origin": "Gap-analysis wave v0.12.x; classic ref: hexagonal sandwich-panel core",
+      "category": "lattices",
+      "group": "blocks",
+      "rank": 26,
+      "parts": 1,
+      "size_mm": [
+        54.0,
+        44.0,
+        16.2
+      ],
+      "play": {
+        "demo": "demo_honeycomb_core",
+        "params": [
+          {
+            "name": "cell",
+            "label": "Cell",
+            "unit": "mm",
+            "type": "float",
+            "default": 8.0,
+            "min": 6.0,
+            "max": 12.0,
+            "step": 2.0
+          },
+          {
+            "name": "height",
+            "label": "Height",
+            "unit": "mm",
+            "type": "float",
+            "default": 15.0,
+            "min": 8.0,
+            "max": 24.0,
+            "step": 1.0
+          }
+        ]
+      },
+      "applications": "Sandwich-panel cores, drone and RC wing infill, crash-box energy absorbers, and stiff-yet-light bulkheads that need a tall open-cell hex-tube core with a single-wall perimeter and optional bond skins, not a thin lightening sheet like honeycomb_panel.",
+      "added": "2026-09-08T08:27:00Z"
+    },
+    {
+      "file": "lattice_flexure_demo.glb",
+      "name": "lattice_flexure",
+      "module": "mechlib.flexures",
+      "signature": "lattice_flexure(kind, block_w=22.0, block_d=16.0, block_h=6.0, gap=10.0, lig_t=0.6, rows=3, cols=4, apex_deg=90.0, embed=1.5)",
+      "description": "A monolithic distributed-compliance pivot: repeating X cells join two rigid anchors with crossed, print-separated ligament walls. The multi-cell web spreads strain for more travel and fatigue life than a single cross-spring pivot.",
+      "origin": "Pattern/lattice/kerf backlog id 21; classic ref: Howell distributed-compliance mechanism",
+      "category": "flexures",
+      "group": "movements",
+      "rank": 15,
+      "parts": 1,
+      "size_mm": [
+        22.0,
+        16.0,
+        22.0
+      ],
+      "play": {
+        "demo": "demo_lattice_flexure",
+        "params": [
+          {
+            "name": "cols",
+            "label": "Cols",
+            "unit": "mm",
+            "type": "int",
+            "default": 4,
+            "min": 2,
+            "max": 4,
+            "step": 1
+          },
+          {
+            "name": "lig_t",
+            "label": "Lig T",
+            "unit": "mm",
+            "type": "float",
+            "default": 0.6,
+            "min": 0.4,
+            "max": 0.7,
+            "step": 0.1
+          }
+        ]
+      },
+      "applications": "Distributed-compliance pivots for optical mounts, precision stages, and printed joints that need more travel and fatigue life than a single cross-spring blade.",
+      "added": "2026-09-08T08:27:00Z"
+    },
+    {
       "file": "text_polygon_demo.glb",
       "name": "text_polygon",
       "module": "mechlib.text",

@@ -1,5 +1,8 @@
 """Use-case catalogue stays complete and queryable for agents."""
 
+import json
+from pathlib import Path
+
 from mechlib.usecases import (
     GALLERY_FILE_TO_API,
     USE_CASES,
@@ -40,6 +43,19 @@ def test_every_gallery_file_has_applications():
         assert text and len(text) > 20, glb
         # Override or mapped API must resolve.
         assert api in USE_CASES, (glb, api)
+
+
+def test_every_mapped_gallery_file_exists_and_is_catalogued():
+    models_dir = Path(__file__).resolve().parents[1] / "docs" / "models"
+    index = json.loads((models_dir / "index.json").read_text(encoding="utf-8"))
+    listed = {model["file"] for model in index["models"]}
+    missing_files = sorted(
+        file for file in GALLERY_FILE_TO_API if not (models_dir / file).is_file()
+    )
+    missing_rows = sorted(set(GALLERY_FILE_TO_API) - listed)
+    assert not missing_files and not missing_rows, (
+        f"Missing GLBs: {missing_files}; missing catalog rows: {missing_rows}"
+    )
 
 
 def test_use_cases_nonempty_and_concrete():
