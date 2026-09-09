@@ -1,10 +1,10 @@
-# GOAL (draft by Pawl 2026-09-03, edit freely)
+# GOAL (edit freely)
 
-For Python-fluent makers and AI coding agents building FDM-printable mechanisms (robot joints, fixtures, kinetic products) who need parametric semi-primitive parts (gears, cams, linkages, flexures, ratchets, snaps, bought-part envelopes) without hand-modeling primitives or guessing dimensions. Done: an agent can `search_use_cases("job")`, call one mechlib function with explicit args, get a watertight mesh that prints, and see it in the live gallery, without inventing geometry from boxes and cylinders. It is explicitly NOT a full parametric CAD system, a GUI modeler, or a home for finished or branded product assemblies; those stay in consumer projects.
+A growing mechanical pattern library for Python-fluent makers and AI coding agents who need researched FDM-printable pattern, lattice, and kerf cells as parametric semi-primitives (explicit args, watertight mesh, live gallery). Done: at least 20 researched pattern/lattice/kerf items in the list, one new implemented every hour, sortable by newest. It is explicitly NOT a full parametric CAD system, a GUI modeler, or a home for finished or branded product assemblies; those stay in consumer projects.
 
 ## Numbers that prove it
-- public API covered by a use case: `python3 -c "import mechlib; from mechlib.usecases import USE_CASES, ALIASES; a=set(mechlib.__all__); print(len(a & (set(USE_CASES)|set(ALIASES))), len(a))"` - today: 263/263; target: 263/263
-- use cases with a gallery demo GLB: `python3 -c "from mechlib.usecases import USE_CASES, GALLERY_FILE_TO_API as g; print(len(set(USE_CASES)&set(g.values())), len(set(g.values())))"` - today: 191/191; target: stays 100% as utility-only use cases grow (every gallery API still has a use case)
-- printed-and-verified parts: demos with a `design/critiques/` look that states it was sliced or printed - today: 0; target: 20
+- researched pattern/lattice/kerf items in the list: `python3 -c "import re; from pathlib import Path; print(sum(1 for l in Path('scripts/overnight/pattern-lattice-kerf-backlog.md').read_text().splitlines() if re.match(r'\|\\s*\\d\\d\\s*\\|', l)))"` - today: 22; target: 20
+- of those, shipped (implemented): `python3 -c "import re; from pathlib import Path; print(sum(1 for l in Path('scripts/overnight/pattern-lattice-kerf-backlog.md').read_text().splitlines() if re.match(r'\|\\s*\\d\\d\\s*\\|', l) and '| shipped |' in l))"` - today: 21; target: 20, then one pending row per hour until the queue is empty
+- sortable by newest: live gallery Latest-added chip; every card carries `added` in `docs/models/index.json`
 
-source: README.md, CLAUDE.md, AGENTS.md, mechlib/usecases.py, gallery/build_gallery.py
+source: scripts/overnight/pattern-lattice-kerf-backlog.md, gallery/build_gallery.py, docs/models/index.json, mechlib/lattices.py, mechlib/flexures.py
