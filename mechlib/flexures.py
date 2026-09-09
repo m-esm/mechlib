@@ -70,7 +70,7 @@ def cross_flexure(block_w=22.0, block_d=16.0, block_h=6.0, gap=10.0,
 def lattice_flexure(kind, block_w=22.0, block_d=16.0, block_h=6.0,
                     gap=10.0, lig_t=0.6, rows=3, cols=4,
                     apex_deg=90.0, embed=1.5):
-    """Build a distributed-compliance crossed-truss flexural pivot.
+    """Build a distributed-compliance X pivot or V accordion flexure.
 
     ``kind="x"`` fills the gap between two rigid anchor blocks with a grid
     of X cells.  Each cell has two diagonal ligament walls on separate
@@ -81,13 +81,19 @@ def lattice_flexure(kind, block_w=22.0, block_d=16.0, block_h=6.0,
     their footprint.  ``lig_t`` is a fatigue-critical living-hinge thickness
     and is deliberately not nozzle-snapped; oversize it for more than a few
     dozen cycles.  Print with the ligament walls vertical so layer lines run
-    along the members.  Units are mm.  ``apex_deg`` is reserved for the
-    unimplemented ``kind="v"`` variant.
+    along the members. Units are mm.
+
+    ``kind="v"`` tiles parallel accordion sheets along Y. Each of ``rows``
+    sloped leaf rows spans ``pitch = gap / rows`` along Z and
+    ``pitch * tan((180 - apex_deg) / 2)`` along X, reversing at each joint.
+    More rows add serial folds (an axial-compliance proxy, not an FEA law).
+    ``apex_deg`` controls the included fold angle, from 60 to 160 degrees;
+    the default 90 gives 45-degree self-supporting legs. The V web's X
+    allowance is the anchor width minus the rim, not the thin X-cell stack.
+    Sheet slots are ``2.2 * lig_t`` wide; sheet depth is at least 0.8 mm.
     """
     if kind not in {"x", "v"}:
         raise ValueError("lattice_flexure(): kind must be 'x' or 'v'")
-    if kind == "v":
-        raise ValueError("lattice_flexure(): kind='v' is not implemented")
     if block_w <= 0 or block_d <= 0 or gap <= 0 or embed <= 0:
         raise ValueError("lattice_flexure(): dimensions must be positive")
     if block_h < 1.2:
@@ -105,6 +111,45 @@ def lattice_flexure(kind, block_w=22.0, block_d=16.0, block_h=6.0,
 
     cell = gap / rows
     gap_clear = 2.2 * lig_t
+    if kind == "v":
+        web_w = block_w - 1.6
+        web_d = cols * cell
+        if web_w <= 0 or web_d > block_d - 1.6:
+            raise ValueError("web overhangs block; reduce rows/cols or grow block")
+        if 2.0 * lig_t + gap_clear > cell:
+            raise ValueError("lattice_flexure(): V pitch is too small for ligament slot")
+        if not 60.0 <= apex_deg <= 160.0:
+            raise ValueError("lattice_flexure(): apex_deg must be between 60 and 160")
+        reach = cell * math.tan(math.radians((180.0 - apex_deg) / 2.0))
+        if reach > web_w / 2.0 - lig_t:
+            raise ValueError("lattice_flexure(): V punches past web edge")
+
+        # Buffer in X/Z so thickness is normal to the leaf, including folds.
+        # Vertical roots avoid extending the zigzag beyond the anchor rim.
+        points = [((-1.0 if i % 2 == 0 else 1.0) * reach / 2.0,
+                   i * cell) for i in range(rows + 1)]
+        root = min(embed, block_h)
+        profile = sg.LineString(
+            [(points[0][0], -root)] + points
+            + [(points[-1][0], gap + root)]
+        ).buffer(lig_t / 2.0, cap_style=2, join_style=1)
+        parts = [
+            boxc((block_w, block_d, block_h), center=(0, 0, -block_h / 2.0)),
+            boxc((block_w, block_d, block_h),
+                 center=(0, 0, gap + block_h / 2.0)),
+        ]
+        sheet_d = cell - gap_clear
+        for col in range(cols):
+            sheet = _extrude(profile, sheet_d)
+            sheet.apply_transform(tf.rotation_matrix(math.pi / 2.0, (1, 0, 0)))
+            sheet.apply_translation((0, -web_d / 2.0 + col * cell
+                                     + (cell + sheet_d) / 2.0, 0))
+            parts.append(sheet)
+        mesh = uni(parts)
+        if not mesh.is_watertight:
+            mesh = from_manifold(to_manifold(mesh))
+        return mesh
+
     web_w = 2.0 * lig_t + gap_clear
     web_d = cols * cell
     if web_w > block_w - 1.6 or web_d > block_d - 1.6:

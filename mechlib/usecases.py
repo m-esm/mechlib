@@ -557,9 +557,9 @@ USE_CASES = {
         "from a MultiPolygon so the outer wall, not a hole, gets extruded."
     ),
     'lattice_flexure': (
-        "Distributed-compliance pivots for optical mounts, precision stages, "
-        "and printed joints that need more travel and fatigue life than a "
-        "single cross-spring blade."
+        "Distributed-compliance X pivots for optical mounts and printed joints; "
+        "V-fold accordion sheets for axial spring travel in precision stages "
+        "with serial leaf folds and transverse stiffness."
     ),
     'lazy_tongs': (
         "Lazy-tongs riveters, scissor lifts, folding gates, and extendable "

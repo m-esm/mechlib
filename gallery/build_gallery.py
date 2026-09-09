@@ -2021,11 +2021,11 @@ def build():
             "module": "mechlib.flexures",
             "signature": signature(lattice_flexure),
             "description": (
-                "A monolithic distributed-compliance pivot: repeating X cells "
-                "join two rigid anchors with crossed, print-separated ligament "
-                "walls. The multi-cell web spreads strain for more travel and "
-                "fatigue life than a single cross-spring pivot."),
-            "origin": ("Pattern/lattice/kerf backlog id 21; classic ref: "
+                "Monolithic distributed-compliance flexures joining two rigid "
+                "anchors: crossed X cells form a pivot, while V-fold accordion "
+                "sheets provide axial compliance through serial leaf folds. "
+                "Print-open slots separate the ligament walls."),
+            "origin": ("Pattern/lattice/kerf backlog ids 21 (X) and 22 (V); classic ref: "
                        "Howell distributed-compliance mechanism"),
             "demo": "demo_lattice_flexure",
         },

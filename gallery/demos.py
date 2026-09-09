@@ -2765,7 +2765,11 @@ def demo_cross_flexure(gap: float = 10.0,
 
 def demo_lattice_flexure(cols: int = 4, lig_t: float = 0.6) -> MeshList:
     flex = lattice_flexure(kind="x", cols=cols, lig_t=lig_t)
-    return [("distributed_x_flexure", flex, PALETTE[6])]
+    accordion = lattice_flexure(kind="v", cols=cols, lig_t=lig_t)
+    accordion.apply_translation((flex.bounds[1][0] - accordion.bounds[0][0]
+                                 + 8.0, 0, 0))
+    return [("distributed_x_flexure", flex, PALETTE[6]),
+            ("distributed_v_accordion", accordion, PALETTE[2])]
 
 
 def demo_wave_spring(waves: int = 3, turns: int = 2,

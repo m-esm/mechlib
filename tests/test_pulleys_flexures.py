@@ -153,11 +153,64 @@ def test_lattice_flexure_rejects_bad_x_dimensions(kwargs):
         lattice_flexure(kind="x", **kwargs)
 
 
-def test_lattice_flexure_rejects_unimplemented_and_unknown_kinds():
-    with pytest.raises(ValueError, match="kind='v' is not implemented"):
-        lattice_flexure(kind="v")
+def test_lattice_flexure_rejects_unknown_kinds():
     with pytest.raises(ValueError, match="kind must be 'x' or 'v'"):
         lattice_flexure(kind="diamond")
+
+
+def test_lattice_flexure_v_is_one_watertight_part_with_open_slots():
+    flex = lattice_flexure(kind="v")
+    assert_mesh(flex)
+    assert len(flex.split(only_watertight=False)) == 1
+    assert flex.extents[2] == pytest.approx(22.0)
+    slab = trimesh.creation.box(extents=(40, 30, 0.1))
+    slab.apply_translation((0, 0, 5))
+    web = trimesh.boolean.intersection([flex, slab], engine="manifold")
+    sheets = sorted(web.split(), key=lambda p: p.centroid[1])
+    assert len(sheets) == 4
+    for left, right in zip(sheets, sheets[1:]):
+        assert right.bounds[0][1] - left.bounds[1][1] == pytest.approx(1.32)
+    assert web.bounds[0][0] >= -11 + 0.8
+    assert web.bounds[1][0] <= 11 - 0.8
+    assert web.bounds[0][1] >= -8 + 0.8
+    assert web.bounds[1][1] <= 8 - 0.8
+
+
+@pytest.mark.parametrize("kwargs, message", [
+    ({"apex_deg": 59}, "apex_deg must be between"),
+    ({"apex_deg": 161}, "apex_deg must be between"),
+    ({"block_w": 8}, "V punches past web edge"),
+    ({"cols": 5}, "web overhangs block"),
+    ({"rows": 4}, "V pitch is too small"),
+    ({"rows": 0}, "gap/block too small"),
+    ({"cols": 0}, "gap/block too small"),
+    ({"lig_t": 0.3}, "lig_t must be at least"),
+    ({"lig_t": 6}, "lig_t is too thick"),
+    ({"block_h": 1}, "block_h must be at least"),
+    ({"gap": 0}, "dimensions must be positive"),
+    ({"embed": 0.7}, "embed must be at least"),
+])
+def test_lattice_flexure_v_rejects_bad_dimensions(kwargs, message):
+    with pytest.raises(ValueError, match=message):
+        lattice_flexure(kind="v", **kwargs)
+
+
+def test_lattice_flexure_v_more_rows_add_serial_folds():
+    # Count actual slope reversals in a sheet's section, not input metadata.
+    # More serial folds are the requested cheap axial-compliance proxy.
+    folds = []
+    for rows in (2, 3):
+        flex = lattice_flexure(kind="v", rows=rows, cols=2)
+        assert_mesh(flex)
+        xs = []
+        for z in np.linspace(0.4, 9.6, 61):
+            section = flex.section(plane_origin=(0, 0, z),
+                                   plane_normal=(0, 0, 1))
+            xs.append((section.bounds[0][0] + section.bounds[1][0]) / 2)
+        slopes = np.sign(np.diff(xs))
+        slopes = slopes[slopes != 0]
+        folds.append(np.count_nonzero(slopes[1:] != slopes[:-1]))
+    assert folds == [1, 2]
 
 
 def test_wave_spring_single_and_multi_turn_geometry():
