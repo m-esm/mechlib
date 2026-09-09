@@ -249,6 +249,30 @@ MANIFOLD_WHEEL = "manifold3d-3.5.2-cp312-cp312-emscripten_3_1_58_wasm32.whl"
 PYODIDE_VERSION = "0.27.7"
 
 
+def _glb_birth_dates():
+    """Read first-add committer timestamps in one git call, in UTC."""
+    try:
+        result = subprocess.run(
+            ["git", "log", "--diff-filter=A", "--reverse",
+             "--format=COMMIT:%cI", "--name-only", "--", "docs/models/*.glb"],
+            cwd=ROOT, capture_output=True, text=True, check=True,
+        )
+    except (OSError, subprocess.SubprocessError):
+        # Source distributions and checkouts without usable git still build.
+        return {}
+
+    dates = {}
+    added = None
+    for line in result.stdout.splitlines():
+        if line.startswith("COMMIT:"):
+            added = datetime.fromisoformat(
+                line[len("COMMIT:"):].replace("Z", "+00:00")
+            ).astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        elif added and line.startswith("docs/models/"):
+            dates.setdefault(line[len("docs/models/"):], added)
+    return dates
+
+
 # Ordered category table. The key is the mechlib module leaf name, so a model's
 # category is DERIVED from its ``module`` field rather than hand-tagged per entry.
 # ``group`` buckets categories into the three shelves the gallery renders, and the
@@ -3544,6 +3568,10 @@ def build():
         except (OSError, json.JSONDecodeError, TypeError):
             previous_added = {}
 
+    # Existing timestamps remain authoritative. Only query history when needed.
+    birth_dates = (_glb_birth_dates() if any(
+        not previous_added.get(model["file"]) for model in models) else {})
+
     manifest_models = []
     built_demos = []
     animated = []
@@ -3585,8 +3613,9 @@ def build():
             model["file"], model.get("description", ""))
         # Drop any leftover code-usage field from older index builds.
         model.pop("usage", None)
-        model["added"] = previous_added.get(model["file"]) or datetime.now(
-            timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        model["added"] = (previous_added.get(model["file"])
+                          or birth_dates.get(model["file"])
+                          or datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"))
         manifest_models.append(model)
 
     unbuilt = set(ANIMATE) - set(built_demos)

@@ -1,0 +1,16 @@
+02 isogrid_panel: card added=2026-09-02 != shipped 2026-09-01
+03 kerf_bend_cutter(mode="hex"): card shared by 7 rows, stuck at added=2026-08-06 (shipped 2026-09-01)
+04 kerf_bend_cutter(mode="cross"): card shared by 7 rows, stuck at added=2026-08-06 (shipped 2026-09-01)
+05 kerf_bend_cutter(mode="chevron"): card shared by 7 rows, stuck at added=2026-08-06 (shipped 2026-09-01)
+06 kerf_bend_cutter(mode="diamond"): card shared by 7 rows, stuck at added=2026-08-06 (shipped 2026-09-02)
+07 kerf_bend_cutter(mode="fishbone"): card shared by 7 rows, stuck at added=2026-08-06 (shipped 2026-09-02)
+08 kerf_bend_cutter(mode="meander"): card shared by 7 rows, stuck at added=2026-08-06 (shipped 2026-09-02)
+09 kerf_bend_cutter(mode="biaxial"): card shared by 7 rows, stuck at added=2026-08-06 (shipped 2026-09-02)
+10 auxetic_panel(mode="arrowhead"): card shared by 4 rows, stuck at added=2026-08-06 (shipped 2026-09-02)
+11 auxetic_panel(mode="star"): card shared by 4 rows, stuck at added=2026-08-06 (shipped 2026-09-02)
+12 auxetic_panel(mode="anti_tetrachiral"): card shared by 4 rows, stuck at added=2026-08-06 (shipped 2026-09-02)
+13 auxetic_panel(mode="houndstooth"): card shared by 4 rows, stuck at added=2026-08-06 (shipped 2026-09-02)
+20 honeycomb_core: card added=2026-09-07 != shipped 2026-09-03
+21 lattice_flexure(kind="x"): card shared by 2 rows, stuck at added=2026-09-07 (shipped 2026-09-06)
+22 lattice_flexure(kind="v"): card shared by 2 rows, stuck at added=2026-09-07 (shipped 2026-09-09)
+undatable 15/22 shipped rows (target 0)

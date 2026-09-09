@@ -25489,7 +25489,7 @@
         4.0
       ],
       "applications": "Flat-printed coupler bars for four-bars, walking-robot legs, and wiper linkages: capsule stock with a pin bore at each centre-distance.",
-      "added": "2026-09-04T21:46:18Z"
+      "added": "2026-09-04T21:53:17Z"
     },
     {
       "file": "iris_diaphragm_demo.glb",
@@ -28454,7 +28454,7 @@
         4.0
       ],
       "applications": "Radial plate-cam pitch curves for automata, packaging-machine lift programs, and model-engine valve timing, extruded into a thin blank before a hub is added.",
-      "added": "2026-09-04T21:46:18Z"
+      "added": "2026-09-04T21:53:17Z"
     },
     {
       "file": "geneva_pair_demo.glb",
@@ -44991,7 +44991,7 @@
         4.0
       ],
       "applications": "Annular involute ring-gear blanks for planetary stages, robot-wrist reducers, and harmonic-drive circular splines, extruded into a printable internal gear.",
-      "added": "2026-09-04T21:46:18Z"
+      "added": "2026-09-04T21:53:17Z"
     },
     {
       "file": "trochoid_profile_2d_demo.glb",
@@ -45011,7 +45011,7 @@
         4.0
       ],
       "applications": "Cycloidal-disc lobe profiles for robot-joint reducers: the shortened epitrochoid that stays tangent to a pin ring, extruded as a disc coupon.",
-      "added": "2026-09-04T21:46:18Z"
+      "added": "2026-09-04T21:53:17Z"
     },
     {
       "file": "pip_ratchet_demo.glb",
@@ -45236,7 +45236,7 @@
         ]
       },
       "applications": "Tension-loaded one-way clutches, winch handles, and compact ratchets that use flexure arms instead of rigid pawls.",
-      "added": "2026-08-05T10:39:40+03:00"
+      "added": "2026-08-30T11:23:00Z"
     },
     {
       "file": "ratchet_wheel_pawl_demo.glb",
@@ -59113,7 +59113,7 @@
         13.6
       ],
       "applications": "Helical flights, thread bands, and Archimedean screw blades swept from a closed radius-Z polygon: augers, printed threads, and spiral ramps.",
-      "added": "2026-09-04T21:46:18Z"
+      "added": "2026-09-04T21:53:17Z"
     },
     {
       "file": "fastener_trio_demo.glb",
@@ -59258,7 +59258,7 @@
         19.0
       ],
       "applications": "Head-down bolt stand-ins for printer-frame stacks, jig layouts, and CAD envelopes that need a shank-plus-head body before the ISO fastener is bought.",
-      "added": "2026-09-04T21:46:18Z"
+      "added": "2026-09-04T21:53:17Z"
     },
     {
       "file": "hex_nut_mesh_demo.glb",
@@ -59278,7 +59278,7 @@
         2.6
       ],
       "applications": "Hex-nut envelopes on printed jigs, fixture stacks, and exploded CAD views where across-flats, height, and bore must match a captured M3 to M8 nut.",
-      "added": "2026-09-04T21:46:18Z"
+      "added": "2026-09-04T21:53:17Z"
     },
     {
       "file": "washer_mesh_demo.glb",
@@ -59298,7 +59298,7 @@
         1.0
       ],
       "applications": "Flat washer envelopes under bolt heads and nuts in printed assemblies, so stack height and outer diameter are visible before hardware lands.",
-      "added": "2026-09-04T21:46:18Z"
+      "added": "2026-09-04T21:53:17Z"
     },
     {
       "file": "plain_bushing_demo.glb",
@@ -59948,7 +59948,7 @@
         ]
       },
       "applications": "PCB standoffs, locating pins, screw bosses, and alignment features between mating plastic parts.",
-      "added": "2026-08-04T16:31:00+03:00"
+      "added": "2026-08-30T10:03:47Z"
     },
     {
       "file": "push_pin_demo.glb",
@@ -61003,7 +61003,7 @@
         4.0
       ],
       "applications": "Downward extrusion of a housing outline from a mating top plane: lids, lips, and pockets whose Z extent is measured from a face.",
-      "added": "2026-09-04T21:46:18Z"
+      "added": "2026-09-04T21:53:17Z"
     },
     {
       "file": "extrude_twist_demo.glb",
@@ -62183,7 +62183,7 @@
         16.0
       ],
       "applications": "Self-supporting 45-degree roofs over wall openings in FDM housings so a doorway or cable slot prints without a ceiling of support.",
-      "added": "2026-09-04T21:46:18Z"
+      "added": "2026-09-04T21:53:17Z"
     },
     {
       "file": "chamfer_cutter_demo.glb",
@@ -62203,7 +62203,7 @@
         12.0
       ],
       "applications": "45-degree end chamfers on printed pins, foot-pegs, and shaft tips so the lead-in starts without a sharp lip.",
-      "added": "2026-09-04T21:46:18Z"
+      "added": "2026-09-04T21:53:17Z"
     },
     {
       "file": "countersink_demo.glb",
@@ -62223,7 +62223,7 @@
         6.5
       ],
       "applications": "Countersunk lead-ins on printed nuts and screw seats so a machine screw starts without chewing the thread crest.",
-      "added": "2026-09-04T21:46:18Z"
+      "added": "2026-09-04T21:53:17Z"
     },
     {
       "file": "slot_neg_demo.glb",
@@ -62243,7 +62243,7 @@
         4.0
       ],
       "applications": "Obround pedestal slots in chassis plates for belt-tension travel and pan-axis adjustment, cut with extra travel at each end.",
-      "added": "2026-09-04T21:46:18Z"
+      "added": "2026-09-04T21:53:17Z"
     },
     {
       "file": "hex_corner_chamfer_demo.glb",
@@ -62263,7 +62263,7 @@
         6.5
       ],
       "applications": "45-degree corner breaks on printed hex nuts that keep the wrench flats while knocking off the sharp across-corners.",
-      "added": "2026-09-04T21:46:18Z"
+      "added": "2026-09-04T21:53:17Z"
     },
     {
       "file": "lighten_grid_demo.glb",
@@ -62793,7 +62793,7 @@
         ]
       },
       "applications": "Orthogonal machine guards, rectilinear lightweight cores, and test coupons that need a simple-cubic network of shared nodes and X/Y/Z edge struts rather than BCC body diagonals or octet face diagonals.",
-      "added": "2026-09-07T23:35:01Z"
+      "added": "2026-09-02T13:04:39Z"
     },
     {
       "file": "gyroid_lattice_demo.glb",
@@ -62838,7 +62838,7 @@
         ]
       },
       "applications": "Lightweight heat-exchanger cores, impact absorbers, tissue scaffolds, and stiffness-tuned infill coupons that need a continuous TPMS gyroid sheet separating two connected passage networks rather than a strut graph or closed-cell foam.",
-      "added": "2026-09-07T23:35:01Z"
+      "added": "2026-09-02T17:40:25Z"
     },
     {
       "file": "kelvin_cell_demo.glb",
@@ -62883,7 +62883,7 @@
         ]
       },
       "applications": "Open-cell foam coupons, isotropic energy absorbers, and lightweight cores that need the 24-node, 36-edge Kelvin tetrakaidecahedral cell with six square and eight hexagonal faces rather than BCC or FCC connectivity.",
-      "added": "2026-09-07T23:35:01Z"
+      "added": "2026-09-02T11:43:53Z"
     },
     {
       "file": "honeycomb_core_demo.glb",
@@ -62927,7 +62927,7 @@
         ]
       },
       "applications": "Sandwich-panel cores, drone and RC wing infill, crash-box energy absorbers, and stiff-yet-light bulkheads that need a tall open-cell hex-tube core with a single-wall perimeter and optional bond skins, not a thin lightening sheet like honeycomb_panel.",
-      "added": "2026-09-08T08:27:00Z"
+      "added": "2026-09-07T15:27:10Z"
     },
     {
       "file": "lattice_flexure_demo.glb",
@@ -62971,7 +62971,7 @@
         ]
       },
       "applications": "Distributed-compliance pivots for optical mounts, precision stages, and printed joints that need more travel and fatigue life than a single cross-spring blade.",
-      "added": "2026-09-08T08:27:00Z"
+      "added": "2026-09-07T15:27:10Z"
     },
     {
       "file": "text_polygon_demo.glb",
@@ -63141,7 +63141,7 @@
         4.0
       ],
       "applications": "Polygon-to-solid between two world Z planes: wall segments, MultiPolygon window frames, and stacked housing slices.",
-      "added": "2026-09-04T21:46:18Z"
+      "added": "2026-09-04T21:53:17Z"
     },
     {
       "file": "extrude_snapped_demo.glb",
@@ -63161,7 +63161,7 @@
         4.0
       ],
       "applications": "Near-tangent 2D profiles that would triangulate as non-volumes: snap vertices to 1e-6 then extrude clean printable walls.",
-      "added": "2026-09-04T21:46:18Z"
+      "added": "2026-09-04T21:53:17Z"
     }
   ],
   "utilities": [
