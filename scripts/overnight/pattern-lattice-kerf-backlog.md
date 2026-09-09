@@ -43,7 +43,7 @@ that fail this and CI fails on anything above 0.
 | 19 | gyroid_lattice | tpms | shipped | TPMS gyroid sheet; wall>=1.2 cell>=8. SHA cf1b37fdb8caddf5bf3eff30d32ed34e6d4e95e5 |
 | 20 | honeycomb_core | 2.5d | shipped | SHA b08ccb9 tall open-cell hex-tube sandwich core, single-wall rim + optional bond skins; != honeycomb_panel sheet |
 | 21 | lattice_flexure(kind="x") | flexure | shipped | Howell distributed-compliance crossed-truss pivot. SHA 5563753 |
-| 22 | lattice_flexure(kind="v") | flexure | pending | |
+| 22 | lattice_flexure(kind="v") | flexure | shipped | Howell V-fold accordion distributed-compliance sheets. SHA fe201be82a9372a7d4204b510aa3fafaf1c30287 |
 
 ## Vetoed (do not ship)
 
