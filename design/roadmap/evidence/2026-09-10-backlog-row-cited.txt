@@ -1,0 +1,23 @@
+01	honeycomb_panel	no-retrievable-source
+02	isogrid_panel	no-retrievable-source
+03	kerf_bend_cutter(mode="hex")	no-retrievable-source
+04	kerf_bend_cutter(mode="cross")	no-retrievable-source
+05	kerf_bend_cutter(mode="chevron")	no-retrievable-source
+06	kerf_bend_cutter(mode="diamond")	no-retrievable-source
+07	kerf_bend_cutter(mode="fishbone")	no-retrievable-source
+08	kerf_bend_cutter(mode="meander")	no-retrievable-source
+09	kerf_bend_cutter(mode="biaxial")	no-retrievable-source
+10	auxetic_panel(mode="arrowhead")	no-retrievable-source
+11	auxetic_panel(mode="star")	no-retrievable-source
+12	auxetic_panel(mode="anti_tetrachiral")	no-retrievable-source
+13	auxetic_panel(mode="houndstooth")	no-retrievable-source
+14	kagome_panel	no-retrievable-source
+15	bcc_lattice	no-retrievable-source
+16	octet_truss	no-retrievable-source
+17	kelvin_cell	no-retrievable-source
+18	cubic_lattice	no-retrievable-source
+19	gyroid_lattice	no-retrievable-source
+20	honeycomb_core	no-retrievable-source
+21	lattice_flexure(kind="x")	no-retrievable-source
+22	lattice_flexure(kind="v")	no-retrievable-source
+uncited 22/22
