@@ -1,5 +1,5 @@
 ---
-state: promoted
+state: in-progress
 lens: telemetry
 created: 2026-09-10
 metric: shipped pattern/lattice/kerf rows with no retrievable source (no URL, DOI, or arXiv id in the backlog note or in the named function's docstring)
@@ -9,7 +9,8 @@ measure: python3 design/roadmap/evidence/backlog_row_cited.py
 evidence:
   - design/roadmap/evidence/backlog_row_cited.py
   - design/roadmap/evidence/2026-09-10-backlog-row-cited.txt
-slices: 0/3
+  - design/roadmap/evidence/2026-09-11-backlog-row-cited-after.txt
+slices: 1/3
 ---
 # "Researched" is the one word in GOAL.md nothing checks
 
@@ -69,7 +70,7 @@ the note and drop the word researched for that row, not to fabricate a citation.
 
 ## Slices
 
-- [ ] Cite the 9 `kerf_bend_cutter` and 4 `auxetic_panel` mode rows (13 rows, the two
+- [x] Cite the 9 `kerf_bend_cutter` and 4 `auxetic_panel` mode rows (13 rows, the two
       collapsed families). These have real literature: Grima's auxetic series and the
       living-hinge/kerf-bending body of work. Measure 22 -> 9. Docstring gets a
       `References:` block per mode so the citation ships with the wheel.
@@ -80,6 +81,19 @@ the note and drop the word researched for that row, not to fabricate a citation.
 - [ ] Wire the probe into the CI job that already runs `tests/test_backlog_provenance.py`
       so a future hour cannot mark a row shipped without a retrievable source, and
       replace the loose `Sources:` footer with per-row citations.
+
+## Slice 1 shipped 2026-09-11
+
+Rows 03-12 now carry a locked URL or DOI on the backlog note (SHA kept first so
+`backlog_provenance.py` still resolves the commit, not a DOI digit run).
+`kerf_bend_cutter` and `auxetic_panel` docstrings gained a `References:` block
+with the same identifiers. Row 13 `houndstooth` has no locked source and stays
+uncited.
+
+`python3 design/roadmap/evidence/backlog_row_cited.py -v` reads **uncited 12/22**.
+The slice text's "22 -> 9" / "10 remaining" omitted rows 21-22 (`lattice_flexure`
+x and v), which sit with the slice-2 remainder. Capture:
+`design/roadmap/evidence/2026-09-11-backlog-row-cited-after.txt`.
 
 ## Measuring it
 

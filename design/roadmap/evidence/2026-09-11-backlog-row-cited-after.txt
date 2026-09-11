@@ -1,0 +1,13 @@
+01	honeycomb_panel	no-retrievable-source
+02	isogrid_panel	no-retrievable-source
+13	auxetic_panel(mode="houndstooth")	no-retrievable-source
+14	kagome_panel	no-retrievable-source
+15	bcc_lattice	no-retrievable-source
+16	octet_truss	no-retrievable-source
+17	kelvin_cell	no-retrievable-source
+18	cubic_lattice	no-retrievable-source
+19	gyroid_lattice	no-retrievable-source
+20	honeycomb_core	no-retrievable-source
+21	lattice_flexure(kind="x")	no-retrievable-source
+22	lattice_flexure(kind="v")	no-retrievable-source
+uncited 12/22

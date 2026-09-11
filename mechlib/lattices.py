@@ -547,6 +547,11 @@ def auxetic_panel(mode="reentrant", width=60.0, height=60.0, thickness=3.0,
     panel builds in well under a second; shrink ``cell`` deliberately if you
     want a denser lattice, and expect the build to slow down accordingly.
     Units are mm and degrees.
+
+    References:
+    ``arrowhead`` https://doi.org/10.1109/84.585787
+    ``star`` https://doi.org/10.1080/08927020500401139
+    ``anti_tetrachiral`` https://doi.org/10.1002/pssb.200777704
     """
     if mode not in _AUXETIC_MODES:
         raise ValueError("auxetic_panel(): mode must be one of %s" % (_AUXETIC_MODES,))
@@ -1852,6 +1857,15 @@ def kerf_bend_cutter(mode="lattice", width=60.0, height=40.0, thickness=3.0,
     from the standard kerf-bend approximation ``radius = thickness * pitch /
     kerf`` (the per-cut arc-length the bridge material has to absorb, set
     equal to the kerf gap being consumed). Units are mm and degrees.
+
+    References:
+    ``hex`` https://livinghingegenerator.com/hex-hinge/
+    ``cross`` https://livinghingegenerator.com/cross-hinge/
+    ``chevron`` https://livinghingegenerator.com/chevron-hinge/
+    ``diamond`` https://livinghingegenerator.com/diamond-hinge/
+    ``fishbone`` https://github.com/KnoxMakers/km-living-hinge
+    ``meander`` https://doi.org/10.3390/app12094303
+    ``biaxial`` https://doi.org/10.1111/cgf.15032
     """
     if mode not in _KERF_MODES:
         raise ValueError("kerf_bend_cutter(): mode must be one of %s" % (_KERF_MODES,))

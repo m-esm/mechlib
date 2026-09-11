@@ -24,16 +24,16 @@ that fail this and CI fails on anything above 0.
 | --- | --- | --- | --- | --- |
 | 01 | honeycomb_panel | 2d-lattice | shipped | SHA 47e3460 |
 | 02 | isogrid_panel | 2d-lattice | shipped | NASA triangular rib sheet. SHA 3df5609 |
-| 03 | kerf_bend_cutter(mode="hex") | kerf | shipped | SHA 7d0cb2a hex living-hinge edge slits |
-| 04 | kerf_bend_cutter(mode="cross") | kerf | shipped | X-lattice bars + ~30° arms. SHA 3694df1 |
-| 05 | kerf_bend_cutter(mode="chevron") | kerf | shipped | nested 45° arrowheads. SHA 2b34903 |
-| 06 | kerf_bend_cutter(mode="diamond") | kerf | shipped | elongated diamond-outline brick-wall slits. SHA 53204ba |
-| 07 | kerf_bend_cutter(mode="fishbone") | kerf | shipped | herringbone 45/135° rib pairs. SHA 6bd5243 |
-| 08 | kerf_bend_cutter(mode="meander") | kerf | shipped | MDPI meander square-wave labyrinth. SHA d1882e5 |
-| 09 | kerf_bend_cutter(mode="biaxial") | kerf | shipped | 2-axis wrap. SHA dca0357dbb6a0658a43507a9f8b5a896521cdbe3 |
-| 10 | auxetic_panel(mode="arrowhead") | auxetic | shipped | Grima double-arrowhead NPR cells. SHA 16184d5 |
-| 11 | auxetic_panel(mode="star") | auxetic | shipped | Grima star-shaped honeycomb NPR cells. SHA 9bad3d1 |
-| 12 | auxetic_panel(mode="anti_tetrachiral") | auxetic | shipped | Opposite-sense square-grid NPR cells. SHA e9833c9 |
+| 03 | kerf_bend_cutter(mode="hex") | kerf | shipped | SHA 7d0cb2a hex living-hinge edge slits. https://livinghingegenerator.com/hex-hinge/ |
+| 04 | kerf_bend_cutter(mode="cross") | kerf | shipped | X-lattice bars + ~30° arms. SHA 3694df1. https://livinghingegenerator.com/cross-hinge/ |
+| 05 | kerf_bend_cutter(mode="chevron") | kerf | shipped | nested 45° arrowheads. SHA 2b34903. https://livinghingegenerator.com/chevron-hinge/ |
+| 06 | kerf_bend_cutter(mode="diamond") | kerf | shipped | elongated diamond-outline brick-wall slits. SHA 53204ba. https://livinghingegenerator.com/diamond-hinge/ |
+| 07 | kerf_bend_cutter(mode="fishbone") | kerf | shipped | herringbone 45/135° rib pairs. SHA 6bd5243. https://github.com/KnoxMakers/km-living-hinge |
+| 08 | kerf_bend_cutter(mode="meander") | kerf | shipped | MDPI meander square-wave labyrinth. SHA d1882e5. https://doi.org/10.3390/app12094303 |
+| 09 | kerf_bend_cutter(mode="biaxial") | kerf | shipped | 2-axis wrap. SHA dca0357dbb6a0658a43507a9f8b5a896521cdbe3. https://doi.org/10.1111/cgf.15032 |
+| 10 | auxetic_panel(mode="arrowhead") | auxetic | shipped | Grima double-arrowhead NPR cells. SHA 16184d5. https://doi.org/10.1109/84.585787 |
+| 11 | auxetic_panel(mode="star") | auxetic | shipped | Grima star-shaped honeycomb NPR cells. SHA 9bad3d1. https://doi.org/10.1080/08927020500401139 |
+| 12 | auxetic_panel(mode="anti_tetrachiral") | auxetic | shipped | Opposite-sense square-grid NPR cells. SHA e9833c9. https://doi.org/10.1002/pssb.200777704 |
 | 13 | auxetic_panel(mode="houndstooth") | auxetic | shipped | interlocking L / broken-chevron NPR cells. SHA d122a6bdc5c1335650aac7979a2cd1ac63c0dc4d |
 | 14 | kagome_panel | 2d-lattice | shipped | Trihexagonal Kagome tri+hex lightening sheet (researched as kagome_lattice). SHA 434302b |
 | 15 | bcc_lattice | 3d-strut | shipped | Body-centred-cubic strut truss, 8 half-diagonals/cell to shared centre node. SHA 479856a986f90ebcaa8c55c8fa80f5d4db1a9070 |
