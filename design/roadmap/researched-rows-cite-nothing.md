@@ -1,5 +1,5 @@
 ---
-state: proposed
+state: promoted
 lens: telemetry
 created: 2026-09-10
 metric: shipped pattern/lattice/kerf rows with no retrievable source (no URL, DOI, or arXiv id in the backlog note or in the named function's docstring)
