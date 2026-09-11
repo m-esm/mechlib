@@ -1,0 +1,13 @@
+honeycomb_panel	no-retrievable-source-on-card-or-usecase
+isogrid_panel	no-retrievable-source-on-card-or-usecase
+kerf_bend_cutter	no-retrievable-source-on-card-or-usecase
+auxetic_panel	no-retrievable-source-on-card-or-usecase
+kagome_panel	no-retrievable-source-on-card-or-usecase
+bcc_lattice	no-retrievable-source-on-card-or-usecase
+octet_truss	no-retrievable-source-on-card-or-usecase
+kelvin_cell	no-retrievable-source-on-card-or-usecase
+cubic_lattice	no-retrievable-source-on-card-or-usecase
+gyroid_lattice	no-retrievable-source-on-card-or-usecase
+honeycomb_core	no-retrievable-source-on-card-or-usecase
+lattice_flexure	no-retrievable-source-on-card-or-usecase
+uncited-in-gallery 12/12
