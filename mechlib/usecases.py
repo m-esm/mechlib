@@ -63,9 +63,12 @@ USE_CASES = {
     ),
     'auxetic_panel': (
         "Impact pads, expandable meshes, medical and sports structures that "
-        "widen when stretched, including Grima arrowhead and star-shaped "
-        "honeycomb NPR cells, anti-tetrachiral opposite-sense square-grid "
-        "NPR cells, and houndstooth interlocking-L / broken-chevron NPR cells."
+        "widen when stretched, including Grima arrowhead NPR cells "
+        "(https://doi.org/10.1109/84.585787) and star-shaped honeycomb NPR "
+        "cells (https://doi.org/10.1080/08927020500401139), anti-tetrachiral "
+        "opposite-sense square-grid NPR cells "
+        "(https://doi.org/10.1002/pssb.200777704), and houndstooth "
+        "interlocking-L / broken-chevron NPR cells."
     ),
     'ball_socket_joint': (
         "Control arms, camera gimbals, robotic wrists, and snap-together "
@@ -525,11 +528,18 @@ USE_CASES = {
     'kerf_bend_cutter': (
         "Living hinges, foldable enclosures, and kerf-bent panels that roll "
         "or twist from a flat print, including sinusoidal wave slits, "
-        "hexagonal living-hinge edge slits, cross X-lattice living-hinge "
-        "slits, chevron nested-arrowhead living-hinge slits, and "
-        "diamond-outline brick-wall and fishbone herringbone living-hinge "
-        "slits, plus a meander-labyrinth continuous square-wave kerf and "
-        "biaxial orthogonal slits for a 2-axis wrap."
+        "hexagonal living-hinge edge slits "
+        "(https://livinghingegenerator.com/hex-hinge/), cross X-lattice "
+        "living-hinge slits (https://livinghingegenerator.com/cross-hinge/), "
+        "chevron nested-arrowhead living-hinge slits "
+        "(https://livinghingegenerator.com/chevron-hinge/), and "
+        "diamond-outline brick-wall "
+        "(https://livinghingegenerator.com/diamond-hinge/) and fishbone "
+        "herringbone living-hinge slits "
+        "(https://github.com/KnoxMakers/km-living-hinge), plus a "
+        "meander-labyrinth continuous square-wave kerf "
+        "(https://doi.org/10.3390/app12094303) and biaxial orthogonal slits "
+        "for a 2-axis wrap (https://doi.org/10.1111/cgf.15032)."
     ),
     'kinematic_coupling': (
         "Optical mounts, metrology fixtures, and any plate pair that must "

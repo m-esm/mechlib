@@ -1,5 +1,5 @@
 ---
-state: promoted
+state: building
 lens: telemetry
 created: 2026-09-11
 metric: unique shipped pattern/lattice/kerf APIs whose gallery card AND use-case string contain no retrievable source (URL, DOI, or arXiv id)
@@ -9,7 +9,7 @@ measure: python3 design/roadmap/evidence/gallery_row_cited.py
 evidence:
   - design/roadmap/evidence/gallery_row_cited.py
   - design/roadmap/evidence/2026-09-11-gallery-row-cited.txt
-slices: 0/3
+slices: 1/3
 ---
 # The gallery is the researched claim a maker actually reads
 
@@ -64,7 +64,7 @@ for that API, not to fabricate a citation.
 
 ## Slices
 
-- [ ] Mirror already-locked citations for `kerf_bend_cutter` and
+- [x] Mirror already-locked citations for `kerf_bend_cutter` and
       `auxetic_panel` into `USE_CASES` (and therefore the card `applications`
       line). Measure 12 -> 10.
 - [ ] Cite the remaining 10 APIs on the card/use-case path once slice 2 of
