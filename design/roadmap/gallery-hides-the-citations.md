@@ -1,5 +1,5 @@
 ---
-state: proposed
+state: promoted
 lens: telemetry
 created: 2026-09-11
 metric: unique shipped pattern/lattice/kerf APIs whose gallery card AND use-case string contain no retrievable source (URL, DOI, or arXiv id)
