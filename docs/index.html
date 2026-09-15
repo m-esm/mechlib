@@ -139,6 +139,10 @@
       white-space: pre;
     }
 
+    #qs-install {
+      overflow-wrap: anywhere;
+    }
+
     .qs-copy {
       position: absolute;
       top: 8px;
@@ -349,7 +353,10 @@
       gap: 6px;
       min-width: 0;
       overflow-x: auto;
+      padding-inline-end: 28px;
       scrollbar-width: thin;
+      -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+      mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
     }
 
     .chip-scroll::-webkit-scrollbar {
@@ -1123,6 +1130,19 @@
         margin-bottom: 26px;
       }
 
+      .qs-block code {
+        white-space: pre-wrap;
+      }
+
+      .search-hint {
+        display: none;
+      }
+
+      .search-wrap input {
+        padding-right: 11px;
+        font-size: 16px;
+      }
+
       .tb-cell {
         padding: 8px 14px 9px 12px;
       }
@@ -1195,6 +1215,7 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
         <div class="search-wrap">
           <input id="search" type="search" autocomplete="off" spellcheck="false"
                  placeholder="Search parts, modules, descriptions…"
+                 data-placeholder-narrow="Search parts…"
                  aria-label="Search components">
           <span class="search-hint">press /</span>
         </div>
@@ -1690,6 +1711,16 @@ ml.export_stl(body, "bracket.stl")                                 # watertight 
     const filters = { q: "", group: "", category: "", tunable: false, animated: false, latest: false };
     const sections = new Map();
     const searchInput = document.querySelector("#search");
+    const searchNarrow = window.matchMedia("(max-width: 700px)");
+    const applySearchPlaceholder = () => {
+      const narrow = searchInput.dataset.placeholderNarrow;
+      if (!narrow) return;
+      searchInput.placeholder = searchNarrow.matches
+        ? narrow
+        : "Search parts, modules, descriptions…";
+    };
+    applySearchPlaceholder();
+    searchNarrow.addEventListener("change", applySearchPlaceholder);
     const groupRow = document.querySelector("#group-row");
     const categoryRow = document.querySelector("#category-row");
     const resultCount = document.querySelector("#result-count");
