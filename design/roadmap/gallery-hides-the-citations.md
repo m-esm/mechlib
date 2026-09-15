@@ -1,5 +1,5 @@
 ---
-state: building
+state: shipped
 lens: telemetry
 created: 2026-09-11
 metric: unique shipped pattern/lattice/kerf APIs whose gallery card AND use-case string contain no retrievable source (URL, DOI, or arXiv id)
@@ -9,7 +9,10 @@ measure: python3 design/roadmap/evidence/gallery_row_cited.py
 evidence:
   - design/roadmap/evidence/gallery_row_cited.py
   - design/roadmap/evidence/2026-09-11-gallery-row-cited.txt
-slices: 1/3
+  - design/roadmap/evidence/2026-09-15-gallery-row-cited-after.txt
+  - tests/test_row_citations.py
+after: 0 of 12 (2026-09-15)
+slices: 3/3
 ---
 # The gallery is the researched claim a maker actually reads
 
@@ -67,13 +70,18 @@ for that API, not to fabricate a citation.
 - [x] Mirror already-locked citations for `kerf_bend_cutter` and
       `auxetic_panel` into `USE_CASES` (and therefore the card `applications`
       line). Measure 12 -> 10.
-- [ ] Cite the remaining 10 APIs on the card/use-case path once slice 2 of
-      `researched-rows-cite-nothing.md` has identifiers to copy (or lock them
-      here if that slice has not landed). Measure 10 -> 0.
-- [ ] Stop cards from dropping identifiers: either flow a `source` field from
-      the backlog/docstring into `docs/models/index.json`, or keep the
-      identifier inside `USE_CASES` and add a CI check that
-      `gallery_row_cited.py` stays at 0.
+- [x] Cite the remaining 10 APIs on the card/use-case path. Each card's
+      `origin` now ends in `Source: <author, year, title, URL>`, written in
+      `gallery/build_gallery.py` (source of truth) and mirrored into
+      `docs/models/index.json` so no GLB rebuild is needed. Measure 10 -> 0.
+      Every identifier was resolved live: Crossref `api.crossref.org/works/<doi>`
+      returned the matching title and first author for each DOI, and both NASA
+      documents resolve on `ntrs.nasa.gov`. Nothing was cited from memory.
+- [x] Stop cards from dropping identifiers: `tests/test_row_citations.py` runs
+      both probes in CI (`.github/workflows/ci.yml` already runs `pytest tests/`),
+      so a new uncited card or backlog row fails the build. Discrimination
+      proven: stripping the `gyroid_lattice` source makes the test fail, and
+      restoring it makes it pass.
 
 ## Measuring it
 

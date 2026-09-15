@@ -2050,7 +2050,9 @@ def build():
                 "sheets provide axial compliance through serial leaf folds. "
                 "Print-open slots separate the ligament walls."),
             "origin": ("Pattern/lattice/kerf backlog ids 21 (X) and 22 (V); classic ref: "
-                       "Howell distributed-compliance mechanism"),
+                       "Howell distributed-compliance mechanism. Source: Howell & Midha "
+                       "1994, A method for the design of compliant mechanisms with "
+                       "small-length flexural pivots, https://doi.org/10.1115/1.2919359"),
             "demo": "demo_lattice_flexure",
         },
         {
@@ -2814,7 +2816,7 @@ def build():
                 "pitch and the across-flats of the wall centreline, and strut_t "
                 "is the printed wall. Stretching it in-plane makes it thinner "
                 "transversely (positive Poisson), the opposite of auxetic_panel."),
-            "origin": "Gap-analysis wave v0.11.x; classic ref: regular hexagonal honeycomb core",
+            "origin": "Gap-analysis wave v0.11.x; classic ref: regular hexagonal honeycomb core. Source: Gibson & Ashby 1982, The mechanics of two-dimensional cellular materials, https://doi.org/10.1098/rspa.1982.0087",
             "demo": "demo_honeycomb_panel",
         },
         {
@@ -2830,7 +2832,7 @@ def build():
                 "the pitch and wall-centreline across-flats; wall_t is the "
                 "shared printed wall (>=0.8 mm). Print cells-up, self-supporting, "
                 "no supports. Distinct from honeycomb_panel's thin wide-rim sheet."),
-            "origin": "Gap-analysis wave v0.12.x; classic ref: hexagonal sandwich-panel core",
+            "origin": "Gap-analysis wave v0.12.x; classic ref: hexagonal sandwich-panel core. Source: Zhang & Ashby 1992, The out-of-plane properties of honeycombs, https://doi.org/10.1016/0020-7403(92)90013-7",
             "demo": "demo_honeycomb_core",
         },
         {
@@ -2845,7 +2847,7 @@ def build():
                 "wall-centreline triangle side and vertex pitch; strut_t is "
                 "the printed rib. Distinct from honeycomb_panel (flat-top hex "
                 "holes). Print flat, no supports."),
-            "origin": "Gap-analysis wave v0.11.x; classic ref: NASA isogrid (triangular rib sheet)",
+            "origin": "Gap-analysis wave v0.11.x; classic ref: NASA isogrid (triangular rib sheet). Source: NASA Isogrid Design Handbook, https://ntrs.nasa.gov/citations/19730011184",
             "demo": "demo_isogrid_panel",
         },
         {
@@ -2861,7 +2863,7 @@ def build():
                 "spacing); strut_t is the printed wall between a triangle and a "
                 "neighbouring hex. Distinct from honeycomb_panel (hex holes only) "
                 "and isogrid_panel (triangle holes only). Print flat, no supports."),
-            "origin": "Gap-analysis wave v0.11.x; classic ref: Kagome / trihexagonal lattice",
+            "origin": "Gap-analysis wave v0.11.x; classic ref: Kagome / trihexagonal lattice. Source: Hutchinson et al. 2003, Kagome plate structures for actuation, https://doi.org/10.1016/S0020-7683(03)00348-2",
             "demo": "demo_kagome_panel",
         },
         {
@@ -2879,7 +2881,7 @@ def build():
                 "lightweight cores and crush structures. metadata reports "
                 "relative_density. Shallow body-diagonal overhangs want a slow "
                 "profile or light support."),
-            "origin": "Gap-analysis wave v0.11.x; classic ref: BCC FFF metamaterial truss",
+            "origin": "Gap-analysis wave v0.11.x; classic ref: BCC FFF metamaterial truss. Source: Ushijima et al. 2010, Compressive properties of stainless steel micro-lattice structures, https://doi.org/10.1177/1099636210380997",
             "demo": "demo_bcc_lattice",
         },
         {
@@ -2894,7 +2896,7 @@ def build():
                 "blends the joints. Unlike BCC it has no body-centre nodes or "
                 "body diagonals; unlike octet/FCC it has no face diagonals. "
                 "metadata reports exact graph counts and relative_density."),
-            "origin": "Simple-cubic edge lattice / orthogonal space frame",
+            "origin": "Simple-cubic edge lattice / orthogonal space frame. Source: Gibson & Ashby, Cellular Solids 2nd ed. 1997, https://doi.org/10.1017/CBO9781139878326",
             "demo": "demo_cubic_lattice",
         },
         {
@@ -2909,7 +2911,7 @@ def build():
                 "and node_d blends the joints. Unlike BCC this has no body-"
                 "centre nodes or body-diagonal struts; unlike a cubic grid it "
                 "has no axis-aligned edges. metadata reports relative_density."),
-            "origin": "Classic octet truss / FCC nearest-neighbour lattice",
+            "origin": "Classic octet truss / FCC nearest-neighbour lattice. Source: Deshpande, Fleck & Ashby 2001, Effective properties of the octet-truss lattice material, https://doi.org/10.1016/S0022-5096(01)00010-2",
             "demo": "demo_octet_truss",
         },
         {
@@ -2925,7 +2927,7 @@ def build():
                 "The block is clipped closed at its six faces and metadata "
                 "reports realised dimensions, wall, resolution, and relative "
                 "density."),
-            "origin": "Schoen gyroid triply-periodic minimal surface",
+            "origin": "Schoen gyroid triply-periodic minimal surface. Source: Schoen 1970, Infinite periodic minimal surfaces without self-intersections, https://ntrs.nasa.gov/citations/19700020472",
             "demo": "demo_gyroid_lattice",
         },
         {
@@ -2940,7 +2942,7 @@ def build():
                 "faces. cell is its vertex-to-vertex span on each principal "
                 "axis; strut_d is nozzle-snapped and node_d blends the joints. "
                 "metadata reports relative_density against that cubic span."),
-            "origin": "Kelvin cell / truncated-octahedron open-cell foam model",
+            "origin": "Kelvin cell / truncated-octahedron open-cell foam model. Source: Thomson (Kelvin) 1887, On the division of space with minimum partitional area, https://doi.org/10.1080/14786448708628135",
             "demo": "demo_kelvin_cell",
         },
         {
