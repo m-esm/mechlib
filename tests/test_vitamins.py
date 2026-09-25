@@ -87,3 +87,20 @@ def test_address_list_is_sorted_and_stable():
     assert a == sorted(a)
     assert "bearing/608-2rs" in a
     assert "fastener/iso4762-m8" in a
+
+
+def test_mount_patterns_are_well_formed():
+    """A ``mount`` dim is a hole pattern in the part's own frame plus the
+    catalog screw slug the holes take; consumers cut the pattern from it."""
+    seen = 0
+    for item in all_vitamins():
+        m = item.dims.get("mount")
+        if m is None:
+            continue
+        seen += 1
+        assert set(m) == {"holes", "screw"}, item.address
+        assert len(m["holes"]) >= 2, item.address
+        for h in m["holes"]:
+            assert len(h) == 2 and all(isinstance(x, float) for x in h), item.address
+        get("fastener/iso4762-%s" % m["screw"])
+    assert seen >= 2

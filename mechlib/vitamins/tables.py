@@ -203,6 +203,11 @@ def _electromech() -> List[Vitamin]:
                 "ear_span": 35.0,
                 "shaft_d": 5.0,
                 "shaft_len": 10.0,
+                # Mounting pattern in the part's own frame, mm from its
+                # centre on the mounting face; ``screw`` is the fastener the
+                # holes take (the catalog's ISO 4762 slug). Datasheet: two
+                # 4.2 mm ear holes 35 mm apart.
+                "mount": {"holes": [[-17.5, 0.0], [17.5, 0.0]], "screw": "m4"},
             },
             notes="Published envelope. ESTIMATE — caliper before printing.",
         ),
@@ -216,6 +221,9 @@ def _electromech() -> List[Vitamin]:
                 "shaft_d": 5.0,
                 "shaft_len": 24.0,
                 "body_len": 48.0,
+                # NEMA ICS 16: four M3 tapped holes on a 31.0 mm square.
+                "mount": {"holes": [[15.5, 15.5], [-15.5, 15.5], [-15.5, -15.5], [15.5, -15.5]],
+                          "screw": "m3"},
             },
             notes="NEMA ICS 16 envelope. Body length varies by stack.",
         ),
