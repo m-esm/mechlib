@@ -11,6 +11,7 @@ Provenance tags:
   bd_warehouse  gumyr/bd_warehouse fastener + bearing tables
   bolts         BOLTS open library of technical specifications
   caliper       measured on the owned part (see notes)
+  samick        Samick linear bushing catalog 2401E
   datasheet     published envelope, still CALIPER BEFORE PRINTING
 """
 from __future__ import annotations
@@ -306,5 +307,27 @@ def _electromech() -> List[Vitamin]:
     ]
 
 
+# Open linear ball bushings, Samick catalog 2401E p. 74 (LM_OP).
+_OPEN_BUSHINGS = (
+    # slug, title, dr, od, length, groove_span, groove_w, h1, theta_deg, C, C0, ball_rows, mass_g
+    ("lm12uu-op", "LM12UUOP open linear bushing", 12.0, 21.0, 30.0, 23.0, 1.3, 8.0, 80.0, 410.0, 590.0, 3, 31.5),
+)
+
+
+def _linear() -> List[Vitamin]:
+    out = []
+    for slug, title, dr, od, length, span, groove_w, h1, theta, c, c0, rows, mass in _OPEN_BUSHINGS:
+        out.append(make_vitamin(
+            "linear", slug, title,
+            "samick",
+            {"dr": dr, "od": od, "length": length, "groove_span": span, "groove_w": groove_w,
+             "opening": h1, "opening_deg": theta, "c_dyn_n": c, "c0_n": c0, "ball_rows": rows,
+             "mass_g": mass},
+            notes="Samick LM_OP table: opening h1 is the chord at the bore, theta the sector angle. "
+                  "OD is the value before slotting. Sealed both ends (UU).",
+        ))
+    return out
+
+
 def all_vitamins() -> List[Vitamin]:
-    return _bearings() + _fasteners() + _electromech()
+    return _bearings() + _fasteners() + _electromech() + _linear()
